@@ -8,6 +8,7 @@ import {
   answer,
   createSession,
   currentQuestion,
+  hasPositionalReference,
   isComplete,
   isSessionCompatible,
   presentOptions,
@@ -280,6 +281,7 @@ test('validateQuiz catches common authoring mistakes', () => {
     [(q) => { delete q.questions[0].explanation; }, /explanation/],
     [(q) => { q.questions[0].explenation = 'typo'; }, /unknown field "explenation"/],
     [(q) => { q.questions[0].options[0].note = 5; }, /note must be a string/],
+    [(q) => { q.questions[0].options[3].text = 'א+ב נכונות'; }, /by position/],
   ];
   for (const [mutate, pattern] of cases) {
     const quiz = clone(fixture);
@@ -288,6 +290,30 @@ test('validateQuiz catches common authoring mistakes', () => {
     assert.ok(errors.some((e) => pattern.test(e)), `expected ${pattern}, got ${JSON.stringify(errors)}`);
   }
   assert.deepEqual(validateQuiz([]), ['quiz must be a JSON object']);
+});
+
+test('hasPositionalReference flags options that depend on option order', () => {
+  const bad = [
+    'א+ב נכונות',
+    'תשובות א ו-ג נכונות',
+    "א' וב' נכונות",
+    'תשובה ג',
+    'כל התשובות נכונות',
+    'אף תשובה אינה נכונה',
+    'אף אחת מהתשובות',
+    'All of the above',
+    'none of the above',
+  ];
+  const ok = [
+    'בקשר הסינוטריאלי (SA)',
+    'אבי העורקים',
+    'תשובה חיסונית מולדת',
+    'ויטמין B12 וחומצה פולית',
+    'שריר הלב, שריר חלק',
+    'Na⁺ ו-K⁺',
+  ];
+  for (const text of bad) assert.ok(hasPositionalReference(text), `should flag: ${text}`);
+  for (const text of ok) assert.ok(!hasPositionalReference(text), `should allow: ${text}`);
 });
 
 test('option notes are optional', () => {

@@ -23,6 +23,9 @@ No build step and no runtime dependencies. Node is only needed for the tests and
 
 ## Adding a quiz
 
+Writing guidelines, plus a brief you can paste into the session that writes the questions, are in
+[docs/quiz-authoring.md](docs/quiz-authoring.md).
+
 1. Save the quiz as `quizzes/<id>.json`. The file name must match `id`.
 2. `npm run manifest` to regenerate `quizzes/manifest.json`.
 3. `npm run validate` to check everything.
@@ -67,7 +70,8 @@ No build step and no runtime dependencies. Node is only needed for the tests and
 | `questions[].correct` | index 0–3 into `options` **as written**. The engine shuffles, so authors don't have to |
 | `questions[].explanation` | required |
 
-Unknown fields are rejected, which catches typos like `explenation`.
+Unknown fields are rejected, which catches typos like `explenation`. Options that refer to other options
+by position ("א+ב נכונות", "all of the above") are rejected too, because the options are shuffled.
 All text is rendered as plain text (no HTML). Use Unicode for symbols (O₂, Na⁺, →).
 A `\n` in a string becomes a line break.
 

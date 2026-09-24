@@ -15,6 +15,20 @@ const QUIZ_KEYS = new Set(['id', 'title', 'description', 'questions']);
 const QUESTION_KEYS = new Set(['id', 'topic', 'question', 'options', 'correct', 'explanation']);
 const OPTION_KEYS = new Set(['text', 'note']);
 
+// Options are shuffled on every display, so an option must never point at another by position
+// ("א+ב נכונות", "תשובה ג", "all of the above").
+const HEB_LABEL = `[אבגד]['׳]?`;
+const POSITIONAL_PATTERNS = [
+  new RegExp(`(?:^|[\\s(])${HEB_LABEL}\\s*(?:\\+|,|ו-?|ו־)\\s*${HEB_LABEL}(?=$|[\\s).,])`),
+  new RegExp(`תשוב(?:ה|ות)\\s+${HEB_LABEL}(?=$|[\\s).,+])`),
+  /כל התשובות|אף (?:אחת מה)?תשוב/,
+  /\b(?:all|none|both) of the (?:above|options)\b/i,
+];
+
+export function hasPositionalReference(text) {
+  return POSITIONAL_PATTERNS.some((re) => re.test(text));
+}
+
 // ---------- randomness ----------
 
 export function randomInt(min, max, rng = Math.random) {
@@ -99,6 +113,9 @@ export function validateQuiz(quiz) {
         const norm = opt.text.trim();
         if (texts.has(norm)) errors.push(`${owhere}: duplicate option text`);
         texts.add(norm);
+        if (hasPositionalReference(norm)) {
+          errors.push(`${owhere}: refers to other options by position, which breaks when options are shuffled`);
+        }
       }
       if (opt.note !== undefined && typeof opt.note !== 'string') {
         errors.push(`${owhere}: note must be a string`);
