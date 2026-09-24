@@ -1,0 +1,92 @@
+# Nursing anatomy & physiology quizzes
+
+A Hebrew (RTL) quiz site for exam prep, served as static files from GitHub Pages:
+https://ariel-j.github.io/nursingTests/
+
+No build step and no runtime dependencies. Node is only needed for the tests and scripts.
+
+## How a quiz plays
+
+- Questions are shown in random order. The 4 options are reshuffled every time a question is shown.
+- A **wrong** or **skipped** question goes back into the queue and comes back 2–5 questions later,
+  never immediately next. The one exception is when it is the only question left.
+- A question answered correctly on the **first try** is mastered.
+  A question that was missed or skipped needs **2 correct answers in a row** to be mastered.
+  Each of those correct answers requeues it the same way.
+- After a wrong answer you see your choice in red, the correct answer in green, the explanation,
+  and the note written for the option you chose.
+- Progress shows mastered/total and the queue size. The end screen shows the first-try score,
+  the questions that came back, and weak topics.
+- An unfinished session is saved in `localStorage` and resumes after a refresh.
+  The quiz list shows which quizzes are in progress and your best first-try score.
+- Keyboard: `1`–`4` choose, `S` skips, `Enter` continues. These use key codes, so they also work with a Hebrew layout.
+
+## Adding a quiz
+
+1. Save the quiz as `quizzes/<id>.json`. The file name must match `id`.
+2. `npm run manifest` to regenerate `quizzes/manifest.json`.
+3. `npm run validate` to check everything.
+4. Commit the quiz and the manifest together.
+
+### Quiz format
+
+```json
+{
+  "id": "cardio-basics",
+  "title": "מערכת הלב וכלי הדם",
+  "description": "optional, shown on the quiz list",
+  "questions": [
+    {
+      "id": "q1",
+      "topic": "הולכה חשמלית",
+      "question": "היכן נוצר הדחף החשמלי בלב תקין?",
+      "options": [
+        { "text": "בקשר הסינוטריאלי (SA)", "note": "optional note for this option" },
+        { "text": "בקשר האטריו־ונטריקולרי (AV)", "note": "why this is wrong" },
+        { "text": "בצרור ע״ש היס" },
+        { "text": "בסיבי פורקינייה" }
+      ],
+      "correct": 0,
+      "explanation": "shown after every answer"
+    }
+  ]
+}
+```
+
+| Field | Rules |
+| --- | --- |
+| `id` | lowercase letters, digits and single hyphens (`cardio-basics`) |
+| `title` | required |
+| `description` | optional string |
+| `questions[].id` | required, unique within the quiz. Keep it stable: saved progress is keyed by it |
+| `questions[].topic` | required. Used to group weak topics on the end screen |
+| `questions[].question` | required |
+| `questions[].options` | exactly 4, texts must be distinct |
+| `options[].text` | required |
+| `options[].note` | optional. Shown when that option is chosen |
+| `questions[].correct` | index 0–3 into `options` **as written**. The engine shuffles, so authors don't have to |
+| `questions[].explanation` | required |
+
+Unknown fields are rejected, which catches typos like `explenation`.
+All text is rendered as plain text (no HTML). Use Unicode for symbols (O₂, Na⁺, →).
+A `\n` in a string becomes a line break.
+
+If you add, remove or rename question IDs in a quiz, saved progress for that quiz no longer matches.
+It is dropped, and the quiz starts fresh.
+
+## Development
+
+```sh
+npm test          # unit tests for js/core.js and the scripts (node:test)
+npm run validate  # validate all quizzes and check the manifest is current
+npm run manifest  # regenerate quizzes/manifest.json
+npm run serve     # http://localhost:8000 (fetch() does not work over file://)
+```
+
+| Path | Role |
+| --- | --- |
+| `js/core.js` | pure logic: queue, scoring, stats, validation. No DOM, no storage |
+| `js/storage.js` | guarded `localStorage` wrapper (prefix `anatomy-quizzes:v1:`) |
+| `js/index.js`, `js/quiz.js` | page UI |
+| `scripts/` | manifest, validate, and a tiny static dev server |
+| `test/` | unit tests. `test/fixtures/` holds placeholder content only |

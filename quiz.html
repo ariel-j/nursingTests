@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>בוחן</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/quiz.js"></script>
+</head>
+<body>
+  <main class="page">
+    <nav class="top-nav">
+      <a href="./">→ לכל הבחנים</a>
+      <button id="restart" class="link-button" type="button" hidden>התחל מחדש</button>
+    </nav>
+    <h1 id="quiz-title">בוחן</h1>
+    <p id="status" class="status" role="status">טוען…</p>
+
+    <section id="play" hidden>
+      <div class="progress">
+        <p id="progress-text" class="muted"></p>
+        <div class="progress-bar" aria-hidden="true"><div id="progress-fill" class="progress-fill"></div></div>
+      </div>
+
+      <article class="card">
+        <p id="topic" class="topic"></p>
+        <h2 id="question" class="question"></h2>
+        <ol id="options" class="options"></ol>
+        <div class="actions">
+          <button id="skip" class="secondary" type="button">דלג <kbd>S</kbd></button>
+        </div>
+        <div id="feedback" class="feedback" aria-live="polite" hidden>
+          <p id="verdict" class="verdict"></p>
+          <p id="explanation" class="explanation"></p>
+          <p id="note" class="note" hidden></p>
+          <p id="requeue-hint" class="muted" hidden></p>
+          <button id="next" class="primary" type="button">הבא <kbd>Enter</kbd></button>
+        </div>
+      </article>
+      <p class="muted shortcuts">קיצורים: <kbd>1</kbd>–<kbd>4</kbd> לבחירה, <kbd>S</kbd> לדילוג, <kbd>Enter</kbd> להמשך</p>
+    </section>
+
+    <section id="done" hidden>
+      <article class="card">
+        <h2>סיימת!</h2>
+        <p id="score" class="score"></p>
+
+        <h3>נושאים לחיזוק</h3>
+        <p id="no-weak" class="muted" hidden>אין — כל הכבוד!</p>
+        <ul id="weak-topics" class="plain-list"></ul>
+
+        <h3>שאלות שחזרו</h3>
+        <p id="no-retried" class="muted" hidden>לא חזרה אף שאלה.</p>
+        <ul id="retried" class="plain-list"></ul>
+
+        <div class="actions">
+          <button id="again" class="primary" type="button">שוב</button>
+          <a class="button secondary" href="./">לכל הבחנים</a>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
