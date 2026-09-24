@@ -11,6 +11,7 @@ import {
   hasPositionalReference,
   isComplete,
   isSessionCompatible,
+  isolateNumberRanges,
   presentOptions,
   progressInfo,
   recordResult,
@@ -259,6 +260,18 @@ test('recordResult tracks attempts and best score', () => {
   assert.equal(h.attempts, 2);
   assert.equal(h.bestPercent, 60);
   assert.equal(h.last.percent, 40);
+});
+
+// ---------- display text ----------
+
+test('isolateNumberRanges wraps numeric ranges in LTR isolates', () => {
+  const LRI = '\u2066';
+  const PDI = '\u2069';
+  assert.equal(isolateNumberRanges('חוליות החזה 5–8'), `חוליות החזה ${LRI}5–8${PDI}`);
+  assert.equal(isolateNumberRanges('0.02 – 0.1 מ׳/ש׳'), `${LRI}0.02–0.1${PDI} מ׳/ש׳`);
+  assert.equal(isolateNumberRanges('20%-30% ו-40–60'), `${LRI}20%-30%${PDI} ו-${LRI}40–60${PDI}`);
+  assert.equal(isolateNumberRanges('צלעות 2–6 ו-7–10'), `צלעות ${LRI}2–6${PDI} ו-${LRI}7–10${PDI}`);
+  assert.equal(isolateNumberRanges('ללא טווח, T8, L5, פי 10'), 'ללא טווח, T8, L5, פי 10');
 });
 
 // ---------- validation ----------

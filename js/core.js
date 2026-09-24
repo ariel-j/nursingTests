@@ -44,6 +44,18 @@ export function shuffle(items, rng = Math.random) {
   return out;
 }
 
+// ---------- display text ----------
+
+const NUMERIC_RANGE = /(\d[\d.,]*%?)\s*([–-])\s*(\d[\d.,]*%?)/g;
+
+/**
+ * Wraps numeric ranges ("5–8", "0.02–0.1") in Unicode LTR isolates so RTL text does not
+ * display them reversed as "8–5". Plain characters, so it stays safe with textContent.
+ */
+export function isolateNumberRanges(text) {
+  return text.replace(NUMERIC_RANGE, '⁦$1$2$3⁩');
+}
+
 // ---------- validation ----------
 
 export function isValidQuizId(id) {

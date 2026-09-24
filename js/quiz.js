@@ -5,6 +5,7 @@ import {
   currentQuestion,
   isComplete,
   isSessionCompatible,
+  isolateNumberRanges as fmt,
   isValidQuizId,
   presentOptions,
   progressInfo,
@@ -80,7 +81,7 @@ function renderQuestion() {
   renderProgress();
 
   ui.topic.textContent = question.topic;
-  ui.question.textContent = question.question;
+  ui.question.textContent = fmt(question.question);
 
   optionButtons = presentOptions(question).map((opt, i) => {
     const button = document.createElement('button');
@@ -90,7 +91,7 @@ function renderQuestion() {
     const key = document.createElement('kbd');
     key.textContent = String(i + 1);
     const text = document.createElement('span');
-    text.textContent = opt.text;
+    text.textContent = fmt(opt.text);
     button.append(key, text);
     button.addEventListener('click', () => choose(opt.index));
     return button;
@@ -117,11 +118,11 @@ function showFeedback(result, chosenIndex) {
   if (chosenIndex === null) ui.verdict.textContent = 'דילגת. התשובה הנכונה מסומנת.';
   else ui.verdict.textContent = correct ? 'נכון!' : 'לא נכון.';
   ui.verdict.className = `verdict ${correct ? 'good' : 'bad'}`;
-  ui.explanation.textContent = question.explanation;
+  ui.explanation.textContent = fmt(question.explanation);
 
   const note = chosenIndex === null ? '' : question.options[chosenIndex].note ?? '';
   ui.note.hidden = note.trim() === '';
-  ui.note.textContent = correct ? note : `על התשובה שבחרת: ${note}`;
+  ui.note.textContent = fmt(correct ? note : `על התשובה שבחרת: ${note}`);
 
   let hint = '';
   if (!progress.mastered) {
@@ -183,7 +184,7 @@ function renderDone() {
   ui.retried.replaceChildren(...summary.retried.map((r) => {
     const li = document.createElement('li');
     const q = document.createElement('span');
-    q.textContent = r.question;
+    q.textContent = fmt(r.question);
     const meta = document.createElement('span');
     meta.className = 'muted';
     meta.textContent = ` (${r.topic} · ${r.misses === 1 ? 'טעות אחת' : `${r.misses} טעויות`})`;
