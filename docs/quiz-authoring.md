@@ -13,12 +13,15 @@ Work only from the course material I give you. Do not add facts that aren't in i
 ambiguous or you are unsure, list it for me in chat. Never put it in the file.
 
 OUTPUT
-- One JSON file per body system / chapter, 20–60 questions each, UTF-8. Do not make one 200-question file.
+- One JSON file per exam or chapter, UTF-8. Large quizzes are fine: students can practice a subset of topics.
 - File name = quiz id + ".json". The id is lowercase English with hyphens: "cardiovascular", "respiratory".
+- "subject" is the course the quiz belongs to, e.g. "אנטומיה ופיזיולוגיה". Use exactly the same string
+  for every quiz of that course: the site groups quizzes by it.
 - Format:
   {
     "id": "cardiovascular",
-    "title": "<Hebrew title>",
+    "subject": "<course name, same for all its quizzes>",
+    "title": "<Hebrew title, e.g. מבחן 1: הלב>",
     "description": "<one Hebrew sentence: what the quiz covers>",
     "questions": [
       {
@@ -46,8 +49,8 @@ IDS
   Deleted ids are never reused. Saved progress is tracked by these ids.
 
 TOPICS
-- Before writing questions, fix a list of 5–12 topics for the quiz, each covering at least 3 questions,
-  and show it to me.
+- Before writing questions, fix a list of topics for the quiz (about 5–15), each covering at least 3
+  questions, and show it to me. Students pick topics to practice from this list.
 - Use the exact same string every time. The end screen groups "weak topics" by exact match,
   so "הולכה חשמלית" and "ההולכה החשמלית" would count as two topics.
 

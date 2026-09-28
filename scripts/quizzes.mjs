@@ -31,16 +31,24 @@ export async function loadQuizzes(dir = QUIZ_DIR) {
   return entries;
 }
 
+// Numeric-aware Hebrew order, so "מבחן 2" sorts before "מבחן 10".
+const collator = new Intl.Collator('he', { numeric: true });
+
+/** Manifest entries grouped by subject (subjects A–Z, then quizzes by title within each). */
 export function buildManifest(quizzes) {
   return {
     quizzes: quizzes
       .map((q) => ({
         id: q.id,
+        subject: q.subject,
         title: q.title,
         description: q.description ?? '',
         questionCount: q.questions.length,
+        topicCount: new Set(q.questions.map((question) => question.topic)).size,
       }))
-      .sort((a, b) => a.id.localeCompare(b.id)),
+      .sort((a, b) => collator.compare(a.subject, b.subject)
+        || collator.compare(a.title, b.title)
+        || a.id.localeCompare(b.id)),
   };
 }
 

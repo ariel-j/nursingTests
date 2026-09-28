@@ -1,12 +1,14 @@
-# Nursing anatomy & physiology quizzes
+# Nursing exam practice quizzes
 
-A Hebrew (RTL) quiz site for exam prep, served as static files from GitHub Pages:
+A Hebrew (RTL) quiz site for nursing exam prep, grouped by subject, served as static files from GitHub Pages:
 https://ariel-j.github.io/nursingTests/
 
 No build step and no runtime dependencies. Node is only needed for the tests and scripts.
 
 ## How a quiz plays
 
+- The home page lists quizzes grouped by subject. Each quiz opens on a start screen where you resume
+  an unfinished session, or start a new one over all topics or only the ones you tick.
 - Questions are shown in random order. The 4 options are reshuffled every time a question is shown.
 - A **wrong** or **skipped** question goes back into the queue and comes back 2–5 questions later,
   never immediately next. The one exception is when it is the only question left.
@@ -17,8 +19,10 @@ No build step and no runtime dependencies. Node is only needed for the tests and
   and the note written for the option you chose.
 - Progress shows mastered/total and the queue size. The end screen shows the first-try score,
   the questions that came back, and weak topics.
+- The end screen can start a session with only the questions that came back.
 - An unfinished session is saved in `localStorage` and resumes after a refresh.
-  The quiz list shows which quizzes are in progress and your best first-try score.
+  The quiz list shows which quizzes are in progress and your best first-try score
+  (best score counts only runs over the whole quiz).
 - Keyboard: `1`–`4` choose, `S` skips, `Enter` continues. These use key codes, so they also work with a Hebrew layout.
 
 ## Adding a quiz
@@ -36,7 +40,8 @@ Writing guidelines, plus a brief you can paste into the session that writes the 
 ```json
 {
   "id": "cardio-basics",
-  "title": "מערכת הלב וכלי הדם",
+  "subject": "אנטומיה ופיזיולוגיה",
+  "title": "מבחן 1: מערכת הלב וכלי הדם",
   "description": "optional, shown on the quiz list",
   "questions": [
     {
@@ -59,7 +64,8 @@ Writing guidelines, plus a brief you can paste into the session that writes the 
 | Field | Rules |
 | --- | --- |
 | `id` | lowercase letters, digits and single hyphens (`cardio-basics`) |
-| `title` | required |
+| `subject` | required. Quizzes with the same subject are grouped together on the home page |
+| `title` | required. Sorted with numbers in order, so "מבחן 2" comes before "מבחן 10" |
 | `description` | optional string |
 | `questions[].id` | required, unique within the quiz. Keep it stable: saved progress is keyed by it |
 | `questions[].topic` | required. Used to group weak topics on the end screen |
@@ -90,7 +96,9 @@ npm run serve     # http://localhost:8000 (fetch() does not work over file://)
 | Path | Role |
 | --- | --- |
 | `js/core.js` | pure logic: queue, scoring, stats, validation. No DOM, no storage |
+| `js/ecg.js` | pure SVG path for the ECG progress strip |
 | `js/storage.js` | guarded `localStorage` wrapper (prefix `anatomy-quizzes:v1:`) |
 | `js/index.js`, `js/quiz.js` | page UI |
 | `scripts/` | manifest, validate, and a tiny static dev server |
+| `fonts/` | self-hosted Assistant and Frank Ruhl Libre (SIL OFL, licenses included) |
 | `test/` | unit tests. `test/fixtures/` holds placeholder content only |

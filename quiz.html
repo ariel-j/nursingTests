@@ -2,32 +2,74 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <title>בוחן</title>
+  <link rel="preload" href="fonts/assistant-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/style.css">
   <script type="module" src="js/quiz.js"></script>
 </head>
 <body>
   <main class="page">
     <nav class="top-nav">
-      <a href="./">→ לכל הבחנים</a>
-      <button id="restart" class="link-button" type="button" hidden>התחל מחדש</button>
+      <a href="./">→ כל הבחנים</a>
+      <button id="to-start" class="link-button" type="button" hidden>תרגול חדש</button>
     </nav>
-    <h1 id="quiz-title">בוחן</h1>
+
+    <header class="quiz-header">
+      <p id="subject" class="kicker"></p>
+      <h1 id="quiz-title">בוחן</h1>
+    </header>
     <p id="status" class="status" role="status">טוען…</p>
 
+    <!-- Start: resume or choose what to practice -->
+    <section id="start" hidden>
+      <p id="description" class="lede"></p>
+
+      <div id="resume-box" class="card resume" hidden>
+        <p id="resume-text"></p>
+        <button id="resume" class="primary" type="button">המשך מאיפה שעצרת</button>
+      </div>
+
+      <form id="new-session" class="card">
+        <h2>תרגול חדש</h2>
+        <fieldset class="topics">
+          <legend>נושאים</legend>
+          <div class="topic-actions">
+            <button id="all-topics" class="chip" type="button">בחר הכל</button>
+            <button id="no-topics" class="chip" type="button">נקה</button>
+          </div>
+          <ul id="topic-list" class="topic-list"></ul>
+        </fieldset>
+        <button id="start-button" class="primary" type="submit">התחל</button>
+      </form>
+
+      <div class="card rules">
+        <p>שאלה אחת בכל פעם, והתשובות מתערבבות בכל הצגה. תשובה שגויה או דילוג מחזירים את השאלה לתור, והיא נחשבת נשלטת רק אחרי שתי תשובות נכונות ברצף.</p>
+        <p>ההתקדמות נשמרת בדפדפן, אפשר לסגור ולחזור.</p>
+        <p class="keys-hint">מקלדת: <kbd>1</kbd>–<kbd>4</kbd> לבחירה, <kbd>S</kbd> לדילוג, <kbd>Enter</kbd> להמשך.</p>
+      </div>
+      <p id="best" class="muted" hidden></p>
+    </section>
+
+    <!-- Play -->
     <section id="play" hidden>
-      <div class="progress">
-        <p id="progress-text" class="muted"></p>
-        <div class="progress-bar" aria-hidden="true"><div id="progress-fill" class="progress-fill"></div></div>
+      <div class="card strip">
+        <svg class="ecg" viewBox="0 0 1000 64" preserveAspectRatio="none" aria-hidden="true">
+          <line x1="0" y1="40" x2="1000" y2="40" class="ecg-baseline"/>
+          <path id="trace" class="ecg-trace" d="M0 40"/>
+        </svg>
+        <p id="progress-text" class="stats"></p>
       </div>
 
       <article class="card">
-        <p id="topic" class="topic"></p>
+        <div class="question-meta">
+          <span id="topic"></span>
+          <span id="retry-label" class="retry" hidden></span>
+        </div>
         <h2 id="question" class="question"></h2>
         <ol id="options" class="options"></ol>
-        <div class="actions">
+        <div id="question-actions" class="actions">
           <button id="skip" class="secondary" type="button">דלג <kbd>S</kbd></button>
         </div>
         <div id="feedback" class="feedback" aria-live="polite" hidden>
@@ -38,27 +80,30 @@
           <button id="next" class="primary" type="button">הבא <kbd>Enter</kbd></button>
         </div>
       </article>
-      <p class="muted shortcuts">קיצורים: <kbd>1</kbd>–<kbd>4</kbd> לבחירה, <kbd>S</kbd> לדילוג, <kbd>Enter</kbd> להמשך</p>
     </section>
 
+    <!-- End -->
     <section id="done" hidden>
-      <article class="card">
+      <div class="card">
         <h2>סיימת!</h2>
-        <p id="score" class="score"></p>
-
-        <h3>נושאים לחיזוק</h3>
-        <p id="no-weak" class="muted" hidden>אין — כל הכבוד!</p>
-        <ul id="weak-topics" class="plain-list"></ul>
-
-        <h3>שאלות שחזרו</h3>
-        <p id="no-retried" class="muted" hidden>לא חזרה אף שאלה.</p>
-        <ul id="retried" class="plain-list"></ul>
+        <p class="muted">ציון בניסיון ראשון</p>
+        <p id="score-percent" class="score"></p>
+        <p id="score"></p>
 
         <div class="actions">
-          <button id="again" class="primary" type="button">שוב</button>
-          <a class="button secondary" href="./">לכל הבחנים</a>
+          <button id="retry-missed" class="primary" type="button" hidden></button>
+          <button id="new-practice" class="secondary" type="button">תרגול חדש</button>
+          <a class="button secondary" href="./">כל הבחנים</a>
         </div>
-      </article>
+
+        <h3>נושאים לחיזוק</h3>
+        <p id="no-weak" class="muted" hidden>אין, כל הכבוד!</p>
+        <ul id="weak-topics" class="weak-topics"></ul>
+
+        <h3 id="retried-title">שאלות שחזרו</h3>
+        <p id="no-retried" class="muted" hidden>כל השאלות נענו נכון בפעם הראשונה.</p>
+        <div id="retried"></div>
+      </div>
     </section>
   </main>
 </body>

@@ -9,9 +9,11 @@ export const REQUEUE_MAX = 5;
 // Consecutive correct answers needed to master a question that was missed or skipped.
 export const MASTERY_STREAK = 2;
 export const SESSION_VERSION = 1;
+// full: every question; topics: questions from chosen topics; retry: questions missed last time.
+export const SESSION_MODES = ['full', 'topics', 'retry'];
 
 const ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const QUIZ_KEYS = new Set(['id', 'title', 'description', 'questions']);
+const QUIZ_KEYS = new Set(['id', 'subject', 'title', 'description', 'questions']);
 const QUESTION_KEYS = new Set(['id', 'topic', 'question', 'options', 'correct', 'explanation']);
 const OPTION_KEYS = new Set(['text', 'note']);
 
@@ -78,6 +80,7 @@ export function validateQuiz(quiz) {
 
   unknownKeys(quiz, QUIZ_KEYS, 'quiz', errors);
   if (!isValidQuizId(quiz.id)) errors.push('quiz.id must be lowercase letters, digits and single hyphens');
+  if (!isText(quiz.subject)) errors.push('quiz.subject must be a non-empty string');
   if (!isText(quiz.title)) errors.push('quiz.title must be a non-empty string');
   if (quiz.description !== undefined && typeof quiz.description !== 'string') {
     errors.push('quiz.description must be a string');
@@ -144,27 +147,55 @@ function blankProgress() {
   return { attempts: 0, firstTry: null, misses: 0, streak: 0, mastered: false };
 }
 
-/** A fresh session: every question queued once, in random order. The state is plain JSON. */
-export function createSession(quiz, rng = Math.random) {
-  const ids = quiz.questions.map((q) => q.id);
+/** Topics in order of first appearance, with question counts. */
+export function listTopics(quiz) {
+  const counts = new Map();
+  for (const q of quiz.questions) counts.set(q.topic, (counts.get(q.topic) ?? 0) + 1);
+  return [...counts].map(([topic, count]) => ({ topic, count }));
+}
+
+export function questionIdsForTopics(quiz, topics) {
+  const wanted = new Set(topics);
+  return quiz.questions.filter((q) => wanted.has(q.topic)).map((q) => q.id);
+}
+
+/**
+ * A fresh session with each chosen question queued once, in random order. Defaults to the whole
+ * quiz. The state is plain JSON, so it can be saved as is.
+ */
+export function createSession(quiz, rng = Math.random, { questionIds = null, mode = 'full' } = {}) {
+  if (!SESSION_MODES.includes(mode)) throw new Error(`unknown session mode: ${mode}`);
+  const known = new Set(quiz.questions.map((q) => q.id));
+  const ids = questionIds === null
+    ? [...known]
+    : [...new Set(questionIds)].filter((id) => known.has(id));
+  if (ids.length === 0) throw new Error('a session needs at least one question');
+
   const progress = {};
   for (const id of ids) progress[id] = blankProgress();
-  return { version: SESSION_VERSION, quizId: quiz.id, queue: shuffle(ids, rng), progress };
+  return { version: SESSION_VERSION, quizId: quiz.id, mode, queue: shuffle(ids, rng), progress };
 }
 
 /** Whether a saved session still matches the quiz (the quiz file may have changed since). */
 export function isSessionCompatible(state, quiz) {
   if (!isPlainObject(state) || state.version !== SESSION_VERSION || state.quizId !== quiz.id) return false;
+  if (!SESSION_MODES.includes(state.mode)) return false;
   if (!Array.isArray(state.queue) || !isPlainObject(state.progress)) return false;
 
-  const ids = quiz.questions.map((q) => q.id);
-  const progressIds = Object.keys(state.progress);
-  if (progressIds.length !== ids.length || !ids.every((id) => isPlainObject(state.progress[id]))) return false;
+  const known = new Set(quiz.questions.map((q) => q.id));
+  const ids = Object.keys(state.progress);
+  if (ids.length === 0 || !ids.every((id) => known.has(id) && isPlainObject(state.progress[id]))) return false;
+  if (state.mode === 'full' && ids.length !== known.size) return false;
   if (new Set(state.queue).size !== state.queue.length) return false;
 
   const queued = new Set(state.queue);
   return ids.every((id) => state.progress[id].mastered === !queued.has(id))
-    && state.queue.every((id) => ids.includes(id));
+    && state.queue.every((id) => id in state.progress);
+}
+
+/** The quiz's questions that belong to this session, in authored order. */
+export function sessionQuestions(state, quiz) {
+  return quiz.questions.filter((q) => Object.hasOwn(state.progress, q.id));
 }
 
 export function questionById(quiz, id) {
@@ -247,16 +278,17 @@ export function progressInfo(state) {
 // ---------- results ----------
 
 export function summarize(state, quiz) {
-  const total = quiz.questions.length;
-  const firstTryCorrect = quiz.questions.filter((q) => state.progress[q.id].firstTry === 'correct').length;
+  const questions = sessionQuestions(state, quiz);
+  const total = questions.length;
+  const firstTryCorrect = questions.filter((q) => state.progress[q.id].firstTry === 'correct').length;
 
-  const retried = quiz.questions
+  const retried = questions
     .filter((q) => state.progress[q.id].misses > 0)
     .map((q) => ({ id: q.id, topic: q.topic, question: q.question, misses: state.progress[q.id].misses }))
     .sort((a, b) => b.misses - a.misses);
 
   const topics = new Map();
-  for (const q of quiz.questions) {
+  for (const q of questions) {
     const t = topics.get(q.topic) ?? { topic: q.topic, total: 0, missed: 0 };
     t.total += 1;
     if (state.progress[q.id].misses > 0) t.missed += 1;

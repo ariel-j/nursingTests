@@ -1,5 +1,6 @@
 {
   "id": "sample-quiz",
+  "subject": "נושא לבדיקות",
   "title": "בוחן דוגמה לבדיקות",
   "description": "תוכן מדומה לבדיקות בלבד",
   "questions": [

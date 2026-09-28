@@ -12,6 +12,9 @@ import {
   isComplete,
   isSessionCompatible,
   isolateNumberRanges,
+  listTopics,
+  questionIdsForTopics,
+  sessionQuestions,
   presentOptions,
   progressInfo,
   recordResult,
@@ -198,6 +201,51 @@ test('answering a completed session throws', () => {
   assert.throws(() => skip(s, fixture, rng));
 });
 
+// ---------- topics and partial sessions ----------
+
+test('listTopics keeps first-appearance order and counts', () => {
+  assert.deepEqual(listTopics(fixture), [
+    { topic: 'נושא א', count: 2 },
+    { topic: 'נושא ב', count: 2 },
+    { topic: 'נושא ג', count: 2 },
+  ]);
+  assert.deepEqual(questionIdsForTopics(fixture, ['נושא ג', 'נושא א']), ['q1', 'q2', 'q5', 'q6']);
+  assert.deepEqual(questionIdsForTopics(fixture, []), []);
+});
+
+test('createSession can cover a subset of questions', () => {
+  const ids = questionIdsForTopics(fixture, ['נושא ב']);
+  const s = createSession(fixture, seeded(1), { questionIds: ids, mode: 'topics' });
+  assert.equal(s.mode, 'topics');
+  assert.deepEqual([...s.queue].sort(), ['q3', 'q4']);
+  assert.deepEqual(progressInfo(s), { mastered: 0, total: 2, queueSize: 2 });
+  assert.deepEqual(sessionQuestions(s, fixture).map((q) => q.id), ['q3', 'q4']);
+  assert.ok(isSessionCompatible(s, fixture));
+});
+
+test('createSession drops unknown and duplicate ids, and refuses an empty set', () => {
+  const s = createSession(fixture, seeded(1), { questionIds: ['q1', 'q1', 'nope'], mode: 'retry' });
+  assert.deepEqual(s.queue, ['q1']);
+  assert.throws(() => createSession(fixture, seeded(1), { questionIds: ['nope'] }));
+  assert.throws(() => createSession(fixture, seeded(1), { mode: 'bogus' }));
+});
+
+test('a partial session plays to completion and summarizes only its own questions', () => {
+  const rng = seeded(8);
+  let s = createSession(fixture, rng, { questionIds: ['q1', 'q3'], mode: 'retry' });
+  let missedOnce = false;
+  while (!isComplete(s)) {
+    const miss = s.queue[0] === 'q3' && !missedOnce;
+    if (miss) missedOnce = true;
+    s = answer(s, fixture, miss ? wrongOf(s) : correctOf(s), rng).state;
+  }
+  const sum = summarize(s, fixture);
+  assert.equal(sum.total, 2);
+  assert.equal(sum.firstTryCorrect, 1);
+  assert.deepEqual(sum.retried.map((r) => r.id), ['q3']);
+  assert.deepEqual(sum.weakTopics.map((t) => [t.topic, t.missed, t.total]), [['נושא ב', 1, 1]]);
+});
+
 // ---------- saved-session compatibility ----------
 
 test('isSessionCompatible rejects sessions that no longer match the quiz', () => {
@@ -205,6 +253,14 @@ test('isSessionCompatible rejects sessions that no longer match the quiz', () =>
   assert.equal(isSessionCompatible(null, fixture), false);
   assert.equal(isSessionCompatible({ ...s, version: 999 }, fixture), false);
   assert.equal(isSessionCompatible({ ...s, quizId: 'other' }, fixture), false);
+  assert.equal(isSessionCompatible({ ...s, mode: undefined }, fixture), false);
+
+  const partial = createSession(fixture, seeded(1), { questionIds: ['q1'], mode: 'topics' });
+  assert.ok(isSessionCompatible(partial, fixture));
+  assert.equal(isSessionCompatible({ ...partial, mode: 'full' }, fixture), false, 'full must cover every question');
+  const removed = clone(fixture);
+  removed.questions = removed.questions.filter((q) => q.id !== 'q1');
+  assert.equal(isSessionCompatible(partial, removed), false, 'question no longer in quiz');
 
   const added = clone(fixture);
   added.questions.push({ ...clone(fixture.questions[0]), id: 'q-new' });
@@ -284,6 +340,7 @@ test('validateQuiz catches common authoring mistakes', () => {
   const cases = [
     [(q) => { q.id = 'Bad ID'; }, /quiz\.id/],
     [(q) => { q.title = ''; }, /title/],
+    [(q) => { delete q.subject; }, /subject/],
     [(q) => { q.questions = []; }, /non-empty array/],
     [(q) => { q.questions[0].options.pop(); }, /exactly 4/],
     [(q) => { q.questions[0].correct = 4; }, /correct must be/],

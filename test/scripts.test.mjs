@@ -10,12 +10,20 @@ test('loadQuizzes validates files and checks the file name matches the id', asyn
   assert.deepEqual(entries.map((e) => [e.file, e.errors]), [['sample-quiz.json', []]]);
 });
 
-test('buildManifest lists quizzes sorted by id with question counts', () => {
-  const q = (id, n) => ({ id, title: id.toUpperCase(), questions: Array(n).fill({}) });
-  assert.deepEqual(buildManifest([q('b', 2), q('a', 3)]), {
-    quizzes: [
-      { id: 'a', title: 'A', description: '', questionCount: 3 },
-      { id: 'b', title: 'B', description: '', questionCount: 2 },
-    ],
+test('buildManifest groups by subject and sorts titles numerically', () => {
+  const q = (id, subject, title, topics) => ({
+    id,
+    subject,
+    title,
+    questions: topics.map((topic) => ({ topic })),
+  });
+  const manifest = buildManifest([
+    q('b10', 'אנטומיה', 'מבחן 10', ['א']),
+    q('p1', 'פרמקולוגיה', 'מבחן 1', ['א', 'ב']),
+    q('b2', 'אנטומיה', 'מבחן 2', ['א', 'ב', 'א']),
+  ]);
+  assert.deepEqual(manifest.quizzes.map((e) => e.id), ['b2', 'b10', 'p1']);
+  assert.deepEqual(manifest.quizzes[0], {
+    id: 'b2', subject: 'אנטומיה', title: 'מבחן 2', description: '', questionCount: 3, topicCount: 2,
   });
 });
