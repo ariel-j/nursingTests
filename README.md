@@ -30,10 +30,17 @@ No build step and no runtime dependencies. Node is only needed for the tests and
 Writing guidelines, plus a brief you can paste into the session that writes the questions, are in
 [docs/quiz-authoring.md](docs/quiz-authoring.md).
 
-1. Save the quiz as `quizzes/<id>.json`. The file name must match `id`.
-2. `npm run manifest` to regenerate `quizzes/manifest.json`.
-3. `npm run validate` to check everything.
-4. Commit the quiz and the manifest together.
+1. Make sure the quiz's `subject` (and `unit`, if that subject has units) exist in
+   `quizzes/subjects.json`. Add them there first if needed.
+2. Save the quiz as `quizzes/<id>.json`. The file name must match `id`. If you were given the quiz in
+   the authoring format (options as plain strings + `correctIndex` + `wrongExplanations`), convert it:
+   `npm run import -- <src.json> --id <id> --subject "<subject>" --unit "<unit>" --title "<title>"`.
+3. `npm run manifest` to regenerate `quizzes/manifest.json`.
+4. `npm run validate` to check everything.
+5. Commit the quiz, the catalog and the manifest together.
+
+`quizzes/subjects.json` is the hand-written catalog: an ordered list of subjects, each with an optional
+ordered list of units. It sets the sections and their order on the home page; empty units show as "בקרוב".
 
 ### Quiz format
 
@@ -41,7 +48,8 @@ Writing guidelines, plus a brief you can paste into the session that writes the 
 {
   "id": "cardio-basics",
   "subject": "אנטומיה ופיזיולוגיה",
-  "title": "מבחן 1: מערכת הלב וכלי הדם",
+  "unit": "הלב",
+  "title": "מבחן 1",
   "description": "optional, shown on the quiz list",
   "questions": [
     {
@@ -64,7 +72,8 @@ Writing guidelines, plus a brief you can paste into the session that writes the 
 | Field | Rules |
 | --- | --- |
 | `id` | lowercase letters, digits and single hyphens (`cardio-basics`) |
-| `subject` | required. Quizzes with the same subject are grouped together on the home page |
+| `subject` | required. Must exist in `quizzes/subjects.json`; sets the home-page section |
+| `unit` | required when the subject declares units, and must be one of them; sets the sub-section |
 | `title` | required. Sorted with numbers in order, so "מבחן 2" comes before "מבחן 10" |
 | `description` | optional string |
 | `questions[].id` | required, unique within the quiz. Keep it stable: saved progress is keyed by it |

@@ -380,8 +380,10 @@ async function main() {
     return;
   }
 
-  document.title = `${quiz.title} · ${quiz.subject}`;
-  ui.subject.textContent = quiz.subject;
+  // Kicker shows the subject and, when present, the unit: "אנטומיה ופיזיולוגיה · הלב".
+  const place = quiz.unit ? `${quiz.subject} · ${quiz.unit}` : quiz.subject;
+  document.title = `${quiz.title} · ${place}`;
+  ui.subject.textContent = place;
   ui.title.textContent = quiz.title;
   ui.description.textContent = quiz.description ?? '';
   ui.description.hidden = !quiz.description;

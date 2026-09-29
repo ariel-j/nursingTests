@@ -17,7 +17,7 @@ function renderQuiz(entry) {
   const link = el('a', 'quiz-card');
   link.href = `quiz.html?id=${encodeURIComponent(entry.id)}`;
 
-  link.append(el('h3', null, entry.title));
+  link.append(el('h4', null, entry.title));
   if (entry.description) link.append(el('p', 'muted', entry.description));
 
   const meta = el('p', 'meta');
@@ -37,15 +37,33 @@ function renderQuiz(entry) {
   return item;
 }
 
-/** Groups manifest entries by subject, keeping the manifest's order (already sorted). */
-function groupBySubject(quizzes) {
-  const groups = new Map();
-  for (const q of quizzes) {
-    const subject = q.subject || 'כללי';
-    if (!groups.has(subject)) groups.set(subject, []);
-    groups.get(subject).push(q);
+/** A group of quizzes under a heading, or a "coming soon" note when it has none. */
+function renderGroup(name, quizzes, headingTag) {
+  const group = el('div', 'group');
+  group.append(el(headingTag, null, name));
+  if (quizzes.length === 0) {
+    group.append(el('p', 'muted soon', 'בקרוב'));
+  } else {
+    const list = el('ul', 'quiz-list');
+    list.append(...quizzes.filter((q) => isValidQuizId(q.id)).map(renderQuiz));
+    group.append(list);
   }
-  return groups;
+  return group;
+}
+
+function renderSubject(subject) {
+  const section = el('section', 'subject');
+  section.append(el('h2', null, subject.name));
+  // Quizzes placed directly on the subject (no unit), then each unit as a sub-heading.
+  if (subject.quizzes.length > 0) {
+    const list = el('ul', 'quiz-list');
+    list.append(...subject.quizzes.filter((q) => isValidQuizId(q.id)).map(renderQuiz));
+    section.append(list);
+  }
+  for (const unit of subject.units) {
+    section.append(renderGroup(unit.name, unit.quizzes, 'h3'));
+  }
+  return section;
 }
 
 async function main() {
@@ -64,23 +82,17 @@ async function main() {
     return;
   }
 
-  const quizzes = (manifest.quizzes ?? []).filter((q) => isValidQuizId(q.id));
-  if (quizzes.length === 0) {
+  const subjects = manifest.subjects ?? [];
+  const total = subjects.reduce(
+    (n, s) => n + s.quizzes.length + s.units.reduce((m, u) => m + u.quizzes.length, 0),
+    0,
+  );
+  if (total === 0) {
     statusEl.textContent = 'עדיין אין בחנים.';
     return;
   }
   statusEl.hidden = true;
-
-  const sections = [];
-  for (const [subject, entries] of groupBySubject(quizzes)) {
-    const section = el('section', 'subject');
-    section.append(el('h2', null, subject));
-    const list = el('ul', 'quiz-list');
-    list.append(...entries.map(renderQuiz));
-    section.append(list);
-    sections.push(section);
-  }
-  subjectsEl.replaceChildren(...sections);
+  subjectsEl.replaceChildren(...subjects.map(renderSubject));
 }
 
 main();

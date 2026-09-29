@@ -13,7 +13,7 @@ export const SESSION_VERSION = 1;
 export const SESSION_MODES = ['full', 'topics', 'retry'];
 
 const ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const QUIZ_KEYS = new Set(['id', 'subject', 'title', 'description', 'questions']);
+const QUIZ_KEYS = new Set(['id', 'subject', 'unit', 'title', 'description', 'questions']);
 const QUESTION_KEYS = new Set(['id', 'topic', 'question', 'options', 'correct', 'explanation']);
 const OPTION_KEYS = new Set(['text', 'note']);
 
@@ -81,6 +81,7 @@ export function validateQuiz(quiz) {
   unknownKeys(quiz, QUIZ_KEYS, 'quiz', errors);
   if (!isValidQuizId(quiz.id)) errors.push('quiz.id must be lowercase letters, digits and single hyphens');
   if (!isText(quiz.subject)) errors.push('quiz.subject must be a non-empty string');
+  if (quiz.unit !== undefined && !isText(quiz.unit)) errors.push('quiz.unit must be a non-empty string');
   if (!isText(quiz.title)) errors.push('quiz.title must be a non-empty string');
   if (quiz.description !== undefined && typeof quiz.description !== 'string') {
     errors.push('quiz.description must be a string');

@@ -1,13 +1,12 @@
-// Validates every quiz and checks that the manifest is up to date.
+// Validates the catalog and every quiz, and checks that the manifest is up to date.
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { MANIFEST_FILE, QUIZ_DIR, buildManifest, loadQuizzes, reportErrors, serializeManifest } from './quizzes.mjs';
+import { MANIFEST_FILE, QUIZ_DIR, buildManifest, loadAll, serializeManifest } from './quizzes.mjs';
 
-const entries = await loadQuizzes();
-let failures = reportErrors(entries);
+let { failures, catalog, entries } = await loadAll();
 
 if (failures === 0) {
-  const expected = serializeManifest(buildManifest(entries.map((e) => e.quiz)));
+  const expected = serializeManifest(buildManifest(entries.map((e) => e.quiz), catalog));
   let actual = null;
   try {
     actual = await readFile(path.join(QUIZ_DIR, MANIFEST_FILE), 'utf8');
@@ -15,7 +14,7 @@ if (failures === 0) {
     // reported below
   }
   if (actual === null || JSON.stringify(JSON.parse(actual)) !== JSON.stringify(JSON.parse(expected))) {
-    console.error(`${MANIFEST_FILE}: missing or out of date — run "npm run manifest".`);
+    console.error(`${MANIFEST_FILE}: missing or out of date, run "npm run manifest".`);
     failures += 1;
   }
 }

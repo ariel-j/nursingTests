@@ -16,10 +16,12 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 * `js/core.js`: pure logic (queue, scoring, stats, topics, quiz validation). No DOM, no storage; imported by Node tests and the scripts. Randomness is injected as an `rng` argument; state is plain JSON and never mutated.
 * `js/ecg.js`: pure SVG path for the ECG progress strip.
 * `js/storage.js`: guarded localStorage wrapper (prefix `anatomy-quizzes:v1:`). Keys: `session:<id>` (in-progress state), `results:<id>` (attempts, best score).
-* `js/index.js`: home page, quizzes grouped by `subject`.
+* `js/index.js`: home page; renders the manifest tree of subjects → units → quizzes.
 * `js/quiz.js`: start screen (resume / choose topics) → play → end screen (retry missed).
-* `scripts/`: `manifest.mjs`, `validate.mjs`, shared `quizzes.mjs`, dev `serve.mjs`.
-* `quizzes/<id>.json`: one quiz per file, with a required `subject`; `quizzes/manifest.json` is generated (sorted by subject, then title, numeric-aware).
+* `scripts/`: `manifest.mjs`, `validate.mjs`, `import.mjs` (+`import-format.mjs`), shared `quizzes.mjs`, dev `serve.mjs`.
+* `quizzes/subjects.json`: hand-written catalog of subjects and their units (order shown on the home page).
+* `quizzes/<id>.json`: one quiz per file; required `subject`, plus `unit` when its subject declares units. Subject/unit must exist in the catalog. `quizzes/manifest.json` is generated (a subjects → units → quizzes tree; titles numeric-aware).
+* Authoring format (options as strings + `correctIndex` + `wrongExplanations`) is converted with `npm run import`.
 * Quiz format is documented in README.md.
 
 ## Quiz rules the engine must keep
@@ -36,7 +38,8 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 
 * `npm test`: unit tests for core.js and scripts (node:test)
 * `npm run validate`: validates all quizzes and checks the manifest
-* `npm run manifest`: regenerate the manifest after adding a quiz
+* `npm run manifest`: regenerate the manifest after adding or editing a quiz or the catalog
+* `npm run import -- <src.json> [--id …] [--subject …] [--unit …] [--title …]`: convert an authoring-format quiz into `quizzes/<id>.json`
 * `npm run serve`: local server on :8000 (fetch() fails over file://)
 
 ## Workflow

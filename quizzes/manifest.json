@@ -1,12 +1,41 @@
 {
-  "quizzes": [
+  "subjects": [
     {
-      "id": "heart",
-      "subject": "אנטומיה ופיזיולוגיה",
-      "title": "מבחן 1: הלב",
-      "description": "המערכת הקרדיווסקולרית: מבנה הלב, הולכה, א.ק.ג, מחזור הלב ובקרה.",
-      "questionCount": 200,
-      "topicCount": 14
+      "name": "אנטומיה ופיזיולוגיה",
+      "units": [
+        {
+          "name": "הלב",
+          "quizzes": [
+            {
+              "id": "heart-1",
+              "title": "מבחן 1",
+              "description": "המערכת הקרדיווסקולרית: מבנה הלב, הולכה, א.ק.ג, מחזור הלב ובקרה.",
+              "questionCount": 200,
+              "topicCount": 14
+            },
+            {
+              "id": "heart-2",
+              "title": "מבחן 2",
+              "description": "מצבים, מנגנונים והבנה, ומספרים רק כשהם חשובים באמת.",
+              "questionCount": 200,
+              "topicCount": 14
+            }
+          ]
+        },
+        {
+          "name": "מערכת הנשימה",
+          "quizzes": []
+        },
+        {
+          "name": "מערכת ההפרשה",
+          "quizzes": []
+        },
+        {
+          "name": "מערכת האנדוקרינולוגיה",
+          "quizzes": []
+        }
+      ],
+      "quizzes": []
     }
   ]
 }

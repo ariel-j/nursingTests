@@ -184,12 +184,20 @@ kbd {
 
 /* ---------- index ---------- */
 
-.subject { margin-block-end: 2rem; }
+.subject { margin-block-end: 2.5rem; }
 .subject h2 {
   padding-block-end: 0.35rem;
   border-block-end: 2px solid var(--trace);
   display: inline-block;
 }
+
+.group { margin-block-start: 1.25rem; }
+.group h3 {
+  margin-block: 0 0.6rem;
+  font-size: 1.15rem;
+  color: var(--muted);
+}
+.soon { margin: 0; font-style: italic; }
 
 .quiz-list {
   list-style: none;
@@ -211,7 +219,7 @@ kbd {
   transition: border-color 0.12s;
 }
 .quiz-card:hover { border-color: var(--ink); border-inline-start-color: var(--trace); }
-.quiz-card h3 { margin: 0 0 0.2rem; font-size: 1.35rem; }
+.quiz-card h4 { margin: 0 0 0.2rem; font-size: 1.35rem; font-family: var(--serif); }
 .quiz-card p { margin: 0.2rem 0 0; }
 
 .meta { display: flex; flex-wrap: wrap; gap: 0.35rem 1rem; color: var(--muted); font-size: 0.95rem; }
