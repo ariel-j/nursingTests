@@ -232,6 +232,8 @@ kbd {
   text-decoration: none;
 }
 .quiz-card:hover { border-color: var(--accent); }
+.mix-card { margin-block: 0.75rem 0.5rem; background: var(--accent-soft); border-color: var(--accent); }
+.mix-card h4 { color: var(--accent); }
 .quiz-card h4 { margin: 0 0 0.2rem; font-size: 1.0625rem; font-weight: 600; }
 .quiz-card p { margin: 0.2rem 0 0; font-size: 0.9375rem; }
 

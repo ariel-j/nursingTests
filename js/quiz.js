@@ -1,6 +1,7 @@
 import {
   MASTERY_STREAK,
   answer,
+  buildMixedQuiz,
   createSession,
   currentQuestion,
   isComplete,
@@ -119,13 +120,16 @@ function loadSavedSession() {
 
 // ---------- start screen ----------
 
+// A mixed practice is chosen by unit ("group"); a single quiz by topic.
+const selectionField = () => (quiz.mixed ? 'group' : 'topic');
+
 function topicCheckboxes() {
   return [...ui.topicList.querySelectorAll('input[type="checkbox"]')];
 }
 
 function selectedQuestionIds() {
   const topics = topicCheckboxes().filter((c) => c.checked).map((c) => c.value);
-  return questionIdsForTopics(quiz, topics);
+  return questionIdsForTopics(quiz, topics, selectionField());
 }
 
 function updateStartButton() {
@@ -135,7 +139,7 @@ function updateStartButton() {
 }
 
 function renderTopics() {
-  ui.topicList.replaceChildren(...listTopics(quiz).map(({ topic, count }) => {
+  ui.topicList.replaceChildren(...listTopics(quiz, selectionField()).map(({ topic, count }) => {
     const li = el('li');
     const label = el('label', 'topic-option');
     const box = el('input');
@@ -289,8 +293,8 @@ function showFeedback(result, chosenIndex) {
 function apply(result, chosenIndex) {
   state = result.state;
   persist();
-  // Best score only means something for a run over the whole quiz.
-  if (isComplete(state) && state.mode === 'full') {
+  // Best score only means something for a run over the whole of one quiz.
+  if (isComplete(state) && state.mode === 'full' && !quiz.mixed) {
     const summary = summarize(state, quiz);
     save(keys.results(quiz.id), recordResult(load(keys.results(quiz.id)), summary, new Date().toISOString()));
   }
@@ -393,29 +397,60 @@ function onKeyDown(event) {
   }
 }
 
-async function main() {
-  const id = new URLSearchParams(location.search).get('id');
-  if (!isValidQuizId(id)) {
-    showStatus('לא נבחר בוחן.');
-    return;
-  }
+class LoadError extends Error {}
 
-  try {
-    const res = await fetch(`quizzes/${id}.json`, { cache: 'no-cache' });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    quiz = await res.json();
-  } catch (err) {
-    console.error(err);
-    showStatus(location.protocol === 'file:'
-      ? 'יש להריץ דרך שרת (npm run serve), הדפדפן חוסם טעינה מקובץ מקומי.'
-      : 'לא הצלחנו לטעון את הבוחן.');
-    return;
-  }
+async function fetchJson(url) {
+  const res = await fetch(url, { cache: 'no-cache' });
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${url}`);
+  return res.json();
+}
 
-  const errors = validateQuiz(quiz);
+async function fetchQuiz(id) {
+  const data = await fetchJson(`quizzes/${id}.json`);
+  const errors = validateQuiz(data);
   if (errors.length > 0) {
-    console.error('Invalid quiz file:', errors);
-    showStatus('קובץ הבוחן פגום. פרטים בקונסול.');
+    console.error(`Invalid quiz file ${id}:`, errors);
+    throw new LoadError('קובץ הבוחן פגום. פרטים בקונסול.');
+  }
+  return data;
+}
+
+/** ?id=<quiz> loads one quiz; ?subject=<name> merges all of that subject's quizzes for mixed practice. */
+async function loadQuiz(params) {
+  const subject = params.get('subject');
+  if (subject === null) {
+    const id = params.get('id');
+    if (!isValidQuizId(id)) throw new LoadError('לא נבחר בוחן.');
+    return fetchQuiz(id);
+  }
+
+  const manifest = await fetchJson('quizzes/manifest.json');
+  const entry = (manifest.subjects ?? []).find((s) => s.name === subject);
+  if (!entry) throw new LoadError('המקצוע לא נמצא.');
+  // Same order as the home page: quizzes directly on the subject, then each unit's.
+  const ids = [...entry.quizzes, ...entry.units.flatMap((u) => u.quizzes)]
+    .map((q) => q.id)
+    .filter(isValidQuizId);
+  if (ids.length === 0) throw new LoadError('עדיין אין בחנים במקצוע הזה.');
+  const quizzes = await Promise.all(ids.map(fetchQuiz));
+  return {
+    ...buildMixedQuiz(subject, quizzes),
+    title: 'תרגול לפי נושאים',
+    description: 'בחרו נושאים, והשאלות מכל הבחנים שלהם יתערבבו לתרגול אחד.',
+  };
+}
+
+async function main() {
+  try {
+    quiz = await loadQuiz(new URLSearchParams(location.search));
+  } catch (err) {
+    if (err instanceof LoadError) {
+      showStatus(err.message);
+      return;
+    }
+    console.error(err);
+    if (location.protocol === 'file:') showStatus('יש להריץ דרך שרת (npm run serve), הדפדפן חוסם טעינה מקובץ מקומי.');
+    else showStatus('לא הצלחנו לטעון את הבוחן.');
     return;
   }
 

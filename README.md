@@ -107,7 +107,7 @@ npm run serve     # http://localhost:8000 (fetch() does not work over file://)
 | --- | --- |
 | `js/core.js` | pure logic: queue, scoring, stats, validation. No DOM, no storage |
 | `js/storage.js` | guarded `localStorage` wrapper (prefix `anatomy-quizzes:v1:`) |
-| `js/index.js`, `js/quiz.js` | page UI |
+| `js/index.js`, `js/quiz.js` | page UI. `quiz.html?id=<quiz>` plays one quiz; `quiz.html?subject=<name>` is mixed practice across the subject's units (the home page's "בחירת נושאים למבחן" card) |
 | `scripts/` | manifest, validate, and a tiny static dev server |
 | `css/style.css` | the whole site's styles; follows `design/STYLE.md` |
 | `design/` | design spec (`STYLE.md`) and the reference page it was taken from. Not used by the site |
