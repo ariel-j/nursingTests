@@ -24,7 +24,7 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 * `scripts/`: `manifest.mjs`, `validate.mjs`, `import.mjs` (+`import-format.mjs`), shared `quizzes.mjs`, dev `serve.mjs`.
 * `quizzes/subjects.json`: hand-written catalog of subjects and their units (order shown on the home page).
 * `quizzes/<id>.json`: one quiz per file; required `subject`, plus `unit` when its subject declares units. Subject/unit must exist in the catalog. `quizzes/manifest.json` is generated (a subjects → units → quizzes tree; titles numeric-aware).
-* Authoring format (options as strings + `correctIndex` + `wrongExplanations`) is converted with `npm run import`.
+* Authoring format (options as strings + `correctIndex` + `wrongExplanations`, or the variant `stem` + `answer` + option-aligned `notes`) is converted with `npm run import`.
 * Quiz format is documented in README.md.
 
 ## Quiz rules the engine must keep
