@@ -9,7 +9,8 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 * No external requests: fonts are self-hosted in `fonts/` (Hebrew + Latin subsets via `unicode-range`).
 * Repo is public: never commit course materials, only quiz JSON (the owner decides what quiz content is published). Test fixtures use placeholder text only.
 * All user-facing text in Hebrew; use CSS logical properties (inline/block, start/end) for RTL.
-* Render quiz content with textContent, never innerHTML.
+* Render content with textContent (and the DOM/SVG APIs), never innerHTML.
+* Ships an accessibility toolbar and a הצהרת נגישות / מדיניות פרטיות page; keep the site keyboard- and screen-reader-friendly, and update the statement's date when accessibility changes.
 
 ## Layout
 
@@ -18,6 +19,8 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 * `js/storage.js`: guarded localStorage wrapper (prefix `anatomy-quizzes:v1:`). Keys: `session:<id>` (in-progress state), `results:<id>` (attempts, best score).
 * `js/index.js`: home page; renders the manifest tree of subjects → units → quizzes.
 * `js/quiz.js`: start screen (resume / choose topics) → play → end screen (retry missed).
+* `js/a11y.js`: accessibility toolbar (text size, high contrast, underline links, stop motion); sets `data-*` on `<html>`, persists in localStorage. Imported by every page.
+* `accessibility.html` (הצהרת נגישות) and `privacy.html` (מדיניות פרטיות): static content pages; every page has a footer linking to them.
 * `scripts/`: `manifest.mjs`, `validate.mjs`, `import.mjs` (+`import-format.mjs`), shared `quizzes.mjs`, dev `serve.mjs`.
 * `quizzes/subjects.json`: hand-written catalog of subjects and their units (order shown on the home page).
 * `quizzes/<id>.json`: one quiz per file; required `subject`, plus `unit` when its subject declares units. Subject/unit must exist in the catalog. `quizzes/manifest.json` is generated (a subjects → units → quizzes tree; titles numeric-aware).
