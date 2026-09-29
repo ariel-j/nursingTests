@@ -3,12 +3,30 @@
 // Authoring format, per question:
 //   { id, topic, question, options: [string ×4], correctIndex, explanation,
 //     wrongExplanations: [string ×3] }   // one per wrong option, in option order
+// Also accepted, per question (option-aligned notes, null for the correct option):
+//   { id, topic, stem, options: [string ×4], answer, explanation, notes: [string|null ×4] }
 // Site format: options become { text, note? }, correctIndex becomes correct.
 
 const QUIZ_FIELDS = ['id', 'subject', 'unit', 'title', 'description'];
 
-function convertQuestion(q, i) {
-  const where = `questions[${i}]${q && q.id ? ` (${q.id})` : ''}`;
+// Maps the stem/answer/notes variant onto the authoring fields; other questions pass through.
+function normalizeQuestion(q, where) {
+  if (!q || !('stem' in q || 'answer' in q || 'notes' in q)) return q;
+  const { stem, answer, notes, ...rest } = q;
+  if (!Array.isArray(notes) || !Array.isArray(q.options) || notes.length !== q.options.length) {
+    throw new Error(`${where}: notes must have one entry per option`);
+  }
+  return {
+    ...rest,
+    question: stem,
+    correctIndex: answer,
+    wrongExplanations: notes.filter((_, index) => index !== answer),
+  };
+}
+
+function convertQuestion(raw, i) {
+  const where = `questions[${i}]${raw && raw.id ? ` (${raw.id})` : ''}`;
+  const q = normalizeQuestion(raw, where);
   if (!q || !Array.isArray(q.options) || !q.options.every((o) => typeof o === 'string')) {
     throw new Error(`${where}: options must be an array of strings`);
   }

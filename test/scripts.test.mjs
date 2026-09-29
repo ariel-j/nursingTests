@@ -107,3 +107,27 @@ test('fromAuthoringFormat rejects a bad wrongExplanations count', () => {
     questions: [{ id: 'x', topic: 't', question: 'q', options: ['a', 'b', 'c', 'd'], correctIndex: 0, explanation: 'e', wrongExplanations: ['only one'] }],
   }), /one entry per wrong option/);
 });
+
+test('fromAuthoringFormat accepts stem/answer/notes with option-aligned notes', () => {
+  const quiz = fromAuthoringFormat({
+    questions: [{
+      id: 'x', topic: 't', stem: 'q',
+      options: ['a', 'b', 'c', 'd'],
+      answer: 1,
+      explanation: 'e',
+      notes: ['why a', null, 'why c', 'why d'],
+    }],
+  });
+  assert.deepEqual(quiz.questions[0], {
+    id: 'x', topic: 't', question: 'q',
+    options: [{ text: 'a', note: 'why a' }, { text: 'b' }, { text: 'c', note: 'why c' }, { text: 'd', note: 'why d' }],
+    correct: 1,
+    explanation: 'e',
+  });
+});
+
+test('fromAuthoringFormat rejects notes that do not line up with the options', () => {
+  assert.throws(() => fromAuthoringFormat({
+    questions: [{ id: 'x', topic: 't', stem: 'q', options: ['a', 'b', 'c', 'd'], answer: 0, explanation: 'e', notes: [null, 'b'] }],
+  }), /one entry per option/);
+});
