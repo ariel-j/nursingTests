@@ -33,6 +33,18 @@
         {
           "name": "מערכת האנדוקרינולוגיה",
           "quizzes": []
+        },
+        {
+          "name": "מערכת העיכול",
+          "quizzes": [
+            {
+              "id": "digestive-1",
+              "title": "מבחן 1",
+              "description": "200 שאלות מהמצגות ומהשחזורים, ללא חומר ההרחבה",
+              "questionCount": 200,
+              "topicCount": 14
+            }
+          ]
         }
       ],
       "quizzes": []
