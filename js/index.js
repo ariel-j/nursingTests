@@ -1,4 +1,4 @@
-import { isValidQuizId, progressInfo } from './core.js';
+import { isValidQuizId, mixedQuizId, progressInfo } from './core.js';
 import { keys, load } from './storage.js';
 
 const statusEl = document.getElementById('status');
@@ -9,6 +9,35 @@ function el(tag, className, text) {
   if (className) node.className = className;
   if (text !== undefined) node.textContent = text;
   return node;
+}
+
+/** Thin progress bar for an in-progress saved session, or nothing. */
+function sessionProgress(id) {
+  const session = load(keys.session(id));
+  if (!(session && Array.isArray(session.queue) && session.queue.length > 0 && session.progress)) return null;
+  const { mastered, total } = progressInfo(session);
+  const progress = el('div', 'card-progress', `בתהליך: נשלטו ${mastered} מתוך ${total}`);
+  const bar = el('span', 'bar is-progress');
+  bar.setAttribute('aria-hidden', 'true');
+  const fill = el('i');
+  fill.style.inlineSize = `${total === 0 ? 0 : Math.round((100 * mastered) / total)}%`;
+  bar.append(fill);
+  progress.append(bar);
+  return progress;
+}
+
+/** Card that opens mixed practice across the subject's units ("בחירת נושאים למבחן"). */
+function renderMixCard(subject, groupCount, questionCount) {
+  const link = el('a', 'quiz-card mix-card');
+  link.href = `quiz.html?subject=${encodeURIComponent(subject.name)}`;
+  link.append(
+    el('h4', null, 'בחירת נושאים למבחן'),
+    el('p', 'muted', 'בוחרים כמה נושאים, והשאלות מכל הבחנים שלהם מתערבבות לתרגול אחד.'),
+    el('p', 'meta', `${groupCount} נושאים · ${questionCount} שאלות`),
+  );
+  const progress = sessionProgress(mixedQuizId(subject.name));
+  if (progress) link.append(progress);
+  return link;
 }
 
 function renderQuiz(entry) {
@@ -28,18 +57,8 @@ function renderQuiz(entry) {
   }
   link.append(meta);
 
-  const session = load(keys.session(entry.id));
-  if (session && Array.isArray(session.queue) && session.queue.length > 0 && session.progress) {
-    const { mastered, total } = progressInfo(session);
-    const progress = el('div', 'card-progress', `בתהליך: נשלטו ${mastered} מתוך ${total}`);
-    const bar = el('span', 'bar is-progress');
-    bar.setAttribute('aria-hidden', 'true');
-    const fill = el('i');
-    fill.style.inlineSize = `${total === 0 ? 0 : Math.round((100 * mastered) / total)}%`;
-    bar.append(fill);
-    progress.append(bar);
-    link.append(progress);
-  }
+  const progress = sessionProgress(entry.id);
+  if (progress) link.append(progress);
   item.append(link);
   return item;
 }
@@ -61,6 +80,13 @@ function renderGroup(name, quizzes, headingTag) {
 function renderSubject(subject) {
   const section = el('section', 'subject');
   section.append(el('h2', null, subject.name));
+  // Mixed practice only makes sense once there is more than one unit (or unit-less quiz) to mix.
+  const groups = [...subject.quizzes.map((q) => [q]), ...subject.units.map((u) => u.quizzes)]
+    .filter((quizzes) => quizzes.length > 0);
+  if (groups.length > 1) {
+    const questionCount = groups.flat().reduce((n, q) => n + q.questionCount, 0);
+    section.append(renderMixCard(subject, groups.length, questionCount));
+  }
   // Quizzes placed directly on the subject (no unit), then each unit as a sub-heading.
   if (subject.quizzes.length > 0) {
     const list = el('ul', 'quiz-list');
