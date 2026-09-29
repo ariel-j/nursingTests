@@ -126,6 +126,14 @@ test('fromAuthoringFormat accepts stem/answer/notes with option-aligned notes', 
   });
 });
 
+test('fromAuthoringFormat accepts stem/answer without notes', () => {
+  const quiz = fromAuthoringFormat({
+    questions: [{ id: 'x', topic: 't', stem: 'q', options: ['a', 'b', 'c', 'd'], answer: 2, explanation: 'e' }],
+  });
+  assert.deepEqual(quiz.questions[0].options, [{ text: 'a' }, { text: 'b' }, { text: 'c' }, { text: 'd' }]);
+  assert.equal(quiz.questions[0].correct, 2);
+});
+
 test('fromAuthoringFormat rejects notes that do not line up with the options', () => {
   assert.throws(() => fromAuthoringFormat({
     questions: [{ id: 'x', topic: 't', stem: 'q', options: ['a', 'b', 'c', 'd'], answer: 0, explanation: 'e', notes: [null, 'b'] }],

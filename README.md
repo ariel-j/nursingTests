@@ -34,7 +34,7 @@ Writing guidelines, plus a brief you can paste into the session that writes the 
    `quizzes/subjects.json`. Add them there first if needed.
 2. Save the quiz as `quizzes/<id>.json`. The file name must match `id`. If you were given the quiz in
    the authoring format (options as plain strings + `correctIndex` + `wrongExplanations`, or its variant
-   `stem` + `answer` + `notes` with one note per option and `null` for the correct one), convert it:
+   `stem` + `answer` + `notes` with one note per option and `null` for the correct one, or no `notes` at all), convert it:
    `npm run import -- <src.json> --id <id> --subject "<subject>" --unit "<unit>" --title "<title>"`.
 3. `npm run manifest` to regenerate `quizzes/manifest.json`.
 4. `npm run validate` to check everything.
