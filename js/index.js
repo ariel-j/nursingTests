@@ -1,5 +1,4 @@
 import { isValidQuizId, progressInfo } from './core.js';
-import { ecgPath } from './ecg.js';
 import { keys, load } from './storage.js';
 
 const statusEl = document.getElementById('status');
@@ -23,16 +22,24 @@ function renderQuiz(entry) {
   const meta = el('p', 'meta');
   meta.append(el('span', null, `${entry.questionCount} שאלות · ${entry.topicCount} נושאים`));
 
-  const session = load(keys.session(entry.id));
-  if (session && Array.isArray(session.queue) && session.queue.length > 0 && session.progress) {
-    const { mastered, total } = progressInfo(session);
-    meta.append(el('span', 'badge', `בתהליך · ${mastered}/${total}`));
-  }
   const results = load(keys.results(entry.id));
   if (results && Number.isFinite(results.bestPercent)) {
     meta.append(el('span', null, `שיא: ${results.bestPercent}%`));
   }
   link.append(meta);
+
+  const session = load(keys.session(entry.id));
+  if (session && Array.isArray(session.queue) && session.queue.length > 0 && session.progress) {
+    const { mastered, total } = progressInfo(session);
+    const progress = el('div', 'card-progress', `בתהליך: נשלטו ${mastered} מתוך ${total}`);
+    const bar = el('span', 'bar is-progress');
+    bar.setAttribute('aria-hidden', 'true');
+    const fill = el('i');
+    fill.style.inlineSize = `${total === 0 ? 0 : Math.round((100 * mastered) / total)}%`;
+    bar.append(fill);
+    progress.append(bar);
+    link.append(progress);
+  }
   item.append(link);
   return item;
 }
@@ -67,8 +74,6 @@ function renderSubject(subject) {
 }
 
 async function main() {
-  document.getElementById('hero-trace').setAttribute('d', ecgPath(1, 12));
-
   let manifest;
   try {
     const res = await fetch('quizzes/manifest.json', { cache: 'no-cache' });

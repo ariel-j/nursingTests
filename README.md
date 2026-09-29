@@ -105,9 +105,10 @@ npm run serve     # http://localhost:8000 (fetch() does not work over file://)
 | Path | Role |
 | --- | --- |
 | `js/core.js` | pure logic: queue, scoring, stats, validation. No DOM, no storage |
-| `js/ecg.js` | pure SVG path for the ECG progress strip |
 | `js/storage.js` | guarded `localStorage` wrapper (prefix `anatomy-quizzes:v1:`) |
 | `js/index.js`, `js/quiz.js` | page UI |
 | `scripts/` | manifest, validate, and a tiny static dev server |
-| `fonts/` | self-hosted Assistant and Frank Ruhl Libre (SIL OFL, licenses included) |
+| `css/style.css` | the whole site's styles; follows `design/STYLE.md` |
+| `design/` | design spec (`STYLE.md`) and the reference page it was taken from. Not used by the site |
+| `fonts/` | self-hosted Rubik and Frank Ruhl Libre (SIL OFL, licenses included) |
 | `test/` | unit tests. `test/fixtures/` holds placeholder content only |
