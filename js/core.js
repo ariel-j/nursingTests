@@ -348,3 +348,71 @@ export function recordResult(history, summary, date) {
     last,
   };
 }
+
+// ---------- printable exam ----------
+
+export const OPTION_LETTERS = ['א', 'ב', 'ג', 'ד'];
+// mixed: one random order, like a real exam; by-topic: grouped by topic, in topic order.
+export const PRINT_ORDERS = ['mixed', 'by-topic'];
+export const PRINT_DEFAULT_COUNT = 100;
+
+/**
+ * Splits `count` across topics in proportion to their sizes (largest remainder), so a short exam
+ * still samples every topic fairly. `sizes` is [{ topic, count }]; returns a Map topic → n.
+ */
+export function allocateByTopic(sizes, count) {
+  const total = sizes.reduce((sum, s) => sum + s.count, 0);
+  const n = Math.min(Math.max(0, Math.floor(count)), total);
+  const shares = sizes.map((s, order) => {
+    const exact = total === 0 ? 0 : (s.count * n) / total;
+    return { topic: s.topic, order, take: Math.floor(exact), rest: exact - Math.floor(exact) };
+  });
+  let left = n - shares.reduce((sum, s) => sum + s.take, 0);
+  // Ties go to the topic that appears first, so the split is stable.
+  for (const s of [...shares].sort((a, b) => b.rest - a.rest || a.order - b.order)) {
+    if (left === 0) break;
+    s.take += 1;
+    left -= 1;
+  }
+  return new Map(shares.map((s) => [s.topic, s.take]));
+}
+
+/**
+ * A fixed paper exam: `count` questions (clamped to what the chosen topics hold) sampled per topic,
+ * options shuffled once and lettered א–ד. by-topic keeps authored order within each topic.
+ * `topics` are values of `field` ('group' picks whole units of a mixed quiz); null means all.
+ */
+export function buildPrintExam(
+  quiz,
+  { topics = null, field = 'topic', count = PRINT_DEFAULT_COUNT, order = 'mixed' } = {},
+  rng = Math.random,
+) {
+  if (!PRINT_ORDERS.includes(order)) throw new Error(`unknown print order: ${order}`);
+  const wanted = topics === null ? null : new Set(topics);
+  const chosen = { questions: quiz.questions.filter((q) => wanted === null || wanted.has(q[field])) };
+  const sizes = listTopics(chosen);
+  const shares = allocateByTopic(sizes, count);
+
+  let picked = [];
+  for (const { topic } of sizes) {
+    const pool = chosen.questions.filter((q) => q.topic === topic);
+    const taken = new Set(shuffle(pool, rng).slice(0, shares.get(topic)).map((q) => q.id));
+    picked.push(...pool.filter((q) => taken.has(q.id)));
+  }
+  if (order === 'mixed') picked = shuffle(picked, rng);
+
+  return picked.map((q, i) => {
+    const options = presentOptions(q, rng);
+    const correctAt = options.findIndex((o) => o.correct);
+    return {
+      number: i + 1,
+      id: q.id,
+      topic: q.topic,
+      question: q.question,
+      options: options.map((o, j) => ({ letter: OPTION_LETTERS[j], text: o.text })),
+      correctLetter: OPTION_LETTERS[correctAt],
+      correctText: options[correctAt].text,
+      explanation: q.explanation,
+    };
+  });
+}

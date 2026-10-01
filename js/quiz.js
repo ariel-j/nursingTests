@@ -1,13 +1,11 @@
 import {
   MASTERY_STREAK,
   answer,
-  buildMixedQuiz,
   createSession,
   currentQuestion,
   isComplete,
   isSessionCompatible,
   isolateNumberRanges as fmt,
-  isValidQuizId,
   listTopics,
   presentOptions,
   progressInfo,
@@ -16,8 +14,8 @@ import {
   recordResult,
   skip,
   summarize,
-  validateQuiz,
 } from './core.js';
+import { loadQuizFromUrl, quizPlace } from './load-quiz.js';
 import { keys, load, remove, save } from './storage.js';
 
 const $ = (id) => document.getElementById(id);
@@ -38,6 +36,7 @@ const ui = {
   topicList: $('topic-list'),
   startButton: $('start-button'),
   best: $('best'),
+  printLink: $('print-link'),
   // play
   play: $('play'),
   ring: $('ring'),
@@ -397,68 +396,21 @@ function onKeyDown(event) {
   }
 }
 
-class LoadError extends Error {}
-
-async function fetchJson(url) {
-  const res = await fetch(url, { cache: 'no-cache' });
-  if (!res.ok) throw new Error(`HTTP ${res.status}: ${url}`);
-  return res.json();
-}
-
-async function fetchQuiz(id) {
-  const data = await fetchJson(`quizzes/${id}.json`);
-  const errors = validateQuiz(data);
-  if (errors.length > 0) {
-    console.error(`Invalid quiz file ${id}:`, errors);
-    throw new LoadError('קובץ הבוחן פגום. פרטים בקונסול.');
-  }
-  return data;
-}
-
-/** ?id=<quiz> loads one quiz; ?subject=<name> merges all of that subject's quizzes for mixed practice. */
-async function loadQuiz(params) {
-  const subject = params.get('subject');
-  if (subject === null) {
-    const id = params.get('id');
-    if (!isValidQuizId(id)) throw new LoadError('לא נבחר בוחן.');
-    return fetchQuiz(id);
-  }
-
-  const manifest = await fetchJson('quizzes/manifest.json');
-  const entry = (manifest.subjects ?? []).find((s) => s.name === subject);
-  if (!entry) throw new LoadError('המקצוע לא נמצא.');
-  // Same order as the home page: quizzes directly on the subject, then each unit's.
-  const ids = [...entry.quizzes, ...entry.units.flatMap((u) => u.quizzes)]
-    .map((q) => q.id)
-    .filter(isValidQuizId);
-  if (ids.length === 0) throw new LoadError('עדיין אין בחנים במקצוע הזה.');
-  const quizzes = await Promise.all(ids.map(fetchQuiz));
-  return {
-    ...buildMixedQuiz(subject, quizzes),
-    title: 'תרגול לפי נושאים',
-    description: 'בחרו נושאים, והשאלות מכל הבחנים שלהם יתערבבו לתרגול אחד.',
-  };
-}
-
 async function main() {
   try {
-    quiz = await loadQuiz(new URLSearchParams(location.search));
+    quiz = await loadQuizFromUrl();
   } catch (err) {
-    if (err instanceof LoadError) {
-      showStatus(err.message);
-      return;
-    }
-    console.error(err);
-    if (location.protocol === 'file:') showStatus('יש להריץ דרך שרת (npm run serve), הדפדפן חוסם טעינה מקובץ מקומי.');
-    else showStatus('לא הצלחנו לטעון את הבוחן.');
+    showStatus(err.message);
     return;
   }
 
   // Kicker shows the subject and, when present, the unit: "אנטומיה ופיזיולוגיה · הלב".
-  const place = quiz.unit ? `${quiz.subject} · ${quiz.unit}` : quiz.subject;
+  const place = quizPlace(quiz);
   document.title = `${quiz.title} · ${place}`;
   ui.subject.textContent = place;
   ui.title.textContent = quiz.title;
+  // Same ?id= or ?subject= as this page, so mixed practice prints mixed too.
+  ui.printLink.href = `print.html${location.search}`;
   ui.description.textContent = quiz.description ?? '';
   ui.description.hidden = !quiz.description;
 
