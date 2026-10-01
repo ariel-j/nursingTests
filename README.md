@@ -98,11 +98,26 @@ A `\n` in a string becomes a line break.
 If you add, remove or rename question IDs in a quiz, saved progress for that quiz no longer matches.
 It is dropped, and the quiz starts fresh.
 
+## Short summaries (סיכומים קצרים)
+
+The home page links to `summaries/`, a hub with one condensed summary per body system. Each summary is a
+static page, `summaries/<id>.html`, with a print button; the browser's print dialog saves it as a PDF
+(light colors, A4, rows kept whole across pages). `summaries/all.html` loads every summary into one page,
+so they print as a single PDF.
+
+To add a summary:
+
+1. Save it as `summaries/<id>.html`, copying the structure of an existing one: its content goes in
+   `<article class="summary" data-system="<id>">` and uses the same classes (`rel`, `def`, `call`, `flags`, `exam`).
+2. Add `{ id, title, blurb }` to `js/summary-list.js` (this sets the order on the hub and in the combined PDF).
+3. Give it accent colors in `css/summary.css` (a `[data-system="<id>"]` rule with light and dark values).
+4. `npm run validate` checks it: listed, self-hosted only, no inline styles or handlers, toolbar and footer present.
+
 ## Development
 
 ```sh
 npm test          # unit tests for js/core.js and the scripts (node:test)
-npm run validate  # validate all quizzes and check the manifest is current
+npm run validate  # validate all quizzes and summaries, and check the manifest is current
 npm run manifest  # regenerate quizzes/manifest.json
 npm run serve     # http://localhost:8000 (fetch() does not work over file://)
 ```
@@ -112,6 +127,8 @@ npm run serve     # http://localhost:8000 (fetch() does not work over file://)
 | `js/core.js` | pure logic: queue, scoring, stats, validation. No DOM, no storage |
 | `js/storage.js` | guarded `localStorage` wrapper (prefix `anatomy-quizzes:v1:`) |
 | `js/index.js`, `js/quiz.js`, `js/print.js` | page UI (`js/load-quiz.js`: quiz loading shared by quiz.js and print.js). `quiz.html?id=<quiz>` plays one quiz; `quiz.html?subject=<name>` is mixed practice across the subject's units (the home page's "בחירת נושאים למבחן" card) |
+| `summaries/`, `css/summary.css` | short summaries, the hub and the combined print page |
+| `js/summary-list.js` | the list of summaries (no DOM); `js/summaries.js`, `js/summary.js`, `js/summaries-all.js` drive the pages |
 | `scripts/` | manifest, validate, and a tiny static dev server |
 | `css/style.css` | the whole site's styles; follows `design/STYLE.md` |
 | `design/` | design spec (`STYLE.md`) and the reference page it was taken from. Not used by the site |

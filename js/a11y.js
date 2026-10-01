@@ -118,7 +118,9 @@ function build() {
   const reset = el('button', { type: 'button', class: 'a11y-reset', text: 'איפוס הגדרות' });
   reset.addEventListener('click', () => change(() => { state = { ...DEFAULTS }; }));
 
-  const statement = el('a', { class: 'a11y-statement', href: 'accessibility.html', text: 'הצהרת נגישות' });
+  // Resolved from this module so it also works on pages in subfolders (summaries/).
+  const statementHref = new URL('../accessibility.html', import.meta.url).href;
+  const statement = el('a', { class: 'a11y-statement', href: statementHref, text: 'הצהרת נגישות' });
 
   container.append(heading, textRow, ...toggleRows, reset, statement);
 
