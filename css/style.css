@@ -373,6 +373,22 @@ kbd {
 .feedback p { margin: 0 0 0.5rem; }
 .feedback p:last-child { margin-block-end: 0; }
 .verdict { font-weight: 600; font-size: 1rem; }
+.countdown {
+  margin-block-start: 0.75rem;
+  block-size: 4px;
+  border-radius: 2px;
+  background: var(--line);
+  overflow: hidden;
+}
+.countdown[hidden] { display: none; }
+.countdown i {
+  display: block;
+  block-size: 100%;
+  background: var(--ok);
+  transform-origin: right;
+  animation: countdown var(--countdown, 3s) linear forwards;
+}
+@keyframes countdown { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 .feedback.good .verdict { color: var(--ok); }
 .feedback.bad .verdict { color: var(--bad); }
 .explanation, .note { color: var(--ink); }
