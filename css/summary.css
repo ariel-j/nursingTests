@@ -1,0 +1,130 @@
+/* Short summaries (summaries/*.html). Loaded after style.css and reuses its tokens; each
+   summary picks an accent by data-system. Printing forces a light, ink-friendly version. */
+
+/* ---------- per-system accents (light / dark) ----------
+   On any element with data-system: a summary article, or a card on the hub. */
+
+[data-system="cardiovascular"] { --a: #96263a; --a-soft: #f4e6e8; --a-ink: #731c2c; --a-d: #ff8496; --a-soft-d: #3d1d24; --a-ink-d: #ffb8c2; }
+[data-system="digestive"]      { --a: #5f6b1f; --a-soft: #eceedc; --a-ink: #474f17; --a-d: #bccb6c; --a-soft-d: #2a2e14; --a-ink-d: #d8e39e; }
+[data-system="endocrine"]      { --a: #a86a1e; --a-soft: #f4e9d6; --a-ink: #7e4e12; --a-d: #e8aa5c; --a-soft-d: #3a2a14; --a-ink-d: #f3cb93; }
+[data-system="excretory"]      { --a: #126e82; --a-soft: #dcedf0; --a-ink: #0c4e5c; --a-d: #5fc4d9; --a-soft-d: #12333a; --a-ink-d: #a2ddea; }
+
+[data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
+@media (prefers-color-scheme: dark) {
+  [data-system] { --accent: var(--a-d); --accent-soft: var(--a-soft-d); --accent-ink: var(--a-ink-d); }
+}
+:root[data-contrast="high"] [data-system] { --accent: #000000; --accent-soft: #ffffff; --accent-ink: #000000; }
+
+/* ---------- page ---------- */
+
+.summary-page { background-image: none; }
+.page.wide { max-inline-size: 860px; }
+
+.summary { font-size: 1.0625rem; line-height: 1.72; overflow-wrap: break-word; }
+.summary b, .summary strong { font-weight: 600; }
+.summary p { margin: 0 0 0.75rem; }
+.summary ul { margin: 0 0 0.9rem; padding-inline-start: 1.4rem; }
+.summary li { margin: 0 0 0.4rem; }
+.summary .flush { margin: 0; }
+.summary .en { direction: ltr; unicode-bidi: isolate; }
+
+.summary > header { padding-block: 1.5rem 1.6rem; border-block-end: 2px solid var(--accent); }
+.summary .kicker { color: var(--accent); margin-block-end: 0.35rem; }
+.summary h1 { font-size: clamp(1.9rem, 6vw, 2.9rem); line-height: 1.08; margin-block: 0 0.6rem; }
+.summary .lede { font-size: 1.0625rem; max-inline-size: 62ch; margin-block-end: 1.1rem; }
+.summary .motif { display: block; inline-size: 100%; block-size: 56px; direction: ltr; }
+.summary .motif path,
+.summary .motif polyline { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+
+.summary .legend { display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem; margin-block-start: 1.1rem; font-size: 0.875rem; color: var(--muted); }
+.summary .legend b { color: var(--ink); }
+.summary .arrowmark { color: var(--accent); font-weight: 700; font-size: 1.125rem; padding-inline: 2px; }
+
+.summary section { margin-block-start: 2.5rem; }
+.summary h2 { font-size: 1.625rem; margin: 0 0 0.25rem; padding-block-end: 0.5rem; border-block-end: 1px solid var(--line); }
+.summary .sec-note { color: var(--muted); font-size: 0.9rem; margin-block-end: 1rem; }
+.summary h3 { font-family: var(--sans); font-size: 1.125rem; font-weight: 700; margin: 1.5rem 0 0.4rem; color: var(--accent-ink); }
+
+/* Definition rows */
+.summary .def { display: grid; grid-template-columns: minmax(120px, 170px) 1fr; gap: 4px 16px; margin: 0; padding-block: 0.55rem; border-block-end: 1px solid var(--line); }
+.summary .def:last-child { border-block-end: 0; }
+.summary .def dt { font-weight: 600; }
+.summary .def dd { margin: 0; }
+
+/* Cause → effect rows, the core component */
+.summary .rel { display: flex; align-items: stretch; margin-block: 0.6rem; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--card); }
+/* Block (not flex) cells so mixed inline text keeps its spaces; align-content centers where supported. */
+.summary .rel-cause { flex: 1; display: block; align-content: center; padding: 0.75rem 0.9rem; background: var(--accent-soft); font-weight: 600; }
+.summary .rel-arrow { display: flex; align-items: center; justify-content: center; padding-inline: 0.75rem; background: var(--accent-soft); color: var(--accent); font-size: 1.5rem; font-weight: 700; }
+.summary .rel-effect { flex: 1.3; display: block; align-content: center; padding: 0.75rem 0.9rem; }
+.summary .seq { color: var(--accent); font-weight: 700; padding-inline: 5px; }
+
+/* "Asked in past exams" badge */
+.summary .exam { display: inline-block; margin-inline-start: 6px; padding: 2px 9px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-ink); font-size: 0.78rem; font-weight: 700; vertical-align: middle; white-space: nowrap; }
+.summary .exam-legend { margin: 0; }
+
+.summary .call { margin-block: 1rem; padding: 0.9rem 1rem; background: var(--card); border: 1px solid var(--line); border-inline-start: 4px solid var(--accent); border-radius: 8px; }
+.summary .call h4 { margin: 0 0 0.4rem; font-size: 1rem; color: var(--accent-ink); }
+
+.summary .flags { padding: 0.4rem 1.1rem; background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
+.summary .flags ul { padding: 0; }
+.summary .flags li { position: relative; margin-block: 0.6rem; padding-inline-start: 1.25rem; list-style: none; }
+.summary .flags li::before { content: "◂"; position: absolute; inset-inline-start: 0; inset-block-start: 1px; color: var(--accent); font-size: 0.8rem; }
+
+.summary .source { margin-block-start: 3rem; padding-block-start: 1rem; border-block-start: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+
+:root[data-contrast="high"] .summary .rel,
+:root[data-contrast="high"] .summary .call,
+:root[data-contrast="high"] .summary .flags,
+:root[data-contrast="high"] .summary .exam { border: 2px solid #000; }
+
+@media (max-width: 560px) {
+  .summary { font-size: 1rem; }
+  .summary .def { grid-template-columns: 1fr; }
+  .summary .def dt { color: var(--accent-ink); }
+  .summary .rel { flex-direction: column; }
+  /* Stacked rows read top to bottom, so the arrow points down. */
+  .summary .rel-arrow { padding: 6px 4px; font-size: 0; line-height: 1; }
+  .summary .rel-arrow::after { content: "↓"; font-size: 1.375rem; color: var(--accent); }
+}
+
+/* ---------- hub (summaries/index.html) ---------- */
+
+.summary-list { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; gap: var(--gap); }
+.summary-card { border-inline-start-color: var(--accent); }
+.summary-card:hover { border-inline-start-color: var(--accent); }
+.summary-card h2 { margin: 0 0 0.2rem; font-size: 1.35rem; }
+
+.all-status { margin-block: 1rem; }
+.summary + .summary { margin-block-start: 4rem; }
+
+/* ---------- print / save as PDF ---------- */
+
+@media print {
+  @page { size: A4; margin: 14mm 14mm 16mm; }
+
+  /* Always light on paper, whatever the screen theme. */
+  :root {
+    color-scheme: light;
+    --paper: #ffffff;
+    --ink: #1f2328;
+    --muted: #5b6169;
+    --line: #d9d3cc;
+    --card: #ffffff;
+  }
+  [data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
+  .summary { font-size: 10.5pt; line-height: 1.55; }
+  :root[data-contrast="high"] [data-system] { --accent: #000000; --accent-soft: #ffffff; --accent-ink: #000000; }
+
+  body, .summary-page { background: #ffffff; }
+  .summary * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+
+  .no-print, .a11y, .site-footer { display: none !important; }
+  .page, .page.wide { max-inline-size: none; padding: 0; }
+
+  .summary > header { padding-block-start: 0; }
+  .summary section { margin-block-start: 1.4rem; }
+  .summary h2, .summary h3 { break-after: avoid; }
+  .summary .rel, .summary .call, .summary .def, .summary .flags li { break-inside: avoid; }
+  .summary + .summary { margin-block-start: 0; break-before: page; }
+}
