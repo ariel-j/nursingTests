@@ -19,6 +19,8 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 * `js/storage.js`: guarded localStorage wrapper (prefix `anatomy-quizzes:v1:`). Keys: `session:<id>` (in-progress state), `results:<id>` (attempts, best score).
 * `js/index.js`: home page; renders the manifest tree of subjects → units → quizzes.
 * `js/quiz.js`: start screen (resume / choose topics) → play → end screen (retry missed).
+* `js/print.js` + `print.html`: printable exam (topics, count, order; answer key with optional explanations). Uses `buildPrintExam` from core.js and `@media print` / `@page` in style.css; the browser's print dialog makes the PDF.
+* `js/load-quiz.js`: fetches and validates `?id=` for quiz.js and print.js.
 * `js/a11y.js`: accessibility toolbar (text size, high contrast, underline links, stop motion); sets `data-*` on `<html>`, persists in localStorage. Imported by every page.
 * `accessibility.html` (הצהרת נגישות) and `privacy.html` (מדיניות פרטיות): static content pages; every page has a footer linking to them.
 * `scripts/`: `manifest.mjs`, `validate.mjs`, `import.mjs` (+`import-format.mjs`), shared `quizzes.mjs`, dev `serve.mjs`.
@@ -35,6 +37,7 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 * Wrong answer: chosen option red, correct green, explanation plus the note for the chosen option.
 * Progress: mastered/total and queue size. End screen: first-try score, retried questions, weak topics.
 * Session modes: `full` (whole quiz), `topics` (chosen topics), `retry` (questions that came back last run). Only `full` runs update the best score.
+* Printable exam: questions sampled per topic in proportion (`allocateByTopic`), options shuffled once and lettered א–ד; default 100 questions.
 * In-progress sessions persist and resume after refresh; a saved session that no longer matches the quiz is discarded.
 
 ## Commands

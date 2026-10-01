@@ -6,7 +6,6 @@ import {
   isComplete,
   isSessionCompatible,
   isolateNumberRanges as fmt,
-  isValidQuizId,
   listTopics,
   presentOptions,
   progressInfo,
@@ -15,9 +14,9 @@ import {
   recordResult,
   skip,
   summarize,
-  validateQuiz,
 } from './core.js';
 import { ecgPath } from './ecg.js';
+import { loadQuizFromUrl, quizPlace } from './load-quiz.js';
 import { keys, load, remove, save } from './storage.js';
 
 const $ = (id) => document.getElementById(id);
@@ -38,6 +37,7 @@ const ui = {
   topicList: $('topic-list'),
   startButton: $('start-button'),
   best: $('best'),
+  printLink: $('print-link'),
   // play
   play: $('play'),
   trace: $('trace'),
@@ -355,36 +355,18 @@ function onKeyDown(event) {
 }
 
 async function main() {
-  const id = new URLSearchParams(location.search).get('id');
-  if (!isValidQuizId(id)) {
-    showStatus('לא נבחר בוחן.');
-    return;
-  }
-
   try {
-    const res = await fetch(`quizzes/${id}.json`, { cache: 'no-cache' });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    quiz = await res.json();
+    quiz = await loadQuizFromUrl();
   } catch (err) {
-    console.error(err);
-    showStatus(location.protocol === 'file:'
-      ? 'יש להריץ דרך שרת (npm run serve), הדפדפן חוסם טעינה מקובץ מקומי.'
-      : 'לא הצלחנו לטעון את הבוחן.');
+    showStatus(err.message);
     return;
   }
 
-  const errors = validateQuiz(quiz);
-  if (errors.length > 0) {
-    console.error('Invalid quiz file:', errors);
-    showStatus('קובץ הבוחן פגום. פרטים בקונסול.');
-    return;
-  }
-
-  // Kicker shows the subject and, when present, the unit: "אנטומיה ופיזיולוגיה · הלב".
-  const place = quiz.unit ? `${quiz.subject} · ${quiz.unit}` : quiz.subject;
+  const place = quizPlace(quiz);
   document.title = `${quiz.title} · ${place}`;
   ui.subject.textContent = place;
   ui.title.textContent = quiz.title;
+  ui.printLink.href = `print.html?id=${quiz.id}`;
   ui.description.textContent = quiz.description ?? '';
   ui.description.hidden = !quiz.description;
 

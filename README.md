@@ -23,6 +23,10 @@ No build step and no runtime dependencies. Node is only needed for the tests and
 - An unfinished session is saved in `localStorage` and resumes after a refresh.
   The quiz list shows which quizzes are in progress and your best first-try score
   (best score counts only runs over the whole quiz).
+- **Printable exam** (`print.html?id=…`, linked from the start screen): pick topics, a question count
+  (default 100, sampled in proportion to each topic's size) and an order (mixed, or grouped by topic).
+  Options are shuffled once and lettered א–ד. The answer key, optionally with explanations, starts on
+  a new page. Printing uses the browser's print dialog, so "Save as PDF" gives a file.
 - Keyboard: `1`–`4` choose, `S` skips, `Enter` continues. These use key codes, so they also work with a Hebrew layout.
 
 ## Adding a quiz
@@ -107,7 +111,7 @@ npm run serve     # http://localhost:8000 (fetch() does not work over file://)
 | `js/core.js` | pure logic: queue, scoring, stats, validation. No DOM, no storage |
 | `js/ecg.js` | pure SVG path for the ECG progress strip |
 | `js/storage.js` | guarded `localStorage` wrapper (prefix `anatomy-quizzes:v1:`) |
-| `js/index.js`, `js/quiz.js` | page UI |
+| `js/index.js`, `js/quiz.js`, `js/print.js` | page UI (`js/load-quiz.js`: shared quiz fetch + validation) |
 | `scripts/` | manifest, validate, and a tiny static dev server |
 | `fonts/` | self-hosted Assistant and Frank Ruhl Libre (SIL OFL, licenses included) |
 | `test/` | unit tests. `test/fixtures/` holds placeholder content only |
