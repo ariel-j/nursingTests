@@ -50,6 +50,7 @@ const ui = {
   options: $('options'),
   skip: $('skip'),
   feedback: $('feedback'),
+  countdown: $('countdown'),
   verdict: $('verdict'),
   explanation: $('explanation'),
   note: $('note'),
@@ -92,8 +93,13 @@ function el(tag, className, text) {
   return node;
 }
 
-function show(section) {
+function cancelAutoAdvance() {
   clearTimeout(autoAdvance);
+  ui.countdown.hidden = true;
+}
+
+function show(section) {
+  cancelAutoAdvance();
   for (const s of [ui.start, ui.play, ui.done]) s.hidden = s !== section;
   // The ring and session stats belong to a running (or just finished) session.
   ui.ring.hidden = section === ui.start;
@@ -294,6 +300,11 @@ function showFeedback(result, chosenIndex) {
     const chars = ui.explanation.textContent.length + (ui.note.hidden ? 0 : ui.note.textContent.length);
     const delay = Math.min(AUTO_ADVANCE_MAX_MS, Math.max(AUTO_ADVANCE_MIN_MS, AUTO_ADVANCE_BASE_MS + chars * AUTO_ADVANCE_PER_CHAR_MS));
     autoAdvance = setTimeout(next, delay);
+    // Visual countdown; restart the animation by toggling hidden.
+    ui.countdown.hidden = true;
+    ui.countdown.style.setProperty('--countdown', `${delay}ms`);
+    void ui.countdown.offsetWidth;
+    ui.countdown.hidden = false;
   }
 }
 
@@ -319,7 +330,7 @@ function skipQuestion() {
 }
 
 function next() {
-  clearTimeout(autoAdvance);
+  cancelAutoAdvance();
   if (phase !== 'feedback') return;
   if (isComplete(state)) renderDone();
   else renderQuestion();
@@ -440,7 +451,7 @@ async function main() {
   ui.skip.addEventListener('click', skipQuestion);
   ui.next.addEventListener('click', next);
   // Touching the explanation means the learner is still reading: stop the automatic advance.
-  ui.feedback.addEventListener('pointerdown', () => clearTimeout(autoAdvance));
+  ui.feedback.addEventListener('pointerdown', cancelAutoAdvance);
   ui.retryMissed.addEventListener('click', retryMissed);
   ui.newPractice.addEventListener('click', renderStart);
   document.addEventListener('keydown', onKeyDown);
