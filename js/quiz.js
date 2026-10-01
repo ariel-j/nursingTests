@@ -71,7 +71,11 @@ const ui = {
 const MODE_LABELS = { full: 'כל הבוחן', topics: 'נושאים נבחרים', retry: 'שאלות שחזרו' };
 const LETTERS = ['א', 'ב', 'ג', 'ד'];
 // After a correct answer, move on by itself unless the user asked for less motion.
-const AUTO_ADVANCE_MS = 1100;
+// The pause scales with the text the learner has to read (explanation plus note).
+const AUTO_ADVANCE_MIN_MS = 2500;
+const AUTO_ADVANCE_MAX_MS = 8000;
+const AUTO_ADVANCE_BASE_MS = 1500;
+const AUTO_ADVANCE_PER_CHAR_MS = 45;
 
 let quiz = null;
 let state = null;
@@ -286,7 +290,11 @@ function showFeedback(result, chosenIndex) {
   ui.feedback.hidden = false;
   renderProgress();
   ui.next.focus({ preventScroll: true });
-  if (correct && !prefersLessMotion()) autoAdvance = setTimeout(next, AUTO_ADVANCE_MS);
+  if (correct && !prefersLessMotion()) {
+    const chars = ui.explanation.textContent.length + (ui.note.hidden ? 0 : ui.note.textContent.length);
+    const delay = Math.min(AUTO_ADVANCE_MAX_MS, Math.max(AUTO_ADVANCE_MIN_MS, AUTO_ADVANCE_BASE_MS + chars * AUTO_ADVANCE_PER_CHAR_MS));
+    autoAdvance = setTimeout(next, delay);
+  }
 }
 
 function apply(result, chosenIndex) {
@@ -431,6 +439,8 @@ async function main() {
   });
   ui.skip.addEventListener('click', skipQuestion);
   ui.next.addEventListener('click', next);
+  // Touching the explanation means the learner is still reading: stop the automatic advance.
+  ui.feedback.addEventListener('pointerdown', () => clearTimeout(autoAdvance));
   ui.retryMissed.addEventListener('click', retryMissed);
   ui.newPractice.addEventListener('click', renderStart);
   document.addEventListener('keydown', onKeyDown);
