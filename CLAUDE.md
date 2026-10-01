@@ -36,7 +36,7 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 * Wrong or skipped questions re-queue 2-5 positions later, never immediately next (only exception: it is the last question left).
 * Mastery: correct on first try = mastered. After any miss or skip, needs 2 correct in a row (`MASTERY_STREAK`); not-yet-mastered correct answers re-queue the same way.
 * Wrong answer: chosen option red, correct green, explanation plus the note for the chosen option.
-* Correct answer auto-advances after ~1.1s, except when the toolbar's stop-motion is on or `prefers-reduced-motion: reduce`; then it waits for הבאה. Wrong/skipped always wait.
+* Correct answer auto-advances after a pause scaled to the explanation length (2.5-8s; touching the feedback panel cancels it), except when the toolbar's stop-motion is on or `prefers-reduced-motion: reduce`; then it waits for הבאה. Wrong/skipped always wait.
 * Progress: a ring with mastered/total, plus queue size and first-try correct. End screen: first-try score, retried questions, weak topics.
 * Session modes: `full` (whole quiz), `topics` (chosen topics, or chosen units in mixed practice), `retry` (questions that came back last run). Only `full` runs of a single quiz update the best score.
 * Printable exam: questions sampled per topic in proportion (`allocateByTopic`), options shuffled once and lettered א–ד; default 100 questions.
