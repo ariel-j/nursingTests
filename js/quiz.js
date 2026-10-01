@@ -16,7 +16,7 @@ import {
   summarize,
 } from './core.js';
 import { loadQuizFromUrl, quizPlace } from './load-quiz.js';
-import { keys, load, remove, save } from './storage.js';
+import { keys, load, prefs, remove, save } from './storage.js';
 
 const $ = (id) => document.getElementById(id);
 const ui = {
@@ -51,6 +51,7 @@ const ui = {
   skip: $('skip'),
   feedback: $('feedback'),
   countdown: $('countdown'),
+  autoToggle: $('auto-advance'),
   verdict: $('verdict'),
   explanation: $('explanation'),
   note: $('note'),
@@ -223,6 +224,12 @@ function renderProgress() {
   );
 }
 
+// The learner's explicit choice wins; until they make one, stop-motion / reduced motion means off.
+function autoAdvanceOn() {
+  const chosen = load(prefs.autoAdvance);
+  return typeof chosen === 'boolean' ? chosen : !prefersLessMotion();
+}
+
 function prefersLessMotion() {
   return document.documentElement.dataset.motion === 'off'
     || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -296,16 +303,21 @@ function showFeedback(result, chosenIndex) {
   ui.feedback.hidden = false;
   renderProgress();
   ui.next.focus({ preventScroll: true });
-  if (correct && !prefersLessMotion()) {
-    const chars = ui.explanation.textContent.length + (ui.note.hidden ? 0 : ui.note.textContent.length);
-    const delay = Math.min(AUTO_ADVANCE_MAX_MS, Math.max(AUTO_ADVANCE_MIN_MS, AUTO_ADVANCE_BASE_MS + chars * AUTO_ADVANCE_PER_CHAR_MS));
-    autoAdvance = setTimeout(next, delay);
-    // Visual countdown; restart the animation by toggling hidden.
-    ui.countdown.hidden = true;
-    ui.countdown.style.setProperty('--countdown', `${delay}ms`);
-    void ui.countdown.offsetWidth;
-    ui.countdown.hidden = false;
-  }
+  if (correct) startAutoAdvance();
+}
+
+// Auto-advance only follows a correct answer, and only while the learner has it switched on.
+function startAutoAdvance() {
+  cancelAutoAdvance();
+  if (phase !== 'feedback' || !ui.feedback.classList.contains('good') || !autoAdvanceOn()) return;
+  const chars = ui.explanation.textContent.length + (ui.note.hidden ? 0 : ui.note.textContent.length);
+  const delay = Math.min(AUTO_ADVANCE_MAX_MS, Math.max(AUTO_ADVANCE_MIN_MS, AUTO_ADVANCE_BASE_MS + chars * AUTO_ADVANCE_PER_CHAR_MS));
+  autoAdvance = setTimeout(next, delay);
+  // Visual countdown; restart the animation by toggling hidden.
+  ui.countdown.hidden = true;
+  ui.countdown.style.setProperty('--countdown', `${delay}ms`);
+  void ui.countdown.offsetWidth;
+  ui.countdown.hidden = false;
 }
 
 function apply(result, chosenIndex) {
@@ -409,7 +421,7 @@ function onKeyDown(event) {
     skipQuestion();
   } else if (phase === 'feedback' && (event.key === 'Enter' || event.key === ' ')) {
     // A focused button already handles Enter/Space natively; avoid a double advance.
-    if (event.target instanceof HTMLButtonElement || event.target instanceof HTMLAnchorElement) return;
+    if (event.target instanceof HTMLButtonElement || event.target instanceof HTMLAnchorElement || event.target instanceof HTMLInputElement) return;
     event.preventDefault();
     next();
   }
@@ -447,6 +459,12 @@ async function main() {
   ui.noTopics.addEventListener('click', () => {
     for (const c of topicCheckboxes()) c.checked = false;
     updateStartButton();
+  });
+  ui.autoToggle.checked = autoAdvanceOn();
+  ui.autoToggle.addEventListener('change', () => {
+    save(prefs.autoAdvance, ui.autoToggle.checked);
+    if (ui.autoToggle.checked) startAutoAdvance();
+    else cancelAutoAdvance();
   });
   ui.skip.addEventListener('click', skipQuestion);
   ui.next.addEventListener('click', next);

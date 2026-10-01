@@ -8,6 +8,11 @@ export const keys = {
   results: (quizId) => `results:${quizId}`,
 };
 
+// Global (not per quiz) preferences.
+export const prefs = {
+  autoAdvance: 'pref:auto-advance',
+};
+
 export function load(key, fallback = null) {
   try {
     const raw = window.localStorage.getItem(PREFIX + key);
