@@ -394,8 +394,10 @@ kbd {
 .explanation, .note { color: var(--ink); }
 .note { padding-inline-start: 0.75rem; border-inline-start: 3px solid var(--bad); }
 
-/* Skip at the start, next at the end. */
-.play-actions { justify-content: space-between; }
+/* Skip at the start, next at the end, the auto-advance switch between them. */
+.play-actions { justify-content: space-between; align-items: center; gap: 0.75rem; }
+.auto-toggle { display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer; color: var(--muted); font-size: 0.9375rem; }
+.auto-toggle input { inline-size: 1.15rem; block-size: 1.15rem; accent-color: var(--accent); }
 
 /* ---------- quiz: end ---------- */
 
