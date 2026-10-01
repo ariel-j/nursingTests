@@ -148,16 +148,45 @@ function blankProgress() {
   return { attempts: 0, firstTry: null, misses: 0, streak: 0, mastered: false };
 }
 
-/** Topics in order of first appearance, with question counts. */
-export function listTopics(quiz) {
+/**
+ * Topics in order of first appearance, with question counts. `field` picks another grouping
+ * field, e.g. 'group' for the units of a mixed quiz.
+ */
+export function listTopics(quiz, field = 'topic') {
   const counts = new Map();
-  for (const q of quiz.questions) counts.set(q.topic, (counts.get(q.topic) ?? 0) + 1);
+  for (const q of quiz.questions) counts.set(q[field], (counts.get(q[field]) ?? 0) + 1);
   return [...counts].map(([topic, count]) => ({ topic, count }));
 }
 
-export function questionIdsForTopics(quiz, topics) {
+export function questionIdsForTopics(quiz, topics, field = 'topic') {
   const wanted = new Set(topics);
-  return quiz.questions.filter((q) => wanted.has(q.topic)).map((q) => q.id);
+  return quiz.questions.filter((q) => wanted.has(q[field])).map((q) => q.id);
+}
+
+// ---------- mixed practice (all quizzes of one subject) ----------
+
+/** Stable, storage-safe quiz id for a subject's mixed practice: "mix-" + a short hash of the name. */
+export function mixedQuizId(subject) {
+  let h = 0x811c9dc5; // FNV-1a, 32 bit
+  for (let i = 0; i < subject.length; i++) {
+    h ^= subject.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return `mix-${(h >>> 0).toString(36)}`;
+}
+
+/**
+ * Merges validated quizzes of one subject into a single practice quiz, in the given order.
+ * Each question gets `group` (its quiz's unit, or the quiz title when there is no unit); its id
+ * is prefixed with the quiz id (two quizzes can both have "q001") and its topic with the group
+ * (two units can both have a topic called "עקרונות כלליים").
+ */
+export function buildMixedQuiz(subject, quizzes) {
+  const questions = quizzes.flatMap((quiz) => {
+    const group = quiz.unit ?? quiz.title;
+    return quiz.questions.map((q) => ({ ...q, id: `${quiz.id}/${q.id}`, topic: `${group} · ${q.topic}`, group }));
+  });
+  return { id: mixedQuizId(subject), subject, mixed: true, questions };
 }
 
 /**
@@ -318,4 +347,72 @@ export function recordResult(history, summary, date) {
     bestPercent: Math.max(prev.bestPercent ?? 0, last.percent),
     last,
   };
+}
+
+// ---------- printable exam ----------
+
+export const OPTION_LETTERS = ['א', 'ב', 'ג', 'ד'];
+// mixed: one random order, like a real exam; by-topic: grouped by topic, in topic order.
+export const PRINT_ORDERS = ['mixed', 'by-topic'];
+export const PRINT_DEFAULT_COUNT = 100;
+
+/**
+ * Splits `count` across topics in proportion to their sizes (largest remainder), so a short exam
+ * still samples every topic fairly. `sizes` is [{ topic, count }]; returns a Map topic → n.
+ */
+export function allocateByTopic(sizes, count) {
+  const total = sizes.reduce((sum, s) => sum + s.count, 0);
+  const n = Math.min(Math.max(0, Math.floor(count)), total);
+  const shares = sizes.map((s, order) => {
+    const exact = total === 0 ? 0 : (s.count * n) / total;
+    return { topic: s.topic, order, take: Math.floor(exact), rest: exact - Math.floor(exact) };
+  });
+  let left = n - shares.reduce((sum, s) => sum + s.take, 0);
+  // Ties go to the topic that appears first, so the split is stable.
+  for (const s of [...shares].sort((a, b) => b.rest - a.rest || a.order - b.order)) {
+    if (left === 0) break;
+    s.take += 1;
+    left -= 1;
+  }
+  return new Map(shares.map((s) => [s.topic, s.take]));
+}
+
+/**
+ * A fixed paper exam: `count` questions (clamped to what the chosen topics hold) sampled per topic,
+ * options shuffled once and lettered א–ד. by-topic keeps authored order within each topic.
+ * `topics` are values of `field` ('group' picks whole units of a mixed quiz); null means all.
+ */
+export function buildPrintExam(
+  quiz,
+  { topics = null, field = 'topic', count = PRINT_DEFAULT_COUNT, order = 'mixed' } = {},
+  rng = Math.random,
+) {
+  if (!PRINT_ORDERS.includes(order)) throw new Error(`unknown print order: ${order}`);
+  const wanted = topics === null ? null : new Set(topics);
+  const chosen = { questions: quiz.questions.filter((q) => wanted === null || wanted.has(q[field])) };
+  const sizes = listTopics(chosen);
+  const shares = allocateByTopic(sizes, count);
+
+  let picked = [];
+  for (const { topic } of sizes) {
+    const pool = chosen.questions.filter((q) => q.topic === topic);
+    const taken = new Set(shuffle(pool, rng).slice(0, shares.get(topic)).map((q) => q.id));
+    picked.push(...pool.filter((q) => taken.has(q.id)));
+  }
+  if (order === 'mixed') picked = shuffle(picked, rng);
+
+  return picked.map((q, i) => {
+    const options = presentOptions(q, rng);
+    const correctAt = options.findIndex((o) => o.correct);
+    return {
+      number: i + 1,
+      id: q.id,
+      topic: q.topic,
+      question: q.question,
+      options: options.map((o, j) => ({ letter: OPTION_LETTERS[j], text: o.text })),
+      correctLetter: OPTION_LETTERS[correctAt],
+      correctText: options[correctAt].text,
+      explanation: q.explanation,
+    };
+  });
 }

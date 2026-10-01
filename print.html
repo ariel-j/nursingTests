@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>מבחן להדפסה</title>
+  <link rel="preload" href="fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/print.js"></script>
+  <script type="module" src="js/a11y.js"></script>
+</head>
+<body>
+  <main class="page print-page">
+    <nav class="top-nav">
+      <a id="back-link" href="./">→ חזרה לבוחן</a>
+      <a href="./">כל הבחנים</a>
+    </nav>
+
+    <header class="quiz-header">
+      <div class="hstats">
+        <p id="subject" class="kicker"></p>
+        <h1>מבחן להדפסה</h1>
+        <p id="quiz-title" class="stats"></p>
+      </div>
+    </header>
+    <p id="status" class="status" role="status">טוען…</p>
+
+    <form id="print-form" class="card" hidden>
+      <h2>מה ייכנס למבחן</h2>
+      <fieldset class="topics">
+        <legend id="topics-legend">נושאים</legend>
+        <div class="topic-actions">
+          <button id="all-topics" class="chip" type="button">בחר הכל</button>
+          <button id="no-topics" class="chip" type="button">נקה</button>
+        </div>
+        <ul id="topic-list" class="topic-list"></ul>
+      </fieldset>
+
+      <div class="print-settings">
+        <div class="setting">
+          <label for="count" class="setting-label">מספר שאלות</label>
+          <div class="count-row">
+            <input id="count" type="number" inputmode="numeric" min="1" step="1" aria-describedby="count-hint">
+            <span id="count-hint" class="muted"></span>
+          </div>
+        </div>
+
+        <fieldset class="setting">
+          <legend class="setting-label">סדר השאלות</legend>
+          <label class="radio"><input type="radio" name="order" value="mixed" checked> מעורבב, כמו במבחן</label>
+          <label class="radio"><input type="radio" name="order" value="by-topic"> לפי נושאים, עם כותרות</label>
+        </fieldset>
+
+        <div class="setting">
+          <span class="setting-label">מפתח תשובות</span>
+          <label class="radio"><input id="explanations" type="checkbox" checked> כולל הסברים</label>
+        </div>
+      </div>
+
+      <p id="summary" class="print-summary" aria-live="polite"></p>
+
+      <div class="actions">
+        <button id="print-button" class="primary" type="submit">הדפסה / שמירה כ-PDF</button>
+        <button id="reshuffle" class="secondary" type="button">ערבוב מחדש</button>
+      </div>
+      <p class="muted print-tip">בחלון ההדפסה בחרו „שמירה כ-PDF״ כדי לקבל קובץ. מפתח התשובות מתחיל בעמוד חדש, כך שאפשר להדפיס אותו בנפרד.</p>
+    </form>
+
+    <p id="preview-label" class="preview-label" hidden>תצוגה מקדימה</p>
+    <article id="sheet" class="sheet" aria-labelledby="preview-label" hidden></article>
+  </main>
+
+  <footer class="site-footer page">
+    <nav>
+      <a href="accessibility.html">הצהרת נגישות</a>
+      <a href="privacy.html">מדיניות פרטיות</a>
+    </nav>
+    <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+  </footer>
+</body>
+</html>

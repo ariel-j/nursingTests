@@ -23,6 +23,10 @@ No build step and no runtime dependencies. Node is only needed for the tests and
 - An unfinished session is saved in `localStorage` and resumes after a refresh.
   The quiz list shows which quizzes are in progress and your best first-try score
   (best score counts only runs over the whole quiz).
+- **Printable exam** (`print.html?id=…`, linked from the start screen): pick topics, a question count
+  (default 100, sampled in proportion to each topic's size) and an order (mixed, or grouped by topic).
+  Options are shuffled once and lettered א–ד. The answer key, optionally with explanations, starts on
+  a new page. Printing uses the browser's print dialog, so "Save as PDF" gives a file.
 - Keyboard: `1`–`4` choose, `S` skips, `Enter` continues. These use key codes, so they also work with a Hebrew layout.
 
 ## Adding a quiz
@@ -33,7 +37,8 @@ Writing guidelines, plus a brief you can paste into the session that writes the 
 1. Make sure the quiz's `subject` (and `unit`, if that subject has units) exist in
    `quizzes/subjects.json`. Add them there first if needed.
 2. Save the quiz as `quizzes/<id>.json`. The file name must match `id`. If you were given the quiz in
-   the authoring format (options as plain strings + `correctIndex` + `wrongExplanations`), convert it:
+   the authoring format (options as plain strings + `correctIndex` + `wrongExplanations`, or its variant
+   `stem` + `answer` + `notes` with one note per option and `null` for the correct one, or no `notes` at all), convert it:
    `npm run import -- <src.json> --id <id> --subject "<subject>" --unit "<unit>" --title "<title>"`.
 3. `npm run manifest` to regenerate `quizzes/manifest.json`.
 4. `npm run validate` to check everything.
@@ -120,11 +125,12 @@ npm run serve     # http://localhost:8000 (fetch() does not work over file://)
 | Path | Role |
 | --- | --- |
 | `js/core.js` | pure logic: queue, scoring, stats, validation. No DOM, no storage |
-| `js/ecg.js` | pure SVG path for the ECG progress strip |
 | `js/storage.js` | guarded `localStorage` wrapper (prefix `anatomy-quizzes:v1:`) |
-| `js/index.js`, `js/quiz.js` | page UI |
+| `js/index.js`, `js/quiz.js`, `js/print.js` | page UI (`js/load-quiz.js`: quiz loading shared by quiz.js and print.js). `quiz.html?id=<quiz>` plays one quiz; `quiz.html?subject=<name>` is mixed practice across the subject's units (the home page's "בחירת נושאים למבחן" card) |
 | `summaries/`, `css/summary.css` | short summaries, the hub and the combined print page |
 | `js/summary-list.js` | the list of summaries (no DOM); `js/summaries.js`, `js/summary.js`, `js/summaries-all.js` drive the pages |
 | `scripts/` | manifest, validate, and a tiny static dev server |
-| `fonts/` | self-hosted Assistant and Frank Ruhl Libre (SIL OFL, licenses included) |
+| `css/style.css` | the whole site's styles; follows `design/STYLE.md` |
+| `design/` | design spec (`STYLE.md`) and the reference page it was taken from. Not used by the site |
+| `fonts/` | self-hosted Rubik and Frank Ruhl Libre (SIL OFL, licenses included) |
 | `test/` | unit tests. `test/fixtures/` holds placeholder content only |
