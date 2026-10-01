@@ -5,8 +5,8 @@ import {
   buildPrintExam,
   isolateNumberRanges as fmt,
   listTopics,
+  questionIdsForTopics,
 } from './core.js';
-import { ecgPath } from './ecg.js';
 import { loadQuizFromUrl, quizPlace } from './load-quiz.js';
 
 const $ = (id) => document.getElementById(id);
@@ -18,6 +18,7 @@ const ui = {
   form: $('print-form'),
   allTopics: $('all-topics'),
   noTopics: $('no-topics'),
+  topicsLegend: $('topics-legend'),
   topicList: $('topic-list'),
   count: $('count'),
   countHint: $('count-hint'),
@@ -29,7 +30,6 @@ const ui = {
   sheet: $('sheet'),
 };
 
-const SVG_NS = 'http://www.w3.org/2000/svg';
 const ORDER_LABELS = { mixed: 'סדר מעורבב', 'by-topic': 'לפי נושאים' };
 
 let quiz = null;
@@ -55,9 +55,17 @@ function selectedTopics() {
   return topicCheckboxes().filter((c) => c.checked).map((c) => c.value);
 }
 
+// A mixed quiz is chosen by unit, like on the practice page.
+function selectionField() {
+  return quiz.mixed ? 'group' : 'topic';
+}
+
 function available(topics) {
-  const wanted = new Set(topics);
-  return listTopics(quiz).filter((t) => wanted.has(t.topic)).reduce((sum, t) => sum + t.count, 0);
+  return questionIdsForTopics(quiz, topics, selectionField()).length;
+}
+
+function examTitle() {
+  return quiz.mixed ? 'מבחן משולב' : quiz.title;
 }
 
 function order() {
@@ -65,7 +73,7 @@ function order() {
 }
 
 function renderTopics() {
-  ui.topicList.replaceChildren(...listTopics(quiz).map(({ topic, count }) => {
+  ui.topicList.replaceChildren(...listTopics(quiz, selectionField()).map(({ topic, count }) => {
     const li = el('li');
     const label = el('label', 'topic-option');
     const box = el('input');
@@ -115,7 +123,7 @@ function rebuild() {
   ui.count.max = String(Math.max(1, max));
   ui.count.disabled = max === 0;
   if (document.activeElement !== ui.count || Number(ui.count.value) > max) ui.count.value = String(count);
-  ui.countHint.textContent = max === 0 ? '' : `מתוך ${max} בנושאים שנבחרו`;
+  ui.countHint.textContent = max === 0 ? '' : `מתוך ${max} זמינות`;
 
   ui.printButton.disabled = max === 0;
   ui.reshuffle.disabled = max === 0;
@@ -127,26 +135,13 @@ function rebuild() {
     return;
   }
 
-  exam = buildPrintExam(quiz, { topics, count, order: order() }, Math.random);
+  exam = buildPrintExam(quiz, { topics, field: selectionField(), count, order: order() }, Math.random);
   const topicCount = new Set(exam.map((q) => q.topic)).size;
   ui.summary.textContent = `${exam.length} שאלות מ-${topicCount} נושאים · ${ORDER_LABELS[order()]}`;
   renderSheet();
 }
 
 // ---------- the sheet ----------
-
-function ecgStrip() {
-  const svg = document.createElementNS(SVG_NS, 'svg');
-  svg.setAttribute('class', 'ecg exam-ecg');
-  svg.setAttribute('viewBox', '0 0 1000 64');
-  svg.setAttribute('preserveAspectRatio', 'none');
-  svg.setAttribute('aria-hidden', 'true');
-  const path = document.createElementNS(SVG_NS, 'path');
-  path.setAttribute('class', 'ecg-trace');
-  path.setAttribute('d', ecgPath(1, 12));
-  svg.append(path);
-  return svg;
-}
 
 function field(label, trailing = '') {
   const span = el('span', 'exam-field');
@@ -155,16 +150,17 @@ function field(label, trailing = '') {
   return span;
 }
 
-function renderHead(topicCount) {
-  const totalTopics = listTopics(quiz).length;
+function renderHead() {
+  const chosen = selectedTopics().length;
+  const total = topicCheckboxes().length;
+  const noun = quiz.mixed ? 'יחידות' : 'נושאים';
   const head = el('header', 'exam-head');
-  const topicText = topicCount === totalTopics ? 'כל הנושאים' : `${topicCount} מתוך ${totalTopics} נושאים`;
+  const topicText = chosen === total ? `כל ה${noun}` : `${chosen} מתוך ${total} ${noun}`;
   const fields = el('p', 'exam-fields');
   fields.append(field('שם:'), field('תאריך:'), field('ציון:', `מתוך ${exam.length}`));
   head.append(
-    ecgStrip(),
     el('p', 'exam-kicker', quizPlace(quiz)),
-    el('h2', 'exam-title', quiz.title),
+    el('h2', 'exam-title', examTitle()),
     el('p', 'exam-meta', `${exam.length} שאלות · ${topicText} · ${ORDER_LABELS[order()]}`),
     fields,
     el('p', 'exam-instructions', 'לכל שאלה תשובה נכונה אחת. הקיפו את האות שבחרתם. מפתח התשובות וההסברים בסוף המבחן.'),
@@ -220,7 +216,7 @@ function renderKey() {
   const key = el('section', 'exam-key');
   key.append(
     el('h2', 'exam-title', 'מפתח תשובות'),
-    el('p', 'exam-meta', `${quiz.title} · ${quizPlace(quiz)}`),
+    el('p', 'exam-meta', `${examTitle()} · ${quizPlace(quiz)}`),
   );
 
   const grid = el('ol', 'key-grid');
@@ -251,12 +247,11 @@ function renderKey() {
 }
 
 function renderSheet() {
-  const topicCount = new Set(exam.map((q) => q.topic)).size;
-  ui.sheet.replaceChildren(renderHead(topicCount), renderBody(), renderKey());
+  ui.sheet.replaceChildren(renderHead(), renderBody(), renderKey());
   ui.sheet.hidden = false;
   ui.previewLabel.hidden = false;
   // Becomes the suggested file name in "Save as PDF".
-  document.title = `${quiz.title} · ${quiz.unit ?? quiz.subject} · ${exam.length} שאלות`;
+  document.title = `${examTitle()} · ${quiz.unit ?? quiz.subject} · ${exam.length} שאלות`;
 }
 
 // ---------- wiring ----------
@@ -277,8 +272,9 @@ async function main() {
   ui.status.hidden = true;
   ui.form.hidden = false;
   ui.subject.textContent = quizPlace(quiz);
-  ui.title.textContent = quiz.title;
-  ui.backLink.href = `quiz.html?id=${quiz.id}`;
+  ui.title.textContent = examTitle();
+  ui.topicsLegend.textContent = quiz.mixed ? 'יחידות' : 'נושאים';
+  ui.backLink.href = `quiz.html${location.search}`;
 
   ui.allTopics.addEventListener('click', () => setAllTopics(true));
   ui.noTopics.addEventListener('click', () => setAllTopics(false));

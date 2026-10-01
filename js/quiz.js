@@ -15,7 +15,6 @@ import {
   skip,
   summarize,
 } from './core.js';
-import { ecgPath } from './ecg.js';
 import { loadQuizFromUrl, quizPlace } from './load-quiz.js';
 import { keys, load, remove, save } from './storage.js';
 
@@ -40,7 +39,10 @@ const ui = {
   printLink: $('print-link'),
   // play
   play: $('play'),
-  trace: $('trace'),
+  ring: $('ring'),
+  ringFill: $('ring-fill'),
+  ringMastered: $('ring-mastered'),
+  ringTotal: $('ring-total'),
   progressText: $('progress-text'),
   topic: $('topic'),
   retryLabel: $('retry-label'),
@@ -67,6 +69,9 @@ const ui = {
 };
 
 const MODE_LABELS = { full: 'כל הבוחן', topics: 'נושאים נבחרים', retry: 'שאלות שחזרו' };
+const LETTERS = ['א', 'ב', 'ג', 'ד'];
+// After a correct answer, move on by itself unless the user asked for less motion.
+const AUTO_ADVANCE_MS = 1100;
 
 let quiz = null;
 let state = null;
@@ -74,6 +79,7 @@ let state = null;
 let phase = 'start';
 let optionButtons = [];
 let lastSummary = null;
+let autoAdvance = null;
 
 function el(tag, className, text) {
   const node = document.createElement(tag);
@@ -83,7 +89,11 @@ function el(tag, className, text) {
 }
 
 function show(section) {
+  clearTimeout(autoAdvance);
   for (const s of [ui.start, ui.play, ui.done]) s.hidden = s !== section;
+  // The ring and session stats belong to a running (or just finished) session.
+  ui.ring.hidden = section === ui.start;
+  ui.progressText.hidden = section === ui.start;
   ui.status.hidden = true;
   ui.toStart.hidden = section === ui.start;
   window.scrollTo({ top: 0 });
@@ -93,6 +103,8 @@ function showStatus(text) {
   ui.status.textContent = text;
   ui.status.hidden = false;
   for (const s of [ui.start, ui.play, ui.done]) s.hidden = true;
+  ui.ring.hidden = true;
+  ui.progressText.hidden = true;
 }
 
 function persist() {
@@ -107,13 +119,16 @@ function loadSavedSession() {
 
 // ---------- start screen ----------
 
+// A mixed practice is chosen by unit ("group"); a single quiz by topic.
+const selectionField = () => (quiz.mixed ? 'group' : 'topic');
+
 function topicCheckboxes() {
   return [...ui.topicList.querySelectorAll('input[type="checkbox"]')];
 }
 
 function selectedQuestionIds() {
   const topics = topicCheckboxes().filter((c) => c.checked).map((c) => c.value);
-  return questionIdsForTopics(quiz, topics);
+  return questionIdsForTopics(quiz, topics, selectionField());
 }
 
 function updateStartButton() {
@@ -123,7 +138,7 @@ function updateStartButton() {
 }
 
 function renderTopics() {
-  ui.topicList.replaceChildren(...listTopics(quiz).map(({ topic, count }) => {
+  ui.topicList.replaceChildren(...listTopics(quiz, selectionField()).map(({ topic, count }) => {
     const li = el('li');
     const label = el('label', 'topic-option');
     const box = el('input');
@@ -173,13 +188,34 @@ function onStartSubmit(event) {
 
 // ---------- play ----------
 
+function stat(label, value) {
+  const span = el('span', null, `${label}: `);
+  span.append(el('strong', null, value));
+  return span;
+}
+
 function renderProgress() {
   const { mastered, total, queueSize } = progressInfo(state);
-  ui.trace.setAttribute('d', ecgPath(total === 0 ? 0 : mastered / total));
+  const firstTries = Object.values(state.progress).map((p) => p.firstTry).filter((t) => t !== null);
+  const firstOk = firstTries.filter((t) => t === 'correct').length;
+
+  const fraction = total === 0 ? 0 : mastered / total;
+  ui.ringFill.setAttribute('stroke-dashoffset', String(100 * (1 - fraction)));
+  ui.ringFill.classList.toggle('is-empty', mastered === 0);
+  ui.ringMastered.textContent = String(mastered);
+  ui.ringTotal.textContent = `מתוך ${total}`;
+  ui.ring.setAttribute('aria-label', `נשלטו ${mastered} מתוך ${total}`);
+
   ui.progressText.replaceChildren(
-    el('span', null, `נשלטו ${mastered} מתוך ${total}`),
-    el('span', null, `בתור: ${queueSize}`),
+    stat('בתור', String(queueSize)),
+    ' ',
+    stat('נכון בניסיון ראשון', `${firstOk}/${firstTries.length}`),
   );
+}
+
+function prefersLessMotion() {
+  return document.documentElement.dataset.motion === 'off'
+    || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 function renderQuestion() {
@@ -188,19 +224,20 @@ function renderQuestion() {
   const question = currentQuestion(state, quiz);
   ui.feedback.hidden = true;
   ui.skip.disabled = false;
+  ui.next.disabled = true;
   renderProgress();
 
   ui.topic.textContent = question.topic;
   const { attempts } = state.progress[question.id];
   ui.retryLabel.hidden = attempts === 0;
-  ui.retryLabel.textContent = `חוזרת · ניסיון ${attempts + 1}`;
+  ui.retryLabel.textContent = `שאלה חוזרת · ניסיון ${attempts + 1}`;
   ui.question.textContent = fmt(question.question);
 
   optionButtons = presentOptions(question).map((opt, i) => {
     const button = el('button', 'option');
     button.type = 'button';
     button.dataset.index = String(opt.index);
-    button.append(el('kbd', null, String(i + 1)), el('span', null, fmt(opt.text)));
+    button.append(el('span', 'letter', LETTERS[i]), el('span', 'option-text', fmt(opt.text)));
     button.addEventListener('click', () => choose(opt.index));
     return button;
   });
@@ -209,6 +246,8 @@ function renderQuestion() {
     li.append(b);
     return li;
   }));
+  // The previous focus (an option or "next") is now disabled or gone; start the new question there.
+  ui.question.focus({ preventScroll: true });
 }
 
 function showFeedback(result, chosenIndex) {
@@ -223,6 +262,7 @@ function showFeedback(result, chosenIndex) {
     else button.classList.add('is-dim');
   }
   ui.skip.disabled = true;
+  ui.next.disabled = false;
 
   if (chosenIndex === null) ui.verdict.textContent = 'דילגת. התשובה הנכונה מסומנת.';
   else ui.verdict.textContent = correct ? 'נכון!' : 'לא נכון.';
@@ -246,13 +286,14 @@ function showFeedback(result, chosenIndex) {
   ui.feedback.hidden = false;
   renderProgress();
   ui.next.focus({ preventScroll: true });
+  if (correct && !prefersLessMotion()) autoAdvance = setTimeout(next, AUTO_ADVANCE_MS);
 }
 
 function apply(result, chosenIndex) {
   state = result.state;
   persist();
-  // Best score only means something for a run over the whole quiz.
-  if (isComplete(state) && state.mode === 'full') {
+  // Best score only means something for a run over the whole of one quiz.
+  if (isComplete(state) && state.mode === 'full' && !quiz.mixed) {
     const summary = summarize(state, quiz);
     save(keys.results(quiz.id), recordResult(load(keys.results(quiz.id)), summary, new Date().toISOString()));
   }
@@ -270,6 +311,7 @@ function skipQuestion() {
 }
 
 function next() {
+  clearTimeout(autoAdvance);
   if (phase !== 'feedback') return;
   if (isComplete(state)) renderDone();
   else renderQuestion();
@@ -307,10 +349,11 @@ function renderDone() {
   ui.weakTopics.replaceChildren(...summary.weakTopics.map((t) => {
     const li = el('li');
     const bar = el('span', 'bar');
+    bar.setAttribute('aria-hidden', 'true');
     const fill = el('i');
     fill.style.inlineSize = `${Math.round(t.rate * 100)}%`;
     bar.append(fill);
-    li.append(el('span', null, t.topic), bar, el('span', 'count', `${t.missed}/${t.total}`));
+    li.append(el('span', null, t.topic), el('span', 'count', `${t.missed} מתוך ${t.total} חזרו`), bar);
     return li;
   }));
   ui.noWeak.hidden = summary.weakTopics.length > 0;
@@ -322,7 +365,6 @@ function renderDone() {
   ui.noRetried.hidden = summary.retried.length > 0;
 
   ui.retryMissed.hidden = summary.retried.length === 0;
-  ui.retryMissed.textContent = `תרגל רק את ${summary.retried.length} השאלות שחזרו`;
   (ui.retryMissed.hidden ? ui.newPractice : ui.retryMissed).focus({ preventScroll: true });
 }
 
@@ -362,11 +404,13 @@ async function main() {
     return;
   }
 
+  // Kicker shows the subject and, when present, the unit: "אנטומיה ופיזיולוגיה · הלב".
   const place = quizPlace(quiz);
   document.title = `${quiz.title} · ${place}`;
   ui.subject.textContent = place;
   ui.title.textContent = quiz.title;
-  ui.printLink.href = `print.html?id=${quiz.id}`;
+  // Same ?id= or ?subject= as this page, so mixed practice prints mixed too.
+  ui.printLink.href = `print.html${location.search}`;
   ui.description.textContent = quiz.description ?? '';
   ui.description.hidden = !quiz.description;
 

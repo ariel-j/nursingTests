@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { OPTION_LETTERS, allocateByTopic, buildPrintExam } from '../js/core.js';
+import { OPTION_LETTERS, allocateByTopic, buildMixedQuiz, buildPrintExam } from '../js/core.js';
 
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/sample-quiz.json', import.meta.url), 'utf8'));
 const clone = (v) => structuredClone(v);
@@ -86,6 +86,15 @@ test('buildPrintExam is reproducible with the same rng and does not mutate the q
   const before = clone(fixture);
   assert.deepEqual(buildPrintExam(fixture, { count: 4 }, seeded(9)), buildPrintExam(fixture, { count: 4 }, seeded(9)));
   assert.deepEqual(fixture, before);
+});
+
+test('buildPrintExam selects whole units of a mixed quiz by group', () => {
+  const a = { ...clone(fixture), id: 'a', unit: 'יחידה א' };
+  const b = { ...clone(fixture), id: 'b', unit: 'יחידה ב' };
+  const mixed = buildMixedQuiz('מקצוע', [a, b]);
+  const exam = buildPrintExam(mixed, { topics: ['יחידה ב'], field: 'group', count: 99 }, seeded(4));
+  assert.equal(exam.length, fixture.questions.length);
+  assert.ok(exam.every((q) => q.id.startsWith('b/') && q.topic.startsWith('יחידה ב · ')));
 });
 
 test('buildPrintExam rejects an unknown order', () => {

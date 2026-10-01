@@ -148,16 +148,45 @@ function blankProgress() {
   return { attempts: 0, firstTry: null, misses: 0, streak: 0, mastered: false };
 }
 
-/** Topics in order of first appearance, with question counts. */
-export function listTopics(quiz) {
+/**
+ * Topics in order of first appearance, with question counts. `field` picks another grouping
+ * field, e.g. 'group' for the units of a mixed quiz.
+ */
+export function listTopics(quiz, field = 'topic') {
   const counts = new Map();
-  for (const q of quiz.questions) counts.set(q.topic, (counts.get(q.topic) ?? 0) + 1);
+  for (const q of quiz.questions) counts.set(q[field], (counts.get(q[field]) ?? 0) + 1);
   return [...counts].map(([topic, count]) => ({ topic, count }));
 }
 
-export function questionIdsForTopics(quiz, topics) {
+export function questionIdsForTopics(quiz, topics, field = 'topic') {
   const wanted = new Set(topics);
-  return quiz.questions.filter((q) => wanted.has(q.topic)).map((q) => q.id);
+  return quiz.questions.filter((q) => wanted.has(q[field])).map((q) => q.id);
+}
+
+// ---------- mixed practice (all quizzes of one subject) ----------
+
+/** Stable, storage-safe quiz id for a subject's mixed practice: "mix-" + a short hash of the name. */
+export function mixedQuizId(subject) {
+  let h = 0x811c9dc5; // FNV-1a, 32 bit
+  for (let i = 0; i < subject.length; i++) {
+    h ^= subject.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return `mix-${(h >>> 0).toString(36)}`;
+}
+
+/**
+ * Merges validated quizzes of one subject into a single practice quiz, in the given order.
+ * Each question gets `group` (its quiz's unit, or the quiz title when there is no unit); its id
+ * is prefixed with the quiz id (two quizzes can both have "q001") and its topic with the group
+ * (two units can both have a topic called "עקרונות כלליים").
+ */
+export function buildMixedQuiz(subject, quizzes) {
+  const questions = quizzes.flatMap((quiz) => {
+    const group = quiz.unit ?? quiz.title;
+    return quiz.questions.map((q) => ({ ...q, id: `${quiz.id}/${q.id}`, topic: `${group} · ${q.topic}`, group }));
+  });
+  return { id: mixedQuizId(subject), subject, mixed: true, questions };
 }
 
 /**
@@ -351,18 +380,24 @@ export function allocateByTopic(sizes, count) {
 /**
  * A fixed paper exam: `count` questions (clamped to what the chosen topics hold) sampled per topic,
  * options shuffled once and lettered א–ד. by-topic keeps authored order within each topic.
+ * `topics` are values of `field` ('group' picks whole units of a mixed quiz); null means all.
  */
-export function buildPrintExam(quiz, { topics, count = PRINT_DEFAULT_COUNT, order = 'mixed' } = {}, rng = Math.random) {
+export function buildPrintExam(
+  quiz,
+  { topics = null, field = 'topic', count = PRINT_DEFAULT_COUNT, order = 'mixed' } = {},
+  rng = Math.random,
+) {
   if (!PRINT_ORDERS.includes(order)) throw new Error(`unknown print order: ${order}`);
-  const wanted = new Set(topics ?? quiz.questions.map((q) => q.topic));
-  const sizes = listTopics(quiz).filter((t) => wanted.has(t.topic));
+  const wanted = topics === null ? null : new Set(topics);
+  const chosen = { questions: quiz.questions.filter((q) => wanted === null || wanted.has(q[field])) };
+  const sizes = listTopics(chosen);
   const shares = allocateByTopic(sizes, count);
 
   let picked = [];
   for (const { topic } of sizes) {
-    const pool = quiz.questions.filter((q) => q.topic === topic);
-    const chosen = new Set(shuffle(pool, rng).slice(0, shares.get(topic)).map((q) => q.id));
-    picked.push(...pool.filter((q) => chosen.has(q.id)));
+    const pool = chosen.questions.filter((q) => q.topic === topic);
+    const taken = new Set(shuffle(pool, rng).slice(0, shares.get(topic)).map((q) => q.id));
+    picked.push(...pool.filter((q) => taken.has(q.id)));
   }
   if (order === 'mixed') picked = shuffle(picked, rng);
 

@@ -15,18 +15,18 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 ## Layout
 
 * `js/core.js`: pure logic (queue, scoring, stats, topics, quiz validation). No DOM, no storage; imported by Node tests and the scripts. Randomness is injected as an `rng` argument; state is plain JSON and never mutated.
-* `js/ecg.js`: pure SVG path for the ECG progress strip.
 * `js/storage.js`: guarded localStorage wrapper (prefix `anatomy-quizzes:v1:`). Keys: `session:<id>` (in-progress state), `results:<id>` (attempts, best score).
 * `js/index.js`: home page; renders the manifest tree of subjects → units → quizzes.
-* `js/quiz.js`: start screen (resume / choose topics) → play → end screen (retry missed).
+* `js/quiz.js`: start screen (resume / choose topics) → play → end screen (retry missed). `?id=<quiz>` plays one quiz; `?subject=<name>` plays mixed practice ("בחירת נושאים למבחן"): every quiz of the subject merged by `buildMixedQuiz` (question ids `<quiz>/<q>`, topics `<unit> · <topic>`), chosen by unit, saved as `session:mix-<hash>`, no best score.
 * `js/print.js` + `print.html`: printable exam (topics, count, order; answer key with optional explanations). Uses `buildPrintExam` from core.js and `@media print` / `@page` in style.css; the browser's print dialog makes the PDF.
-* `js/load-quiz.js`: fetches and validates `?id=` for quiz.js and print.js.
+* `js/load-quiz.js`: loads `?id=<quiz>` or `?subject=<name>` (mixed) for quiz.js and print.js; validates every quiz file.
 * `js/a11y.js`: accessibility toolbar (text size, high contrast, underline links, stop motion); sets `data-*` on `<html>`, persists in localStorage. Imported by every page.
 * `accessibility.html` (הצהרת נגישות) and `privacy.html` (מדיניות פרטיות): static content pages; every page has a footer linking to them.
+* `css/style.css`: all styles, following `design/STYLE.md` (tokens, ring, cards, letter badges). `design/reference.html` is the standalone page the design was taken from; reference only, the site doesn't use it.
 * `scripts/`: `manifest.mjs`, `validate.mjs`, `import.mjs` (+`import-format.mjs`), shared `quizzes.mjs`, dev `serve.mjs`.
 * `quizzes/subjects.json`: hand-written catalog of subjects and their units (order shown on the home page).
 * `quizzes/<id>.json`: one quiz per file; required `subject`, plus `unit` when its subject declares units. Subject/unit must exist in the catalog. `quizzes/manifest.json` is generated (a subjects → units → quizzes tree; titles numeric-aware).
-* Authoring format (options as strings + `correctIndex` + `wrongExplanations`) is converted with `npm run import`.
+* Authoring format (options as strings + `correctIndex` + `wrongExplanations`, or the variant `stem` + `answer` + option-aligned `notes`) is converted with `npm run import`.
 * Quiz format is documented in README.md.
 
 ## Quiz rules the engine must keep
@@ -35,8 +35,9 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 * Wrong or skipped questions re-queue 2-5 positions later, never immediately next (only exception: it is the last question left).
 * Mastery: correct on first try = mastered. After any miss or skip, needs 2 correct in a row (`MASTERY_STREAK`); not-yet-mastered correct answers re-queue the same way.
 * Wrong answer: chosen option red, correct green, explanation plus the note for the chosen option.
-* Progress: mastered/total and queue size. End screen: first-try score, retried questions, weak topics.
-* Session modes: `full` (whole quiz), `topics` (chosen topics), `retry` (questions that came back last run). Only `full` runs update the best score.
+* Correct answer auto-advances after ~1.1s, except when the toolbar's stop-motion is on or `prefers-reduced-motion: reduce`; then it waits for הבאה. Wrong/skipped always wait.
+* Progress: a ring with mastered/total, plus queue size and first-try correct. End screen: first-try score, retried questions, weak topics.
+* Session modes: `full` (whole quiz), `topics` (chosen topics, or chosen units in mixed practice), `retry` (questions that came back last run). Only `full` runs of a single quiz update the best score.
 * Printable exam: questions sampled per topic in proportion (`allocateByTopic`), options shuffled once and lettered א–ד; default 100 questions.
 * In-progress sessions persist and resume after refresh; a saved session that no longer matches the quiz is discarded.
 
