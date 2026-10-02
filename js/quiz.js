@@ -416,6 +416,9 @@ function onKeyDown(event) {
       event.preventDefault();
       button.click();
     }
+  } else if ((phase === 'question' || phase === 'feedback') && event.code === 'KeyA') {
+    event.preventDefault();
+    ui.autoToggle.click();
   } else if (phase === 'question' && event.code === 'KeyS') {
     event.preventDefault();
     skipQuestion();
