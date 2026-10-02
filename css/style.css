@@ -397,6 +397,7 @@ kbd {
 /* Skip at the start, next at the end, the auto-advance switch between them. */
 .play-actions { justify-content: space-between; align-items: center; gap: 0.75rem; }
 .auto-toggle { display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer; color: var(--muted); font-size: 0.9375rem; }
+.play-actions { flex-wrap: wrap; }
 .auto-toggle input { inline-size: 1.15rem; block-size: 1.15rem; accent-color: var(--accent); }
 
 /* ---------- quiz: end ---------- */
@@ -432,8 +433,13 @@ kbd {
   .card, .quiz-card { padding: 16px; }
 }
 
+@media (max-width: 480px) {
+  /* Narrow screens: the switch gets its own row above skip / next. */
+  .auto-toggle { order: -1; flex-basis: 100%; }
+}
+
 @media (hover: none) {
-  .keys-hint, .primary kbd, .secondary kbd { display: none; }
+  .keys-hint, .primary kbd, .secondary kbd, .auto-toggle kbd { display: none; }
 }
 
 /* ---------- quiz: print entry ---------- */
