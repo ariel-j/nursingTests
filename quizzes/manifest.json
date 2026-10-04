@@ -1,6 +1,7 @@
 {
   "subjects": [
     {
+      "id": "anatomy",
       "name": "אנטומיה ופיזיולוגיה",
       "units": [
         {
@@ -92,6 +93,12 @@
           ]
         }
       ],
+      "quizzes": []
+    },
+    {
+      "id": "pharmacology",
+      "name": "פרמקולוגיה",
+      "units": [],
       "quizzes": []
     }
   ]

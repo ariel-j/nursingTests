@@ -15,7 +15,7 @@ import {
   skip,
   summarize,
 } from './core.js';
-import { loadQuizFromUrl, quizPlace } from './load-quiz.js';
+import { loadQuizFromUrl, quizPlace, subjectHomeHref } from './load-quiz.js';
 import { keys, load, prefs, remove, save } from './storage.js';
 
 const $ = (id) => document.getElementById(id);
@@ -37,6 +37,7 @@ const ui = {
   startButton: $('start-button'),
   best: $('best'),
   printLink: $('print-link'),
+  homeLinks: [$('home-link'), $('done-home-link')],
   // play
   play: $('play'),
   ring: $('ring'),
@@ -445,6 +446,9 @@ async function main() {
   ui.title.textContent = quiz.title;
   // Same ?id= or ?subject= as this page, so mixed practice prints mixed too.
   ui.printLink.href = `print.html${location.search}`;
+  subjectHomeHref(quiz).then((href) => {
+    for (const link of ui.homeLinks) link.href = href;
+  });
   ui.description.textContent = quiz.description ?? '';
   ui.description.hidden = !quiz.description;
 

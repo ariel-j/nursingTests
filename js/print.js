@@ -7,11 +7,12 @@ import {
   listTopics,
   questionIdsForTopics,
 } from './core.js';
-import { loadQuizFromUrl, quizPlace } from './load-quiz.js';
+import { loadQuizFromUrl, quizPlace, subjectHomeHref } from './load-quiz.js';
 
 const $ = (id) => document.getElementById(id);
 const ui = {
   backLink: $('back-link'),
+  homeLink: $('home-link'),
   subject: $('subject'),
   title: $('quiz-title'),
   status: $('status'),
@@ -275,6 +276,7 @@ async function main() {
   ui.title.textContent = examTitle();
   ui.topicsLegend.textContent = quiz.mixed ? 'יחידות' : 'נושאים';
   ui.backLink.href = `quiz.html${location.search}`;
+  subjectHomeHref(quiz).then((href) => { ui.homeLink.href = href; });
 
   ui.allTopics.addEventListener('click', () => setAllTopics(true));
   ui.noTopics.addEventListener('click', () => setAllTopics(false));

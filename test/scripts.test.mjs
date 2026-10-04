@@ -14,8 +14,8 @@ const FIXTURES = fileURLToPath(new URL('./fixtures/', import.meta.url));
 
 const catalog = {
   subjects: [
-    { name: 'אנטומיה', units: ['הלב', 'הנשימה'] },
-    { name: 'פרמקולוגיה' },
+    { id: 'anatomy', name: 'אנטומיה', units: ['הלב', 'הנשימה'] },
+    { id: 'pharmacology', name: 'פרמקולוגיה' },
   ],
 };
 const q = (id, subject, title, topics, unit) => ({
@@ -30,9 +30,15 @@ test('loadQuizzes validates files and checks the file name matches the id', asyn
 test('validateCatalog rejects malformed catalogs', () => {
   assert.deepEqual(validateCatalog(catalog), []);
   assert.deepEqual(validateCatalog({}), ['"subjects" must be a non-empty array']);
-  assert.ok(validateCatalog({ subjects: [{ name: 'א' }, { name: 'א' }] }).some((e) => /duplicate subject/.test(e)));
-  assert.ok(validateCatalog({ subjects: [{ name: 'א', units: ['x', 'x'] }] }).some((e) => /duplicate unit/.test(e)));
-  assert.ok(validateCatalog({ subjects: [{ name: '' }] }).some((e) => /name/.test(e)));
+  assert.ok(validateCatalog({ subjects: [{ id: 'a', name: 'א' }, { id: 'b', name: 'א' }] }).some((e) => /duplicate subject/.test(e)));
+  assert.ok(validateCatalog({ subjects: [{ id: 'a', name: 'א', units: ['x', 'x'] }] }).some((e) => /duplicate unit/.test(e)));
+  assert.ok(validateCatalog({ subjects: [{ id: 'a', name: '' }] }).some((e) => /name/.test(e)));
+});
+
+test('validateCatalog requires a unique URL-safe id per subject', () => {
+  assert.ok(validateCatalog({ subjects: [{ name: 'א' }] }).some((e) => /id must be/.test(e)));
+  assert.ok(validateCatalog({ subjects: [{ id: 'Pharma', name: 'א' }] }).some((e) => /id must be/.test(e)));
+  assert.ok(validateCatalog({ subjects: [{ id: 'a', name: 'א' }, { id: 'a', name: 'ב' }] }).some((e) => /duplicate id/.test(e)));
 });
 
 test('placementErrors checks a quiz against the catalog', () => {
@@ -51,7 +57,7 @@ test('buildManifest builds a subject→unit tree in catalog order, titles numeri
     q('heart2', 'אנטומיה', 'מבחן 2', ['א', 'ב', 'א'], 'הלב'),
   ], catalog);
 
-  assert.deepEqual(manifest.subjects.map((s) => s.name), ['אנטומיה', 'פרמקולוגיה']);
+  assert.deepEqual(manifest.subjects.map((s) => [s.id, s.name]), [['anatomy', 'אנטומיה'], ['pharmacology', 'פרמקולוגיה']]);
   const heart = manifest.subjects[0].units.find((u) => u.name === 'הלב');
   assert.deepEqual(heart.quizzes.map((e) => e.id), ['heart2', 'heart10']); // 2 before 10
   assert.deepEqual(heart.quizzes[0], {
