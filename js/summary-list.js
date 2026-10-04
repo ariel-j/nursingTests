@@ -28,6 +28,12 @@ export const SUMMARIES = [
     title: 'מערכת העיכול',
     blurb: 'הפה והקיבה, לבלב, כבד ומרה, ספיגה, המעי הגס ובקרה עצבית.',
   },
+  {
+    subject: 'pharmacology',
+    id: 'pharmacokinetics',
+    title: 'פרמקוקינטיקה',
+    blurb: 'ADME: ספיגה וזמינות ביולוגית, פיזור ו‑Vd, CYP450 וקינטיקה, פינוי ומינון.',
+  },
 ];
 
 /** The summaries of one subject, in list order. */
