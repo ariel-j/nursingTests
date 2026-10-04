@@ -72,6 +72,9 @@
 .summary .flags li { position: relative; margin-block: 0.6rem; padding-inline-start: 1.25rem; list-style: none; }
 .summary .flags li::before { content: "◂"; position: absolute; inset-inline-start: 0; inset-block-start: 1px; color: var(--accent); font-size: 0.8rem; }
 
+.summary .figure { margin: 1.5rem 0 0; break-inside: avoid; }
+.summary .figure img { display: block; inline-size: 100%; block-size: auto; border-radius: 8px; border: 1px solid var(--line, currentColor); }
+.summary .figure figcaption { margin-block-start: 0.4rem; color: var(--muted); font-size: 0.85rem; text-align: center; }
 .summary .source { margin-block-start: 3rem; padding-block-start: 1rem; border-block-start: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
 
 :root[data-contrast="high"] .summary .rel,
