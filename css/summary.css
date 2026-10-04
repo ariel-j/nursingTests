@@ -12,13 +12,13 @@
 
 [data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
 @media (prefers-color-scheme: dark) {
-  [data-system] { --accent: var(--a-d); --accent-soft: var(--a-soft-d); --accent-ink: var(--a-ink-d); }
+  :root:not([data-theme="light"]) [data-system] { --accent: var(--a-d); --accent-soft: var(--a-soft-d); --accent-ink: var(--a-ink-d); }
 }
+:root[data-theme="dark"] [data-system] { --accent: var(--a-d); --accent-soft: var(--a-soft-d); --accent-ink: var(--a-ink-d); }
 :root[data-contrast="high"] [data-system] { --accent: #000000; --accent-soft: #ffffff; --accent-ink: #000000; }
 
 /* ---------- page ---------- */
 
-.summary-page { background-image: none; }
 .page.wide { max-inline-size: 860px; }
 
 .summary { font-size: 1.0625rem; line-height: 1.72; overflow-wrap: break-word; }
@@ -53,7 +53,7 @@
 .summary .def dd { margin: 0; }
 
 /* Cause → effect rows, the core component */
-.summary .rel { display: flex; align-items: stretch; margin-block: 0.6rem; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--card); }
+.summary .rel { display: flex; align-items: stretch; margin-block: 0.6rem; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface); }
 /* Block (not flex) cells so mixed inline text keeps its spaces; align-content centers where supported. */
 .summary .rel-cause { flex: 1; display: block; align-content: center; padding: 0.75rem 0.9rem; background: var(--accent-soft); font-weight: 600; }
 .summary .rel-arrow { display: flex; align-items: center; justify-content: center; padding-inline: 0.75rem; background: var(--accent-soft); color: var(--accent); font-size: 1.5rem; font-weight: 700; }
@@ -64,10 +64,10 @@
 .summary .exam { display: inline-block; margin-inline-start: 6px; padding: 2px 9px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-ink); font-size: 0.78rem; font-weight: 700; vertical-align: middle; white-space: nowrap; }
 .summary .exam-legend { margin: 0; }
 
-.summary .call { margin-block: 1rem; padding: 0.9rem 1rem; background: var(--card); border: 1px solid var(--line); border-inline-start: 4px solid var(--accent); border-radius: 8px; }
+.summary .call { margin-block: 1rem; padding: 0.9rem 1rem; background: var(--surface); border: 1px solid var(--line); border-inline-start: 4px solid var(--accent); border-radius: 8px; }
 .summary .call h4 { margin: 0 0 0.4rem; font-size: 1rem; color: var(--accent-ink); }
 
-.summary .flags { padding: 0.4rem 1.1rem; background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
+.summary .flags { padding: 0.4rem 1.1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
 .summary .flags ul { padding: 0; }
 .summary .flags li { position: relative; margin-block: 0.6rem; padding-inline-start: 1.25rem; list-style: none; }
 .summary .flags li::before { content: "◂"; position: absolute; inset-inline-start: 0; inset-block-start: 1px; color: var(--accent); font-size: 0.8rem; }
@@ -91,10 +91,11 @@
 
 /* ---------- hub (summaries/index.html) ---------- */
 
-.summary-list { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; gap: var(--gap); }
-.summary-card { border-inline-start-color: var(--accent); }
-.summary-card:hover { border-inline-start-color: var(--accent); }
-.summary-card h2 { margin: 0 0 0.2rem; font-size: 1.35rem; }
+.summary-list { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; gap: 0.75rem; }
+.summary-card { border-inline-start: 5px solid var(--accent); }
+.summary-card:hover { border-color: var(--accent); }
+.summary-card .card-title { font-family: var(--serif); font-size: 1.35rem; font-weight: 700; }
+.summary-group + .summary-group { margin-block-start: 1.5rem; }
 
 .all-status { margin-block: 1rem; }
 .summary + .summary { margin-block-start: 4rem; }
@@ -104,20 +105,21 @@
 @media print {
   @page { size: A4; margin: 14mm 14mm 16mm; }
 
-  /* Always light on paper, whatever the screen theme. */
-  :root {
+  /* Always light on paper, whatever the screen theme. The repeated :root outranks the
+     dark-theme rules above and the site's :root:not([data-theme="light"]) tokens. */
+  :root:root:root {
     color-scheme: light;
-    --paper: #ffffff;
+    --bg: #ffffff;
+    --surface: #ffffff;
     --ink: #1f2328;
     --muted: #5b6169;
     --line: #d9d3cc;
-    --card: #ffffff;
   }
-  [data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
+  :root:root:root [data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
   .summary { font-size: 10.5pt; line-height: 1.55; }
-  :root[data-contrast="high"] [data-system] { --accent: #000000; --accent-soft: #ffffff; --accent-ink: #000000; }
+  :root:root:root[data-contrast="high"] [data-system] { --accent: #000000; --accent-soft: #ffffff; --accent-ink: #000000; }
 
-  body, .summary-page { background: #ffffff; }
+  body { background: #ffffff; }
   .summary * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 
   .no-print, .a11y, .site-footer { display: none !important; }

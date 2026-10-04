@@ -3,6 +3,7 @@ import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateQuiz } from '../js/core.js';
+import { isValidSubjectId } from '../js/catalog.js';
 
 export const QUIZ_DIR = fileURLToPath(new URL('../quizzes/', import.meta.url));
 export const MANIFEST_FILE = 'manifest.json';
@@ -11,13 +12,14 @@ export const CATALOG_FILE = 'subjects.json';
 
 const isText = (v) => typeof v === 'string' && v.trim() !== '';
 
-/** Problems with the catalog: [{ name, units?: [unit names] }] under "subjects". */
+/** Problems with the catalog: [{ id, name, units?: [unit names] }] under "subjects". */
 export function validateCatalog(catalog) {
   const errors = [];
   if (!catalog || !Array.isArray(catalog.subjects) || catalog.subjects.length === 0) {
     return ['"subjects" must be a non-empty array'];
   }
   const names = new Set();
+  const ids = new Set();
   catalog.subjects.forEach((s, i) => {
     const where = `subjects[${i}]`;
     if (!s || !isText(s.name)) {
@@ -26,6 +28,13 @@ export function validateCatalog(catalog) {
     }
     if (names.has(s.name)) errors.push(`${where}: duplicate subject "${s.name}"`);
     names.add(s.name);
+    // The id goes in URLs (?subject=<id>) and ties summaries to their subject.
+    if (!isValidSubjectId(s.id)) {
+      errors.push(`${where}: id must be lowercase letters, digits and single hyphens`);
+    } else if (ids.has(s.id)) {
+      errors.push(`${where}: duplicate id "${s.id}"`);
+    }
+    ids.add(s.id);
     if (s.units === undefined) return;
     if (!Array.isArray(s.units) || !s.units.every(isText)) {
       errors.push(`${where}: units must be an array of non-empty strings`);
@@ -106,6 +115,7 @@ export function buildManifest(quizzes, catalog) {
     subjects: catalog.subjects.map((s) => {
       const own = quizzes.filter((q) => q.subject === s.name);
       return {
+        id: s.id,
         name: s.name,
         units: (s.units ?? []).map((unit) => ({
           name: unit,
