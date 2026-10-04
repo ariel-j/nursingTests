@@ -1,9 +1,9 @@
 // Side menu on every page. A slim bar at the top of the page holds the menu button and the site
 // name; the button opens a modal <dialog> drawer (focus stays inside, Esc and the backdrop close it)
 // listing every subject with its parts: quizzes by unit, mixed practice, the printable exam and
-// summaries. Built from the manifest and the summaries list. Links are resolved from this module's
+// summaries and videos. Built from the manifests and the summaries list. Links are resolved from this module's
 // URL, so pages in subfolders (summaries/) get the same menu.
-import { findSubject, loadManifest, subjectOfQuiz, subjectPaths, subjectStats, unitAnchor } from './catalog.js';
+import { findSubject, loadManifest, loadMedia, mediaCount, subjectOfQuiz, subjectPaths, subjectStats, unitAnchor } from './catalog.js';
 import { SUMMARIES, summariesFor } from './summary-list.js';
 
 const ROOT = new URL('../', import.meta.url);
@@ -59,7 +59,7 @@ function currentSubjectId(manifest) {
   return SUMMARIES.find((s) => s.id === system)?.subject ?? null;
 }
 
-function subjectItem(subject, open) {
+function subjectItem(subject, open, media) {
   const paths = subjectPaths(subject.id);
   const { quizCount, canMix } = subjectStats(subject);
   const items = [el('li', {}, link(paths.home, quizCount > 0 ? 'כל הבחנים' : 'דף המקצוע'))];
@@ -70,6 +70,7 @@ function subjectItem(subject, open) {
   if (canMix) items.push(el('li', {}, link(paths.practice, 'תרגול לפי נושאים')));
   if (quizCount > 0) items.push(el('li', {}, link(paths.print, 'מבחן להדפסה')));
   if (summariesFor(subject.id).length > 0) items.push(el('li', {}, link(paths.summaries, 'סיכומים קצרים')));
+  if (mediaCount(media, subject.id) > 0) items.push(el('li', {}, link(paths.media, 'סרטוני הסבר קצרים')));
   if (quizCount === 0) items.push(el('li', { class: 'drawer-soon', text: 'בחנים בקרוב' }));
 
   const details = el('details', { class: 'drawer-subject' },
@@ -79,7 +80,7 @@ function subjectItem(subject, open) {
   return el('li', {}, details);
 }
 
-function subjectsSection(manifest) {
+function subjectsSection(manifest, media) {
   const subjects = manifest?.subjects ?? [];
   if (subjects.length === 0) return [];
   const current = currentSubjectId(manifest);
@@ -87,7 +88,7 @@ function subjectsSection(manifest) {
     el('h3', { class: 'drawer-heading', text: 'מקצועות' }),
     // The current subject starts open; with none (home, statement pages) every subject does.
     el('ul', { class: 'drawer-subjects' },
-      ...subjects.map((s) => subjectItem(s, current === null || s.id === current))),
+      ...subjects.map((s) => subjectItem(s, current === null || s.id === current, media))),
   ];
 }
 
@@ -96,17 +97,17 @@ function build() {
   const close = el('button', { type: 'button', class: 'drawer-close', 'aria-label': 'סגירת התפריט' },
     icon('M6 6l12 12M18 6L6 18'));
   const nav = el('nav', { 'aria-label': 'ניווט ראשי' });
-  const fill = (manifest) => nav.replaceChildren(
+  const fill = (manifest, media) => nav.replaceChildren(
     el('ul', { class: 'drawer-list' },
       el('li', {}, link('./', 'דף הבית · כל המקצועות')),
       el('li', {}, link('summaries/', 'כל הסיכומים'))),
-    ...subjectsSection(manifest),
+    ...subjectsSection(manifest, media),
     el('ul', { class: 'drawer-list drawer-foot' },
       el('li', {}, link('accessibility.html', 'הצהרת נגישות')),
       el('li', {}, link('privacy.html', 'מדיניות פרטיות'))),
   );
   fill(null);
-  loadManifest().then(fill, (err) => console.error(err));
+  Promise.all([loadManifest(), loadMedia()]).then(([manifest, media]) => fill(manifest, media), (err) => console.error(err));
 
   // The inner box takes every click inside the drawer, so a click on the dialog itself is the backdrop.
   dialog.append(el('div', { class: 'drawer-box' },

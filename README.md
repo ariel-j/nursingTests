@@ -8,7 +8,7 @@ No build step and no runtime dependencies. Node is only needed for the tests and
 ## How a quiz plays
 
 - The home page lists the subjects (מקצועות). A subject's page (`./?subject=<id>`) has its mixed practice,
-  printable exam and summaries, then its quizzes grouped by unit. A side menu (the "תפריט" button on
+  printable exam, summaries and videos, then its quizzes grouped by unit. A side menu (the "תפריט" button on
   every page) lists every subject with its units and those same parts.
 - Each quiz opens on a start screen where you resume an unfinished session, or start a new one over
   all topics or only the ones you tick.
@@ -124,12 +124,23 @@ site's style, then these steps:
 4. `npm run validate` checks it: listed, a known subject, self-hosted only, no inline styles or handlers,
    toolbar, menu and footer present.
 
+## Videos and artifacts (סרטוני הסבר קצרים)
+
+`media.html?subject=<id>` shows a subject's short explainer videos and the owner's own artifacts (images,
+PDFs, HTML pages), one section per sub-subject. The files live in `media/<subject-id>/`, optionally one
+folder per sub-subject; names give the titles and order (`01 - …`). GitHub Pages can't list a folder,
+so `media/manifest.json` lists them. It is rebuilt by `npm run manifest`, and by the "Media manifest"
+GitHub Action after an upload to `main`, so uploading through the GitHub web UI is enough. Captions:
+a `.vtt` next to the video, same name. `npm run validate` rejects course files (`.pptx`, `.docx`),
+unplayable video (`.mov`), unsupported types and files over 50MB, and warns about videos without
+captions and HTML pages that load from a CDN. How to upload: [media/README.md](media/README.md).
+
 ## Development
 
 ```sh
 npm test          # unit tests for js/core.js and the scripts (node:test)
-npm run validate  # validate all quizzes and summaries, and check the manifest is current
-npm run manifest  # regenerate quizzes/manifest.json
+npm run validate  # validate all quizzes, summaries and media, and check the manifests are current
+npm run manifest  # regenerate quizzes/manifest.json and media/manifest.json
 npm run serve     # http://localhost:8000 (fetch() does not work over file://)
 ```
 

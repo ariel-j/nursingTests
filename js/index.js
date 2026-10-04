@@ -1,7 +1,7 @@
 // Home page. Without ?subject= it lists the subjects to choose from; with ?subject=<id> it shows
-// that subject: mixed practice, the printable exam and its summaries, then its quizzes by unit.
+// that subject: mixed practice, the printable exam, its summaries and videos, then its quizzes by unit.
 import { isValidQuizId, mixedQuizId, progressInfo } from './core.js';
-import { findSubject, loadManifest, subjectPaths, subjectQuizzes, subjectStats, unitAnchor } from './catalog.js';
+import { findSubject, loadManifest, loadMedia, mediaCount, subjectPaths, subjectQuizzes, subjectStats, unitAnchor } from './catalog.js';
 import { keys, load } from './storage.js';
 import { summariesFor } from './summary-list.js';
 
@@ -56,13 +56,15 @@ function card(href, className, title, ...rest) {
 
 // ---------- subject list ----------
 
-function renderSubjectCard(subject) {
+function renderSubjectCard(subject, media) {
   const { quizCount, questionCount, groupCount } = subjectStats(subject);
   const summaryCount = summariesFor(subject.id).length;
+  const videoCount = mediaCount(media, subject.id);
   const parts = quizCount === 0
     ? ['בחנים בקרוב']
     : [`${groupCount} נושאים`, `${quizCount} בחנים`, `${num(questionCount)} שאלות`];
   if (summaryCount > 0) parts.push(`${summaryCount} סיכומים`);
+  if (videoCount > 0) parts.push(`${videoCount} סרטונים וחומרים`);
   const meta = el('p', 'meta');
   meta.append(...parts.map((p) => el('span', null, p)));
 
@@ -73,10 +75,10 @@ function renderSubjectCard(subject) {
   return card(subjectPaths(subject.id).home, 'subject-card', subject.name, meta, progress);
 }
 
-function renderSubjectList(subjects) {
+function renderSubjectList(subjects, media) {
   document.title = SITE_TITLE;
   const list = el('ul', 'quiz-list subject-list');
-  list.append(...subjects.map(renderSubjectCard));
+  list.append(...subjects.map((s) => renderSubjectCard(s, media)));
   ui.content.replaceChildren(list);
 }
 
@@ -99,11 +101,12 @@ function renderQuiz(entry) {
   );
 }
 
-/** Mixed practice, the printable exam and the summaries: whichever this subject has. */
-function renderTools(subject) {
+/** Mixed practice, the printable exam, the summaries and the videos: whichever this subject has. */
+function renderTools(subject, media) {
   const { quizCount, questionCount, groupCount, canMix } = subjectStats(subject);
   const paths = subjectPaths(subject.id);
   const summaryCount = summariesFor(subject.id).length;
+  const videoCount = mediaCount(media, subject.id);
   const items = [];
   if (canMix) {
     items.push(card(paths.practice, 'mix-card', 'בחירת נושאים למבחן',
@@ -118,6 +121,10 @@ function renderTools(subject) {
   if (summaryCount > 0) {
     items.push(card(paths.summaries, 'tool-card', 'סיכומים קצרים',
       el('p', 'muted', `${summaryCount} סיכומים מרוכזים, להדפסה או לשמירה כ‑PDF.`)));
+  }
+  if (videoCount > 0) {
+    items.push(card(paths.media, 'tool-card', 'סרטוני הסבר קצרים',
+      el('p', 'muted', `סרטון וחומרי עזר לכל תת‑נושא · ${videoCount} פריטים.`)));
   }
   if (items.length === 0) return null;
   const list = el('ul', 'quiz-list tool-list');
@@ -141,7 +148,7 @@ function renderUnit(unit, index) {
   return group;
 }
 
-function renderSubject(subject) {
+function renderSubject(subject, media) {
   document.title = `${subject.name} · ${SITE_TITLE}`;
   ui.subjectNav.hidden = false;
   ui.title.textContent = subject.name;
@@ -151,7 +158,7 @@ function renderSubject(subject) {
   } else {
     ui.lede.textContent = 'בחרו בוחן לפי נושא, או תרגול שמערבב כמה נושאים. ההתקדמות נשמרת בדפדפן.';
   }
-  const tools = renderTools(subject);
+  const tools = renderTools(subject, media);
   if (tools) nodes.push(tools);
   // Quizzes placed directly on the subject (no unit), then each unit as a section.
   const own = subject.quizzes.filter((q) => isValidQuizId(q.id));
@@ -169,6 +176,7 @@ function renderSubject(subject) {
 
 async function main() {
   let manifest;
+  const media = loadMedia();
   try {
     manifest = await loadManifest();
   } catch (err) {
@@ -191,8 +199,8 @@ async function main() {
   } else {
     ui.status.hidden = true;
   }
-  if (subject) renderSubject(subject);
-  else renderSubjectList(subjects);
+  if (subject) renderSubject(subject, await media);
+  else renderSubjectList(subjects, await media);
 }
 
 main();

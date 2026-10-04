@@ -1,7 +1,7 @@
 # Adding a subject
 
 Every subject gets the same features, with no code changes. All of it comes from
-`quizzes/subjects.json`, the quiz files and `js/summary-list.js`:
+`quizzes/subjects.json`, the quiz files, `js/summary-list.js` and the `media/` folder:
 
 | Feature | Where | Appears when |
 | --- | --- | --- |
@@ -10,6 +10,7 @@ Every subject gets the same features, with no code changes. All of it comes from
 | Mixed practice across units ("בחירת נושאים למבחן") | `quiz.html?subject=<id>` | quizzes in two or more units |
 | Printable exam for the whole subject, or for one quiz from its start screen | `print.html?subject=<id>` | at least one quiz |
 | Summaries hub for the subject, and one combined PDF | `summaries/?subject=<id>` | at least one summary |
+| Short explainer videos and own artifacts (סרטוני הסבר קצרים) | `media.html?subject=<id>` | files in `media/<id>/` ([how](../media/README.md)) |
 
 ## 1. Declare it (in this repo)
 

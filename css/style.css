@@ -861,3 +861,26 @@ kbd {
   /* The key starts on its own page, so it can be printed or torn off separately. */
   .exam-key { break-before: page; margin-block-start: 0; padding-block-start: 0; border: none; }
 }
+
+/* ---------- videos and artifacts (media.html) ---------- */
+
+.media-group { margin-block-start: 2rem; }
+.media-video { margin: 0 0 12px; }
+.media-video video {
+  display: block;
+  inline-size: 100%;
+  max-block-size: 70vh;
+  background: #000;
+  border-radius: 14px;
+}
+.media-video figcaption { margin-block-start: 0.5rem; }
+.media-list { grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); }
+.media-card img {
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  margin-block-end: 0.6rem;
+  border-radius: 8px;
+  background: var(--bg);
+}

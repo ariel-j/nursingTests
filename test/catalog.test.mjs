@@ -61,6 +61,7 @@ test('subjectPaths and unitAnchor build the subject links', () => {
     practice: 'quiz.html?subject=pharmacology',
     print: 'print.html?subject=pharmacology',
     summaries: 'summaries/?subject=pharmacology',
+    media: 'media.html?subject=pharmacology',
   });
   assert.equal(unitAnchor(0), 'unit-1');
 });

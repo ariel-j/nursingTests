@@ -1,5 +1,6 @@
 // The subjects as the pages see them: quizzes/manifest.json (generated from quizzes/subjects.json)
-// and helpers over it. Everything except loadManifest is pure, so the Node tests can import it.
+// and media/manifest.json (generated from the media/ folder), and helpers over them. Everything
+// except the loaders is pure, so the Node tests can import it.
 import { isValidQuizId } from './core.js';
 
 /** Subject ids go in URLs (?subject=<id>) and tie summaries to their subject: same rule as quiz ids. */
@@ -44,6 +45,7 @@ export function subjectPaths(id) {
     practice: `quiz.html${q}`,
     print: `print.html${q}`,
     summaries: `summaries/${q}`,
+    media: `media.html${q}`,
   };
 }
 
@@ -60,4 +62,23 @@ export function loadManifest() {
     return res.json();
   });
   return pending;
+}
+
+/** How many videos and artifacts a subject has in the media manifest (0 when it has none). */
+export function mediaCount(media, subjectId) {
+  return (media?.subjects?.[subjectId]?.groups ?? []).reduce((n, g) => n + g.items.length, 0);
+}
+
+const MEDIA_URL = new URL('../media/manifest.json', import.meta.url);
+let pendingMedia = null;
+
+/** The media manifest, fetched once per page. Never rejects: no manifest means no media. */
+export function loadMedia() {
+  pendingMedia ??= fetch(MEDIA_URL, { cache: 'no-cache' })
+    .then((res) => (res.ok ? res.json() : { subjects: {} }))
+    .catch((err) => {
+      console.error(err);
+      return { subjects: {} };
+    });
+  return pendingMedia;
 }

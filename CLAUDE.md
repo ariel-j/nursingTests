@@ -17,11 +17,12 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 * `js/core.js`: pure logic (queue, scoring, stats, topics, quiz validation). No DOM, no storage; imported by Node tests and the scripts. Randomness is injected as an `rng` argument; state is plain JSON and never mutated.
 * `js/storage.js`: guarded localStorage wrapper (prefix `anatomy-quizzes:v1:`). Keys: `session:<id>` (in-progress state), `results:<id>` (attempts, best score).
 * `js/catalog.js`: the manifest for the pages: `loadManifest()` (one cached fetch per page) and pure helpers (`findSubject` by id or, for old links, name; `subjectQuizzes`, `subjectStats`, `subjectPaths`). Tested in Node.
-* `js/index.js`: home page. No `?subject=` → subject cards; `?subject=<id>` → that subject: mixed practice, printable exam and summaries cards, then quizzes by unit (sections `#unit-N`).
+* `js/index.js`: home page. No `?subject=` → subject cards; `?subject=<id>` → that subject: mixed practice, printable exam, summaries and videos cards, then quizzes by unit (sections `#unit-N`).
 * `js/nav.js`: top bar + side menu on every page: a modal `<dialog>` drawer listing each subject with its units, mixed practice, print and summaries; the current subject starts open. Links resolve from `import.meta.url`, so subfolder pages work. Deliberately a drawer at every width, not a persistent desktop sidebar: the quiz page stays a focus screen, and the subject page already lists every unit.
 * `js/quiz.js`: start screen (resume / choose topics) → play → end screen (retry missed). `?id=<quiz>` plays one quiz; `?subject=<id>` (or the name, from older links) plays mixed practice ("בחירת נושאים למבחן"): every quiz of the subject merged by `buildMixedQuiz` (question ids `<quiz>/<q>`, topics `<unit> · <topic>`), chosen by unit, saved as `session:mix-<hash of the subject name>`, no best score.
 * `js/print.js` + `print.html`: printable exam (topics, count, order; answer key with optional explanations). Uses `buildPrintExam` from core.js and `@media print` / `@page` in style.css; the browser's print dialog makes the PDF.
 * `js/load-quiz.js`: loads `?id=<quiz>` or `?subject=<id>` (mixed) for quiz.js and print.js; validates every quiz file. `subjectHomeHref` gives the "כל הבחנים" links their subject page.
+* `media/` + `media.html` + `js/media.js`: סרטוני הסבר קצרים. The owner uploads videos and own artifacts (mp4/webm, images, pdf, html; `.vtt` captions beside a video) to `media/<subject-id>/[<sub-subject>/]`; names give titles and order (`01 - …` prefix dropped). `scripts/media.mjs` (pure `buildMedia`, tested) scans it into the generated `media/manifest.json` (Pages can't list folders); `npm run manifest` and the `.github/workflows/media-manifest.yml` Action (on push to `main` touching `media/**`) rebuild it. Validation rejects course files (pptx/docx), mov, unsupported types and >50MB; warns on missing captions and CDN-loading HTML. `catalog.js` has `loadMedia()` (never rejects) and `mediaCount`; the subject card, tools card and menu entry appear only when a subject has media. Upload guide: `media/README.md`.
 * `js/a11y.js`: accessibility toolbar (text size, high contrast, underline links, stop motion); sets `data-*` on `<html>`, persists in localStorage. Imported by every page.
 * `summaries/`: סיכומים קצרים. `index.html` hub (from `js/summary-list.js`, the single list; each entry has its catalog `subject` id; `?subject=<id>` filters, otherwise grouped by subject), one static `<id>.html` per summary with its content in `<article class="summary" data-system="<id>">`, and `all.html` (`?subject=<id>` to keep one subject's), which fetches the summaries into one page for a single PDF (`js/summaries-all.js`, DOMParser + adoptNode). Styles in `css/summary.css` (per-system accent, dark, high contrast, print). PDF = the browser's print dialog, no library.
 * `accessibility.html` (הצהרת נגישות) and `privacy.html` (מדיניות פרטיות): static content pages; every page has a footer linking to them. Every page loads `js/nav.js` and `js/a11y.js`; `npm run validate` checks this.
@@ -35,7 +36,7 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 
 ## Subjects
 
-* Every subject gets the same features from data alone: subject page with quizzes by unit (progress, best score), mixed practice (2+ units with quizzes), printable exam, summaries hub + combined PDF, and a menu entry. Never special-case a subject in code.
+* Every subject gets the same features from data alone: subject page with quizzes by unit (progress, best score), mixed practice (2+ units with quizzes), printable exam, summaries hub + combined PDF, videos page (`media/<id>/`), and a menu entry. Never special-case a subject in code.
 
 ## Quiz rules the engine must keep
 
@@ -52,8 +53,8 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 ## Commands
 
 * `npm test`: unit tests for core.js and scripts (node:test)
-* `npm run validate`: validates all quizzes and summaries, and checks the manifest
-* `npm run manifest`: regenerate the manifest after adding or editing a quiz or the catalog
+* `npm run validate`: validates all quizzes, summaries and media, and checks both manifests
+* `npm run manifest`: regenerate the quiz and media manifests after adding or editing a quiz, the catalog or media files
 * `npm run import -- <src.json> [--id …] [--subject …] [--unit …] [--title …]`: convert an authoring-format quiz into `quizzes/<id>.json`
 * `npm run serve`: local server on :8000 (fetch() fails over file://)
 
