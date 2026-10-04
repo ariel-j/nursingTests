@@ -1,6 +1,8 @@
-// Loads the quiz a page was opened for: ?id=<quiz> is one quiz; ?subject=<name> merges all of
-// that subject's quizzes for mixed practice. Shared by quiz.js and print.js.
+// Loads the quiz a page was opened for: ?id=<quiz> is one quiz; ?subject=<id> (or the subject's
+// name, from older links) merges all of that subject's quizzes for mixed practice.
+// Shared by quiz.js and print.js.
 import { buildMixedQuiz, isValidQuizId, validateQuiz } from './core.js';
+import { findSubject, loadManifest, subjectPaths, subjectQuizzes } from './catalog.js';
 
 /** An error whose message is ready to show the user. */
 export class LoadError extends Error {}
@@ -29,17 +31,15 @@ async function loadQuiz(params) {
     return fetchQuiz(id);
   }
 
-  const manifest = await fetchJson('quizzes/manifest.json');
-  const entry = (manifest.subjects ?? []).find((s) => s.name === subject);
+  const entry = findSubject(await loadManifest(), subject);
   if (!entry) throw new LoadError('המקצוע לא נמצא.');
   // Same order as the home page: quizzes directly on the subject, then each unit's.
-  const ids = [...entry.quizzes, ...entry.units.flatMap((u) => u.quizzes)]
-    .map((q) => q.id)
-    .filter(isValidQuizId);
+  const ids = subjectQuizzes(entry).map((q) => q.id);
   if (ids.length === 0) throw new LoadError('עדיין אין בחנים במקצוע הזה.');
   const quizzes = await Promise.all(ids.map(fetchQuiz));
   return {
-    ...buildMixedQuiz(subject, quizzes),
+    // Keyed by the subject's name, as before ids existed, so saved mixed sessions still resume.
+    ...buildMixedQuiz(entry.name, quizzes),
     title: 'תרגול לפי נושאים',
     description: 'בחרו נושאים, והשאלות מכל הבחנים שלהם יתערבבו לתרגול אחד.',
   };
@@ -55,6 +55,16 @@ export async function loadQuizFromUrl() {
     throw new LoadError(location.protocol === 'file:'
       ? 'יש להריץ דרך שרת (npm run serve), הדפדפן חוסם טעינה מקובץ מקומי.'
       : 'לא הצלחנו לטעון את הבוחן.');
+  }
+}
+
+/** The home page of the quiz's subject, or the subject list when it cannot be found. */
+export async function subjectHomeHref(quiz) {
+  try {
+    const entry = findSubject(await loadManifest(), quiz.subject);
+    return entry ? subjectPaths(entry.id).home : './';
+  } catch {
+    return './';
   }
 }
 

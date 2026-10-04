@@ -93,7 +93,8 @@
 .summary-list { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; gap: 0.75rem; }
 .summary-card { border-inline-start: 5px solid var(--accent); }
 .summary-card:hover { border-color: var(--accent); }
-.summary-card h2 { margin: 0 0 0.2rem; font-size: 1.35rem; }
+.summary-card .card-title { font-family: var(--serif); font-size: 1.35rem; font-weight: 700; }
+.summary-group + .summary-group { margin-block-start: 1.5rem; }
 
 .all-status { margin-block: 1rem; }
 .summary + .summary { margin-block-start: 4rem; }
