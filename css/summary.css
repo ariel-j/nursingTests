@@ -8,6 +8,7 @@
 [data-system="digestive"]      { --a: #5f6b1f; --a-soft: #eceedc; --a-ink: #474f17; --a-d: #bccb6c; --a-soft-d: #2a2e14; --a-ink-d: #d8e39e; }
 [data-system="endocrine"]      { --a: #a86a1e; --a-soft: #f4e9d6; --a-ink: #7e4e12; --a-d: #e8aa5c; --a-soft-d: #3a2a14; --a-ink-d: #f3cb93; }
 [data-system="excretory"]      { --a: #126e82; --a-soft: #dcedf0; --a-ink: #0c4e5c; --a-d: #5fc4d9; --a-soft-d: #12333a; --a-ink-d: #a2ddea; }
+[data-system="pharmacokinetics"] { --a: #6a3d9a; --a-soft: #ece4f4; --a-ink: #4b2a72; --a-d: #c3a0ea; --a-soft-d: #2c1f3d; --a-ink-d: #dcc6f5; }
 
 [data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
 @media (prefers-color-scheme: dark) {
