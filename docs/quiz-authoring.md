@@ -128,8 +128,9 @@ SUBJECT NOTES
   Write units in Latin letters: mg, mcg, mL, IU, IV, IM, PO.
 - Calculation questions (dose, drip rate) are welcome: put the numbers in the stem, the four options
   are results, and the explanation shows the calculation in one line.
-- Topics are usually drug classes or body systems ("נוגדי קרישה", "משתנים"), plus cross-cutting ones
-  such as "חישובי מינונים" or "עקרונות פרמקוקינטיקה".
+- Units are drug classes ("נוגדי קרישה", "משתנים"). Inside a class quiz, each drug is a topic
+  (its generic name, e.g. "Warfarin"), plus cross-cutting topics when the material has them, such as
+  "עקרונות הקבוצה" or "חישובי מינונים". A drug with fewer than 3 questions joins a shared topic.
 ```
 
 ## After receiving a file

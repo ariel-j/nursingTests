@@ -16,7 +16,7 @@ Every subject gets the same features, with no code changes. All of it comes from
 Add the subject to `quizzes/subjects.json`, in the order it should appear (the units here are only an example):
 
 ```json
-{ "id": "pharmacology", "name": "פרמקולוגיה", "units": ["עקרונות", "מערכת העצבים האוטונומית", "לב וכלי דם"] }
+{ "id": "pharmacology", "name": "פרמקולוגיה", "units": ["נוגדי קרישה", "חוסמי בטא", "משתנים"] }
 ```
 
 - `id`: lowercase English with hyphens. It goes in links and ties summaries to the subject, so
@@ -25,6 +25,8 @@ Add the subject to `quizzes/subjects.json`, in the order it should appear (the u
   saved under it, so renaming it later restarts that progress.
 - `units`: optional, in display order. Once a subject has units, every quiz needs one of them as `unit`.
   A subject without units lists its quizzes directly. Choose before the first quiz arrives.
+  Prefer a few broad units with topics inside them over many tiny units: in pharmacology a unit is a
+  drug class and each drug is a topic, so students can still practice one drug by choosing its topic.
 
 Then `npm run manifest && npm run validate`.
 
