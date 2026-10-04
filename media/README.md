@@ -31,7 +31,7 @@ media/
 1. Open the `media/pharmacology` folder on github.com → **Add file → Upload files**.
    To create a sub-subject folder, drag the whole folder from your computer into the upload box.
 2. Commit to `main`.
-3. The "Media manifest" action rebuilds `media/manifest.json` and commits it (about a minute).
-   If a file breaks a rule, the action fails and GitHub emails you; the reason is in its log.
+3. The "Deploy site" action builds the list of files and publishes the site (about a minute).
+   If a file breaks a rule, it is left out, the action fails and GitHub emails you; the reason is in its log.
 
-Locally instead: copy the files here, then `npm run manifest && npm run validate`.
+Locally instead: copy the files here, `npm run manifest && npm run validate`, check with `npm run serve`, commit and push.

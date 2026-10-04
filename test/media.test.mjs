@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, writeFile, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { MAX_BYTES, buildMedia, checkMedia, displayName } from '../scripts/media.mjs';
@@ -76,7 +76,7 @@ test('buildMedia ignores notes, dotfiles and the manifest itself', () => {
   assert.deepEqual(manifest, { subjects: {} });
 });
 
-test('checkMedia writes the manifest, then reports it stale after a change', async () => {
+test('checkMedia writes the manifest and flags HTML that loads from a CDN', async () => {
   const dir = await mkdtemp(path.join(os.tmpdir(), 'media-'));
   try {
     await mkdir(path.join(dir, 'pharmacology', '1 - נושא'), { recursive: true });
@@ -85,10 +85,9 @@ test('checkMedia writes the manifest, then reports it stale after a change', asy
     const written = await checkMedia(ids, { write: true, dir });
     assert.deepEqual(written.errors, []);
     assert.ok(written.warnings.some((w) => /עמוד\.html: loads external/.test(w)));
-    assert.deepEqual((await checkMedia(ids, { dir })).errors, []);
-
-    await writeFile(path.join(dir, 'pharmacology', 'חדש.png'), 'placeholder');
-    assert.ok((await checkMedia(ids, { dir })).errors.some((e) => /out of date/.test(e)));
+    const saved = JSON.parse(await readFile(path.join(dir, 'manifest.json'), 'utf8'));
+    assert.deepEqual(saved, written.manifest);
+    assert.equal(mediaCount(saved, 'pharmacology'), 2);
   } finally {
     await rm(dir, { recursive: true, force: true });
   }

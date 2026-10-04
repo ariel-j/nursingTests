@@ -1,7 +1,8 @@
 // Videos and the owner's own artifacts (images, PDFs, HTML pages) under media/<subject-id>/,
 // optionally one folder deeper per sub-subject. GitHub Pages can't list a folder, so this scans
-// media/ into media/manifest.json, which the media page reads. Run by `npm run manifest`, and by the
-// GitHub Action after an upload. buildMedia is pure, so the tests feed it a file list.
+// media/ into media/manifest.json, which the media page reads. The file is not committed: the Pages
+// deploy workflow builds it on every deploy, and `npm run manifest` builds it for local use.
+// buildMedia is pure, so the tests feed it a file list.
 import { readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -149,7 +150,7 @@ export async function scanMedia(dir = MEDIA_DIR) {
   return out.sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
 }
 
-/** Builds the manifest from disk. With `write`, saves it; otherwise also reports a stale file. */
+/** Builds the manifest from disk and checks the files; with `write`, also saves it. */
 export async function checkMedia(subjectIds, { write = false, dir = MEDIA_DIR } = {}) {
   const { manifest, errors, warnings } = buildMedia(await scanMedia(dir), subjectIds);
   // HTML artifacts (often exported from Claude) may pull scripts from a CDN: allowed, but flagged.
@@ -160,18 +161,6 @@ export async function checkMedia(subjectIds, { write = false, dir = MEDIA_DIR } 
       warnings.push(`${item.src}: loads external resources (a CDN?), so it needs a connection and isn't self-hosted`);
     }
   }
-  const file = path.join(dir, MEDIA_MANIFEST);
-  const expected = serializeMedia(manifest);
-  if (write) {
-    await writeFile(file, expected);
-  } else {
-    let actual = null;
-    try {
-      actual = await readFile(file, 'utf8');
-    } catch {
-      // reported below
-    }
-    if (actual !== expected) errors.push(`media/${MEDIA_MANIFEST}: missing or out of date, run "npm run manifest"`);
-  }
+  if (write) await writeFile(path.join(dir, MEDIA_MANIFEST), serializeMedia(manifest));
   return { manifest, errors, warnings };
 }

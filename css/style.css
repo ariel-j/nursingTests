@@ -874,7 +874,11 @@ kbd {
   border-radius: 14px;
 }
 .media-video figcaption { margin-block-start: 0.5rem; }
-.media-list { grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); }
+/* Two per row on a phone, more on wider screens: the video stays the main thing. */
+.media-list { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+.media-card { padding: 12px; block-size: 100%; }
+.media-card .card-title { font-size: 0.9375rem; }
+.media-card .meta { font-size: 0.8125rem; }
 .media-card img {
   display: block;
   inline-size: 100%;

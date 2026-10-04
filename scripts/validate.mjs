@@ -38,4 +38,4 @@ if (failures > 0) {
   process.exit(1);
 }
 const questions = entries.reduce((n, e) => n + e.quiz.questions.length, 0);
-console.log(`OK: ${entries.length} quiz(zes), ${questions} question(s), manifest up to date, ${SUMMARIES.length} summaries, ${mediaTotal(media.manifest)} media item(s).`);
+console.log(`OK: ${entries.length} quiz(zes), ${questions} question(s), manifest up to date, ${SUMMARIES.length} summaries, ${mediaTotal(media.manifest)} media file(s).`);

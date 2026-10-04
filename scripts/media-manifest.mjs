@@ -1,4 +1,4 @@
-// Regenerates media/manifest.json only (the GitHub Action runs this after an upload to media/).
+// Builds media/manifest.json only: the Pages deploy workflow runs this before publishing the site.
 // Files with errors are left out; the errors still fail the run so the owner gets notified.
 import { checkMedia, mediaTotal } from './media.mjs';
 import { loadCatalog } from './quizzes.mjs';
