@@ -3,6 +3,7 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { MANIFEST_FILE, QUIZ_DIR, buildManifest, loadAll, serializeManifest } from './quizzes.mjs';
+import { checkMedia, mediaTotal } from './media.mjs';
 import { checkRootPages, checkSummaries } from './summaries.mjs';
 import { SUMMARIES } from '../js/summary-list.js';
 
@@ -27,9 +28,14 @@ const pageErrors = [...await checkSummaries(subjectIds), ...await checkRootPages
 for (const e of pageErrors) console.error(e);
 failures += pageErrors.length;
 
+const media = await checkMedia(subjectIds);
+for (const w of media.warnings) console.warn(`warning: ${w}`);
+for (const e of media.errors) console.error(e);
+failures += media.errors.length;
+
 if (failures > 0) {
   console.error(`\n${failures} problem(s) found.`);
   process.exit(1);
 }
 const questions = entries.reduce((n, e) => n + e.quiz.questions.length, 0);
-console.log(`OK: ${entries.length} quiz(zes), ${questions} question(s), manifest up to date, ${SUMMARIES.length} summaries.`);
+console.log(`OK: ${entries.length} quiz(zes), ${questions} question(s), manifest up to date, ${SUMMARIES.length} summaries, ${mediaTotal(media.manifest)} media file(s).`);
