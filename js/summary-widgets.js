@@ -326,3 +326,47 @@ export function initReceptors(receptors) {
   }
   render(receptors[0].key);
 }
+
+/**
+ * Generic explorer for pages whose items are not receptors (an enzyme pathway, the coagulation steps): one
+ * button per `[data-receptor]`, the detail goes into `#receptor-detail` and reuses the receptor look.
+ * `items` is [{ key, tone, tag, title, lead: { label, text }, boxes: [{ title, tone?, text }], pearl }]
+ * (rich.js text; the labels and box titles are plain). The facts must also be in the page's static text.
+ */
+export function initExplorer(items) {
+  const container = $('receptor-detail');
+  const buttons = [...document.querySelectorAll('[data-receptor]')];
+
+  function render(key) {
+    const item = items.find((i) => i.key === key);
+
+    const head = el('div', 'rc-head');
+    const tag = el('span', 'tag');
+    tag.dataset.tone = item.tone;
+    tag.append(...rich(item.tag));
+    head.append(richEl('h3', null, item.title), tag);
+
+    const lead = el('div', 'rc-pathway');
+    lead.append(el('b', 'rc-label', item.lead.label), richEl('p', 'flush', item.lead.text));
+
+    const grid = el('div', 'cards c2');
+    for (const box of item.boxes) {
+      const card = el('div', 'pcard');
+      if (box.tone) card.dataset.tone = box.tone;
+      card.append(el('h4', null, box.title), richEl('p', 'flush', box.text));
+      grid.append(card);
+    }
+
+    const pearl = el('div', 'call');
+    pearl.append(el('h4', null, '💡 דגש קליני למבחן'), richEl('p', 'flush', item.pearl));
+    container.replaceChildren(head, lead, grid, pearl);
+  }
+
+  for (const btn of buttons) {
+    btn.addEventListener('click', () => {
+      setPressed(buttons, btn);
+      render(btn.dataset.receptor);
+    });
+  }
+  render(items[0].key);
+}
