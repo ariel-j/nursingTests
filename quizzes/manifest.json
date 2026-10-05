@@ -153,6 +153,30 @@
               "topicCount": 15
             }
           ]
+        },
+        {
+          "name": "NSAIDs",
+          "quizzes": [
+            {
+              "id": "pharma-nsaids-1",
+              "title": "מבחן 1",
+              "description": "מבחן מקיף על NSAIDs: מסלול חומצה ארכידונית, מנגנון וסלקטיביות COX, Aspirin ו-Paracetamol, לויקוטריאנים, שיגדון, RA ומיגרנה.",
+              "questionCount": 130,
+              "topicCount": 14
+            }
+          ]
+        },
+        {
+          "name": "קרישה",
+          "quizzes": [
+            {
+              "id": "pharma-coagulation-1",
+              "title": "מבחן 1",
+              "description": "תרופות בהפרעות קרישה: נוגדי טסיות, נוגדי קרישה, טרומבוליטים, מעודדי קרישה, בדיקות מעבדה וסיעוד.",
+              "questionCount": 130,
+              "topicCount": 15
+            }
+          ]
         }
       ],
       "quizzes": []

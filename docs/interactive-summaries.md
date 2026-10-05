@@ -44,7 +44,7 @@ convert it with these rules. `npm run validate` and `npm test` enforce the mecha
    logic in a pure module (`js/<id>-math.js`, no DOM or storage) with text data in `js/<id>-data.js`.
    Search with filter pills, flip flashcards (with an optional `repeats` badge per card), the reading-progress bar,
    the light panels and mode toggles (`.panel`, `.seg`) already exist: import `initSearch`, `initFlashcards`,
-   `initReadingProgress`, `initReceptors` (receptor explorer), `initSelfTest` (hide / reveal the cause → effect rows),
+   `initReadingProgress`, `initReceptors` (receptor explorer), `initExplorer` (the same look for non-receptor items), `initSelfTest` (hide / reveal the cause → effect rows),
    `initTracker` ("chapter done" marks and bar) and the DOM helpers `el`, `rich`, `richEl`, `setPressed` from `js/summary-widgets.js`, load
    `css/summary-widgets.css`, and copy the toolbar / flashcard markup (ids `<prefix>-search`, `flashcard`, `card-*`)
    from `summaries/parasympathetic.html`, `summaries/sympathetic.html` or `summaries/opioids.html` (the last two are the
@@ -55,6 +55,11 @@ convert it with these rules. `npm run validate` and `npm test` enforce the mecha
    a draft's card grid that only re-shows static text (a cause → effect board) works better as a mode over the
    static rows than as a second copy. Per-reader state (chapter marks) goes through `js/storage.js`, and the
    privacy page must list it.
+
+5. Every summary starts with an explanation, then defines its terms: `<section class="intro">` (2-4 short paragraphs: what the
+   topic is, why it matters, how the chapters fit) right after the header, and `<section class="glossary">` with one
+   `<dl class="def">` per term (add `sc` when the page has search, so rows filter). In pages with search type
+   plain `-` (not the non-breaking hyphen U+2011) inside terms, or a reader's query won't match.
 
 ## 4. Interactive widgets
 
