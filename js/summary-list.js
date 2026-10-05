@@ -34,6 +34,12 @@ export const SUMMARIES = [
     title: 'פרמקוקינטיקה',
     blurb: 'ADME: ספיגה וזמינות ביולוגית, פיזור ו‑Vd, CYP450 וקינטיקה, פינוי ומינון.',
   },
+  {
+    subject: 'pharmacology',
+    id: 'pharmacodynamics',
+    title: 'פרמקודינמיקה',
+    blurb: 'רצפטורים ומנגנוני פעולה, עקומת מנה-תגובה, העברת אות, אינדקס וחלון טיפולי, סבילות ושילובי תרופות. עם סימולטור, מחשבון וכרטיסיות.',
+  },
 ];
 
 /** The summaries of one subject, in list order. */

@@ -135,6 +135,11 @@ a `.vtt` next to the video, same name. `npm run validate` rejects course files (
 unplayable video (`.mov`), unsupported types and files over 50MB, and warns about videos without
 captions and HTML pages that load from a CDN. How to upload: [media/README.md](media/README.md).
 
+A summary can also carry interactive widgets (search, simulators, flashcards), as `pharmacodynamics.html` does:
+mark each widget `data-interactive` (and `no-print`), keep its script and styles in their own files
+(`js/pharmacodynamics.js`, `css/pharmacodynamics.css`, pure maths in `js/pharma-math.js`), and keep the article's
+text complete without them. `all.html` drops every `[data-interactive]` block, so only the text is printed.
+
 ## Development
 
 ```sh

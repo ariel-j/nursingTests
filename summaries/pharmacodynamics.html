@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>פרמקודינמיקה — סיכום</title>
+  <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/summary.css">
+  <link rel="stylesheet" href="../css/pharmacodynamics.css">
+  <script type="module" src="../js/summary.js"></script>
+  <script type="module" src="../js/pharmacodynamics.js"></script>
+  <script type="module" src="../js/nav.js"></script>
+  <script type="module" src="../js/a11y.js"></script>
+</head>
+<body class="summary-page">
+  <div id="read-progress" class="read-progress no-print" aria-hidden="true"></div>
+  <main class="page wide">
+    <nav class="top-nav no-print">
+      <a href="./?subject=pharmacology">→ כל הסיכומים</a>
+      <button type="button" class="secondary" data-print>הדפסה / שמירה כ‑PDF</button>
+    </nav>
+
+<article class="summary" data-system="pharmacodynamics">
+  <header>
+    <p class="kicker">פרמקולוגיה קלינית · סיכום נושא</p>
+    <h1>פרמקודינמיקה <span class="en h1-en">(Pharmacodynamics)</span></h1>
+    <p class="lede">פרמקודינמיקה היא <b>מה שהתרופה עושה לגוף</b> — המנגנון והאפקט, בהיפוך המשלים לפרמקוקינטיקה (מה שהגוף עושה לתרופה). הרעיון המאחד: תרופה נקשרת למטרה (רצפטור, אנזים, תעלה או נשא), מתרגמת את הקישור לאות תוך-תאי, והיחס בין המינון לאפקט קובע פוטנטיות, אפקטיביות ובטיחות.</p>
+    <svg class="motif" viewBox="0 0 480 64" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 54 C 120 54, 175 52, 235 34 C 300 15, 360 11, 480 10"/>
+    </svg>
+    <div class="legend">
+      <span><span class="arrowmark">←</span> <b>גורם ← תוצאה</b> (קוראים מימין לשמאל)</span>
+      <span><span class="exam exam-legend">נשאל בשחזורים</span> נקודות זהב שחזרו שוב ושוב בבחינות</span>
+    </div>
+  </header>
+
+  <!-- חיפוש ומסננים (אינטראקטיבי) -->
+  <div class="toolbar no-print" data-interactive>
+    <nav class="toc" aria-label="קפיצה לפרק">
+      <a href="#pd-sec-1">יסודות</a>
+      <a href="#pd-sec-2">אגוניסט / אנטגוניסט</a>
+      <a href="#pd-simulator" class="toc-lab"><span aria-hidden="true">📊</span> סימולטור עקומות</a>
+      <a href="#pd-sec-4">העברת אותות</a>
+      <a href="#pd-sec-5">TI ואינדקס</a>
+      <a href="#pd-practice" class="toc-exam"><span aria-hidden="true">⭐</span> שחזורים</a>
+    </nav>
+    <div class="search-row">
+      <label class="search-label" for="pd-search">חיפוש בסיכום</label>
+      <input type="search" id="pd-search" class="search-input" placeholder="חיפוש מיידי בכל המושגים, ההגדרות, מנגנוני הפעולה ושאלות השחזור..." autocomplete="off">
+      <p id="pd-search-count" class="search-count" role="status">מציג את כל הנושאים</p>
+    </div>
+    <div class="pills" role="group" aria-label="סינון לפי נושא">
+      <button type="button" class="pill" data-filter="all" aria-pressed="true">הכל (8 פרקים)</button>
+      <button type="button" class="pill" data-filter="exam" aria-pressed="false"><span aria-hidden="true">⭐</span> שחזורי בחינות בלבד</button>
+      <button type="button" class="pill" data-filter="curves" aria-pressed="false"><span aria-hidden="true">📊</span> עקומות ומדדים (<span class="en">Emax, EC50, TI</span>)</button>
+      <button type="button" class="pill" data-filter="receptors" aria-pressed="false"><span aria-hidden="true">⚡</span> העברת אותות ו-<span class="en">GPCR</span></button>
+      <button type="button" class="pill" data-filter="combos" aria-pressed="false"><span aria-hidden="true">💊</span> שילובי תרופות וסבילות</button>
+    </div>
+  </div>
+
+  <!-- סימולטור עקומת מנה-תגובה (אינטראקטיבי) -->
+  <section id="pd-simulator" class="lab no-print" data-interactive aria-labelledby="pd-sim-title">
+    <p class="lab-kicker"><span aria-hidden="true">🔬</span> מעבדה אינטראקטיבית בזמן אמת</p>
+    <h2 id="pd-sim-title">סימולטור עקומת מנה-תגובה (<span class="en">Dose-Response Curve</span>)</h2>
+    <p class="sec-note">השוו באופן חי כיצד אגוניסט, אגוניסט חלקי, אנטגוניסט תחרותי ואנטגוניסט לא-תחרותי משנים את <span class="en">EC50</span> ו-<span class="en">Emax</span>.</p>
+
+    <div class="modes" role="group" aria-label="סוג התרופה בסימולטור">
+      <button type="button" class="mode" data-mode="full" aria-pressed="true">אגוניסט מלא (<span class="en">Full Agonist</span>)</button>
+      <button type="button" class="mode" data-mode="comp" aria-pressed="false">+ אנטגוניסט תחרותי (<span class="en">Competitive</span>)</button>
+      <button type="button" class="mode" data-mode="noncomp" aria-pressed="false">+ אנטגוניסט לא-תחרותי (<span class="en">Non-competitive</span>)</button>
+      <button type="button" class="mode" data-mode="partial" aria-pressed="false">אגוניסט חלקי (<span class="en">Partial</span>)</button>
+      <button type="button" class="mode" data-mode="inverse" aria-pressed="false">אגוניסט הפוך (<span class="en">Inverse</span>)</button>
+    </div>
+
+    <div class="lab-grid">
+      <div class="stage">
+        <div class="stage-top">
+          <span>עקומת תגובה סמי-לוגריתמית</span>
+          <strong id="dr-legend">אגוניסט מלא (Full Agonist)</strong>
+        </div>
+        <canvas id="dr-canvas" class="plot" role="img" aria-label="עקומת מנה-תגובה"></canvas>
+        <div class="stage-axis">
+          <span>ריכוז נמוך (<span class="en">10⁻⁹ M</span>)</span>
+          <strong>סקאלה לוגריתמית של מנה (<span class="en">Log [Dose]</span>)</strong>
+          <span>ריכוז גבוה (<span class="en">10⁻³ M</span>)</span>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="slider-row">
+          <label for="dose-slider">ריכוז תרופה נוכחי (<span class="en">Log Dose</span>):</label>
+          <output id="dose-value" for="dose-slider" class="en readout">-6.00</output>
+        </div>
+        <input type="range" id="dose-slider" min="-9" max="-3" step="0.05" value="-6">
+        <div class="metrics">
+          <div class="metric"><span class="metric-label">אפקט ביולוגי (<span class="en">Response</span>)</span><output id="response-value" class="metric-value">50.0%</output></div>
+          <div class="metric"><span class="metric-label">פוטנטיות (<span class="en">log EC50</span>)</span><output id="ec50-value" class="metric-value">-6.00</output></div>
+        </div>
+        <div id="sim-explain" class="explain" aria-live="polite">
+          <b class="sim-lead">💡 מסקנה פרמקולוגית למבחן:</b>
+          <b>אגוניסט מלא לבד:</b> מגיע ל-Emax מלא (100%). פוטנטיות נמדדת לפי log EC50 = -6.0. עקומה סיגמואידית סטנדרטית.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1 יסודות -->
+  <section id="pd-sec-1" class="topic-section" data-category="receptors">
+    <h2>1 · יסודות מהירים</h2>
+    <p class="sec-note">פרמקודינמיקה = מה התרופה עושה לגוף; פרמקוקינטיקה = מה הגוף עושה לתרופה. מושגים משלימים, לא חופפים.</p>
+
+    <div class="cards">
+      <div class="pcard sc">
+        <div class="pcard-head"><h3>רצפטור (<span class="en">Receptor</span>)</h3><span class="tag">הגדרה</span></div>
+        <p class="flush">רכיב בתא שנקשר לליגנד (תרופה) ומתניע שרשרת אירועים ביוכימיים עד לאפקט ביולוגי נצפה.</p>
+      </div>
+
+      <div class="pcard sc" data-tone="teal">
+        <div class="pcard-head"><h3>שלושת תפקידי הרצפטור</h3><span class="tag">עקרון בסיס</span></div>
+        <ul class="flush">
+          <li>קובע את היחס הכמותי מינון ← אפקט.</li>
+          <li>אחראי לסלקטיביות התרופה.</li>
+          <li>מתווך פעילות של אגוניסטים ואנטגוניסטים.</li>
+        </ul>
+      </div>
+
+      <div class="pcard sc">
+        <div class="pcard-head"><h3>ליגנד ← אפקט</h3><span class="tag">מסלול</span></div>
+        <p class="flow flush">ליגנד נקשר לרצפטור (<span class="en">R ⇌ R*</span>)<br><span class="flow-arrow" aria-hidden="true">↓</span><br>העברת אות (<span class="en">signal transduction</span>)<br><span class="flow-arrow" aria-hidden="true">↓</span><br>אפקט ביולוגי</p>
+      </div>
+
+      <div class="pcard sc" data-tone="blue">
+        <div class="pcard-head"><h3>ארבע מולקולות מטרה</h3><span class="tag"><span class="en">4 Targets</span></span></div>
+        <p class="flush">ארבע מטרות עיקריות לפעילות תרופתית בתא: <b>רצפטור, אנזים, תעלת יונים ומולקולת נשא</b> (<span class="en">Carrier/Transporter</span>).</p>
+      </div>
+
+      <div class="pcard sc">
+        <div class="pcard-head"><h3>מנגנוני פעולה מגוונים</h3><span class="tag">מנגנונים</span></div>
+        <p class="flush">קישור לרצפטור; אינטראקציה עם אנזים (שפעול/עיכוב); אינטראקציה עם <span class="en">DNA/RNA</span>; עיכוב סינתזת חלבונים; אינטראקציה עם הממברנה; פעילות לא-ספציפית (למשל סותרי חומצה).</p>
+      </div>
+
+      <div class="pcard sc" data-tone="emerald">
+        <div class="pcard-head"><h3>מקורות תרופות</h3><span class="tag">טבעי מול סינתטי</span></div>
+        <p class="flush"><b>טבעי:</b> צמחים (גליקוזידים, אלקלואידים), בעלי חיים (הורמונים, אנטי-דוטים), מיקרואורגניזמים (אנטיביוטיקה), מינרלים.<br><b>סינתטי:</b> סמי-סינתטי / <span class="en">recombinant DNA</span>. <i>רוב התרופות סינתטיות:</i> פוטנטיות ובטוחות, זולות ובעלות בקרת איכות מוקפדת.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 אגוניסט / אנטגוניסט -->
+  <section id="pd-sec-2" class="topic-section" data-category="exam">
+    <h2>2 · מנגנוני פעולה: אגוניסט ואנטגוניסט</h2>
+    <p class="sec-note">המפתח למבחן: מי מפעיל ומי חוסם, והאם אפשר לגבור עליו בהעלאת מינון האגוניסט.</p>
+
+    <div class="cards">
+      <div class="pcard sc" data-tone="emerald">
+        <div class="pcard-head"><h3>אגוניסט מלא (<span class="en">Agonist</span>)</h3><span class="tag">100% פעילות</span></div>
+        <p class="flush">נקשר ומפעיל את הרצפטור במלואו ← מפיק אפקט תאי מקסימלי (<span class="en">Emax</span> מלא).</p>
+      </div>
+      <div class="pcard sc" data-tone="cyan">
+        <div class="pcard-head"><h3>אגוניסט חלקי (<span class="en">Partial</span>)</h3><span class="tag">יעילות מוגבלת</span></div>
+        <p class="flush">מפעיל חלקית בלבד ← <span class="en">Emax</span> נמוך יותר גם בתפוסה של 100% מהרצפטורים. בנוכחות אגוניסט מלא עשוי לתפקד כאנטגוניסט.</p>
+      </div>
+      <div class="pcard sc" data-tone="purple">
+        <div class="pcard-head"><h3>אגוניסט הפוך (<span class="en">Inverse</span>)</h3><span class="tag">תת-בסיסי</span></div>
+        <p class="flush">מייצב את המצב הלא-פעיל (<span class="en">Inactive state</span>) ← מוריד את הפעילות הספונטנית אל <b>מתחת</b> לרמת הבסיס.</p>
+      </div>
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h3>אנטגוניסט (<span class="en">Antagonist</span>)</h3><span class="exam">נשאל</span></div>
+        <p class="flush">נקשר לרצפטור אך <b>אינו מפעיל אותו כלל</b> ← חוסם את הגישה לליגנדים אנדוגניים ואגוניסטים.</p>
+      </div>
+    </div>
+
+    <h3>סוגי אנטגוניזם — דגשים קריטיים</h3>
+    <div class="rel sc">
+      <div class="rel-cause"><span class="tag" data-tone="teal">תחרותי (הפיך)</span><br>אנטגוניסט תחרותי (<span class="en">Competitive</span>)</div>
+      <span class="rel-arrow" aria-hidden="true">←</span>
+      <div class="rel-effect">נקשר לאותו אתר של האגוניסט; <b>ניתן לגבור עליו</b> בהעלאת מינון האגוניסט (עקומה זזה ימינה, <span class="en">Emax</span> נשמר).</div>
+    </div>
+    <div class="rel sc">
+      <div class="rel-cause"><span class="tag" data-tone="rose">לא-תחרותי (בלתי הפיך)</span><br>אנטגוניסט לא-תחרותי (<span class="en">Non-competitive</span>)</div>
+      <span class="rel-arrow" aria-hidden="true">←</span>
+      <div class="rel-effect">קישור קוולנטי או לאתר אלוסטרי; <b>לא ניתן לגבור עליו</b> בעודף אגוניסט (<span class="en">Emax</span> מדוכא).</div>
+    </div>
+    <div class="rel sc is-exam">
+      <div class="rel-cause">אנטגוניסט פיזיולוגי (<span class="en">Physiological</span>) <span class="exam">נשאל בשחזורים</span></div>
+      <span class="rel-arrow" aria-hidden="true">←</span>
+      <div class="rel-effect">מפיק אפקט מנוגד דרך <b>רצפטור או מסלול אחר לחלוטין</b>, ללא חסימה או תחרות על אותו רצפטור! (למשל היסטמין מול אדרנלין).</div>
+    </div>
+
+    <div class="cards c2">
+      <div class="pcard sc">
+        <div class="pcard-head"><h3>שפעול אנזים (<span class="en">Activation</span>)</h3></div>
+        <p class="flush">הגברת סינתזת האנזים; קישור אלוסטרי שמעלה את האפיניות לסובסטרט; קופקטורים שמעלים את קצב הפעילות.</p>
+      </div>
+      <div class="pcard sc">
+        <div class="pcard-head"><h3>עיכוב אנזים (<span class="en">Inhibition</span>)</h3></div>
+        <p class="flush"><b>הפיך:</b> קישור לא-קוולנטי, תחרותי.<br><b>בלתי-הפיך:</b> קישור קוולנטי או לאתר אלוסטרי, לא-תחרותי.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 עקומת מנה-תגובה -->
+  <section id="pd-sec-3" class="topic-section" data-category="curves">
+    <h2>3 · עקומת מנה-תגובה: פוטנטיות מול אפקטיביות</h2>
+    <p class="sec-note">הסקאלה החצי-לוגריתמית הופכת את טווח המינונים לעקומה סיגמואידית ברורה. כלל ברזל: <span class="en">Potency → EC50</span>, <span class="en">Efficacy → Emax</span>.</p>
+
+    <div class="cards">
+      <div class="pcard sc">
+        <div class="pcard-head"><h3 class="en">Emax</h3><span class="tag" data-tone="teal">אפקטיביות</span></div>
+        <p class="flush">האפקט המקסימלי שהתרופה מסוגלת להפיק — מדד היעילות והאפקטיביות (<span class="en">efficacy</span>).</p>
+      </div>
+      <div class="pcard sc">
+        <div class="pcard-head"><h3 class="en">EC50</h3><span class="tag" data-tone="teal">פוטנטיות</span></div>
+        <p class="flush">הריכוז שנותן בדיוק מחצית (50%) מ-<span class="en">Emax</span> — מדד הפוטנטיות (<span class="en">potency</span>).</p>
+      </div>
+      <div class="pcard sc is-exam" data-tone="amber">
+        <div class="pcard-head"><h3>פוטנטיות (<span class="en">Potency</span>)</h3><span class="exam">נשאל בשחזורים</span></div>
+        <p class="flush">כמה תרופה צריך.<br><b><span class="en">EC50↓</span> ← פוטנטיות↑</b><br>(מינון נמוך יותר נדרש כדי להשיג את אותו האפקט. 20 מ"ג פוטנטי יותר מ-30 מ"ג!).</p>
+      </div>
+      <div class="pcard sc">
+        <div class="pcard-head"><h3><span class="en">Kd</span> ו-<span class="en">Bmax</span></h3><span class="tag">קישור לרצפטור</span></div>
+        <p class="flush"><span class="en">Kd</span> = אפיניות (ככל שנמוך יותר, האפיניות גבוהה יותר).<br><span class="en">Bmax</span> = תפוסת רצפטורים מרבית.<br>בעקומת התפוסה, <span class="en">Kd</span> הוא הריכוז לחצי <span class="en">Bmax</span>.</p>
+      </div>
+    </div>
+
+    <div class="call sc">
+      <h4>כלל השוואה קריטי</h4>
+      <p>עקומות מנה-תגובה מאפשרות להשוות פוטנטיות ואפקטיביות רק בין תרופות בעלות <b>אותו מנגנון פעולה</b> (פועלות על אותה המטרה).</p>
+      <ul class="flush">
+        <li>אנטגוניסט תחרותי: <b>הסטה מקבילה ימינה</b>.</li>
+        <li>אנטגוניסט לא-תחרותי: <b>צניחת <span class="en">Emax</span> למטה</b>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4 העברת אות -->
+  <section id="pd-sec-4" class="topic-section" data-category="receptors">
+    <h2>4 · העברת אות דרך הממברנה</h2>
+    <p class="sec-note">ארבע משפחות, ארבעה קצבי תגובה: ככל שהמסלול "עמוק" יותר בתא, כך האפקט איטי יותר.</p>
+
+    <div class="cards">
+      <div class="pcard top sc" data-tone="cyan">
+        <div class="pcard-head"><span class="tag">מילישניות (<span class="en">ms</span>)</span><span class="pcard-icon" aria-hidden="true">⚡</span></div>
+        <h3>תעלת יונים מווסתת-ליגנד</h3>
+        <p class="sub en">Ionotropic Receptors</p>
+        <p>שינוי מיידי במתח הממברנה או בריכוז יונים בתא.<br><b>דוגמה:</b> קולטן ניקוטיני כולינרגי (<span class="en">nAChR</span>).</p>
+        <p class="foot flush">הקצב המהיר ביותר מבין כל הקולטנים</p>
+      </div>
+      <div class="pcard top sc" data-tone="teal">
+        <div class="pcard-head"><span class="tag">שניות – דקות</span><span class="pcard-icon" aria-hidden="true">🔄</span></div>
+        <h3><span class="en">GPCR</span> (צמוד חלבון <span class="en">G</span>)</h3>
+        <p class="sub en">Metabotropic (7-TM)</p>
+        <p>שפעול חלבון <span class="en">G</span> ← יצירת שליח שני (<span class="en">cAMP, IP3, DAG</span>) ← זרחון חלבוני מטרה.<br><b>דוגמה:</b> אדרנרגי אלפא / בטא.</p>
+        <p class="foot flush">תיווך בינוני, מגביר אותות חזק</p>
+      </div>
+      <div class="pcard top sc" data-tone="indigo">
+        <div class="pcard-head"><span class="tag">דקות – שעות</span><span class="pcard-icon" aria-hidden="true">🧬</span></div>
+        <h3>קולטן צמוד-אנזים (<span class="en">RTK</span>)</h3>
+        <p class="sub en">Receptor Tyrosine Kinase</p>
+        <p>דימריזציה וזרחון טירוזין עצמי ושל חלבונים ציטופלזמטיים.<br><b>דוגמה:</b> קולטן אינסולין וגורמי גדילה.</p>
+        <p class="foot flush">מעורב במטבוליזם ובחלוקת תאים</p>
+      </div>
+      <div class="pcard top sc" data-tone="purple">
+        <div class="pcard-head"><span class="tag">שעות – ימים</span><span class="pcard-icon" aria-hidden="true">⏳</span></div>
+        <h3>קולטן תוך-תאי (גרעיני)</h3>
+        <p class="sub en">Intracellular / Nuclear</p>
+        <p>ליגנד ליפופילי חוצה ממברנה ← נדידה לגרעין ← קישור ל-<span class="en">DNA</span> ובקרת שעתוק גנים.<br><b>דוגמה:</b> סטרואידים, הורמוני בלוטת התריס, ויטמין <span class="en">D</span>.</p>
+        <p class="foot flush">הקצב האיטי ביותר (שינוי ביטוי גנים)</p>
+      </div>
+    </div>
+
+    <h3>חלבוני G ושליחים שניים — טבלת הפעלה למבחן</h3>
+    <p class="sec-note">קינאז מזרחן; פוספטאז מוריד זרחן.</p>
+    <div class="cards">
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h3 class="en">Gq</h3><span class="tag">כיווץ שריר</span></div>
+        <p><b>מפעיל:</b> <span class="en">PLC</span> (פוספוליפאז C)</p>
+        <p><b>שליח שני:</b> <span class="en">IP3 + DAG</span></p>
+        <p class="flush"><b>תוצאה:</b> שחרור סידן (<span class="en">Ca²⁺↑</span>) ← <b>כיווץ שריר חלק</b></p>
+      </div>
+      <div class="pcard sc" data-tone="teal">
+        <div class="pcard-head"><h3><span class="en">Gs</span> (<span class="en">Stimulatory</span>)</h3><span class="tag">הרפיית שריר</span></div>
+        <p><b>מפעיל:</b> אדנילט ציקלאז (<span class="en">Adenylyl cyclase</span>)</p>
+        <p><b>שליח שני:</b> <span class="en">cAMP↑</span> (עולה)</p>
+        <p class="flush"><b>תוצאה:</b> הפעלת <span class="en">PKA</span> ← <b>הרפיית שריר חלק / עליית קצב לב</b></p>
+      </div>
+      <div class="pcard sc" data-tone="blue">
+        <div class="pcard-head"><h3><span class="en">Gi</span> (<span class="en">Inhibitory</span>)</h3><span class="tag">עיכוב אות</span></div>
+        <p><b>מעכב:</b> אדנילט ציקלאז</p>
+        <p><b>שליח שני:</b> <span class="en">cAMP↓</span> (יורד)</p>
+        <p class="flush"><b>תוצאה:</b> הפחתת זרחון תאי, פתיחת תעלות אשלגן, הרגעה</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 חלון טיפולי -->
+  <section id="pd-sec-5" class="topic-section" data-category="curves">
+    <h2>5 · חלון טיפולי, <span class="en">Onset</span> ואינדקס טיפולי (<span class="en">TI</span>)</h2>
+    <p class="sec-note">הכל נמדד מול שני ספים: <span class="en">MEC</span> (יעיל מינימלי) ו-<span class="en">MTC</span> (רעיל מינימלי).</p>
+
+    <div class="call sc is-exam">
+      <h4>אינדקס טיפולי (<span class="en">Therapeutic Index</span>) <span class="exam">נשאל בשחזורים ×2</span></h4>
+      <p>נוסחה: <b class="en">TI = TD50 / ED50</b>. זכרו: ה-<span class="en">TI</span> הוא מדד של <b>בטיחות בלבד</b>, לא של פוטנטיות או אפקטיביות!</p>
+      <p class="flush"><span class="en">ED50</span> = מינון יעיל ב-50% מהאוכלוסייה (ככל שנמוך יותר, התרופה פוטנטית יותר). <span class="en">TD50</span> = מינון רעיל ב-50% מהאוכלוסייה (ככל שרחוק יותר מה-<span class="en">ED50</span>, מרווח הבטיחות גדל).</p>
+    </div>
+
+    <!-- מחשבון TI ועקומת ריכוז (אינטראקטיבי) -->
+    <div class="lab no-print" data-interactive>
+      <div class="lab-head">
+        <div>
+          <h3 class="lab-title">מחשבון אינדקס טיפולי חי (<span class="en">Therapeutic Index</span>)</h3>
+          <p class="sec-note flush">הזיזו את ה-<span class="en">ED50</span> וה-<span class="en">TD50</span> וראו איך משתנה מרווח הבטיחות.</p>
+        </div>
+        <div class="ti-total">
+          <span class="metric-label">ערך ה-<span class="en">TI</span> המחושב:</span>
+          <output id="ti-value" class="metric-value ti-number" for="ed50-slider td50-slider">5.00</output>
+        </div>
+      </div>
+
+      <div class="ti-sliders">
+        <div class="controls">
+          <div class="slider-row">
+            <label for="ed50-slider"><span class="en">ED50</span> (מינון יעיל ב-50% מהאוכלוסייה):</label>
+            <output id="ed50-value" for="ed50-slider" class="en readout">10 mg</output>
+          </div>
+          <input type="range" id="ed50-slider" min="1" max="100" value="10">
+          <p class="hint flush">ככל שערך זה נמוך יותר, התרופה פוטנטית יותר.</p>
+        </div>
+        <div class="controls">
+          <div class="slider-row">
+            <label for="td50-slider"><span class="en">TD50</span> (מינון רעיל ב-50% מהאוכלוסייה):</label>
+            <output id="td50-value" for="td50-slider" class="en readout readout-bad">50 mg</output>
+          </div>
+          <input type="range" id="td50-slider" min="2" max="200" value="50">
+          <p class="hint flush">ככל שערך זה רחוק יותר מה-<span class="en">ED50</span>, מרווח הבטיחות גדל.</p>
+        </div>
+      </div>
+
+      <div id="ti-alert" class="ti-alert" data-level="wide" role="status">
+        <span id="ti-alert-icon" class="ti-alert-icon" aria-hidden="true">🟢</span>
+        <div>
+          <h4 id="ti-alert-title">אינדקס טיפולי רחב ובטוח (TI = 5.00)</h4>
+          <p id="ti-alert-desc" class="flush">מרחק רב בין מינון יעיל לרעיל. התרופה בטוחה מאוד לשימוש קליני (למשל פניצילין). הסיכון לרעילות בשגגה נמוך ביותר.</p>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-top">
+          <strong><span aria-hidden="true">📈</span> עקומת ריכוז בדם לאורך זמן (<span class="en">Plasma Concentration vs Time</span>)</strong>
+          <button type="button" id="bolus-toggle" class="stage-btn" aria-pressed="false">הדגם מנת בולוס (Loading Dose) ⚡</button>
+        </div>
+        <canvas id="pk-canvas" class="plot plot-short" role="img" aria-label="עקומת ריכוז בדם לאורך זמן"></canvas>
+        <dl class="pk-key">
+          <div><dt class="en k-mtc">MTC</dt><dd>ריכוז רעיל מינימלי</dd></div>
+          <div><dt class="en k-mec">MEC</dt><dd>ריכוז יעיל מינימלי</dd></div>
+          <div><dt class="k-onset">Onset</dt><dd>הזמן עד הגעה ל-MEC</dd></div>
+          <div><dt class="k-dur">Duration</dt><dd>משך הזמן מעל MEC</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="cards">
+      <div class="pcard sc">
+        <div class="pcard-head"><h3>חלון טיפולי (<span class="en">Therapeutic Window</span>)</h3></div>
+        <p class="flush">טווח הריכוזים בין <span class="en">MEC</span> ל-<span class="en">MTC</span>. מתחת ל-<span class="en">MEC</span> אין אפקט טיפולי; מעל <span class="en">MTC</span> מופיעה רעילות.</p>
+      </div>
+      <div class="pcard sc is-exam" data-tone="amber">
+        <div class="pcard-head"><h3>חלון טיפולי צר (<span class="en">Narrow TI</span>)</h3><span class="exam">נשאל בשחזורים</span></div>
+        <p class="flush"><span class="en">MEC</span> ו-<span class="en">MTC</span> קרובים מאוד זה לזה ← <b>חובה לנטר רמת תרופה בדם (<span class="en">TDM</span>)</b> למניעת הרעלה! (דוגמאות: ליתיום, דיגוקסין, תאופילין, וורפרין).</p>
+      </div>
+      <div class="pcard sc">
+        <div class="pcard-head"><h3>מנת בולוס (<span class="en">Loading Dose</span>)</h3><span class="exam">נשאל</span></div>
+        <p class="flush">מנה ראשונית גבוהה הניתנת כדי <b>להגיע במהירות ל-<span class="en">MEC</span></b> (ריכוז טיפולי) מבלי להמתין להצטברות הדרגתית של שעות או ימים (לא ל-<span class="en">MTC</span>!).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 סבילות ושילובים -->
+  <section id="pd-sec-6" class="topic-section" data-category="combos">
+    <h2>6 · סבילות, מנגנוני הגנה ושילובי תרופות</h2>
+    <p class="sec-note">מנגנוני הגנה תאיים נועדו למנוע גירוי-יתר או תת-גירוי של תא המטרה, על ידי בקרת כמות הרצפטורים בממברנה.</p>
+
+    <div class="cards c2">
+      <div class="pcard sc is-exam">
+        <div class="pcard-head"><h3>חשיפה ממושכת לאגוניסט</h3><span class="exam">נשאל בשחזורים</span></div>
+        <p class="chain">חשיפה ממושכת לאגוניסט ← <b class="en">Down-regulation</b> ← הפנמת וירידת רצפטורים ← <span class="en">desensitization</span> וסבילות (<span class="en">tolerance</span>)</p>
+        <p class="flush"><b>התוצאה:</b> ירידה בתגובה הביולוגית ← צורך בהעלאת המינון כדי לקבל את אותו האפקט.</p>
+      </div>
+      <div class="pcard sc is-exam">
+        <div class="pcard-head"><h3>חשיפה ממושכת לאנטגוניסט</h3><span class="exam">נשאל בשחזורים</span></div>
+        <p class="chain">חשיפה ממושכת לאנטגוניסט ← <b class="en">Up-regulation</b> ← ביטוי יתר של רצפטורים בממברנה ← רגישות יתר ותקופה עמידה</p>
+        <p class="flush"><b>הסכנה:</b> בהפסקה פתאומית של אנטגוניסט (כמו חוסמי בטא) עלול להתרחש <span class="en">Rebound effect</span> עקב רגישות-יתר חריפה.</p>
+      </div>
+    </div>
+
+    <dl class="def sc">
+      <dt>סבילות (<span class="en">Tolerance</span>)</dt>
+      <dd>ירידה הדרגתית בתגובה לתרופה לאורך זמן עקב מתן חוזר ← מחייבת עלייה במינון להשגת אותו האפקט.</dd>
+    </dl>
+    <dl class="def sc">
+      <dt>טכיפילקסיס (<span class="en">Tachyphylaxis</span>)</dt>
+      <dd>ירידת תגובה <b>מהירה מאוד</b> (בתוך דקות עד שעות), מהירה מ-<span class="en">down-regulation</span>, עקב כשל או ניתוק מהיר בצימוד הרצפטור למסלול שאחריו (למשל אגוניסטים בטא במשאף, ניטרטים בתעוקת חזה).</dd>
+    </dl>
+
+    <h3>שילובי תרופות (<span class="en">Drug Combinations</span>)</h3>
+    <div class="cards">
+      <div class="pcard sc">
+        <div class="pcard-head"><h3 class="en">Addition</h3><span class="tag en">1 + 1 = 2</span></div>
+        <p>אפקט משולב השווה בדיוק לסכום האפקטים הנפרדים של כל תרופה לבדה.</p>
+        <p class="flush"><b>דוגמה קלאסית:</b> <span class="en">Trimethoprim + Sulfamethoxazole</span></p>
+      </div>
+      <div class="pcard sc is-exam" data-tone="amber">
+        <div class="pcard-head"><h3 class="en">Synergism</h3><span class="exam"><span class="en">1 + 1 = 3</span> (נשאל)</span></div>
+        <p>האפקט המשולב <b>גדול משמעותית</b> מסכום הפעולות של שתי התרופות יחד.</p>
+        <p class="flush"><b>דוגמה קטלנית במבחן:</b> אלכוהול + בנזודיאזפינים (דיכוי נשימתי מוגבר ומסכן חיים).</p>
+      </div>
+      <div class="pcard sc" data-tone="purple">
+        <div class="pcard-head"><h3 class="en">Potentiation</h3><span class="tag en">0 + 1 = 2</span></div>
+        <p>תרופה שהיא <b>חסרת אפקט בפני עצמה</b> מעצימה ומגבירה מאוד את פעולת התרופה השנייה.</p>
+        <p class="flush"><b>דוגמה:</b> <span class="en">Carbidopa + L-Dopa</span> (קרבידופה אינה חודרת למוח אך מונעת פירוק דופה בפריפריה).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 טבלת סיבה ← תוצאה -->
+  <section id="pd-sec-7" class="topic-section" data-category="exam">
+    <h2>7 · טבלת סיבה ← תוצאה למבחן</h2>
+    <p class="sec-note">השורות שהכי משתלם לדעת בעל-פה לפני הכניסה לבחינה.</p>
+
+    <div class="table-wrap">
+      <table class="rtable">
+        <thead>
+          <tr><th scope="col">גורם / תנאי</th><th scope="col" class="arrow-col"><span class="visually-hidden">מוביל ל</span></th><th scope="col">תוצאה פרמקולוגית ישירה</th></tr>
+        </thead>
+        <tbody>
+          <tr class="sc"><td><b class="en">EC50 ↓</b> (יורד)</td><td class="arrow-col" aria-hidden="true">←</td><td><b>פוטנטיות גבוהה יותר</b> (צריך פחות תרופה לאותו אפקט).</td></tr>
+          <tr class="sc"><td><b class="en">Emax ↑</b> (עולה)</td><td class="arrow-col" aria-hidden="true">←</td><td><b>אפקטיביות ויעילות גבוהה יותר</b>.</td></tr>
+          <tr class="sc"><td><b class="en">Kd ↓</b> (יורד)</td><td class="arrow-col" aria-hidden="true">←</td><td><b>אפיניות גבוהה יותר</b> של התרופה לרצפטור.</td></tr>
+          <tr class="sc"><td><b class="en">TI ↑</b> (אינדקס טיפולי עולה)</td><td class="arrow-col" aria-hidden="true">←</td><td><b>תרופה בטוחה יותר</b> בעלת טווח בטיחות רחב.</td></tr>
+          <tr class="sc"><td>אגוניסט חלקי (<span class="en">Partial</span>)</td><td class="arrow-col" aria-hidden="true">←</td><td>פוטנטיות ייתכן שדומה, אך <b class="en">Emax נמוך יותר</b>.</td></tr>
+          <tr class="sc"><td>קולטן תוך-תאי (סטרואיד, ויטמין <span class="en">D</span>)</td><td class="arrow-col" aria-hidden="true">←</td><td><b>אפקט איטי</b> (שעות עד ימים) המתווך דרך שינוי בביטוי גנים בגרעין.</td></tr>
+          <tr class="sc"><td>ריכוז תרופה יורד מתחת ל-<b class="en">MEC</b></td><td class="arrow-col" aria-hidden="true">←</td><td><b>האפקט הטיפולי נפסק</b> (סיום ה-<span class="en">duration</span>).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 8 נקודות שחזורים -->
+  <section id="pd-sec-8" class="topic-section" data-category="exam">
+    <h2>8 · נקודות שחזרו בשחזורים — לא לפספס!</h2>
+    <p class="sec-note">13 נקודות זהב שלוקטו ישירות ממבחני גמר ושחזורים של השנים האחרונות.</p>
+
+    <div class="cards c2 points">
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">נשאל ×2</span><p class="flush">האינדקס התרפויטי (<b class="en">TI = TD50/ED50</b>) הוא מדד ל<b>בטיחות התרופה</b> — לא לפוטנטיות ולא לאפקטיביות.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">נשאל</span><p class="flush"><b class="en">ED50</b> נמוך יותר = פוטנטיות גבוהה יותר (למשל 20 <span class="en">mg</span> פוטנטי מ-30 <span class="en">mg</span>).</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">נשאל</span><p class="flush">במתן אגוניסט ממושך ← ירידת רצפטורים (<span class="en">Down-regulation</span>) וסבילות; נוצר צורך בהעלאת מינון.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">נשאל</span><p class="flush">חשיפה ממושכת לאנטגוניסט ← עליית רצפטורים בממברנה (<span class="en">Up-regulation</span>) ורגישות יתר.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">נשאל</span><p class="flush"><b>חלון טיפולי צר:</b> רווח קטן בין מינון יעיל לרעיל ← חובה לנטר רמת תרופה בדם (<span class="en">TDM</span>).</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">נשאל</span><p class="flush"><b>סיווג אנטגוניסט:</b> תחרותי / לא-תחרותי / חלקי / פיזיולוגי — נקבע לפי האתר ולפי היכולת לגבור עליו בעודף אגוניסט.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">נשאל</span><p class="flush"><b>מנת בולוס:</b> ניתנת כדי להגיע מהר ל-<span class="en">MEC</span> (יעיל מינימלי) — <b>לא</b> ל-<span class="en">MTC</span>!</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">נשאל</span><p class="flush"><b>סינרגיזם:</b> שתי תרופות שנותנות אפקט משותף הגדול מסכומן החשבוני (1+1=3).</p></div>
+      <div class="pcard point sc"><span class="tag" data-tone="teal">עקומה</span><p class="flush">אנטגוניסט תחרותי ← <b class="en">EC50 ↑</b> ו-<b class="en">Emax</b> נשמר; לא-תחרותי ← <b class="en">Emax ↓</b>.</p></div>
+      <div class="pcard point sc"><span class="tag" data-tone="cyan">מהירויות</span><p class="flush">קצב התגובה לפי משפחה: תעלות יונים (מילישניות) &lt; <span class="en">GPCR</span> (שניות–דקות) &lt; <span class="en">RTK</span> (דקות–שעות) &lt; תוך-תאי (שעות–ימים).</p></div>
+      <div class="pcard point sc"><span class="tag" data-tone="rose">שליחים</span><p class="flush"><b class="en">Gq</b> ← כיווץ שריר (<span class="en">IP3/DAG</span>); <b class="en">Gs</b> ← הרפיית שריר (<span class="en">cAMP</span>).</p></div>
+      <div class="pcard point sc"><span class="tag">מלכודת</span><p class="flush">סבילות = צורך במינון <b>גבוה יותר</b>; הדגם הנגדי השגוי במבחן מנסה להטעות ולטעון שנדרש מינון נמוך יותר.</p></div>
+      <div class="pcard point sc"><span class="tag" data-tone="purple">פוטנציאציה</span><p class="flush"><b class="en">Potentiation</b>: תרופה חסרת אפקט לבדה מגבירה את חברתה (<span class="en">Carbidopa + L-Dopa</span>).</p></div>
+    </div>
+  </section>
+
+  <!-- כרטיסיות תרגול (אינטראקטיבי) -->
+  <section id="pd-practice" class="lab deck no-print" data-interactive aria-labelledby="pd-deck-title">
+    <p class="lab-kicker lab-kicker-hot"><span aria-hidden="true">⭐</span> מצב תרגול אישי לבחינה</p>
+    <h2 id="pd-deck-title">כרטיסיות שחזורים לבדיקה עצמית (<span class="en">Flashcards</span>)</h2>
+    <p class="sec-note">לחצו על הכרטיסייה כדי לגלות את התשובה והסבירו לעצמכם לפני שתהפכו.</p>
+    <p class="flash-progress"><span>התקדמות:</span> <strong id="flash-progress" role="status">0 מתוך 10 נלמדו בהצלחה</strong></p>
+
+    <div class="flash-stage">
+      <button type="button" id="flashcard" class="flash" data-flipped="false">
+        <span class="flash-inner">
+          <span id="card-front" class="face face-front" aria-hidden="false">
+            <span class="face-top"><b>שאלה <span id="card-num">1 / 10</span></b><span class="face-hint">לחצו לחשיפת התשובה ↻</span></span>
+            <span id="card-question" class="face-text">טוען שאלה...</span>
+            <span class="face-bottom">הקליקו בכל מקום בכרטיסייה כדי לראות את התשובה המלאה</span>
+          </span>
+          <span id="card-back" class="face face-back" aria-hidden="true">
+            <span class="face-top"><b>תשובה מלאה ונימוק</b><span class="face-hint">לחצו לחזרה לשאלה ↻</span></span>
+            <span id="card-answer" class="face-text">טוען תשובה...</span>
+            <span class="face-bottom">סמנו למטה האם שלטתם בחומר</span>
+          </span>
+        </span>
+      </button>
+
+      <div class="flash-controls">
+        <button type="button" id="card-prev" class="flash-btn">→ הקודם</button>
+        <span class="flash-marks">
+          <button type="button" id="card-known" class="flash-btn flash-ok"><span aria-hidden="true">✓</span> ידעתי מצוין</button>
+          <button type="button" id="card-again" class="flash-btn flash-bad"><span aria-hidden="true">✗</span> לחזור שוב</button>
+        </span>
+        <button type="button" id="card-next" class="flash-btn">הבא ←</button>
+      </div>
+    </div>
+  </section>
+
+  <p class="source">סיכום לימודי המבוסס על חומרי הקורס בנושא "פרמקודינמיקה". נועד לחזרה ולמידה לקראת בחינות — אין בו אבחון או ייעוץ רפואי קליני.</p>
+</article>
+  </main>
+
+  <footer class="site-footer page wide">
+    <nav>
+      <a href="../accessibility.html">הצהרת נגישות</a>
+      <a href="../privacy.html">מדיניות פרטיות</a>
+    </nav>
+    <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+  </footer>
+</body>
+</html>

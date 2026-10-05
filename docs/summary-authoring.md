@@ -7,6 +7,7 @@ material, written outside this repo like the quizzes. Only the finished HTML com
 The generating session writes **only the `<article>`**. This repo wraps it in the page (bar, menu,
 print button, footer), so the page markup can't drift. The steps after you receive it are at the end.
 Starting a whole new subject? Read [new-subject.md](new-subject.md) first.
+A draft with interactive widgets (calculators, canvases, flashcards)? Follow [interactive-summaries.md](interactive-summaries.md) instead.
 
 ## Brief to paste
 

@@ -15,6 +15,8 @@ async function loadArticle(id) {
   const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
   const article = doc.querySelector('article.summary');
   if (!article) throw new Error(`${id}: no article.summary`);
+  // Interactive widgets (search, simulators, flashcards) need their page's script; print only the text.
+  for (const widget of article.querySelectorAll('[data-interactive]')) widget.remove();
   return document.adoptNode(article);
 }
 
