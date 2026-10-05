@@ -1,0 +1,81 @@
+/* Interactive parts specific to the parasympathetic summary (organ simulator, synapse explorer, NMJ
+   comparison). Loaded only by summaries/parasympathetic.html, after summary.css and summary-widgets.css
+   (search, lab panels, flashcards). Hidden on paper (.no-print), absent from all.html. */
+
+/* Same dark lab panels as the shared ones, in this page's green. */
+.summary .lab, .summary .flash-stage { --lab-teal: #34d399; }
+.summary .lab .en { color: #6ee7b7; }
+.summary .lab-kicker { color: #a7f3d0; background: rgba(16, 185, 129, 0.2); }
+.summary .stage-top strong, .summary .explain { color: #a7f3d0; }
+.summary .deck { background: linear-gradient(135deg, #0f172a, #022c22); border-color: #065f46; }
+.summary .face-back { background: #022c22; }
+.summary .face-front { border-color: rgba(52, 211, 153, 0.45); color: #6ee7b7; }
+
+/* ---------- light panels (organ simulator, NMJ comparison) ---------- */
+
+.summary .panel { margin-block: 2rem; padding: 1.25rem; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
+.summary .panel h2 { margin: 0 0 0.3rem; padding: 0; border: 0; font-size: 1.5rem; }
+.summary .panel-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; padding-block-end: 1rem; margin-block-end: 1rem; border-block-end: 1px solid var(--line); }
+.summary .panel-kicker { display: inline-block; margin: 0 0 0.5rem; padding: 2px 12px; font-size: 0.8rem; font-weight: 700; color: var(--accent-ink); background: var(--accent-soft); border-radius: 999px; }
+.summary .panel-kicker-hot { color: #7a3a05; background: #fbeccf; }
+:root[data-contrast="high"] .summary .panel { border: 2px solid #000; }
+
+/* Two- or three-way toggle: the pressed one takes the button's tone. */
+.summary .seg-row { display: inline-flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.35rem; background: var(--bg); border: 1px solid var(--line); border-radius: 14px; }
+.summary .seg { padding: 0.45rem 0.9rem; font-size: 0.9rem; font-weight: 600; color: var(--ink); background: transparent; border: 2px solid transparent; border-radius: 10px; }
+.summary .seg:hover { border-color: var(--t, var(--accent)); }
+.summary .seg[aria-pressed="true"] { font-weight: 700; color: var(--t-ink); background: var(--t-soft); border-color: var(--t); }
+:root[data-contrast="high"] .summary .seg[aria-pressed="true"] { color: #fff; background: #000; border-color: #000; }
+
+/* ---------- organ simulator ---------- */
+
+.summary .organ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 0.9rem; }
+.summary .organ-card { display: flex; flex-direction: column; gap: 0.5rem; padding: 1rem 1.1rem; color: var(--ink); background: var(--t-soft); border: 1px solid var(--t); border-radius: 14px; }
+.summary .organ-card h3 { margin: 0; font-size: 1.1rem; }
+.summary .organ-top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.summary .organ-icon { font-size: 1.6rem; line-height: 1; }
+.summary .organ-badge { padding: 1px 10px; font-size: 0.78rem; font-weight: 700; color: var(--t-ink); background: var(--surface); border: 1px solid var(--t); border-radius: 999px; }
+.summary .organ-desc { margin: 0; font-size: 0.92rem; }
+.summary .organ-drug { margin-block-start: auto; padding-block-start: 0.5rem; border-block-start: 1px solid var(--t); font-size: 0.85rem; font-weight: 600; color: var(--t-ink); }
+
+/* ---------- synapse explorer (on the dark lab panel) ---------- */
+
+.summary .syn-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: 0.5rem; margin-block: 1rem; }
+.summary .syn-step { padding: 0.65rem 0.8rem; font-size: 0.85rem; font-weight: 600; text-align: start; color: var(--lab-muted); background: var(--lab-panel); border: 1px solid var(--lab-line); border-radius: 14px; }
+.summary .syn-step:hover { border-color: var(--lab-teal); }
+.summary .syn-step[aria-pressed="true"] { color: #fff; background: #047857; border-color: #34d399; }
+.summary .syn-n { display: block; font-size: 0.72rem; font-weight: 700; color: var(--lab-teal); }
+.summary .syn-step[aria-pressed="true"] .syn-n { color: #d1fae5; }
+
+.summary .syn-display { padding: 1.1rem; background: var(--lab-panel); border: 1px solid var(--lab-line); border-radius: 16px; }
+.summary .syn-display h3 { margin-block: 0.6rem 0.4rem; font-size: 1.2rem; }
+.summary .syn-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; padding-block-end: 0.6rem; border-block-end: 1px solid var(--lab-line); }
+.summary .syn-num { font-size: 0.8rem; font-weight: 700; color: var(--lab-teal); }
+.summary .syn-kind { padding: 1px 10px; font-size: 0.75rem; font-weight: 700; color: var(--lab-muted); background: #334155; border-radius: 999px; }
+.summary .syn-desc { margin-block: 0 0.8rem; font-size: 0.92rem; color: var(--lab-muted); }
+.summary .syn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0.7rem; }
+.summary .syn-box { padding: 0.8rem 0.9rem; font-size: 0.88rem; line-height: 1.6; color: var(--lab-muted); background: #0b1220; border: 1px solid var(--lab-line); border-radius: 12px; }
+.summary .syn-label { display: block; margin-block-end: 0.25rem; color: var(--lab-teal); }
+.summary .syn-alert { color: #fde68a; background: rgba(120, 53, 15, 0.4); border-color: rgba(180, 83, 9, 0.7); }
+.summary .syn-alert .syn-label { color: #fbbf24; }
+.summary .syn-box .en { color: #6ee7b7; }
+.summary .syn-alert .en { color: #fde68a; }
+
+/* ---------- NMJ comparison ---------- */
+
+.summary .nmj-btn { padding: 0.55rem 1.1rem; font-size: 0.9rem; font-weight: 700; color: #fff; background: #047857; border: 0; border-radius: 12px; }
+.summary .nmj-btn:hover { background: #059669; }
+.summary .nmj-btn[aria-pressed="true"] { background: #475569; }
+.summary .nmj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1rem; }
+.summary .nmj-card { padding: 1rem 1.1rem; background: var(--t-soft); border: 2px solid var(--t); border-radius: 16px; }
+.summary .nmj-card h3 { margin: 0.4rem 0 0.2rem; font-size: 1.15rem; }
+.summary .nmj-card .drugs { margin: 0 0 0.6rem; font-size: 0.82rem; color: var(--muted); }
+.summary .nmj-card .nmj-top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.summary .nmj-status { margin-block-start: 0.8rem; padding: 0.8rem 0.9rem; font-size: 0.9rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.summary .nmj-status[data-tone] { background: var(--t-soft); border: 2px solid var(--t); }
+.summary .nmj-lead { display: block; margin-block-end: 0.2rem; color: var(--t-ink, var(--accent-ink)); }
+.summary .nmj-warn { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 0.9rem; margin-block-start: 1rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .summary .organ-card { transition: none; }
+}

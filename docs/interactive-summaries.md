@@ -42,6 +42,11 @@ convert it with these rules. `npm run validate` and `npm test` enforce the mecha
    (a formula, a rule), that fact must also appear in static text outside the widget.
 4. Widget code goes in its own files, loaded only by that page: `js/<id>.js` (DOM), `css/<id>.css`, and the
    logic in a pure module (`js/<id>-math.js`, no DOM or storage) with text data in `js/<id>-data.js`.
+   Search with filter pills, flip flashcards and the reading-progress bar already exist: import `initSearch`,
+   `initFlashcards`, `initReadingProgress` from `js/summary-widgets.js`, load `css/summary-widgets.css`, and copy
+   the toolbar / flashcard markup (ids `<prefix>-search`, `flashcard`, `card-*`) from `summaries/parasympathetic.html`.
+   Strings that need bold or Latin text use the `**bold**` / `` `Latin` `` markup of `js/parasympathetic-data.js`
+   (`parseRich`) and are built into nodes, never innerHTML.
 
 ## 4. Interactive widgets
 

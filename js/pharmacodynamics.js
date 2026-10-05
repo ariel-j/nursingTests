@@ -1,11 +1,13 @@
 // Pharmacodynamics summary (summaries/pharmacodynamics.html): the interactive parts around the static
-// text. Search and filters, the dose-response simulator, the therapeutic-index calculator with its
-// plasma curve, and the flashcards. The article's text works without any of this (and in all.html,
-// which drops the [data-interactive] blocks). Maths lives in pharma-math.js, text data in pharma-data.js.
+// text: the dose-response simulator and the therapeutic-index calculator with its plasma curve. Search,
+// flashcards and the progress bar are shared (summary-widgets.js). The article's text works without any
+// of this (and in all.html, which drops the [data-interactive] blocks). Maths lives in pharma-math.js,
+// text data in pharma-data.js.
 import {
   CURVES, LOG_MIN, LOG_MAX, PK, responseAt, therapeuticIndex, classifyTI, plasmaConcentration,
 } from './pharma-math.js';
 import { FLASHCARDS, TI_INFO } from './pharma-data.js';
+import { initReadingProgress, initSearch, initFlashcards } from './summary-widgets.js';
 
 const $ = (id) => document.getElementById(id);
 const FONT = 'Assistant, "Segoe UI", Arial, sans-serif';
@@ -31,71 +33,17 @@ function onResize(canvas, draw) {
   draw();
 }
 
-// ---------- reading progress ----------
+// ---------- search filters ----------
 
-function initReadingProgress() {
-  const bar = $('read-progress');
-  if (!bar) return;
-  const update = () => {
-    const root = document.documentElement;
-    const max = root.scrollHeight - root.clientHeight;
-    bar.style.transform = `scaleX(${max > 0 ? root.scrollTop / max : 0})`;
-  };
-  window.addEventListener('scroll', update, { passive: true });
-  update();
-}
-
-// ---------- search and filters ----------
-
-function initSearch() {
-  const input = $('pd-search');
-  const counter = $('pd-search-count');
-  const pills = [...document.querySelectorAll('[data-filter]')];
-  const cards = [...document.querySelectorAll('.summary .sc')];
-  const sections = [...document.querySelectorAll('.summary .topic-section')];
-  let filter = 'all';
-
-  const inCategory = (card, cat) => card.closest(`[data-category="${cat}"]`) !== null;
-  const matchesFilter = (card, text) => {
-    switch (filter) {
-      case 'exam': return card.classList.contains('is-exam') || text.includes('נשאל');
-      case 'curves': return inCategory(card, 'curves') || text.includes('emax') || text.includes('ec50') || text.includes('אינדקס');
-      case 'receptors': return inCategory(card, 'receptors') || text.includes('רצפטור') || text.includes('gpcr');
-      case 'combos': return inCategory(card, 'combos') || text.includes('סבילות') || text.includes('synergism') || text.includes('שילוב');
-      default: return true;
-    }
-  };
-
-  function run() {
-    const query = input.value.trim().toLowerCase();
-    const active = query !== '' || filter !== 'all';
-    let visible = 0;
-    for (const card of cards) {
-      const text = card.textContent.toLowerCase();
-      const show = (!query || text.includes(query)) && matchesFilter(card, text);
-      card.classList.toggle('filtered-out', !show);
-      if (show) visible++;
-    }
-    for (const sec of sections) {
-      const empty = sec.querySelector('.sc:not(.filtered-out)') === null;
-      sec.classList.toggle('dimmed', empty && active);
-    }
-    counter.textContent = active ? `נמצאו ${visible} תוצאות מתאימות` : 'מציג את כל הנושאים';
+const inCategory = (card, cat) => card.closest(`[data-category="${cat}"]`) !== null;
+function matchesFilter(filter, card, text) {
+  switch (filter) {
+    case 'exam': return card.classList.contains('is-exam') || text.includes('נשאל');
+    case 'curves': return inCategory(card, 'curves') || text.includes('emax') || text.includes('ec50') || text.includes('אינדקס');
+    case 'receptors': return inCategory(card, 'receptors') || text.includes('רצפטור') || text.includes('gpcr');
+    case 'combos': return inCategory(card, 'combos') || text.includes('סבילות') || text.includes('synergism') || text.includes('שילוב');
+    default: return true;
   }
-
-  input.addEventListener('input', run);
-  for (const pill of pills) {
-    pill.addEventListener('click', () => {
-      for (const p of pills) p.setAttribute('aria-pressed', String(p === pill));
-      filter = pill.dataset.filter;
-      run();
-    });
-  }
-  // Print shows everything, whatever is filtered on screen.
-  window.addEventListener('beforeprint', () => {
-    for (const el of document.querySelectorAll('.filtered-out, .dimmed')) el.classList.remove('filtered-out', 'dimmed');
-  });
-  window.addEventListener('afterprint', run);
 }
 
 // ---------- dose-response simulator ----------
@@ -305,49 +253,8 @@ function initTherapeuticIndex() {
   onResize(canvas, draw);
 }
 
-// ---------- flashcards ----------
-
-function initFlashcards() {
-  const card = $('flashcard');
-  const num = $('card-num');
-  const question = $('card-question');
-  const answer = $('card-answer');
-  const front = $('card-front');
-  const back = $('card-back');
-  const progress = $('flash-progress');
-  const known = new Set();
-  let index = 0;
-
-  function setFlipped(flipped) {
-    card.dataset.flipped = String(flipped);
-    front.setAttribute('aria-hidden', String(flipped));
-    back.setAttribute('aria-hidden', String(!flipped));
-  }
-
-  function show() {
-    setFlipped(false);
-    const item = FLASHCARDS[index];
-    num.textContent = `${index + 1} / ${FLASHCARDS.length}`;
-    question.textContent = item.q;
-    answer.textContent = item.a;
-    progress.textContent = `${known.size} מתוך ${FLASHCARDS.length} נלמדו בהצלחה`;
-  }
-
-  const go = (step) => {
-    index = (index + step + FLASHCARDS.length) % FLASHCARDS.length;
-    show();
-  };
-
-  card.addEventListener('click', () => setFlipped(card.dataset.flipped !== 'true'));
-  $('card-prev').addEventListener('click', () => go(-1));
-  $('card-next').addEventListener('click', () => go(1));
-  $('card-known').addEventListener('click', () => { known.add(index); go(1); });
-  $('card-again').addEventListener('click', () => { known.delete(index); go(1); });
-  show();
-}
-
 initReadingProgress();
-initSearch();
+initSearch('pd', matchesFilter);
 initSimulator();
 initTherapeuticIndex();
-initFlashcards();
+initFlashcards(FLASHCARDS);

@@ -1,0 +1,116 @@
+/* Shared parts of the interactive summaries (search and filters, dark "lab" panels, mode buttons,
+   flashcards, reading-progress bar). Loaded after summary.css by every summary that carries widgets
+   (pharmacodynamics.html, parasympathetic.html); each page adds its own css/<id>.css on top.
+   Everything here is hidden on paper (.no-print) and absent from all.html. */
+
+/* The dark "lab" panels keep a fixed dark palette in light and dark mode, as the canvases are drawn for it. */
+.summary .lab, .summary .stage, .summary .flash-stage {
+  --lab-bg: #0f172a;
+  --lab-panel: #1e293b;
+  --lab-line: #334155;
+  --lab-ink: #f1f5f9;
+  --lab-muted: #cbd5e1;
+  --lab-teal: #2dd4bf;
+  --lab-amber: #fbbf24;
+}
+
+.read-progress {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 5px;
+  z-index: 50;
+  background: linear-gradient(90deg, #0d9488, #06b6d4, #f59e0b);
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 75ms linear;
+  pointer-events: none;
+}
+
+/* ---------- search, filters, quick links ---------- */
+
+.summary .toolbar { margin-block-start: 1.5rem; padding: 0.9rem 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.summary .toc { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-block-end: 0.8rem; font-size: 0.92rem; font-weight: 600; }
+.summary .toc a { padding: 0.25rem 0.7rem; border-radius: 8px; color: var(--accent-ink); text-decoration: none; background: var(--accent-soft); }
+.summary .toc a:hover { text-decoration: underline; }
+.summary .toc .toc-exam { background: #fbeccf; color: #7a3a05; }
+:root[data-links="underline"] .summary .toc a { text-decoration: underline; }
+
+.summary .search-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; }
+.summary .search-label { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
+.summary .search-input { flex: 1 1 18rem; min-inline-size: 0; padding: 0.55rem 0.8rem; font: inherit; font-size: 0.95rem; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; }
+.summary .search-count { margin: 0; font-size: 0.85rem; color: var(--muted); }
+
+.summary .pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-block-start: 0.8rem; padding-block-start: 0.8rem; border-block-start: 1px solid var(--line); }
+.summary .pill { padding: 0.35rem 0.85rem; font-size: 0.9rem; font-weight: 600; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; }
+.summary .pill:hover { border-color: var(--accent); }
+.summary .pill[aria-pressed="true"] { color: #fff; background: var(--accent-ink); border-color: var(--accent-ink); }
+:root[data-contrast="high"] .summary .pill[aria-pressed="true"] { color: #fff; background: #000; }
+
+.summary .filtered-out { display: none; }
+.summary .topic-section.dimmed { opacity: 0.4; }
+
+/* ---------- lab panels (simulator, TI calculator, flashcards) ---------- */
+
+.summary .lab { margin-block: 2rem; padding: 1.25rem; color: var(--lab-ink); background: var(--lab-bg); border: 1px solid var(--lab-line); border-radius: 16px; }
+.summary .lab h2, .summary .lab h3, .summary .lab h4 { color: var(--lab-ink); border: 0; padding: 0; margin: 0 0 0.3rem; }
+.summary .lab h2 { font-size: 1.5rem; }
+.summary .lab .sec-note, .summary .lab .hint { color: var(--lab-muted); }
+.summary .lab .en { color: var(--lab-teal); }
+.summary .lab-kicker { display: inline-block; margin: 0 0 0.5rem; padding: 2px 12px; font-size: 0.8rem; font-weight: 700; color: #99f6e4; background: rgba(20, 184, 166, 0.2); border-radius: 999px; }
+.summary .lab-kicker-hot { color: #1a1305; background: #fbbf24; }
+.summary .lab-title { font-size: 1.2rem; }
+.summary .lab-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; padding-block-end: 1rem; margin-block-end: 1rem; border-block-end: 1px solid var(--lab-line); }
+.summary .lab .lab { margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; }
+
+.summary .modes { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-block: 0.8rem 1.1rem; }
+.summary .mode { padding: 0.4rem 0.85rem; font-size: 0.85rem; font-weight: 600; color: var(--lab-ink); background: var(--lab-panel); border: 1px solid var(--lab-line); border-radius: 10px; }
+.summary .mode:hover { border-color: var(--lab-teal); }
+.summary .mode[aria-pressed="true"] { color: #042f2e; background: var(--lab-teal); border-color: var(--lab-teal); }
+.summary .mode[aria-pressed="true"] .en { color: inherit; }
+
+/* ---------- flashcards ---------- */
+
+.summary .deck { background: linear-gradient(135deg, #0f172a, #042f2e); border-color: #115e59; }
+.summary .flash-progress { margin: 0.2rem 0 1rem; font-size: 0.85rem; color: var(--lab-muted); }
+.summary .flash-progress strong { color: var(--lab-amber); font-size: 0.95rem; }
+.summary .flash-stage { max-inline-size: 36rem; margin-inline: auto; }
+
+.summary .flash { display: block; inline-size: 100%; block-size: 17rem; padding: 0; color: inherit; background: none; border: 0; border-radius: 24px; perspective: 1000px; text-align: start; }
+.summary .flash-inner { position: relative; display: block; inline-size: 100%; block-size: 100%; border-radius: 24px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45); transform-style: preserve-3d; transition: transform 0.5s; }
+.summary .flash[data-flipped="true"] .flash-inner { transform: rotateY(180deg); }
+.summary .face { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 1.25rem; border: 2px solid; border-radius: 24px; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.summary .face-front { background: #1e293b; border-color: rgba(45, 212, 191, 0.45); color: #5eead4; }
+.summary .face-back { background: #042f2e; border-color: rgba(251, 191, 36, 0.65); color: #fcd34d; transform: rotateY(180deg); }
+.summary .face-top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; font-size: 0.8rem; }
+.summary .face-hint { padding: 1px 9px; font-size: 0.72rem; color: var(--lab-muted); background: rgba(51, 65, 85, 0.8); border-radius: 6px; }
+.summary .face-text { display: block; text-align: center; font-size: 1.2rem; font-weight: 600; line-height: 1.6; color: #fff; overflow-wrap: anywhere; }
+.summary .face-back .face-text { font-size: 1.05rem; color: #d1fae5; }
+.summary .face-bottom { font-size: 0.78rem; text-align: center; color: var(--lab-muted); }
+.summary .flash:focus-visible { outline: 3px solid #fbbf24; outline-offset: 4px; }
+
+.summary .flash-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem; margin-block-start: 1.2rem; }
+.summary .flash-marks { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.summary .flash-btn { padding: 0.5rem 1rem; font-size: 0.9rem; font-weight: 700; color: #e2e8f0; background: #1e293b; border: 1px solid #475569; border-radius: 12px; }
+.summary .flash-btn:hover { background: #334155; }
+.summary .flash-ok { color: #fff; background: #059669; border-color: #059669; }
+.summary .flash-ok:hover { background: #10b981; }
+.summary .flash-bad { color: #fff; background: #be123c; border-color: #be123c; }
+.summary .flash-bad:hover { background: #e11d48; }
+
+
+.summary .lab button:focus-visible, .summary .lab input:focus-visible, .summary .toolbar :focus-visible { outline-color: #fbbf24; }
+.summary .toolbar :focus-visible { outline-color: var(--focus); }
+
+:root[data-contrast="high"] .summary .lab { border: 2px solid #fff; }
+:root[data-contrast="high"] .summary .toolbar { border: 2px solid #000; }
+
+@media (max-width: 560px) {
+  .summary .lab { padding: 0.9rem; }
+  .summary .flash { block-size: 20rem; }
+  .summary .flash-controls { justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .read-progress, .summary .flash-inner { transition: none; }
+}

@@ -137,7 +137,7 @@ captions and HTML pages that load from a CDN. How to upload: [media/README.md](m
 
 A summary can also carry interactive widgets (search, simulators, flashcards), as `pharmacodynamics.html` does:
 mark each widget `data-interactive` (and `no-print`), keep its script and styles in their own files
-(`js/pharmacodynamics.js`, `css/pharmacodynamics.css`, pure maths in `js/pharma-math.js`), and keep the article's
+(`js/pharmacodynamics.js`, `css/pharmacodynamics.css`, pure maths in `js/pharma-math.js`; the search, flashcards and progress bar come from `js/summary-widgets.js` and `css/summary-widgets.css`), and keep the article's
 text complete without them. `all.html` drops every `[data-interactive]` block, so only the text is printed.
 
 ## Development
