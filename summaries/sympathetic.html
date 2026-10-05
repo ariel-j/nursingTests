@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>תרופות במערכת הסימפתטית — סיכום</title>
+  <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/summary.css">
+  <link rel="stylesheet" href="../css/summary-widgets.css">
+  <link rel="stylesheet" href="../css/sympathetic.css">
+  <script type="module" src="../js/summary.js"></script>
+  <script type="module" src="../js/sympathetic.js"></script>
+  <script type="module" src="../js/nav.js"></script>
+  <script type="module" src="../js/a11y.js"></script>
+</head>
+<body class="summary-page">
+  <div id="read-progress" class="read-progress no-print" aria-hidden="true"></div>
+  <main class="page wide">
+    <nav class="top-nav no-print">
+      <a href="./?subject=pharmacology">→ כל הסיכומים</a>
+      <button type="button" class="secondary" data-print>הדפסה / שמירה כ‑PDF</button>
+    </nav>
+
+<article class="summary" data-system="sympathetic">
+  <header>
+    <p class="kicker">פרמקולוגיה · מערכת העצבים האוטונומית · סיכום נושא</p>
+    <h1>תרופות במערכת הסימפתטית <span class="en h1-en">(Adrenergic Pharmacology)</span></h1>
+    <p class="lede">החלק של המערכת האוטונומית האחראי על תגובת <b>"הילחם או ברח" (<span class="en">fight or flight</span>)</b>, שבו הנוירוטרנסמיטרים המרכזיים הם נוראדרנלין (<span class="en">NE</span>) ואדרנלין (<span class="en">Epi</span>). הרעיון המאחד את כל התרופות: כל תרופה נקראת לפי השרשרת <b>תת-סוג רצפטור ← איבר מטרה ← אפקט ביולוגי</b>, וממנה נגזרות ישירות ההתוויות ותופעות הלוואי במבחן.</p>
+    <svg class="motif" viewBox="0 0 480 64" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 34 L70 34 L84 34 L96 12 L108 54 L120 34 L190 34 L200 28 L214 34 L300 34 L312 34 L324 8 L336 58 L348 34 L420 34 L430 28 L444 34 L480 34"/>
+    </svg>
+    <div class="legend">
+      <span><span class="arrowmark">←</span> <b>גורם ← תוצאה</b> (קוראים מימין לשמאל)</span>
+      <span><span class="exam exam-legend">נשאל בשחזורים</span> דגש בעל חזרתיות בבחינות</span>
+    </div>
+  </header>
+
+  <!-- חיפוש, מסננים ומעקב התקדמות (אינטראקטיבי) -->
+  <div class="toolbar no-print" data-interactive>
+    <nav class="toc" aria-label="קפיצה לפרק">
+      <a href="#sy-receptors"><span aria-hidden="true">🎯</span> סייר רצפטורים</a>
+      <a href="#sy-sec-3"><span aria-hidden="true">🧪</span> קטכולאמינים</a>
+      <a href="#sy-sec-6"><span aria-hidden="true">🚨</span> נוהל חירום</a>
+      <a href="#sy-sec-8">חוסמי <span class="en">α</span> ו-<span class="en">β</span></a>
+      <a href="#sy-sec-9"><span aria-hidden="true">🔄</span> סיבה ← תוצאה</a>
+      <a href="#sy-practice" class="toc-exam"><span aria-hidden="true">⭐</span> 10 שחזורים</a>
+    </nav>
+    <div class="search-row">
+      <label class="search-label" for="sy-search">חיפוש בסיכום</label>
+      <input type="search" id="sy-search" class="search-input" placeholder="חיפוש חופשי: תרופה, רצפטור, תופעת לוואי, התוויה (למשל: Clonidine, Prazosin, ברונכודילטציה)..." autocomplete="off">
+      <p id="sy-search-count" class="search-count" role="status">מציג את כל הנושאים</p>
+    </div>
+    <div class="pills" role="group" aria-label="סינון לפי נושא">
+      <button type="button" class="pill" data-filter="all" aria-pressed="true">הכל (10 פרקים)</button>
+      <button type="button" class="pill" data-filter="exam" aria-pressed="false"><span aria-hidden="true">⭐</span> שחזורים בלבד</button>
+      <button type="button" class="pill" data-filter="agonists" aria-pressed="false"><span aria-hidden="true">💊</span> אגוניסטים</button>
+      <button type="button" class="pill" data-filter="antagonists" aria-pressed="false"><span aria-hidden="true">🛑</span> חוסמים</button>
+      <button type="button" class="pill" data-filter="traps" aria-pressed="false"><span aria-hidden="true">⚠️</span> מלכודות מבחן</button>
+      <button type="button" class="pill" data-filter="rel" aria-pressed="false"><span aria-hidden="true">🔄</span> סיבה ← תוצאה</button>
+    </div>
+    <div class="tracker">
+      <div class="tracker-top">
+        <span id="sy-tracker-label" class="tracker-label">מעקב התקדמות בלמידה</span>
+        <strong id="sy-percent">0%</strong>
+      </div>
+      <div id="sy-bar" class="tracker-bar" role="progressbar" aria-labelledby="sy-tracker-label" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div id="sy-fill" class="tracker-fill"></div>
+      </div>
+      <div class="tracker-foot">
+        <span id="sy-count" role="status">0 מתוך 10 פרקים הושלמו</span>
+        <button type="button" id="sy-reset" class="secondary tracker-reset">איפוס סימונים</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- סייר רצפטורים (אינטראקטיבי) -->
+  <section id="sy-receptors" class="panel no-print" data-interactive aria-labelledby="sy-receptors-title">
+    <div class="panel-head">
+      <div>
+        <p class="panel-kicker"><span aria-hidden="true">🎯</span> סייר רצפטורים אדרנרגיים</p>
+        <h2 id="sy-receptors-title">מסלול חלבון ה-<span class="en">G</span>, איברי המטרה והתרופות של כל רצפטור</h2>
+        <p class="sec-note flush">לחצו על רצפטור כדי לחקור את מסלול ההתמרה, האפקטים הפיזיולוגיים והתרופות הפועלות עליו.</p>
+      </div>
+    </div>
+    <div class="seg-row" role="group" aria-label="בחירת רצפטור">
+      <button type="button" class="seg" data-receptor="alpha1" data-tone="amber" aria-pressed="true"><span class="en">α1</span> (<span class="en">Gq</span>)</button>
+      <button type="button" class="seg" data-receptor="alpha2" data-tone="rose" aria-pressed="false"><span class="en">α2</span> (<span class="en">Gi</span>)</button>
+      <button type="button" class="seg" data-receptor="beta1" data-tone="blue" aria-pressed="false"><span class="en">β1</span> (<span class="en">Gs</span>)</button>
+      <button type="button" class="seg" data-receptor="beta2" data-tone="blue" aria-pressed="false"><span class="en">β2</span> (<span class="en">Gs</span>)</button>
+      <button type="button" class="seg" data-receptor="beta3" data-tone="blue" aria-pressed="false"><span class="en">β3</span> (<span class="en">Gs</span>)</button>
+      <button type="button" class="seg" data-receptor="d1" data-tone="blue" aria-pressed="false"><span class="en">D1</span> (<span class="en">Gs</span>)</button>
+    </div>
+    <div id="receptor-detail" class="receptor-detail" aria-live="polite"></div>
+  </section>
+
+  <!-- 1 יסודות מהירים -->
+  <section id="sy-sec-1" class="topic-section" data-category="basics">
+    <h2>1 · יסודות מהירים ומבנה המערכת</h2>
+    <p class="sec-note">תגובת <span class="en">Fight or Flight</span> מאפשרת גזירה לוגית של כל אפקט, בלי שינון עיוור.</p>
+
+    <div class="cards">
+      <div class="pcard sc is-exam" data-tone="rose">
+        <div class="pcard-head"><h3>תגובת <span class="en">Fight or Flight</span></h3><span class="exam">נשאל ×2</span></div>
+        <p>דופק↑, לחץ דם↑, <b>מידריאזיס (אישון מורחב)</b>, ברונכודילטציה (הרחבת סמפונות), גליקוגנוליזה וליפוליזה↑ לצורך אנרגיה זמינה, ופעילות מערכת העיכול (<span class="en">GI</span>)↓.</p>
+        <p class="foot flush"><span aria-hidden="true">💡</span> טיפ: הכל מכוון להישרדות: ראייה רחבה, אספקת חמצן ודם לשרירים, והשתקת עיכול.</p>
+      </div>
+      <div class="pcard sc" data-tone="blue">
+        <div class="pcard-head"><h3>נוירוטרנסמיטרים</h3><span class="tag"><span class="en">NE &amp; Epi</span></span></div>
+        <p><b>נוראדרנלין (<span class="en">NE</span>)</b>: משוחרר מקצות הנוירונים הסימפתטיים הפוסט-גנגליוניים.<br><b>אדרנלין (<span class="en">Epinephrine</span>)</b>: מופרש ישירות ממדולת האדרנל כהורמון למחזור הדם.</p>
+        <p class="foot flush">מבנה: טבעת קטכול (בנזן + 2 הידרוקסילים) + שרשרת אתילאמין.</p>
+      </div>
+      <div class="pcard sc" data-tone="amber">
+        <div class="pcard-head"><h3>סינפסה אדרנרגית ומשוב</h3><span class="tag"><span class="en">α2 Autoreceptor</span></span></div>
+        <p>על הנוירון הפרה-סינפטי יושב רצפטור <b><span class="en">α2</span> עצמי (<span class="en">Autoreceptor</span>)</b>. הפעלתו מעכבת שחרור <span class="en">NE</span> ו-<span class="en">ACh</span> במנגנון משוב שלילי המכבה את הפרץ הסימפתטי.</p>
+        <p class="foot flush"><span aria-hidden="true">⚠️</span> מלכודת מבחן: אגוניסט ל-<span class="en">α2</span> דווקא מוריד לחץ דם!</p>
+      </div>
+    </div>
+
+    <div class="call sc">
+      <h4><span aria-hidden="true">📌</span> חשוב לזכור</h4>
+      <p class="flush">המערכת הסימפתטית פועלת באופן <b>מפושט, מתואם ומהיר</b> (<span class="en">mass discharge</span>), בעוד המערכת הפאראסימפתטית פועלת באופן מקומי, דיסקרטי ואיטי.</p>
+    </div>
+  </section>
+
+  <!-- 2 רצפטורים אדרנרגיים -->
+  <section id="sy-sec-2" class="topic-section" data-category="receptors">
+    <h2>2 · רצפטורים אדרנרגיים: סוג, חלבון <span class="en">G</span>, מיקום ואפקט</h2>
+    <p class="sec-note">חמישה תת-סוגים ראשיים ועוד <span class="en">D1</span>. הבנת המנגנון המולקולרי חוסכת שינון של עשרות תרופות.</p>
+
+    <div class="cards c2">
+      <div class="pcard sc" data-tone="amber">
+        <div class="pcard-head"><h3><span class="en">α1</span></h3><span class="tag">חלבון <span class="en">Gq</span> · <span class="en">IP3 / DAG / Ca²⁺↑</span></span></div>
+        <p class="sub">מיקום: כלי דם, עין, עור, ספינקטרים ב-<span class="en">GI</span> ובשלפוחית, ערמונית</p>
+        <p><b>מסלול:</b> שפעול <span class="en">Phospholipase C (PLC)</span> ← פירוק <span class="en">PIP2</span> ל-<span class="en">IP3</span> ו-<span class="en">DAG</span> ← שחרור <span class="en">Ca²⁺</span> תוך-תאי.</p>
+        <p><b>אפקט ביולוגי:</b> כיווץ שריר חלק (<span class="en">Vasoconstriction</span>) ברוב כלי הדם ← התנגודת ההיקפית (<span class="en">TPR</span>) ולחץ הדם↑; כיווץ ה-<span class="en">Pupillary dilator muscle</span> ← <b>מידריאזיס</b> (<span class="en">Mydriasis</span>, הרחבת אישון ללא פגיעה באקומודציה); כיווץ סוגר שלפוחית השתן (אצירת שתן) ושריר חלק בערמונית.</p>
+        <p><b>אגוניסטים:</b> <span class="en">Phenylephrine, Midodrine, Tetrahydrozoline, Naphazoline, Oxymetazoline</span><br><b>אנטגוניסטים:</b> <span class="en">Prazosin, Terazosin, Doxazosin, Phenoxybenzamine, Phentolamine</span></p>
+        <p class="foot flush"><span aria-hidden="true">💡</span> אגוניסט של <span class="en">α1</span> מעלה לחץ דם ומפעיל ברו-רצפטורים המובילים ל-<span class="en">Reflex Bradycardia</span> (האטת דופק רפלקסיבית).</p>
+      </div>
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h3><span class="en">α2</span></h3><span class="tag">חלבון <span class="en">Gi</span> · <span class="en">AC↓ · cAMP↓</span></span></div>
+        <p class="sub">מיקום: פרה-סינפטי ב-<span class="en">CNS</span> ובקצות עצבים סימפתטיים, מרכז הפיקוח הוואזומוטורי בגזע המוח, טסיות דם, תאי בטא בלבלב</p>
+        <p><b>מסלול:</b> עיכוב <span class="en">Adenylyl Cyclase (AC)</span> ← ירידה ב-<span class="en">cAMP</span> תוך-תאי ← עיכוב תעלות סידן ושפעול תעלות אשלגן.</p>
+        <p><b>אפקט ביולוגי:</b> משוב שלילי מעכב על הנוירון הפרה-סינפטי: עיכוב שחרור <span class="en">NE</span> ו-<span class="en">ACh</span> ← <b>הפחתת הטונוס הסימפתטי המרכזי והורדת לחץ דם ודופק</b>. בנוסף: עיכוב שחרור אינסולין מתאי בטא בלבלב.</p>
+        <p><b>אגוניסטים:</b> <span class="en">Clonidine, Methyldopa, Lofexidine, Guanfacine</span><br><b>אנטגוניסטים:</b> <span class="en">Yohimbine</span> (ללא שימוש קליני מובהק), <span class="en">Phentolamine</span> (לא סלקטיבי)</p>
+        <p class="foot flush"><span aria-hidden="true">⚠️</span> אגוניסט של <span class="en">α2</span> מוריד לחץ דם, והפסקה פתאומית שלו מובילה ל-<span class="en">Rebound Hypertension</span> מסכן חיים!</p>
+      </div>
+      <div class="pcard sc" data-tone="blue">
+        <div class="pcard-head"><h3><span class="en">β1</span></h3><span class="tag">חלבון <span class="en">Gs</span> · <span class="en">AC↑ · cAMP↑</span></span></div>
+        <p class="sub">מיקום ראשי: לב (שריר וקוצב <span class="en">SA/AV</span>) ותאי <span class="en">JG</span> בכליה</p>
+        <p><b>מסלול:</b> שפעול <span class="en">Adenylyl Cyclase</span> ← <span class="en">cAMP</span>↑ ← שפעול <span class="en">PKA</span> וזרחון תעלות <span class="en">Ca²⁺</span> מסוג <span class="en">L</span> בלב.</p>
+        <p><b>אפקט ביולוגי בלב:</b> קצב לב↑ (כרונוטרופי חיובי, <span class="en">Positive Chronotropy</span>), כוח כיווץ↑ (אינוטרופי חיובי, <span class="en">Positive Inotropy</span>), מהירות הולכה↑ (דרומוטרופי חיובי, <span class="en">Positive Dromotropy</span>).<br><b>בכליה:</b> שחרור <b>רנין (<span class="en">Renin</span>)↑</b> המפעיל את מערכת <span class="en">RAAS</span> להעלאת ל"ד.</p>
+        <p><b>אגוניסטים:</b> <span class="en">Dobutamine, Isoproterenol, Epinephrine, Norepinephrine, Dopamine</span><br><b>אנטגוניסטים:</b> <span class="en">Atenolol, Metoprolol, Bisoprolol, Esmolol</span>, <span class="en">Propranolol</span> (לא סלקטיבי)</p>
+        <p class="foot flush"><span aria-hidden="true">💡</span> תרופות <span class="en">β1</span> קרדיוסלקטיביות (כמו <span class="en">Atenolol</span>) עדיפות בחולי נשימה, אך <b>במינון גבוה מאבדות את הסלקטיביות</b> ופועלות גם על <span class="en">β2</span>!</p>
+      </div>
+      <div class="pcard sc" data-tone="blue">
+        <div class="pcard-head"><h3><span class="en">β2</span></h3><span class="tag">חלבון <span class="en">Gs</span> · הרפיית שריר חלק</span></div>
+        <p class="sub">מיקום: סמפונות ריאה, כלי דם של שרירי שלד, רחם, כבד</p>
+        <p><b>מסלול:</b> שפעול <span class="en">Adenylyl Cyclase</span> ← <span class="en">cAMP</span>↑ ← <span class="en">PKA</span> מזרחנת ומעכבת את <span class="en">Myosin Light Chain Kinase (MLCK)</span> בשריר חלק.</p>
+        <p><b>אפקט ביולוגי:</b> <b>ברונכודילטציה</b> (<span class="en">Bronchodilation</span>, הרחבת דרכי נשימה, הקלה על התקפי אסטמה); ואזודילטציה (<span class="en">Vasodilation</span>) בשרירי שלד; גליקוגנוליזה וגלוקונאוגנזה בכבד (העלאת גלוקוז בדם); הרפיית שריר הרחם (טוקוליזה לעצירת צירים מוקדמים).</p>
+        <p><b>אגוניסטים:</b> <span class="en">Albuterol (Salbutamol), Terbutaline, Salmeterol, Formoterol</span><br><b>אנטגוניסטים:</b> <span class="en">Propranolol, Timolol, Nadolol</span> (אינם סלקטיביים, אסורים באסטמה!)</p>
+        <p class="foot flush"><span aria-hidden="true">💡</span> חוסם בטא לא-סלקטיבי יחסום את <span class="en">β2</span> ויגרום לברונכוקונסטריקציה קטלנית באסטמה. תופעת לוואי של אגוניסט ל-<span class="en">β2</span>: <b>רעד בשרירי שלד</b> (<span class="en">Tremor</span>).</p>
+      </div>
+      <div class="pcard sc" data-tone="blue">
+        <div class="pcard-head"><h3><span class="en">β3</span></h3><span class="tag">חלבון <span class="en">Gs</span></span></div>
+        <p class="sub">מיקום: רקמת שומן (לבנה וחומה) ושריר ה-<span class="en">Detrusor</span> בשלפוחית השתן</p>
+        <p><b>מסלול:</b> שפעול <span class="en">AC</span> ועלייה ב-<span class="en">cAMP</span> ברקמות שומן ובשלפוחית השתן.</p>
+        <p><b>אפקט ביולוגי:</b> ליפוליזה (<span class="en">Lipolysis</span>) מוגברת ברקמת שומן; <b>הרפיית שריר ה-<span class="en">Detrusor</span></b> בשלפוחית (מאפשר אגירת שתן טובה יותר והקלה על שלפוחית רגיזה).</p>
+        <p><b>אגוניסטים:</b> <span class="en">Mirabegron, Vibegron</span> (לטיפול בשלפוחית רגיזה)<br><b>אנטגוניסטים:</b> אין אנטגוניסט קליני ייעודי</p>
+        <p class="foot flush"><span class="en">Mirabegron</span> מיועדת ל-<span class="en">Overactive Bladder</span> כתחליף לתרופות אנטי-כולינרגיות; תופעת הלוואי העיקרית שלה היא <b>עלייה בלחץ הדם</b>.</p>
+      </div>
+      <div class="pcard sc" data-tone="teal">
+        <div class="pcard-head"><h3><span class="en">D1</span></h3><span class="tag">דופמינרגי · <span class="en">Gs</span></span></div>
+        <p class="sub">מיקום: כלי דם כלייתיים, כלי דם מזנטריים בבטן, עורקים כליליים</p>
+        <p><b>מסלול:</b> שפעול <span class="en">Adenylyl Cyclase</span> ← <span class="en">cAMP</span>↑ ← הרפיית שריר חלק וסקולרי.</p>
+        <p><b>אפקט ביולוגי:</b> הרחבת עורקים כלייתיים והגברת הזילוח לכליה (<span class="en">GFR</span>↑); הפרשת נתרן בשתן (<span class="en">Natriuresis</span>); ירידה בתנגודת כלי הדם המערכתית.</p>
+        <p><b>אגוניסטים:</b> <span class="en">Fenoldopam</span> (למשברי יתר לחץ דם <span class="en">IV</span>), <span class="en">Dopamine</span> (במינון נמוך)<br><b>אנטגוניסטים:</b> חוסמי דופמין כגון נוירולפטיים</p>
+        <p class="foot flush"><span class="en">Fenoldopam</span> מרחיב כלי דם ומגן על הכליה במשברי יתר לחץ דם, בניגוד לתרופות אחרות שעלולות לפגוע בזילוח הכלייתי.</p>
+      </div>
+    </div>
+
+    <div class="call sc">
+      <h4><span aria-hidden="true">⚠️</span> מלכודות קלאסיות במבחנים</h4>
+      <ul class="flush">
+        <li><b><span class="en">α2</span> הוא רצפטור מעכב:</b> אגוניסט של <span class="en">α2</span> (כגון <span class="en">Clonidine</span>) גורם לירידה בלחץ הדם, בניגוד לאגוניסט של <span class="en">α1</span> (<span class="en">Phenylephrine</span>) שמעלה אותו בחריפות!</li>
+        <li><b><span class="en">β2</span> מרחיב סמפונות:</b> חוסם בטא לא-סלקטיבי (כמו <span class="en">Propranolol</span>) יחסום גם את <span class="en">β2</span> ויגרום לברונכוקונסטריקציה מסכנת חיים בחולי אסטמה ו-<span class="en">COPD</span>!</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3 קטכולאמינים מול לא-קטכולאמינים -->
+  <section id="sy-sec-3" class="topic-section" data-category="catecholamines">
+    <h2>3 · קטכולאמינים (<span class="en">CA</span>) מול לא‑קטכולאמינים (<span class="en">nonCA</span>)</h2>
+    <p class="sec-note">הקשר בין מבנה כימי, פירוק ע"י אנזימים (<span class="en">MAO / COMT</span>) ומעבר מחסום דם-מוח (<span class="en">BBB</span>).</p>
+
+    <div class="cards c2">
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h3>קטכולאמינים (<span class="en">CA</span>)</h3><span class="tag"><span class="en">Epi, NE, DA, Dobutamine</span></span></div>
+        <ul class="flush">
+          <li><b>מבנה:</b> מכילים טבעת בנזן עם 2 קבוצות הידרוקסיל (<span class="en">Catechol ring</span>).</li>
+          <li><b>פירוק מהיר:</b> מפורקים במהירות ע"י <b><span class="en">COMT</span></b> (פוסט-סינפטי ומחוץ לנוירון) ו-<b><span class="en">MAO</span></b> (תוך-נוירוני).</li>
+          <li><b>פרמקוקינטיקה:</b> זמן מחצית חיים (<span class="en">t½</span>) קצר מאוד (דקות ספורות), <span class="en">onset</span> מהיר, <span class="en">first-pass</span> ענקי בכבד.</li>
+          <li><b>מתן קליני:</b> <b>פראנטרלי בלבד</b> (<span class="en">IV</span>, תת-עורי, אינהלציה). אינם פעילים במתן <span class="en">PO</span>!</li>
+          <li><b>מעבר <span class="en">BBB</span>:</b> פולריים ביותר, <b>אינם חודרים כמעט את מחסום הדם-מוח</b>.</li>
+        </ul>
+      </div>
+      <div class="pcard sc" data-tone="emerald">
+        <div class="pcard-head"><h3>לא-קטכולאמינים (<span class="en">nonCA</span>)</h3><span class="tag"><span class="en">Phenylephrine, Ephedrine, Amphetamine</span></span></div>
+        <ul class="flush">
+          <li><b>מבנה:</b> חסרים הידרוקסיל אחד או שניים בטבעת הבנזן (עמידים ל-<span class="en">COMT</span>).</li>
+          <li><b>עמידות אנזימטית:</b> <b>אינם מפורקים ע"י <span class="en">COMT</span></b> ופירוקם ע"י <span class="en">MAO</span> איטי מאוד.</li>
+          <li><b>פרמקוקינטיקה:</b> זמן מחצית חיים ממושך בהרבה (שעות), משך פעולה ארוך.</li>
+          <li><b>מתן קליני:</b> <b>פעילים במתן אוראלי (<span class="en">PO</span>)</b>, בטיפות אף או באינהלציה.</li>
+          <li><b>מעבר <span class="en">BBB</span>:</b> ליפופיליים יותר, <b>חודרים למוח (<span class="en">CNS</span>)</b> ומחוללים אפקטים מרכזיים (כמו עוררות וממריצים).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="call sc">
+      <h4><span aria-hidden="true">🔬</span> חוקיות מבנה-פעילות (<span class="en">SAR</span>)</h4>
+      <ul class="flush">
+        <li><b>תחליף על החנקן (<span class="en">N</span>):</b> ככל שהתחליף גדול יותר (למשל איזופרופיל), כך עולה הזיקה לרצפטורי <span class="en">β</span> ויורדת לרצפטורי <span class="en">α</span>.</li>
+        <li><b>הסרת הידרוקסיל במיקום פארא (<span class="en">C4</span>):</b> מובילה לאובדן מוחלט של זיקה ל-<span class="en">β</span> והופכת את התרופה לסלקטיבית לרצפטורי <span class="en">α</span> בלבד (כמו <span class="en">Phenylephrine</span>).</li>
+      </ul>
+    </div>
+
+    <h3>מטריצת השוואה</h3>
+    <div class="table-wrap">
+      <table class="rtable cols4">
+        <thead>
+          <tr><th scope="col">תכונה</th><th scope="col">קטכולאמינים (<span class="en">CA</span>)</th><th scope="col">לא-קטכולאמינים (<span class="en">nonCA</span>)</th><th scope="col">משמעות קלינית למבחן</th></tr>
+        </thead>
+        <tbody>
+          <tr class="sc"><td>פירוק ע"י אנזים <span class="en">COMT</span></td><td>כן, פירוק מהיר ביותר</td><td>לא, עמידים לחלוטין ל-<span class="en">COMT</span></td><td><span class="en">CA</span> מפורקים מיידית במתן פומי במעי ובכבד; <span class="en">nonCA</span> עמידים.</td></tr>
+          <tr class="sc"><td>פירוק ע"י אנזים <span class="en">MAO</span></td><td>מפורקים מהר בתוך הנוירון</td><td>פירוק איטי מאוד או עמידות</td><td>זמן מחצית חיים (<span class="en">t½</span>) של <span class="en">nonCA</span> ארוך משמעותית (שעות לעומת דקות).</td></tr>
+          <tr class="sc"><td>חדירה למוח (<span class="en">BBB</span>)</td><td>כמעט ואינם חודרים (פולריים)</td><td>חודרים היטב (ליפופיליים)</td><td><span class="en">nonCA</span> כמו אמפטמין ואפדרין גורמים לאפקטים מרכזיים (<span class="en">CNS Stimulation</span>).</td></tr>
+          <tr class="sc"><td>מתן דרך הפה (<span class="en">PO</span>)</td><td>אינם פעילים (<span class="en">First-pass</span> מלא)</td><td>זמינות ביולוגית טובה ב-<span class="en">PO</span></td><td>נוראדרנלין ואדרנלין ניתנים רק ב-<span class="en">IV</span>, <span class="en">SC</span> או אינהלציה; פנילאפרין ניתן גם ב-<span class="en">PO</span>.</td></tr>
+          <tr class="sc"><td>הידרוקסיל במיקום 4 בטבעת</td><td>קיימות שתי קבוצות <span class="en">OH</span> (3,4)</td><td>הסרת <span class="en">OH</span> במיקום 4</td><td>אובדן מוחלט של זיקה ל-<span class="en">β</span> וסלקטיביות ל-<span class="en">α</span> (כמו <span class="en">Phenylephrine</span>).</td></tr>
+          <tr class="sc"><td>דוגמאות לתרופות</td><td><span class="en">Epinephrine, Norepinephrine, Dopamine, Dobutamine</span></td><td><span class="en">Phenylephrine, Ephedrine, Pseudoephedrine, Amphetamine</span></td><td>שימושי חירום (<span class="en">CA</span>) לעומת טיפול כרוני או מקומי (<span class="en">nonCA</span>).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 4 אגוניסטים ישירים -->
+  <section id="sy-sec-4" class="topic-section" data-category="agonists">
+    <h2>4 · אגוניסטים אדרנרגיים ישירים (<span class="en">Direct Sympathomimetics</span>)</h2>
+    <p class="sec-note">נקשרים ישירות לקולטן ומפעילים אותו; ממוינים לפי סלקטיביות לתת-סוגי הרצפטורים.</p>
+
+    <h3><span aria-hidden="true">●</span> אגוניסטים של קולטני אלפא (<span class="en">α</span>)</h3>
+    <div class="cards c2">
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h3><span class="en">Phenylephrine</span></h3><span class="tag"><span class="en">α1</span> סלקטיבי</span></div>
+        <p>גם <span class="en">Tetrahydrozoline, Naphazoline</span>.<br><b>התוויות:</b> גודש באף (טיפות/ספריי), מידריאזיס לבדיקת עיניים, תוספת למאלחש מקומי, והעלאת ל"ד במצבי חירום (<span class="en">IV</span>).</p>
+        <p class="foot flush"><span aria-hidden="true">⚠️</span> ת"ל: יתר לחץ דם קיצוני, <b><span class="en">Reflex Bradycardia</span></b> (האטת דופק רפלקסיבית מה-<span class="en">Baroreceptors</span>).</p>
+      </div>
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h3><span class="en">Midodrine</span></h3><span class="tag"><span class="en">α1</span> סלקטיבי</span></div>
+        <p><b>התוויה ייחודית:</b> תת-לחץ דם תנוחתי כרוני (<span class="en">Orthostatic Hypotension</span>) ע"י הגברת הטונוס הוורידי והעורקי.</p>
+        <p class="foot flush"><span aria-hidden="true">⚠️</span> ת"ל קלאסית: <b><span class="en">Supine Hypertension</span></b> (יתר לחץ דם בשכיבה), אסור ליטול סמוך לשינה!</p>
+      </div>
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h3><span class="en">Clonidine &amp; Methyldopa</span></h3><span class="tag"><span class="en">α2</span> סלקטיבי (מרכזי)</span></div>
+        <p><b>התוויה:</b> יתר לחץ דם (<span class="en">Methyldopa</span> בטוחה בהריון). <b><span class="en">Lofexidine</span>:</b> להקלה על תסמיני גמילה מאופיואידים.</p>
+        <p class="foot flush"><span aria-hidden="true">⚠️</span> ת"ל: סדציה, יובש בפה, עצירות. <b><span class="en">Rebound Hypertension</span> מסוכן בהפסקה פתאומית!</b></p>
+      </div>
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h3><span class="en">Oxymetazoline</span></h3><span class="tag"><span class="en">α1 + α2</span></span></div>
+        <p>טיפות ותרסיסים לאף ולעיניים לגודש מקומי. שימוש מעל 3-5 ימים גורם לגודש חוזר (<span class="en">Rhinitis medicamentosa</span>).</p>
+      </div>
+      <div class="pcard sc" data-tone="teal">
+        <div class="pcard-head"><h3><span class="en">Fenoldopam</span></h3><span class="tag"><span class="en">D1</span> אגוניסט</span></div>
+        <p><b>התוויה:</b> משבר יתר לחץ דם חמור בחירום (<span class="en">IV</span>). גורם להרחבת עורקים קורונריים וכלייתיים. ת"ל: כאב ראש, טכיקרדיה רפלקסיבית.</p>
+      </div>
+    </div>
+
+    <h3><span aria-hidden="true">●</span> אגוניסטים של קולטני בטא (<span class="en">β</span>)</h3>
+    <div class="cards c2">
+      <div class="pcard sc" data-tone="blue">
+        <div class="pcard-head"><h3><span class="en">Dobutamine</span></h3><span class="tag"><span class="en">β1</span> עיקרי</span></div>
+        <p><b>התוויות:</b> שוק קרדיוגני, אי ספיקת לב חריפה עם ירידה בתפוקת הלב (מעלה כוח כיווץ יותר מאשר דופק).</p>
+        <p class="foot flush"><span aria-hidden="true">⚠️</span> ת"ל: הפרעות קצב לב (דיסריתמיות), אנגינה.</p>
+      </div>
+      <div class="pcard sc" data-tone="blue">
+        <div class="pcard-head"><h3><span class="en">Albuterol / Salmeterol</span></h3><span class="tag"><span class="en">β2</span> סלקטיבי</span></div>
+        <p><b><span class="en">SABA</span> (התקף חריף):</b> <span class="en">Albuterol / Salbutamol, Terbutaline</span>, התחלה מהירה.<br><b><span class="en">LABA</span> (טיפול מונע קבוע):</b> <span class="en">Salmeterol, Formoterol</span>, משך פעולה ארוך.</p>
+        <p class="foot flush"><span aria-hidden="true">⚠️</span> ת"ל: <b>רעד בשרירי שלד (<span class="en">Tremor</span>)</b>, טכיקרדיה, היפוקלמיה (הכנסת אשלגן לתאים).</p>
+      </div>
+      <div class="pcard sc" data-tone="blue">
+        <div class="pcard-head"><h3><span class="en">Mirabegron / Vibegron</span></h3><span class="tag"><span class="en">β3</span> סלקטיבי</span></div>
+        <p><b>התוויה:</b> שלפוחית שתן רגיזה (<span class="en">Overactive Bladder</span>) ע"י הרפיית שריר ה-<span class="en">Detrusor</span> והגדלת קיבולת האגירה.</p>
+        <p class="foot flush"><span aria-hidden="true">⚠️</span> ת"ל: עלייה בלחץ הדם (דורש מעקב ל"ד), <span class="en">UTI</span>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 קטכולאמינים אנדוגניים -->
+  <section id="sy-sec-5" class="topic-section" data-category="agonists">
+    <h2>5 · קטכולאמינים אנדוגניים בשימוש קליני</h2>
+    <p class="sec-note">פרופיל הרצפטורים של הקטכולאמינים הטבעיים ושימושי החירום שלהם. דליפה מהווריד היא סכנה מיוחדת (פרק 6).</p>
+
+    <div class="cards c2">
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h3><span class="en">Norepinephrine</span></h3><span class="tag"><span class="en">α1 &gt; α2 &gt; β1</span></span></div>
+        <p><b>תרופת הבחירה בשוק ספטי:</b> כיווץ כלי דם רב עוצמה המעלה את התנגודת ההיקפית (<span class="en">TPR</span>). יש להימנע מהזרקה לוורידים פריפריים קטנים.</p>
+      </div>
+      <div class="pcard sc is-exam" data-tone="amber">
+        <div class="pcard-head"><h3><span class="en">Epinephrine</span></h3><span><span class="tag"><span class="en">α1, α2, β1, β2</span> (לא סלקטיבי)</span> <span class="exam">נשאל בשחזור</span></span></div>
+        <p><b>חירום עליון:</b> שוק אנפילקטי (מציל חיים ע"י פתיחת סמפונות והעלאת ל"ד), דום לב, התקף אסטמה חריף, וכתוספת למאלחש מקומי להארכת הפעולה.</p>
+      </div>
+      <div class="pcard sc" data-tone="teal">
+        <div class="pcard-head"><h3><span class="en">Dopamine</span></h3><span class="tag">תלוי-מינון: <span class="en">D1 ← β1 ← α1</span></span></div>
+        <p>במינון נמוך מרחיב כלי דם כלייתיים (<span class="en">D1</span>); במינון בינוני מעלה כיווץ לב (<span class="en">β1</span>); במינון גבוה מכווץ כלי דם היקפיים ומעלה ל"ד (<span class="en">α1</span>).</p>
+      </div>
+      <div class="pcard sc" data-tone="blue">
+        <div class="pcard-head"><h3><span class="en">Dobutamine</span></h3><span class="tag">בעיקר <span class="en">β1</span></span></div>
+        <p>משמש בשוק קרדיוגני ובאי-ספיקת לב חריפה: מגביר עוצמת התכווצות שריר הלב עם השפעה מתונה יותר על קצב הלב.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 נוהל חירום -->
+  <section id="sy-sec-6" class="topic-section" data-category="emergency">
+    <h2>6 · נוהל חירום: דליפת נוראדרנלין (<span class="en">NE Extravasation</span>)</h2>
+    <p class="sec-note">פרוטוקול חובה במחלקות טיפול נמרץ, חדר הלם ומחלקות אשפוז.</p>
+
+    <div class="call sc is-exam">
+      <h4><span aria-hidden="true">🚨</span> המנגנון והסכנה <span class="exam">נשאל בשחזור</span></h4>
+      <p class="flush">ריכוז גבוה של <span class="en">NE</span> ברקמה (מחוץ לווריד) גורם לכיווץ עורקי מוחלט ← איסכמיה חמורה ← עור חיוור וקר ← <b>נמק רקמתי (<span class="en">Gangrene / Necrosis</span>)</b>. האנטידוט: <b class="en">Phentolamine</b> (חוסם <span class="en">α</span>) בהזרקה תת-עורית מיידית להרפיית כלי הדם.</p>
+    </div>
+
+    <div class="cards">
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h3>1 · עצירת העירוי</h3><span class="tag">מיידי</span></div>
+        <p class="flush">יש להפסיק מיד את עירוי ה-<span class="en">NE</span>! אין להוציא מיד את הקנולה (ניתן לנסות לשאוב דרכה שאריות תרופה לפני השליפה).</p>
+      </div>
+      <div class="pcard sc" data-tone="amber">
+        <div class="pcard-head"><h3>2 · זיהוי סימני איסכמיה</h3><span class="tag">זיהוי קליני</span></div>
+        <p class="flush">עור חיוור, קר ולבן (<span class="en">Blanching</span>), בצקת קשה וכאב עז סביב אתר החדירה. סכנה קריטית: נמק רקמתי בתוך שעות!</p>
+      </div>
+      <div class="pcard sc" data-tone="emerald">
+        <div class="pcard-head"><h3>3 · מתן <span class="en">Phentolamine</span></h3><span class="tag">אנטידוט</span></div>
+        <p class="flush">הזרקה מקומית תת-עורית (<span class="en">SubQ</span>) סביב האזור הנגוע של 5-10 מ"ג <b class="en">Phentolamine</b> מדולל בסליין, תוך 12 שעות.</p>
+      </div>
+      <div class="pcard sc" data-tone="blue">
+        <div class="pcard-head"><h3>4 · שיקום וניטור</h3><span class="tag">מעקב</span></div>
+        <p class="flush">מעקב אחר חזרת זילוח הדם והחום לגפה, חימום עדין ושטיפה. במידת הצורך: ייעוץ כירורגי לפלסטיקה, ניקוי כירורגי (דברידמנט) של רקמה נמקית וכיסוי אנטיביוטי.</p>
+      </div>
+    </div>
+
+    <div class="call sc">
+      <h4><span aria-hidden="true">💡</span> כלל מניעתי ראשון במעלה</h4>
+      <p class="flush">יש לתת קטכולאמינים בריכוז וזופרסורי דרך <b>צנתר ורידי מרכזי (<span class="en">CVC</span>)</b> בלבד במידת האפשר. אם נאלצים להשתמש בווריד פריפרי בחירום, יש לבחור וריד גדול באמה/זרוע ולהימנע מוורידים קטנים בכף היד או ברגל.</p>
+    </div>
+  </section>
+
+  <!-- 7 אגוניסטים עקיפים ו-ADHD -->
+  <section id="sy-sec-7" class="topic-section" data-category="agonists">
+    <h2>7 · אגוניסטים עקיפים ותרופות ל-<span class="en">ADHD</span></h2>
+    <p class="sec-note">אמינים סימפטומימטיים שאינם נקשרים לקולטן ישירות, אלא מעלים את רמת ה-<span class="en">NE</span> בסינפסה.</p>
+
+    <div class="cards c2">
+      <div class="pcard sc is-exam" data-tone="amber">
+        <div class="pcard-head"><h3><span class="en">Amphetamine</span></h3><span class="exam">נשאל ×2</span></div>
+        <p><b>מנגנון משולש:</b> מעודד שחרור קטכולאמינים מווסיקולות, מעכב <span class="en">MAO</span>, ומעכב <span class="en">Reuptake</span>. ממריץ עוצמתי של ה-<span class="en">CNS</span>.<br><b>התוויות:</b> הפרעות קשב (<span class="en">ADHD</span>), נרקולפסיה, דיכוי תיאבון.</p>
+        <p class="foot flush"><span aria-hidden="true">⚠️</span> ת"ל: טכיקרדיה, אינסומניה, יתר לחץ דם, התמכרות, <b>פסיכוזה חריפה (<span class="en">Psychosis</span>)</b> במינון יתר.</p>
+      </div>
+      <div class="pcard sc" data-tone="indigo">
+        <div class="pcard-head"><h3><span class="en">Methylphenidate</span> (ריטלין)</h3><span class="tag"><span class="en">NDRI</span></span></div>
+        <p><b>מנגנון:</b> חסימת נשאי ה-<span class="en">Reuptake</span> של דופמין ונוראדרנלין (<span class="en">DAT + NET</span>).<br><b>התוויות:</b> <span class="en">ADHD</span>, נרקולפסיה. ת"ל: כאבי בטן, ירידה בתיאבון (אנורקסיה), אינסומניה, פלפיטציות.</p>
+        <p class="foot flush"><span aria-hidden="true">⚠️</span> <b>התוויית נגד מוחלטת:</b> אסור בחולי גלאוקומה; פוטנציאל התמכרות.</p>
+      </div>
+      <div class="pcard sc" data-tone="purple">
+        <div class="pcard-head"><h3><span class="en">Atomoxetine</span></h3><span class="tag"><span class="en">NRI</span> סלקטיבי</span></div>
+        <p><b>מנגנון:</b> מעכב סלקטיבי להחזרת נוראדרנלין בלבד (אינו משפיע על דופמין).<br><b>יתרון בולט:</b> אינו ממריץ, אינו משפר מצב רוח, <b>ואינו ממכר</b> (ללא פוטנציאל שימוש לרעה).</p>
+        <p class="foot flush"><span aria-hidden="true">⚠️</span> אסור בגלאוקומה סגורת זווית; דורש מעקב תפקודי כבד ומחשבות אובדניות.</p>
+      </div>
+      <div class="pcard sc" data-tone="cyan">
+        <div class="pcard-head"><h3><span class="en">Pseudoephedrine</span></h3><span class="tag"><span class="en">nonCA</span></span></div>
+        <p>מנגנון מעורב: אגוניסט חלש ישיר + שחרור <span class="en">NE</span>. שימוש נפוץ בתכשירי צינון להקלה על גודש באף. ת"ל: דופק מואץ, נדודי שינה, יתר לחץ דם.</p>
+      </div>
+    </div>
+
+    <div class="call sc">
+      <h4><span aria-hidden="true">🧀</span> טיראמין ו"תגובת הגבינה" (<span class="en">Cheese Reaction</span>): אינטראקציה קטלנית</h4>
+      <p class="flush">טיראמין נמצא במזונות מותססים ומיושנים (גבינות צהובות קשות, יין אדום, שמרים). באופן נורמלי הוא מפורק ע"י <span class="en">MAO</span> במעי ובכבד.<br>במטופלים הנוטלים <b>מעכבי <span class="en">MAO</span> (<span class="en">MAO-I</span>)</b>: טיראמין חודר למחזור הדם וגורם לשחרור מאסיבי של נוראדרנלין מווסיקולות ← משבר היפרטנסיבי מסכן חיים (<span class="en">Hypertensive Crisis</span>), טכיקרדיה, דיסריתמיות וסכנת שבץ מוחי. הטיפול: <span class="en">Phentolamine</span>.</p>
+    </div>
+  </section>
+
+  <!-- 8 חוסמי α וחוסמי β -->
+  <section id="sy-sec-8" class="topic-section" data-category="antagonists">
+    <h2>8 · אנטגוניסטים: חוסמי <span class="en">α</span> וחוסמי <span class="en">β</span></h2>
+    <p class="sec-note">חוסמי <span class="en">α</span> מרפים כלי דם וספינקטרים; חוסמי <span class="en">β</span> מרגיעים את הלב. הסלקטיביות קובעת את תופעות הלוואי.</p>
+
+    <h3>חוסמי אלפא (<span class="en">α-Blockers</span>)</h3>
+    <div class="cards c2">
+      <div class="pcard sc is-exam" data-tone="purple">
+        <div class="pcard-head"><h3><span class="en">Prazosin, Terazosin, Doxazosin</span></h3><span><span class="tag"><span class="en">α1</span> סלקטיבי</span> <span class="exam">נשאל ×3</span></span></div>
+        <p><b>התוויות:</b> יתר לחץ דם, והקלה מיידית במתן שתן בהגדלת ערמונית שפירה (<span class="en">BPH</span>) ע"י הרפיית ספינקטר השלפוחית והערמונית.</p>
+        <p class="foot flush"><span aria-hidden="true">⚠️</span> הדרכת חולה קריטית: לקום לאט! <b><span class="en">Postural (Orthostatic) Hypotension</span></b> ואפקט המנה הראשונה (<span class="en">1st Dose Effect</span>, עילפון). ת"ל נוספות: גודש באף, אימפוטנציה, רפלקס טכיקרדיה.</p>
+      </div>
+      <div class="pcard sc" data-tone="purple">
+        <div class="pcard-head"><h3><span class="en">Phenoxybenzamine &amp; Phentolamine</span></h3><span class="tag"><span class="en">α1 + α2</span> לא-סלקטיביים</span></div>
+        <p><b class="en">Phenoxybenzamine:</b> חסימה קוולנטית <b>בלתי הפיכה</b>. משמש להכנה לניתוח פאוכרומוציטומה (<span class="en">Pheochromocytoma</span>).<br><b class="en">Phentolamine:</b> חסימה הפיכה. משמש ל-<span class="en">NE extravasation</span>, למשבר טיראמין ולפאוכרומוציטומה.</p>
+      </div>
+      <div class="pcard sc" data-tone="purple">
+        <div class="pcard-head"><h3><span class="en">Yohimbine</span></h3><span class="tag"><span class="en">α2</span> סלקטיבי</span></div>
+        <p>אין כיום שימוש קליני מקובל. מופק מקליפת עץ היוהימבי, בעבר שווק כמעורר חשק מיני (אפרודיזיאק). חוסם את המשוב השלילי ומגביר שחרור <span class="en">NE</span>.</p>
+      </div>
+    </div>
+
+    <h3>חוסמי בטא (<span class="en">β-Blockers</span>)</h3>
+    <div class="cards c2">
+      <div class="pcard sc is-exam" data-tone="indigo">
+        <div class="pcard-head"><h3><span class="en">β1</span> סלקטיביים (<span class="en">Cardioselective</span>)</h3><span class="exam">נשאל ×2 (<span class="en">Atenolol</span>)</span></div>
+        <p class="sub en">Atenolol, Metoprolol, Bisoprolol, Esmolol, Nebivolol</p>
+        <p><b>התוויות:</b> יתר לחץ דם, הפרעות קצב מהירות, תעוקת חזה (<span class="en">Angina</span>), אי-ספיקת לב כרונית. בטוחים יותר יחסית בדרכי הנשימה, אך <b>במינון גבוה מאבדים את הסלקטיביות</b> ופועלים גם על <span class="en">β2</span>!</p>
+      </div>
+      <div class="pcard sc is-exam" data-tone="indigo">
+        <div class="pcard-head"><h3>חוסמי <span class="en">β</span> לא-סלקטיביים</h3><span class="exam">נשאל ×2 (<span class="en">Propranolol</span>)</span></div>
+        <p class="sub en">Propranolol, Nadolol, Timolol</p>
+        <p>גם למיגרנה, היפרתירואידיזם (<span class="en">Thyroid Storm</span>), רעד חרדתי, גלאוקומה (<span class="en">Timolol</span> בעיניים).<br><b>התוויית נגד קריטית:</b> <b>אסור לחולי אסטמה ו-<span class="en">COPD</span></b> עקב חסימת <span class="en">β2</span> וברונכוקונסטריקציה קטלנית.</p>
+        <p class="foot flush"><span aria-hidden="true">⚠️</span> ת"ל: גפיים קרות, עייפות, הסתרת תסמיני היפוגליקמיה בסוכרת (פרט להזעה).</p>
+      </div>
+      <div class="pcard sc" data-tone="cyan">
+        <div class="pcard-head"><h3>חוסמים משולבים: <span class="en">α + β</span></h3></div>
+        <p class="sub en">Labetalol, Carvedilol</p>
+        <p>משלבים הרחבת כלי דם (חסימת <span class="en">α1</span>) יחד עם בלימת הלב (חסימת <span class="en">β1</span>).<br><b class="en">Labetalol:</b> תרופת הבחירה ביתר לחץ דם בהריון (<span class="en">Preeclampsia</span>) ובמשברי יתר לחץ דם.<br><b class="en">Carvedilol:</b> משפר הישרדות באי-ספיקת לב כרונית וביתר לחץ דם.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 שרשראות סיבה ← תוצאה -->
+  <section id="sy-sec-9" class="topic-section" data-category="rel">
+    <h2>9 · שרשראות סיבה ← תוצאה מובילות במבחנים</h2>
+    <p class="sec-note">הקשרים הפיזיולוגיים והפרמקולוגיים הנפוצים ביותר בשאלות הבחינה. קוראים מימין לשמאל: הגורם והתוצאה הקלינית שנגזרת ממנו.</p>
+
+    <div class="selftest no-print" data-interactive>
+      <button type="button" id="selftest-toggle" class="secondary" aria-pressed="false"><span aria-hidden="true">👁️</span> מצב בחינה עצמית (הסתר תוצאות)</button>
+      <button type="button" id="selftest-reveal" class="secondary">חשוף הכל</button>
+      <p id="selftest-status" class="selftest-status" role="status"></p>
+    </div>
+
+    <div id="sy-chains">
+      <div class="rel sc is-exam">
+        <div class="rel-cause">מתן אגוניסט <span class="en">α1</span> (כגון <span class="en">Phenylephrine</span>) <span class="exam">נשאל בשחזור</span></div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect">כיווץ כלי דם עורקיים ← עלייה בתנגודת פריפרית ובלחץ דם ← שפעול <span class="en">Baroreceptors</span> בסינוס הקרוטידי ← <b>רפלקס ברדיקרדיה</b> (האטת דופק).</div>
+      </div>
+      <div class="rel sc">
+        <div class="rel-cause">מתן אגוניסט <span class="en">α2</span> פרה-סינפטי (<span class="en">Clonidine</span>)</div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect">הפעלת רצפטור עצמי מעכב ← עיכוב שחרור <span class="en">NE</span> ו-<span class="en">ACh</span> ב-<span class="en">CNS</span> ← ירידה בטונוס הסימפתטי המרכזי ← <b>ירידה בלחץ הדם ובדופק</b>.</div>
+      </div>
+      <div class="rel sc">
+        <div class="rel-cause">חשיפה ממושכת לאגוניסט אדרנרגי</div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect"><b>דסנסיטיזציה (<span class="en">Desensitization</span>) / סבילות תרופתית</b> ← הפנמה והורדת צפיפות הקולטנים על הממברנה (<span class="en">Down-regulation</span>).</div>
+      </div>
+      <div class="rel sc is-exam">
+        <div class="rel-cause">חשיפה ממושכת לאנטגוניסט אדרנרגי (חוסם) <span class="exam">נשאל ×2</span></div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect">הגברת צפיפות הרצפטורים בממברנה (<span class="en">Up-regulation</span>) ← <b>רגישות יתר</b> (<span class="en">Hyperreactivity / Rebound</span>) בעת הפסקת החוסם.</div>
+      </div>
+      <div class="rel sc is-exam">
+        <div class="rel-cause">מתן חוסם <span class="en">β</span> לא-סלקטיבי (כגון <span class="en">Propranolol</span>) לחולה אסטמה <span class="exam">נשאל ×2</span></div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect">חסימת קולטני <span class="en">β2</span> בדרכי הנשימה ← ביטול ההרפיה הטבעית ← <b>ברונכוספאזם חמור</b>, כשל נשימתי וסכנת חיים.</div>
+      </div>
+      <div class="rel sc is-exam">
+        <div class="rel-cause">הוספת <span class="en">Phenylephrine</span> למאלחש מקומי (כמו לידוקאין) <span class="exam">נשאל בשחזור</span></div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect">כיווץ כלי דם מקומי באזור ההזרקה ← האטת ספיגת המאלחש לזרם הדם המערכתי ← <b>הארכת משך האלחוש</b> והפחתת רעילות סיסטמית.</div>
+      </div>
+      <div class="rel sc">
+        <div class="rel-cause">הפסקה חדה ופתאומית של טיפול ב-<span class="en">Clonidine</span></div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect">פרץ סימפתטי מאסיבי מה-<span class="en">CNS</span> ← שחרור עודף של <span class="en">NE</span> ← זינוק מסוכן בלחץ הדם (<b><span class="en">Rebound Hypertension</span></b>) וסכנת שבץ.</div>
+      </div>
+      <div class="rel sc is-exam">
+        <div class="rel-cause">מתן מנה ראשונה של חוסם <span class="en">α1</span> (כמו <span class="en">Prazosin</span>) <span class="exam">נשאל ×3</span></div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect">הרפיית שריר חלק בכלי דם ומניעת כיווץ רפלקסיבי במעבר לעמידה ← <b><span class="en">Postural (Orthostatic) Hypotension</span></b> ועילפון (<span class="en">1st Dose Effect</span>).</div>
+      </div>
+      <div class="rel sc">
+        <div class="rel-cause">אכילת מזונות עשירי טיראמין (גבינה צהובה, יין) תחת מעכבי <span class="en">MAO</span></div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect">טיראמין אינו מפורק במעי ובכבד ← חודר לסינפסות ומוציא <span class="en">NE</span> מהווסיקולות ← <b>משבר יל"ד קיצוני</b> (<span class="en">Cheese Reaction</span>).</div>
+      </div>
+      <div class="rel sc is-exam">
+        <div class="rel-cause">דליפת נוראדרנלין מחוץ לווריד (<span class="en">NE Extravasation</span>) <span class="exam">נשאל בשחזור</span></div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect">כיווץ עורקי מקומי ממושך וטוטאלי ← איסכמיה חריפה של הגפה ← <b>נמק רקמתי</b> (<span class="en">Necrosis</span>). הטיפול המיידי: <b class="en">Phentolamine</b> מקומי.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 נקודות שחזורים -->
+  <section id="sy-sec-10" class="topic-section" data-category="exam">
+    <h2>10 · נקודות שחזרו בשחזורים: צ'ק-ליסט לקראת הבחינה</h2>
+    <p class="sec-note">שאלות מפתח שחזרו שוב ושוב בבחינות. הכוכבית מציינת כמה פעמים הנקודה נשאלה.</p>
+
+    <div class="cards c2 points">
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span>×3</span><p class="flush"><b class="en">Prazosin:</b> הדרכת חולה קריטית לקום לאט מישיבה או שכיבה לעמידה עקב <span class="en">Postural Hypotension</span> ו-<span class="en">1st dose effect</span>.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span>×2</span><p class="flush"><b class="en">Propranolol:</b> חוסם בטא לא-סלקטיבי, איסור מוחלט בחולי אסטמה ו-<span class="en">COPD</span> עקב סכנת ברונכוספאזם חמור.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span>×2</span><p class="flush"><b class="en">Atenolol:</b> מנגנון פעולה מוגדר כחוסם <span class="en">β1</span> קרדיוסלקטיבי (<span class="en">Cardioselective</span>).</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span>×2</span><p class="flush"><b class="en">Amphetamine:</b> אגוניסט אדרנרגי עקיף; מנגנונו העיקרי הוא שחרור נוירוטרנסמיטרים מהווסיקולות הסינפטיות.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span>×2</span><p class="flush"><b>חשיפה ממושכת לאנטגוניסט:</b> גורמת לעלייה בצפיפות הקולטנים (<span class="en">Up-regulation</span>) ולתופעת <b>רגישות יתר</b> (<span class="en">Hyperreactivity</span>).</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span>×2</span><p class="flush"><b>הפעלת המערכת הסימפתטית:</b> תגובת <span class="en">fight or flight</span> מתאפיינת ב<b>מידריאזיס (הרחבת אישון)</b> וברונכודילטציה.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span></span><p class="flush"><b class="en">Epinephrine:</b> תרופת הבחירה הראשונה והמצילה חיים בשוק אנפילקטי (<span class="en">Anaphylactic Shock</span>).</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span></span><p class="flush"><b><span class="en">Phenylephrine</span> במאלחש מקומי:</b> ואזוקונסטריקטור המוסף כדי להאט ספיגה, למנוע רעילות סיסטמית ולהאריך את משך האלחוש.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span></span><p class="flush"><b><span class="en">NE Extravasation</span>:</b> האנטידוט להצלת הרקמה מנמק הוא <b class="en">Phentolamine</b> בהזרקה תת-עורית מיידית.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span></span><p class="flush"><b class="en">Clonidine:</b> אגוניסט של <span class="en">α2</span>, אסור להפסיק בבת אחת עקב סכנת <span class="en">Rebound Hypertension</span> קיצונית.</p></div>
+    </div>
+  </section>
+
+  <!-- כרטיסיות תרגול (אינטראקטיבי) -->
+  <section id="sy-practice" class="lab deck no-print" data-interactive aria-labelledby="sy-deck-title">
+    <p class="lab-kicker lab-kicker-hot"><span aria-hidden="true">⭐</span> מצב תרגול אישי לשחזורים</p>
+    <h2 id="sy-deck-title">כרטיסיות שחזורים (<span class="en">Flashcards</span>) לבחינה</h2>
+    <p class="sec-note">נסו לענות בעל פה ואז לחצו על הכרטיסייה כדי לחשוף את התשובה. עם המיקוד בכרטיסייה, החצים ← → עוברים בין הכרטיסים.</p>
+    <p class="flash-progress"><span>התקדמות:</span> <strong id="flash-progress" role="status">0 מתוך 10 נלמדו בהצלחה</strong></p>
+
+    <div class="flash-stage">
+      <button type="button" id="flashcard" class="flash" data-flipped="false">
+        <span class="flash-inner">
+          <span id="card-front" class="face face-front" aria-hidden="false">
+            <span class="face-top"><b>שאלה <span id="card-num">1 / 10</span></b><span id="card-repeat" class="exam" hidden></span></span>
+            <span id="card-question" class="face-text">טוען שאלה...</span>
+            <span class="face-bottom">הקליקו בכל מקום בכרטיסייה לחשיפת התשובה ↻</span>
+          </span>
+          <span id="card-back" class="face face-back" aria-hidden="true">
+            <span class="face-top"><b>תשובה מלאה ומנומקת</b><span class="face-hint">לחצו לחזרה לשאלה ↻</span></span>
+            <span id="card-answer" class="face-text">טוען תשובה...</span>
+            <span class="face-bottom">סמנו למטה כדי לתעד הצלחה</span>
+          </span>
+        </span>
+      </button>
+
+      <div class="flash-controls">
+        <button type="button" id="card-prev" class="flash-btn">→ הקודם</button>
+        <span class="flash-marks">
+          <button type="button" id="card-known" class="flash-btn flash-ok"><span aria-hidden="true">✓</span> ידעתי מצוין</button>
+          <button type="button" id="card-again" class="flash-btn flash-bad"><span aria-hidden="true">✗</span> לחזור שוב</button>
+        </span>
+        <button type="button" id="card-next" class="flash-btn">הבא ←</button>
+      </div>
+    </div>
+  </section>
+
+  <p class="source">סיכום לימודי המבוסס על חומרי הקורס בנושא "מערכת העצבים הסימפתטית". נועד לחזרה — אין בו אבחון או ייעוץ רפואי.</p>
+</article>
+  </main>
+
+  <footer class="site-footer page wide">
+    <nav>
+      <a href="../accessibility.html">הצהרת נגישות</a>
+      <a href="../privacy.html">מדיניות פרטיות</a>
+    </nav>
+    <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+  </footer>
+</body>
+</html>
