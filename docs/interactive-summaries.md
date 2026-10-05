@@ -44,9 +44,11 @@ convert it with these rules. `npm run validate` and `npm test` enforce the mecha
    logic in a pure module (`js/<id>-math.js`, no DOM or storage) with text data in `js/<id>-data.js`.
    Search with filter pills, flip flashcards (with an optional `repeats` badge per card), the reading-progress bar,
    the light panels and mode toggles (`.panel`, `.seg`) already exist: import `initSearch`, `initFlashcards`,
-   `initReadingProgress` and the DOM helpers `el`, `rich`, `richEl`, `setPressed` from `js/summary-widgets.js`, load
+   `initReadingProgress`, `initReceptors` (receptor explorer), `initSelfTest` (hide / reveal the cause → effect rows),
+   `initTracker` ("chapter done" marks and bar) and the DOM helpers `el`, `rich`, `richEl`, `setPressed` from `js/summary-widgets.js`, load
    `css/summary-widgets.css`, and copy the toolbar / flashcard markup (ids `<prefix>-search`, `flashcard`, `card-*`)
-   from `summaries/parasympathetic.html` or `summaries/sympathetic.html`.
+   from `summaries/parasympathetic.html`, `summaries/sympathetic.html` or `summaries/opioids.html` (the last two are the
+   simplest starting point: they only wire the shared widgets to their own ids and data).
    Strings that need bold or Latin text use the `**bold**` / `` `Latin` `` markup of `js/rich.js`
    (`parseRich`) and are built into nodes, never innerHTML.
    A draft's tabs become sections on one page with a `.toc` of jump links (print and screen readers get everything);
