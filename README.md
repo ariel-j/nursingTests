@@ -108,6 +108,11 @@ To add a summary:
 3. Give it accent colors in `css/summary.css` (a `[data-system="<id>"]` rule with light and dark values).
 4. `npm run validate` checks it: listed, self-hosted only, no inline styles or handlers, toolbar and footer present.
 
+A summary can also carry interactive widgets (search, simulators, flashcards), as `pharmacodynamics.html` does:
+mark each widget `data-interactive` (and `no-print`), keep its script and styles in their own files
+(`js/pharmacodynamics.js`, `css/pharmacodynamics.css`, pure maths in `js/pharma-math.js`), and keep the article's
+text complete without them. `all.html` drops every `[data-interactive]` block, so only the text is printed.
+
 ## Development
 
 ```sh

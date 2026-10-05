@@ -21,6 +21,7 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 * `js/quiz.js`: start screen (resume / choose topics) → play → end screen (retry missed).
 * `js/a11y.js`: accessibility toolbar (text size, high contrast, underline links, stop motion); sets `data-*` on `<html>`, persists in localStorage. Imported by every page.
 * `summaries/`: סיכומים קצרים. `index.html` hub (from `js/summary-list.js`, the single list), one static `<id>.html` per summary with its content in `<article class="summary" data-system="<id>">`, and `all.html`, which fetches every summary into one page for a single PDF (`js/summaries-all.js`, DOMParser + adoptNode). Styles in `css/summary.css` (per-system accent, dark, high contrast, print). PDF = the browser's print dialog, no library.
+  A summary may add interactive widgets in `[data-interactive]` blocks (`summaries/pharmacodynamics.html` + `js/pharmacodynamics.js`, `css/pharmacodynamics.css`; pure maths in `js/pharma-math.js`, text data in `js/pharma-data.js`, both unit-tested). `all.html` strips those blocks, so the article text must stand on its own.
 * `accessibility.html` (הצהרת נגישות) and `privacy.html` (מדיניות פרטיות): static content pages; every page has a footer linking to them.
 * `scripts/`: `manifest.mjs`, `validate.mjs`, `import.mjs` (+`import-format.mjs`), shared `quizzes.mjs`, `summaries.mjs` (summary page checks), dev `serve.mjs`.
 * `quizzes/subjects.json`: hand-written catalog of subjects and their units (order shown on the home page).

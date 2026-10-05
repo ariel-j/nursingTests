@@ -23,6 +23,11 @@ export const SUMMARIES = [
     title: 'מערכת העיכול',
     blurb: 'הפה והקיבה, לבלב, כבד ומרה, ספיגה, המעי הגס ובקרה עצבית.',
   },
+  {
+    id: 'pharmacodynamics',
+    title: 'פרמקודינמיקה',
+    blurb: 'רצפטורים ומנגנוני פעולה, עקומת מנה-תגובה, העברת אות, אינדקס וחלון טיפולי, סבילות ושילובי תרופות. עם סימולטור, מחשבון וכרטיסיות.',
+  },
 ];
 
 /** Page file for a summary, relative to the summaries/ folder. */
