@@ -46,6 +46,17 @@ STRUCTURE (in this order)
     </div>
   </header>
 
+  <section class="intro" id="<ID>-intro">   <!-- right after the header: 2-4 short paragraphs -->
+    <h2>מבוא: על מה כל זה?</h2>             <!-- what the topic is, why it matters, how the chapters fit -->
+    <p>…</p>
+  </section>
+
+  <section class="glossary" id="<ID>-glossary">   <!-- every term the page uses, in plain language -->
+    <h2>מילון מונחים</h2>
+    <h3>group title</h3>
+    <dl class="def"><dt>term</dt><dd>one line.</dd></dl> …
+  </section>
+
   <section>                     <!-- 4 to 8 sections -->
     <h2>1 · יסודות מהירים</h2>   <!-- numbered "N · title"; the first is always the quick basics -->
     <p class="sec-note">one muted line: why this section matters or a memory trick.</p>
@@ -95,6 +106,7 @@ STYLE
 
 BEFORE HANDING OVER, CHECK
 - Exactly one <article class="summary" data-system="<ID>">, nothing outside it.
+- The intro and the glossary both come before chapter 1.
 - Only the elements and classes above; no attributes other than class (and the svg's own).
 - Every .exam badge is backed by an exam recall I gave you.
 - A separate list in chat of anything you were not sure about.

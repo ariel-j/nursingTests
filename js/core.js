@@ -377,6 +377,36 @@ export function allocateByTopic(sizes, count) {
   return new Map(shares.map((s) => [s.topic, s.take]));
 }
 
+/** The quiz's questions whose `field` value is in `topics` (null means all), in authored order. */
+function questionsOf(quiz, topics, field) {
+  const wanted = topics === null ? null : new Set(topics);
+  return quiz.questions.filter((q) => wanted === null || wanted.has(q[field]));
+}
+
+/**
+ * Samples `count` of `questions` (clamped to what there is), split across their topics in proportion
+ * to topic size, so every topic is represented. Grouped by topic, authored order inside each.
+ */
+function pickPerTopic(questions, count, rng) {
+  const sizes = listTopics({ questions });
+  const shares = allocateByTopic(sizes, count);
+  const picked = [];
+  for (const { topic } of sizes) {
+    const pool = questions.filter((q) => q.topic === topic);
+    const taken = new Set(shuffle(pool, rng).slice(0, shares.get(topic)).map((q) => q.id));
+    picked.push(...pool.filter((q) => taken.has(q.id)));
+  }
+  return picked;
+}
+
+/**
+ * Ids for a custom practice: `count` questions from the chosen topics (`field` values; null means
+ * all), sampled in proportion per topic. A count at or above the pool takes every question.
+ */
+export function sampleQuestionIds(quiz, { topics = null, field = 'topic', count = Infinity } = {}, rng = Math.random) {
+  return pickPerTopic(questionsOf(quiz, topics, field), count, rng).map((q) => q.id);
+}
+
 /**
  * A fixed paper exam: `count` questions (clamped to what the chosen topics hold) sampled per topic,
  * options shuffled once and lettered א–ד. by-topic keeps authored order within each topic.
@@ -388,20 +418,10 @@ export function buildPrintExam(
   rng = Math.random,
 ) {
   if (!PRINT_ORDERS.includes(order)) throw new Error(`unknown print order: ${order}`);
-  const wanted = topics === null ? null : new Set(topics);
-  const chosen = { questions: quiz.questions.filter((q) => wanted === null || wanted.has(q[field])) };
-  const sizes = listTopics(chosen);
-  const shares = allocateByTopic(sizes, count);
+  const picked = pickPerTopic(questionsOf(quiz, topics, field), count, rng);
+  const ordered = order === 'mixed' ? shuffle(picked, rng) : picked;
 
-  let picked = [];
-  for (const { topic } of sizes) {
-    const pool = chosen.questions.filter((q) => q.topic === topic);
-    const taken = new Set(shuffle(pool, rng).slice(0, shares.get(topic)).map((q) => q.id));
-    picked.push(...pool.filter((q) => taken.has(q.id)));
-  }
-  if (order === 'mixed') picked = shuffle(picked, rng);
-
-  return picked.map((q, i) => {
+  return ordered.map((q, i) => {
     const options = presentOptions(q, rng);
     const correctAt = options.findIndex((o) => o.correct);
     return {

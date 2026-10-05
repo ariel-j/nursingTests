@@ -41,7 +41,7 @@ async function loadQuiz(params) {
     // Keyed by the subject's name, as before ids existed, so saved mixed sessions still resume.
     ...buildMixedQuiz(entry.name, quizzes),
     title: 'תרגול לפי נושאים',
-    description: 'בחרו נושאים, והשאלות מכל הבחנים שלהם יתערבבו לתרגול אחד.',
+    description: 'בחרו נושאים ומספר שאלות, והשאלות מכל הבחנים שלהם יתערבבו לתרגול אחד.',
   };
 }
 
