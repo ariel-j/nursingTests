@@ -81,9 +81,10 @@ export function classifyTI(ti) {
   return 'wide';
 }
 
-/** Plasma concentration (arbitrary units) at time `t` after a gradual oral dose, or a loading (bolus) dose. */
+/** Plasma concentration (arbitrary units) at time `t` after a gradual oral dose, or a loading (bolus) dose.
+ * The bolus starts above MEC but below MTC: it targets MEC, it does not overshoot into toxicity. */
 export function plasmaConcentration(t, bolus) {
-  return bolus ? 1.35 * Math.exp(-0.35 * t) : 1.6 * (Math.exp(-0.3 * t) - Math.exp(-1.4 * t));
+  return bolus ? 0.95 * Math.exp(-0.35 * t) : 1.6 * (Math.exp(-0.3 * t) - Math.exp(-1.4 * t));
 }
 
 /** Axis top and the two therapeutic-window thresholds for the plasma curve, in the same units. */

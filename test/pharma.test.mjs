@@ -51,6 +51,7 @@ test('therapeutic index is TD50 over ED50 and is banded narrow / medium / wide',
 
 test('a loading dose is above MEC at once; a gradual dose starts at zero and peaks inside the window', () => {
   assert.ok(plasmaConcentration(0, true) > PK.mec);
+  assert.ok(plasmaConcentration(0, true) < PK.mtc, 'the bolus targets MEC, not MTC');
   assert.equal(plasmaConcentration(0, false), 0);
   let peak = 0;
   for (let t = 0; t <= PK.timeMax; t += 0.1) peak = Math.max(peak, plasmaConcentration(t, false));
