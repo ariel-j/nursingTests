@@ -37,9 +37,17 @@
     </div>
   </header>
 
+  <section class="intro" id="pd-intro">
+    <h2>מבוא: על מה כל זה?</h2>
+    <p>תרופה פועלת כי היא <b>נקשרת למטרה בתא</b>, בדרך כלל רצפטור (קולטן), אבל גם אנזים, תעלת יונים או נשא. הקישור מתורגם לאות בתוך התא ובסוף לאפקט שרואים בגוף. <b>פרמקודינמיקה</b> היא התחום שמתאר את זה: מה התרופה עושה לגוף ובאיזה מנגנון. היא משלימה את הפרמקוקינטיקה, שמתארת מה הגוף עושה לתרופה.</p>
+    <p>הנושא מתחלק לשאלות שחוזרות בכל מבחן: האם התרופה מפעילה את הרצפטור (<b>אגוניסט</b>) או חוסמת אותו (<b>אנטגוניסט</b>), ואם זה חסימה, האם אפשר לגבור עליה בעודף אגוניסט. כמה תרופה צריך (<b>פוטנטיות</b>) ומה האפקט המרבי (<b>אפקטיביות</b>). עד כמה המינון בטוח (<b>אינדקס טיפולי</b> וחלון טיפולי). ומה קורה בשימוש ממושך (<b>סבילות</b>) או כששתי תרופות ניתנות יחד.</p>
+    <p>בסיכום יש סימולטור של עקומת מנה-תגובה ומחשבון של אינדקס טיפולי, שאפשר לשחק איתם. המילון שמתחת מסביר כל מונח בשפה פשוטה לפני שנכנסים לפרקים.</p>
+  </section>
+
   <!-- חיפוש ומסננים (אינטראקטיבי) -->
   <div class="toolbar no-print" data-interactive>
     <nav class="toc" aria-label="קפיצה לפרק">
+      <a href="#pd-glossary"><span aria-hidden="true">📖</span> מילון מונחים</a>
       <a href="#pd-sec-1">יסודות</a>
       <a href="#pd-sec-2">אגוניסט / אנטגוניסט</a>
       <a href="#pd-simulator" class="toc-lab"><span aria-hidden="true">📊</span> סימולטור עקומות</a>
@@ -60,6 +68,63 @@
       <button type="button" class="pill" data-filter="combos" aria-pressed="false"><span aria-hidden="true">💊</span> שילובי תרופות וסבילות</button>
     </div>
   </div>
+
+  <section class="glossary" id="pd-glossary">
+    <h2>מילון מונחים</h2>
+    <p class="sec-note">כל מונח שמופיע בהמשך, בשפה פשוטה. אפשר לחפש מונח בשורת החיפוש.</p>
+
+    <h3>מטרות ורצפטורים</h3>
+    <dl class="def sc"><dt>ליגנד (<span class="en">Ligand</span>)</dt><dd>כל מולקולה שנקשרת לרצפטור, למשל תרופה או חומר שהגוף מייצר.</dd></dl>
+    <dl class="def sc"><dt>רצפטור / קולטן (<span class="en">Receptor</span>)</dt><dd>רכיב בתא שנקשר לליגנד ומתניע שרשרת אירועים עד לאפקט. קובע את היחס בין מינון לאפקט ואת הסלקטיביות של התרופה.</dd></dl>
+    <dl class="def sc"><dt>ארבע המטרות</dt><dd>רצפטור, אנזים, תעלת יונים ונשא (<span class="en">Carrier / Transporter</span>): ארבעת המקומות העיקריים שבהם תרופה פועלת בתא.</dd></dl>
+    <dl class="def sc"><dt>העברת אות (<span class="en">Signal transduction</span>)</dt><dd>שרשרת האירועים בתא שבה קישור הליגנד לרצפטור הופך לאפקט ביולוגי.</dd></dl>
+    <dl class="def sc"><dt>סלקטיביות</dt><dd>עד כמה התרופה פועלת על מטרה מסוימת ולא על אחרות.</dd></dl>
+    <dl class="def sc"><dt>אפיניות (<span class="en">Affinity</span>) / <span class="en">Kd</span></dt><dd>עוצמת הקישור של התרופה לרצפטור. <span class="en">Kd</span> נמוך משמעותו אפיניות גבוהה.</dd></dl>
+    <dl class="def sc"><dt><span class="en">Bmax</span></dt><dd>תפוסת הרצפטורים המרבית. <span class="en">Kd</span> הוא הריכוז שנותן חצי מ-<span class="en">Bmax</span>.</dd></dl>
+
+    <h3>סוגי תרופות לפי הפעולה על הרצפטור</h3>
+    <dl class="def sc"><dt>אגוניסט מלא (<span class="en">Full Agonist</span>)</dt><dd>נקשר ומפעיל את הרצפטור במלואו, ומפיק אפקט מקסימלי.</dd></dl>
+    <dl class="def sc"><dt>אגוניסט חלקי (<span class="en">Partial</span>)</dt><dd>מפעיל רק חלקית, ולכן <span class="en">Emax</span> נמוך יותר גם כשכל הרצפטורים תפוסים. מול אגוניסט מלא הוא עלול לפעול כאנטגוניסט.</dd></dl>
+    <dl class="def sc"><dt>אגוניסט הפוך (<span class="en">Inverse</span>)</dt><dd>מייצב את המצב הלא פעיל של הרצפטור ומוריד את הפעילות הספונטנית מתחת לרמת הבסיס.</dd></dl>
+    <dl class="def sc"><dt>אנטגוניסט (<span class="en">Antagonist</span>)</dt><dd>נקשר לרצפטור בלי להפעיל אותו, וחוסם גישה של אגוניסטים.</dd></dl>
+    <dl class="def sc"><dt>אנטגוניסט תחרותי</dt><dd>נקשר לאותו אתר של האגוניסט, הפיך. אפשר לגבור עליו בהעלאת מינון האגוניסט: העקומה זזה ימינה ו-<span class="en">Emax</span> נשמר.</dd></dl>
+    <dl class="def sc"><dt>אנטגוניסט לא תחרותי</dt><dd>קישור קוולנטי או לאתר אלוסטרי, בלתי הפיך. לא ניתן לגבור עליו, ו-<span class="en">Emax</span> יורד.</dd></dl>
+    <dl class="def sc"><dt>אנטגוניסט פיזיולוגי</dt><dd>מפיק אפקט מנוגד דרך רצפטור או מסלול אחר לגמרי, בלי לחסום ובלי להתחרות על אותו רצפטור. למשל היסטמין מול אדרנלין.</dd></dl>
+    <dl class="def sc"><dt>אתר אלוסטרי</dt><dd>מקום בחלבון שאינו האתר הראשי של הליגנד. קישור אליו משנה את פעולת החלבון.</dd></dl>
+    <dl class="def sc"><dt>קוולנטי / לא קוולנטי</dt><dd>קישור קוולנטי הוא חזק וקבוע (בלתי הפיך). קישור לא קוולנטי הוא חלש והפיך.</dd></dl>
+    <dl class="def sc"><dt>שפעול / עיכוב אנזים</dt><dd>שפעול: הגברת הפעילות. עיכוב: הפחתתה. עיכוב הפיך הוא לא קוולנטי ותחרותי, ובלתי הפיך הוא קוולנטי או אלוסטרי.</dd></dl>
+
+    <h3>עקומת מנה-תגובה</h3>
+    <dl class="def sc"><dt>עקומת מנה-תגובה</dt><dd>גרף של האפקט לפי המינון, בסקאלה חצי לוגריתמית, שנראית כקו סיגמואידי (בצורת <span class="en">S</span>).</dd></dl>
+    <dl class="def sc"><dt><span class="en">Emax</span> / אפקטיביות (<span class="en">Efficacy</span>)</dt><dd>האפקט המקסימלי שהתרופה מסוגלת להפיק.</dd></dl>
+    <dl class="def sc"><dt><span class="en">EC50</span> / פוטנטיות (<span class="en">Potency</span>)</dt><dd><span class="en">EC50</span> הוא הריכוז שנותן חצי מ-<span class="en">Emax</span>. כמה תרופה צריך: <span class="en">EC50</span> נמוך משמעותו פוטנטיות גבוהה.</dd></dl>
+    <dl class="def sc"><dt><span class="en">ED50</span> / <span class="en">TD50</span></dt><dd><span class="en">ED50</span>: המינון שיעיל ב-50% מהאוכלוסייה. <span class="en">TD50</span>: המינון שרעיל ב-50% מהאוכלוסייה.</dd></dl>
+    <dl class="def sc"><dt>אינדקס טיפולי (<span class="en">TI</span>)</dt><dd><span class="en">TI = TD50 / ED50</span>. מדד לבטיחות בלבד, לא לפוטנטיות ולא לאפקטיביות. ככל שגבוה יותר התרופה בטוחה יותר.</dd></dl>
+
+    <h3>ריכוז, זמן וחלון טיפולי</h3>
+    <dl class="def sc"><dt><span class="en">MEC</span></dt><dd>ריכוז יעיל מינימלי: מתחתיו אין אפקט טיפולי.</dd></dl>
+    <dl class="def sc"><dt><span class="en">MTC</span></dt><dd>ריכוז רעיל מינימלי: מעליו מופיעה רעילות.</dd></dl>
+    <dl class="def sc"><dt>חלון טיפולי</dt><dd>טווח הריכוזים בין <span class="en">MEC</span> ל-<span class="en">MTC</span>. בחלון צר יש לנטר רמת תרופה בדם.</dd></dl>
+    <dl class="def sc"><dt><span class="en">Onset</span> / <span class="en">Duration</span></dt><dd><span class="en">Onset</span>: הזמן עד שהריכוז מגיע ל-<span class="en">MEC</span>. <span class="en">Duration</span>: משך הזמן שבו הוא נשאר מעליו.</dd></dl>
+    <dl class="def sc"><dt>מנת בולוס / העמסה (<span class="en">Loading Dose</span>)</dt><dd>מנה ראשונית גבוהה כדי להגיע מהר ל-<span class="en">MEC</span>, בלי לחכות להצטברות הדרגתית. לא ל-<span class="en">MTC</span>.</dd></dl>
+    <dl class="def sc"><dt>ניטור רמת תרופה (<span class="en">TDM</span>)</dt><dd>בדיקות דם לריכוז התרופה, חובה כשהחלון הטיפולי צר (למשל ליתיום, דיגוקסין, תאופילין, וורפרין).</dd></dl>
+
+    <h3>העברת אות</h3>
+    <dl class="def sc"><dt>תעלת יונים מווסתת ליגנד (<span class="en">Ionotropic</span>)</dt><dd>רצפטור שהוא עצמו תעלה. תגובה תוך מילישניות, הקצב המהיר ביותר (למשל <span class="en">nAChR</span>).</dd></dl>
+    <dl class="def sc"><dt><span class="en">GPCR</span> (<span class="en">Metabotropic</span>)</dt><dd>רצפטור צמוד חלבון <span class="en">G</span> עם 7 מקטעי ממברנה. תגובה בשניות עד דקות, דרך שליח שני.</dd></dl>
+    <dl class="def sc"><dt><span class="en">RTK</span></dt><dd>קולטן צמוד אנזים (טירוזין קינאז), למשל קולטן אינסולין. תגובה בדקות עד שעות.</dd></dl>
+    <dl class="def sc"><dt>קולטן תוך תאי / גרעיני</dt><dd>ליגנד ליפופילי חוצה את הממברנה ומשפיע על שעתוק גנים (סטרואידים, הורמוני תריס, ויטמין <span class="en">D</span>). האיטי ביותר: שעות עד ימים.</dd></dl>
+    <dl class="def sc"><dt>שליח שני (<span class="en">Second messenger</span>)</dt><dd>מולקולה בתא שמעבירה את האות הלאה: <span class="en">cAMP</span>, <span class="en">IP3</span>, <span class="en">DAG</span>.</dd></dl>
+    <dl class="def sc"><dt><span class="en">Gq</span> / <span class="en">Gs</span> / <span class="en">Gi</span></dt><dd><span class="en">Gq</span>: מפעיל <span class="en">PLC</span>, יוצר <span class="en">IP3</span> ו-<span class="en">DAG</span>, מעלה סידן, מכווץ שריר. <span class="en">Gs</span>: מפעיל אדנילט ציקלאז, <span class="en">cAMP</span>↑. <span class="en">Gi</span>: מעכב אדנילט ציקלאז, <span class="en">cAMP</span>↓.</dd></dl>
+    <dl class="def sc"><dt>קינאז / פוספטאז</dt><dd>קינאז מוסיף זרחן לחלבון (מזרחן), פוספטאז מסיר אותו.</dd></dl>
+
+    <h3>שימוש ממושך ושילובי תרופות</h3>
+    <dl class="def sc"><dt><span class="en">Down-regulation</span> / <span class="en">Up-regulation</span></dt><dd>ירידה או עלייה בכמות הרצפטורים בממברנה. אגוניסט ממושך מוריד אותם, אנטגוניסט ממושך מעלה אותם.</dd></dl>
+    <dl class="def sc"><dt><span class="en">Desensitization</span> / סבילות (<span class="en">Tolerance</span>)</dt><dd>ירידה הדרגתית בתגובה לתרופה במתן חוזר, שמחייבת העלאת מינון.</dd></dl>
+    <dl class="def sc"><dt>טכיפילקסיס (<span class="en">Tachyphylaxis</span>)</dt><dd>ירידת תגובה מהירה מאוד, תוך דקות עד שעות, בגלל ניתוק בצימוד בין הרצפטור למסלול.</dd></dl>
+    <dl class="def sc"><dt><span class="en">Rebound</span></dt><dd>החמרה בעקבות הפסקה פתאומית של אנטגוניסט (למשל חוסמי בטא), בגלל רגישות יתר שנוצרה.</dd></dl>
+    <dl class="def sc"><dt><span class="en">Addition</span> / <span class="en">Synergism</span> / <span class="en">Potentiation</span></dt><dd>חיבור: 1+1=2. סינרגיזם: 1+1=3, האפקט גדול מהסכום (אלכוהול עם בנזודיאזפינים). פוטנציאציה: 0+1=2, תרופה חסרת אפקט לבדה מעצימה אחרת (<span class="en">Carbidopa + L-Dopa</span>).</dd></dl>
+  </section>
 
   <!-- סימולטור עקומת מנה-תגובה (אינטראקטיבי) -->
   <section id="pd-simulator" class="lab no-print" data-interactive aria-labelledby="pd-sim-title">

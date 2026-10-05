@@ -12,6 +12,7 @@ import {
   questionById,
   questionIdsForTopics,
   recordResult,
+  sampleQuestionIds,
   skip,
   summarize,
 } from './core.js';
@@ -33,6 +34,8 @@ const ui = {
   newSession: $('new-session'),
   allTopics: $('all-topics'),
   noTopics: $('no-topics'),
+  count: $('count'),
+  countHint: $('count-hint'),
   topicList: $('topic-list'),
   startButton: $('start-button'),
   best: $('best'),
@@ -138,15 +141,52 @@ function topicCheckboxes() {
   return [...ui.topicList.querySelectorAll('input[type="checkbox"]')];
 }
 
+function selectedTopics() {
+  return topicCheckboxes().filter((c) => c.checked).map((c) => c.value);
+}
+
+// null until the learner types a number: then the count follows "everything chosen".
+let wantedCount = null;
+
+function availableCount() {
+  return questionIdsForTopics(quiz, selectedTopics(), selectionField()).length;
+}
+
+function chosenCount() {
+  const max = availableCount();
+  return wantedCount === null ? max : Math.min(wantedCount, max);
+}
+
+/** A fresh sample of the chosen size: proportional per topic, so every chosen unit is covered. */
 function selectedQuestionIds() {
-  const topics = topicCheckboxes().filter((c) => c.checked).map((c) => c.value);
-  return questionIdsForTopics(quiz, topics, selectionField());
+  const topics = selectedTopics();
+  const max = availableCount();
+  if (wantedCount === null || wantedCount >= max) return questionIdsForTopics(quiz, topics, selectionField());
+  return sampleQuestionIds(quiz, { topics, field: selectionField(), count: wantedCount });
 }
 
 function updateStartButton() {
-  const count = selectedQuestionIds().length;
+  const max = availableCount();
+  const count = chosenCount();
+  ui.count.max = String(Math.max(1, max));
+  ui.count.disabled = max === 0;
+  if (document.activeElement !== ui.count) ui.count.value = max === 0 ? '' : String(count);
+  ui.countHint.textContent = max === 0 ? '' : `מתוך ${max} זמינות`;
   ui.startButton.disabled = count === 0;
   ui.startButton.textContent = count === 0 ? 'בחרו לפחות נושא אחד' : `התחל · ${count} שאלות`;
+}
+
+/** Takes the typed number; an empty or invalid field means "all chosen questions". */
+function readCount() {
+  const n = Number.parseInt(ui.count.value, 10);
+  wantedCount = Number.isInteger(n) && n >= 1 ? n : null;
+  updateStartButton();
+}
+
+/** When the field is left, show the number that will really be used. */
+function settleCount() {
+  readCount();
+  if (availableCount() > 0) ui.count.value = String(chosenCount());
 }
 
 function renderTopics() {
@@ -463,6 +503,8 @@ async function main() {
     for (const c of topicCheckboxes()) c.checked = true;
     updateStartButton();
   });
+  ui.count.addEventListener('input', readCount);
+  ui.count.addEventListener('change', settleCount);
   ui.noTopics.addEventListener('click', () => {
     for (const c of topicCheckboxes()) c.checked = false;
     updateStartButton();

@@ -488,6 +488,7 @@ kbd {
 }
 .count-row input:hover { border-color: var(--accent); }
 .count-row .muted { font-size: 0.875rem; }
+.count-setting { margin-block-end: 18px; }
 .radio { display: flex; align-items: center; gap: 0.5rem; padding-block: 0.15rem; cursor: pointer; }
 .radio input { inline-size: 18px; block-size: 18px; accent-color: var(--accent); margin: 0; flex: none; }
 .print-summary { margin: 1rem 0 0; font-weight: 600; }

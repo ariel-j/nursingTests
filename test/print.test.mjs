@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { OPTION_LETTERS, allocateByTopic, buildMixedQuiz, buildPrintExam } from '../js/core.js';
+import { OPTION_LETTERS, allocateByTopic, buildMixedQuiz, buildPrintExam, listTopics, sampleQuestionIds } from '../js/core.js';
 
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/sample-quiz.json', import.meta.url), 'utf8'));
 const clone = (v) => structuredClone(v);
@@ -42,6 +42,35 @@ test('allocateByTopic clamps the count to what is available', () => {
   assert.deepEqual([...allocateByTopic(sizes, 99)], [['a', 2], ['b', 3]]);
   assert.deepEqual([...allocateByTopic(sizes, -4)], [['a', 0], ['b', 0]]);
   assert.deepEqual([...allocateByTopic([], 5)], []);
+});
+
+// ---------- sampleQuestionIds ----------
+
+test('sampleQuestionIds takes every chosen question when the count is large or missing', () => {
+  const all = fixture.questions.map((q) => q.id);
+  assert.deepEqual(sampleQuestionIds(fixture, {}, seeded(1)).sort(), [...all].sort());
+  assert.equal(sampleQuestionIds(fixture, { count: 9999 }, seeded(1)).length, all.length);
+});
+
+test('sampleQuestionIds samples the count from the chosen topics only, spread across them', () => {
+  const topics = listTopics(fixture).map((t) => t.topic);
+  const chosen = topics.slice(0, 2);
+  const ids = sampleQuestionIds(fixture, { topics: chosen, count: 2 }, seeded(2));
+  assert.equal(ids.length, 2);
+  assert.equal(new Set(ids).size, 2);
+  const byId = new Map(fixture.questions.map((q) => [q.id, q.topic]));
+  assert.deepEqual(new Set(ids.map((id) => byId.get(id))), new Set(chosen));
+});
+
+test('sampleQuestionIds picks by unit in a mixed quiz', () => {
+  const a = clone(fixture);
+  const b = clone(fixture);
+  a.id = 'qa'; a.unit = 'A';
+  b.id = 'qb'; b.unit = 'B';
+  const mixed = buildMixedQuiz('S', [a, b]);
+  const ids = sampleQuestionIds(mixed, { topics: ['A'], field: 'group', count: 2 }, seeded(3));
+  assert.equal(ids.length, 2);
+  assert.ok(ids.every((id) => id.startsWith('qa/')));
 });
 
 // ---------- buildPrintExam ----------

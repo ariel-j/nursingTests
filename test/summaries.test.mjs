@@ -7,10 +7,19 @@ const page = (body) => `<!doctype html><html><head>
 <script type="module" src="../js/nav.js"></script>
 <script type="module" src="../js/a11y.js"></script></head><body>${body}
 <footer><a href="../accessibility.html">א</a><a href="../privacy.html">פ</a></footer></body></html>`;
-const summary = (id) => page(`<button data-print>הדפסה</button><article class="summary" data-system="${id}">תוכן</article>`);
+const summary = (id) => page(`<button data-print>הדפסה</button><article class="summary" data-system="${id}"><section class="intro">מבוא</section><section class="glossary" id="g">מילון</section><section><h2>1 · יסודות</h2></section></article>`);
 
 test('pageErrors accepts a well-formed summary page', () => {
   assert.deepEqual(pageErrors(summary('heart'), { id: 'heart', isSummary: true }), []);
+});
+
+test('pageErrors requires the intro and glossary before chapter 1', () => {
+  const body = (inner) => page(`<button data-print>הדפסה</button><article class="summary" data-system="x">${inner}</article>`);
+  const chapter = '<section><h2>1 · יסודות</h2></section>';
+  const missing = pageErrors(body(chapter), { id: 'x', isSummary: true });
+  assert.ok(missing.some((e) => /intro/.test(e)) && missing.some((e) => /glossary/.test(e)));
+  const late = body(`${chapter}<section class="intro">א</section><section class="glossary">ב</section>`);
+  assert.ok(pageErrors(late, { id: 'x', isSummary: true }).some((e) => /before chapter 1/.test(e)));
 });
 
 test('pageErrors rejects external resources, inline styles and handlers', () => {

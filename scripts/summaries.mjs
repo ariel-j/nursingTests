@@ -35,6 +35,18 @@ export function pageErrors(html, { id, isSummary, root = '../' }) {
       errors.push(`needs exactly one <article class="summary" data-system="${id}">`);
     }
     if (!html.includes('data-print')) errors.push('missing the print / PDF button');
+    // The explanation and the glossary open every summary, before the first chapter.
+    const intro = html.search(/<section class="intro"/);
+    const glossary = html.search(/<section[^>]*class="glossary"/);
+    const firstChapter = html.search(/<h2[^>]*>\s*1 ·/);
+    if (intro === -1) errors.push('missing <section class="intro"> (the opening explanation)');
+    if (glossary === -1) errors.push('missing <section class="glossary"> (the terms)');
+    for (const at of [intro, glossary]) {
+      if (at !== -1 && firstChapter !== -1 && at > firstChapter) {
+        errors.push('the intro and the glossary must come before chapter 1');
+        break;
+      }
+    }
   }
   return errors;
 }
