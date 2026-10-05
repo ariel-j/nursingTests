@@ -1,8 +1,9 @@
 // All summaries on one page (summaries/all.html), for printing them as a single PDF.
 // Each summary page stays the only copy of its content: this fetches the pages and moves their
-// <article> in with the DOM APIs (DOMParser does not run their scripts), minus any [data-interactive] blocks. Opened with #print, it
-// opens the print dialog once everything, fonts included, has loaded.
-import { SUMMARIES, summaryFile } from './summary-list.js';
+// <article> in with the DOM APIs (DOMParser does not run their scripts). Opened with #print, it
+// opens the print dialog once everything, fonts included, has loaded. ?subject=<id> keeps only
+// that subject's summaries.
+import { SUMMARIES, summariesFor, summaryFile } from './summary-list.js';
 
 const statusEl = document.getElementById('status');
 const listEl = document.getElementById('all-summaries');
@@ -21,9 +22,16 @@ async function loadArticle(id) {
 
 async function main() {
   printBtn.disabled = true;
+  const subjectId = new URLSearchParams(location.search).get('subject');
+  const chosen = subjectId === null ? SUMMARIES : summariesFor(subjectId);
+  if (subjectId !== null) document.getElementById('back-link').href = `./?subject=${encodeURIComponent(subjectId)}`;
+  if (chosen.length === 0) {
+    statusEl.textContent = 'אין סיכומים להדפסה.';
+    return;
+  }
   let articles;
   try {
-    articles = await Promise.all(SUMMARIES.map((s) => loadArticle(s.id)));
+    articles = await Promise.all(chosen.map((s) => loadArticle(s.id)));
   } catch (err) {
     console.error(err);
     statusEl.textContent = location.protocol === 'file:'

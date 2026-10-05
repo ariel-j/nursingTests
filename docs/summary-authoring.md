@@ -1,57 +1,115 @@
-# Adding a summary (including converting an interactive page)
+# Writing summaries (סיכומים קצרים)
 
-Summaries are the owner's own short study pages in `summaries/`. They are often drafted elsewhere as a
-standalone HTML page (Tailwind from a CDN, Google Fonts, inline scripts). That draft can't be committed as is:
-convert it with these rules. `npm run validate` and `npm test` enforce the mechanical ones.
+A summary is one condensed page per unit or topic, in the site's fixed visual style: definitions,
+cause → effect rows, warnings, and a closing checklist. Its content is the owner's own summary of the
+material, written outside this repo like the quizzes. Only the finished HTML comes here.
 
-## 1. Before converting
+The generating session writes **only the `<article>`**. This repo wraps it in the page (bar, menu,
+print button, footer), so the page markup can't drift. The steps after you receive it are at the end.
+Starting a whole new subject? Read [new-subject.md](new-subject.md) first.
+A draft with interactive widgets (calculators, canvases, flashcards)? Follow [interactive-summaries.md](interactive-summaries.md) instead.
 
-- Read the whole draft first and list its parts: static text, and each interactive widget (calculator,
-  canvas, search, flashcards, toggles). Everything on that list must exist in the result, or be reported to the
-  owner as dropped, with the reason.
-- Note facts that contradict the page's own teaching (for example a chart that shows the opposite of its text).
-  Ask the owner before changing content; never "fix" silently, never copy a known error silently.
-- Names of lecturers and course materials stay out (the repo is public).
+## Brief to paste
 
-## 2. Site rules the draft must meet
+Fill in the `<…>` values and paste the subject's notes from [quiz-authoring.md](quiz-authoring.md#notes-per-subject) under it.
 
-- No external requests: no CDN scripts, no Google Fonts, no remote images. Use `css/style.css` fonts.
-- No Tailwind: rebuild the look with the site's tokens and the classes in `css/summary.css`
-  (`rel`, `def`, `call`, `flags`, `exam`, `cards`, `pcard`, `tag`, `rtable`, `data-tone`).
-- No inline `style=` or `on*=` attributes in HTML. Set styles from JS only (`el.style.x`) or via classes.
-- Text via `textContent` and DOM/SVG APIs, never `innerHTML`. If a string needs bold, build the nodes.
-- CSS logical properties only (inline/block, start/end); `lang="he" dir="rtl"`; Latin terms in `class="en"`.
-- Colors must work in light, dark (`prefers-color-scheme`), high contrast (`data-contrast="high"`) and print
-  (always light). Prefer `light-dark()` tokens (see `data-tone` in `summary.css`).
-- A page-level theme toggle is not needed: the site follows the system theme and the accessibility toolbar.
+```text
+You are writing one short summary page for a Hebrew nursing exam-prep site.
+SUBJECT: <subject name, e.g. פרמקולוגיה>
+TOPIC:   <what this summary covers, e.g. תרופות לב וכלי דם>
+ID:      <lowercase English with hyphens, e.g. pharma-cardio>
 
-## 3. Structure
+Work only from the course material I give you. Do not add facts that aren't in it. Anything
+ambiguous goes in a list for me in chat, never in the file. Write in your own words: no copied
+passages, no names of lecturers. The page is public.
 
-1. `summaries/<id>.html` copies an existing page: one `<article class="summary" data-system="<id>">`, the
-   print button (`data-print`), `../js/a11y.js`, and the footer links to the accessibility and privacy pages.
-2. Add `{ id, title, blurb }` to `js/summary-list.js` and a `[data-system="<id>"]` accent in `css/summary.css`.
-3. The article's text must be complete without JavaScript. Interactive blocks get `data-interactive` and
-   `no-print`; `summaries/all.html` removes them, so the combined PDF is text only. If a widget carries a fact
-   (a formula, a rule), that fact must also appear in static text outside the widget.
-4. Widget code goes in its own files, loaded only by that page: `js/<id>.js` (DOM), `css/<id>.css`, and the
-   logic in a pure module (`js/<id>-math.js`, no DOM or storage) with text data in `js/<id>-data.js`.
+OUTPUT
+- Only this element, as HTML, nothing before or after it:
+  <article class="summary" data-system="<ID>"> … </article>
+- No <html>, <head>, <script>, <style>, no style="" or on…="" attributes, no external links,
+  images or fonts. Only the elements and classes listed below.
 
-## 4. Interactive widgets
+STRUCTURE (in this order)
+<article class="summary" data-system="<ID>">
+  <header>
+    <p class="kicker"><SUBJECT> · סיכום נושא</p>
+    <h1><TOPIC></h1>
+    <p class="lede">2–3 sentences: what this topic is about and the one idea that ties it together.
+       Put the key phrase in <b>…</b>.</p>
+    <svg class="motif" viewBox="0 0 480 64" preserveAspectRatio="none" aria-hidden="true">
+      <path d="…"/>   <!-- one simple decorative line across the full width (y between 8 and 56),
+                           e.g. a wave, a pulse, steps. Only a <path> or <polyline>, no fill. -->
+    </svg>
+    <div class="legend">
+      <span><span class="arrowmark">←</span> <b>גורם ← תוצאה</b> (קוראים מימין לשמאל)</span>
+      <span><span class="exam exam-legend">נשאל בשחזורים</span> נקודה שחזרה במבחנים</span>
+    </div>
+  </header>
 
-- Buttons that toggle use `aria-pressed`; live results use `<output>` or `role="status"`/`aria-live="polite"`.
-- Every `<canvas>` has `role="img"` and an `aria-label` that is updated with the current state (values, mode).
-- Anything clickable is a real `<button>` (flashcards included); hide the inactive face with `aria-hidden`.
-- Redraw canvases with `ResizeObserver`, scale for `devicePixelRatio`, and keep labels inside the plot area
-  (leave enough left padding for Hebrew labels).
-- Filters and search must not hide content in print: clear them on `beforeprint`, restore on `afterprint`.
-- Motion must respect "stop motion" (`data-motion="off"` kills transitions in `style.css`) and reduced motion.
+  <section>                     <!-- 4 to 8 sections -->
+    <h2>1 · יסודות מהירים</h2>   <!-- numbered "N · title"; the first is always the quick basics -->
+    <p class="sec-note">one muted line: why this section matters or a memory trick.</p>
+    … the blocks below …
+  </section>
 
-## 5. Tests and checks before committing
+  … more sections …
+  <section>
+    <h2>N−1 · טבלת סיבה ← תוצאה למבחן</h2>   <!-- the most testable cause → effect rows, together -->
+    … .rel rows …
+  </section>
+  <section>
+    <h2>N · נקודות שחזרו בשחזורים — לא לפספס</h2>   <!-- or "נקודות חשובות למבחן" if there are no exam recalls -->
+    <div class="flags"><ul><li>…</li> … 8–15 one-line facts …</ul></div>
+  </section>
 
-- Unit-test the pure module: key values (EC50 gives 50%), invariants (a competitive antagonist keeps Emax),
-  thresholds (band edges), and that data (flashcards) is complete and unique.
-- `npm test`, `npm run validate`.
-- Open the page with `npm run serve` and check: every widget, keyboard only, dark mode, high contrast, a
-  390px-wide phone (no horizontal scroll), `all.html` (no widgets, no errors in the console), and print preview.
-- Update `accessibility.html` (and its date) when the page adds new interactive features.
-- Update README.md and CLAUDE.md if the pattern itself changed.
+  <p class="source">סיכום לימודי המבוסס על חומרי הקורס בנושא "<TOPIC>". נועד לחזרה — אין בו אבחון או ייעוץ רפואי.</p>
+</article>
+
+BLOCKS (use these, and only these)
+1. Definition row: a term and what to know about it.
+   <dl class="def"><dt>term</dt><dd>one or two lines.</dd></dl>
+   One <dl> per term; consecutive rows stack into a table.
+2. Cause → effect row: the core of every summary. The cause is short; the effect can be a line.
+   <div class="rel">
+     <div class="rel-cause">cause</div>
+     <span class="rel-arrow">←</span>
+     <div class="rel-effect">effect</div>
+   </div>
+3. A chain inside a sentence: <span class="seq">←</span> between the steps.
+4. Callout for traps and "remember": 
+   <div class="call"><h4>מלכודות</h4><ul class="flush"><li>…</li></ul></div>
+5. Sub-heading inside a section: <h3>…</h3>. Plain paragraphs <p> and lists <ul><li> are fine.
+6. "Came up in past exams" badge, at the end of a row or line: <span class="exam">נשאל</span>
+   (or "נשאל ×2"). Only when I told you it came up in an exam recall; never guess.
+7. Emphasis: <b>…</b> only. Latin text (drug names, abbreviations, English terms) inside Hebrew:
+   <span class="en">Propranolol</span>, so it keeps its direction.
+
+STYLE
+- Hebrew, short and dense: rows and fragments, not paragraphs. A section fits on one printed page.
+- Arrows: ← for cause → effect (it points in the reading direction, right to left), and ↑ ↓ for
+  increase / decrease ("לחץ דם↑").
+- Medical terms: Hebrew first, then the English/Latin term in a .en span in parentheses, on first mention.
+- Numbers and units exactly as in the material; Unicode symbols (Na⁺, Ca²⁺, O₂, ≥, µ), no HTML entities
+  except &amp; &lt; &gt;.
+- No tables, no images, no emoji, no colors: the page's accent color and print layout come from the site.
+
+BEFORE HANDING OVER, CHECK
+- Exactly one <article class="summary" data-system="<ID>">, nothing outside it.
+- Only the elements and classes above; no attributes other than class (and the svg's own).
+- Every .exam badge is backed by an exam recall I gave you.
+- A separate list in chat of anything you were not sure about.
+```
+
+## After receiving an article
+
+1. Copy an existing summary page (e.g. `summaries/endocrine.html`) to `summaries/<id>.html`. Replace
+   its `<title>` (`<topic> — סיכום`), the back link's `?subject=<subject id>`, and the whole
+   `<article>` with the new one.
+2. Add `{ subject, id, title, blurb }` to `js/summary-list.js`. The order there sets the order on the hub
+   and in the combined PDF. `subject` is the subject's id from `quizzes/subjects.json`.
+3. Give it accent colors in `css/summary.css`: a `[data-system="<id>"]` line with light and dark values,
+   like the others. Pick a hue the subject's other summaries don't use. Keep `--a` dark enough for text
+   on white and `--a-d` light enough for text on the dark background.
+4. `npm run validate` checks the page: listed, a known subject, self-hosted only, no inline styles or
+   handlers, toolbar, menu and footer present, and an accent defined.
+5. Look at it with `npm run serve`, in light, dark and print preview, before committing.
