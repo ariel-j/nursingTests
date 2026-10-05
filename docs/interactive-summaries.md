@@ -42,11 +42,17 @@ convert it with these rules. `npm run validate` and `npm test` enforce the mecha
    (a formula, a rule), that fact must also appear in static text outside the widget.
 4. Widget code goes in its own files, loaded only by that page: `js/<id>.js` (DOM), `css/<id>.css`, and the
    logic in a pure module (`js/<id>-math.js`, no DOM or storage) with text data in `js/<id>-data.js`.
-   Search with filter pills, flip flashcards and the reading-progress bar already exist: import `initSearch`,
-   `initFlashcards`, `initReadingProgress` from `js/summary-widgets.js`, load `css/summary-widgets.css`, and copy
-   the toolbar / flashcard markup (ids `<prefix>-search`, `flashcard`, `card-*`) from `summaries/parasympathetic.html`.
-   Strings that need bold or Latin text use the `**bold**` / `` `Latin` `` markup of `js/parasympathetic-data.js`
+   Search with filter pills, flip flashcards (with an optional `repeats` badge per card), the reading-progress bar,
+   the light panels and mode toggles (`.panel`, `.seg`) already exist: import `initSearch`, `initFlashcards`,
+   `initReadingProgress` and the DOM helpers `el`, `rich`, `richEl`, `setPressed` from `js/summary-widgets.js`, load
+   `css/summary-widgets.css`, and copy the toolbar / flashcard markup (ids `<prefix>-search`, `flashcard`, `card-*`)
+   from `summaries/parasympathetic.html` or `summaries/sympathetic.html`.
+   Strings that need bold or Latin text use the `**bold**` / `` `Latin` `` markup of `js/rich.js`
    (`parseRich`) and are built into nodes, never innerHTML.
+   A draft's tabs become sections on one page with a `.toc` of jump links (print and screen readers get everything);
+   a draft's card grid that only re-shows static text (a cause → effect board) works better as a mode over the
+   static rows than as a second copy. Per-reader state (chapter marks) goes through `js/storage.js`, and the
+   privacy page must list it.
 
 ## 4. Interactive widgets
 

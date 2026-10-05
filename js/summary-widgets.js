@@ -1,9 +1,38 @@
-// Widgets shared by the interactive summaries (pharmacodynamics.html, parasympathetic.html): the
-// reading-progress bar, search with filter pills, and flip flashcards. Each page's own script wires
-// them to its ids and data. The article text works without any of this (and in all.html, which drops
-// the [data-interactive] blocks).
+// Widgets shared by the interactive summaries (pharmacodynamics, parasympathetic, sympathetic): the
+// reading-progress bar, search with filter pills, flip flashcards, and the small DOM helpers their
+// scripts use. Each page's own script wires them to its ids and data. The article text works without
+// any of this (and in all.html, which drops the [data-interactive] blocks).
+import { parseRich } from './rich.js';
 
 const $ = (id) => document.getElementById(id);
+
+export function el(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+/** Nodes for a marked-up string (see rich.js): bold, Latin and line breaks. */
+export function rich(source) {
+  return parseRich(source).map((seg) => {
+    if (seg.br) return document.createElement('br');
+    if (!seg.bold && !seg.en) return document.createTextNode(seg.text);
+    return el(seg.bold ? 'b' : 'span', seg.en ? 'en' : '', seg.text);
+  });
+}
+
+/** A block element (p, h3, div, …) holding a marked-up string. */
+export function richEl(tag, className, source) {
+  const node = el(tag, className);
+  node.append(...rich(source));
+  return node;
+}
+
+/** Pressed state for a row of toggle buttons: only `active` is pressed. */
+export function setPressed(buttons, active) {
+  for (const b of buttons) b.setAttribute('aria-pressed', String(b === active));
+}
 
 export function initReadingProgress() {
   const bar = $('read-progress');
@@ -62,7 +91,11 @@ export function initSearch(prefix, matchesFilter) {
   window.addEventListener('afterprint', run);
 }
 
-/** Flip flashcards over `cards` ([{ q, a }]), on the shared markup (ids flashcard, card-*, flash-progress). */
+/**
+ * Flip flashcards over `cards` ([{ q, a, repeats? }]), on the shared markup (ids flashcard, card-*,
+ * flash-progress). An optional `#card-repeat` element shows the card's `repeats` badge ("נשאל ×3").
+ * With focus inside the card area, ← goes to the next card and → to the previous (the page is RTL).
+ */
 export function initFlashcards(cards) {
   const card = $('flashcard');
   const num = $('card-num');
@@ -71,6 +104,7 @@ export function initFlashcards(cards) {
   const front = $('card-front');
   const back = $('card-back');
   const progress = $('flash-progress');
+  const repeat = $('card-repeat');
   const known = new Set();
   let index = 0;
 
@@ -86,6 +120,10 @@ export function initFlashcards(cards) {
     num.textContent = `${index + 1} / ${cards.length}`;
     question.textContent = item.q;
     answer.textContent = item.a;
+    if (repeat) {
+      repeat.textContent = item.repeats ?? '';
+      repeat.hidden = !item.repeats;
+    }
     progress.textContent = `${known.size} מתוך ${cards.length} נלמדו בהצלחה`;
   }
 
@@ -99,5 +137,11 @@ export function initFlashcards(cards) {
   $('card-next').addEventListener('click', () => go(1));
   $('card-known').addEventListener('click', () => { known.add(index); go(1); });
   $('card-again').addEventListener('click', () => { known.delete(index); go(1); });
+  card.closest('.flash-stage').addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') go(1);
+    else if (e.key === 'ArrowRight') go(-1);
+    else return;
+    e.preventDefault();
+  });
   show();
 }

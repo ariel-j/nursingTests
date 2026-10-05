@@ -10,6 +10,7 @@
 [data-system="pharmacodynamics"] { --a: #0f766e; --a-soft: #dcf1ee; --a-ink: #0b514b; --a-d: #4fd1c5; --a-soft-d: #11322f; --a-ink-d: #9be7de; }
 [data-system="excretory"]      { --a: #126e82; --a-soft: #dcedf0; --a-ink: #0c4e5c; --a-d: #5fc4d9; --a-soft-d: #12333a; --a-ink-d: #a2ddea; }
 [data-system="parasympathetic"] { --a: #2f7a3e; --a-soft: #e1f1e4; --a-ink: #1f5a2c; --a-d: #6fcf86; --a-soft-d: #15301b; --a-ink-d: #a9e5b8; }
+[data-system="sympathetic"] { --a: #c2410c; --a-soft: #fbe9df; --a-ink: #8f2f08; --a-d: #ff9d6b; --a-soft-d: #3f2316; --a-ink-d: #ffc4a3; }
 [data-system="pharmacokinetics"] { --a: #6a3d9a; --a-soft: #ece4f4; --a-ink: #4b2a72; --a-d: #c3a0ea; --a-soft-d: #2c1f3d; --a-ink-d: #dcc6f5; }
 
 [data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
@@ -163,9 +164,11 @@
 
 /* The amber "asked in past exams" flag on the pharmacology summary */
 [data-system="pharmacodynamics"] .exam,
-[data-system="parasympathetic"] .exam { background: #f59e0b; color: #1a1305; }
+[data-system="parasympathetic"] .exam,
+[data-system="sympathetic"] .exam { background: #f59e0b; color: #1a1305; }
 [data-system="pharmacodynamics"] .h1-en,
-[data-system="parasympathetic"] .h1-en { color: var(--accent); font-size: 0.55em; font-weight: 400; }
+[data-system="parasympathetic"] .h1-en,
+[data-system="sympathetic"] .h1-en { color: var(--accent); font-size: 0.55em; font-weight: 400; }
 :root[data-contrast="high"] .summary .pcard,
 :root[data-contrast="high"] .summary .table-wrap { border: 2px solid #000; }
 

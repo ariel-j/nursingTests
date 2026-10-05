@@ -1,4 +1,4 @@
-/* Shared parts of the interactive summaries (search and filters, dark "lab" panels, mode buttons,
+/* Shared parts of the interactive summaries (search and filters, dark "lab" panels, light panels, mode buttons,
    flashcards, reading-progress bar). Loaded after summary.css by every summary that carries widgets
    (pharmacodynamics.html, parasympathetic.html); each page adds its own css/<id>.css on top.
    Everything here is hidden on paper (.no-print) and absent from all.html. */
@@ -68,6 +68,22 @@
 .summary .mode:hover { border-color: var(--lab-teal); }
 .summary .mode[aria-pressed="true"] { color: #042f2e; background: var(--lab-teal); border-color: var(--lab-teal); }
 .summary .mode[aria-pressed="true"] .en { color: inherit; }
+
+/* ---------- light panels and mode toggles (simulators, explorers) ---------- */
+
+.summary .panel { margin-block: 2rem; padding: 1.25rem; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
+.summary .panel h2 { margin: 0 0 0.3rem; padding: 0; border: 0; font-size: 1.5rem; }
+.summary .panel-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; padding-block-end: 1rem; margin-block-end: 1rem; border-block-end: 1px solid var(--line); }
+.summary .panel-kicker { display: inline-block; margin: 0 0 0.5rem; padding: 2px 12px; font-size: 0.8rem; font-weight: 700; color: var(--accent-ink); background: var(--accent-soft); border-radius: 999px; }
+.summary .panel-kicker-hot { color: #7a3a05; background: #fbeccf; }
+:root[data-contrast="high"] .summary .panel { border: 2px solid #000; }
+
+/* Two- or three-way toggle: the pressed one takes the button's tone. */
+.summary .seg-row { display: inline-flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.35rem; background: var(--bg); border: 1px solid var(--line); border-radius: 14px; }
+.summary .seg { padding: 0.45rem 0.9rem; font-size: 0.9rem; font-weight: 600; color: var(--ink); background: transparent; border: 2px solid transparent; border-radius: 10px; }
+.summary .seg:hover { border-color: var(--t, var(--accent)); }
+.summary .seg[aria-pressed="true"] { font-weight: 700; color: var(--t-ink); background: var(--t-soft); border-color: var(--t); }
+:root[data-contrast="high"] .summary .seg[aria-pressed="true"] { color: #fff; background: #000; border-color: #000; }
 
 /* ---------- flashcards ---------- */
 

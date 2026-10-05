@@ -3,40 +3,12 @@
 // NMJ comparison (competitive vs. depolarizing block). Search, flashcards and the progress bar are shared
 // (summary-widgets.js). The article's text works without any of this (and in all.html, which drops the
 // [data-interactive] blocks), so each widget's facts also appear in the static sections.
-// Text data and the markup parser live in parasympathetic-data.js; text goes in with textContent and
-// DOM nodes, never innerHTML.
-import { ORGAN_MODES, SYNAPSE_STEPS, NMJ, FLASHCARDS, parseRich } from './parasympathetic-data.js';
-import { initReadingProgress, initSearch, initFlashcards } from './summary-widgets.js';
+// Text data lives in parasympathetic-data.js, the markup parser in rich.js; text goes in with textContent
+// and DOM nodes, never innerHTML.
+import { ORGAN_MODES, SYNAPSE_STEPS, NMJ, FLASHCARDS } from './parasympathetic-data.js';
+import { el, rich, richEl, setPressed, initReadingProgress, initSearch, initFlashcards } from './summary-widgets.js';
 
 const $ = (id) => document.getElementById(id);
-
-function el(tag, className, text) {
-  const node = document.createElement(tag);
-  if (className) node.className = className;
-  if (text !== undefined) node.textContent = text;
-  return node;
-}
-
-/** Nodes for a marked-up string (see parasympathetic-data.js): bold, Latin and line breaks. */
-function rich(source) {
-  return parseRich(source).map((seg) => {
-    if (seg.br) return document.createElement('br');
-    if (!seg.bold && !seg.en) return document.createTextNode(seg.text);
-    return el(seg.bold ? 'b' : 'span', seg.en ? 'en' : '', seg.text);
-  });
-}
-
-/** A block element (p, h3, div, …) holding a marked-up string. */
-function richEl(tag, className, source) {
-  const node = el(tag, className);
-  node.append(...rich(source));
-  return node;
-}
-
-/** Pressed state for a row of toggle buttons: only `active` is pressed. */
-function setPressed(buttons, active) {
-  for (const b of buttons) b.setAttribute('aria-pressed', String(b === active));
-}
 
 // ---------- search filters ----------
 
