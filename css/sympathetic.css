@@ -1,6 +1,6 @@
-/* Interactive parts specific to the sympathetic summary (receptor explorer, self-test mode, "chapter done"
-   tracker). Loaded only by summaries/sympathetic.html, after summary.css and summary-widgets.css (search, lab
-   and light panels, flashcards). Hidden on paper (.no-print), absent from all.html. */
+/* Page-specific look of the sympathetic summary. Loaded only by summaries/sympathetic.html, after summary.css
+   and summary-widgets.css (search, lab and light panels, flashcards, receptor explorer, self-test mode and
+   "chapter done" tracker). Hidden on paper (.no-print), absent from all.html. */
 
 /* Same dark lab panels as the shared ones, in this page's warm orange. */
 .summary .lab, .summary .flash-stage { --lab-teal: #fb923c; }
@@ -16,47 +16,3 @@
 
 /* Wider table: the first column should not take a third of it. */
 .summary .rtable.cols4 td:first-child { inline-size: 18%; font-weight: 600; }
-
-/* ---------- receptor explorer ---------- */
-
-.summary .receptor-detail { display: grid; gap: 0.9rem; margin-block-start: 1rem; }
-.summary .receptor-detail .cards { margin-block: 0; }
-.summary .rc-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.9rem; padding-block-end: 0.6rem; border-block-end: 1px solid var(--line); }
-.summary .rc-head h3 { margin: 0; font-size: 1.3rem; }
-.summary .rc-pathway { padding: 0.75rem 0.9rem; font-size: 0.92rem; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; }
-.summary .rc-label { display: block; margin-block-end: 0.25rem; }
-.summary .receptor-detail .call { margin-block: 0; }
-
-/* ---------- self-test mode ---------- */
-
-.summary .selftest { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; margin-block-end: 0.8rem; }
-.summary .selftest button[aria-pressed="true"] { color: #fff; background: var(--accent-ink); border-color: var(--accent-ink); }
-:root[data-contrast="high"] .summary .selftest button[aria-pressed="true"] { background: #000; }
-.summary .selftest-status { flex-basis: 100%; margin: 0; font-size: 0.85rem; color: var(--muted); }
-
-.summary .rel.is-hidden { cursor: pointer; }
-.summary .rel.is-hidden:hover, .summary .rel.is-hidden:focus-visible { border-color: var(--accent); }
-.summary .rel.is-hidden .rel-effect { position: relative; }
-.summary .rel-blur { display: block; filter: blur(6px); opacity: 0.4; user-select: none; }
-.summary .rel-hint { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 0.4rem; font-size: 0.85rem; font-weight: 700; text-align: center; color: var(--accent-ink); pointer-events: none; }
-
-/* ---------- progress tracker and "chapter done" marks ---------- */
-
-.summary .tracker { margin-block-start: 0.8rem; padding-block-start: 0.8rem; border-block-start: 1px solid var(--line); }
-.summary .tracker-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-block-end: 0.4rem; font-size: 0.9rem; }
-.summary .tracker-label { font-weight: 700; }
-.summary .tracker-top strong { color: var(--accent-ink); }
-.summary .tracker-bar { block-size: 10px; overflow: hidden; background: var(--bg); border: 1px solid var(--line); border-radius: 999px; }
-.summary .tracker-fill { block-size: 100%; inline-size: 0; background: var(--accent); border-radius: 999px; transition: inline-size 0.3s; }
-.summary .tracker-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; margin-block-start: 0.5rem; font-size: 0.85rem; color: var(--muted); }
-.summary .tracker-reset { padding: 0.25rem 0.8rem; font-size: 0.85rem; }
-:root[data-contrast="high"] .summary .tracker-bar { border: 2px solid #000; }
-:root[data-contrast="high"] .summary .tracker-fill { background: #000; }
-
-.summary .done-mark { display: flex; align-items: center; gap: 0.5rem; inline-size: fit-content; margin-block-start: 1.2rem; padding: 0.4rem 0.9rem; font-size: 0.9rem; font-weight: 600; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; cursor: pointer; }
-.summary .done-mark:has(input:checked) { color: var(--accent-ink); background: var(--accent-soft); border-color: var(--accent); }
-.summary .done-mark input { inline-size: 1.1rem; block-size: 1.1rem; accent-color: var(--accent); }
-
-@media (prefers-reduced-motion: reduce) {
-  .summary .tracker-fill { transition: none; }
-}

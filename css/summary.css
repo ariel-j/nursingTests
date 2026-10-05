@@ -11,6 +11,7 @@
 [data-system="excretory"]      { --a: #126e82; --a-soft: #dcedf0; --a-ink: #0c4e5c; --a-d: #5fc4d9; --a-soft-d: #12333a; --a-ink-d: #a2ddea; }
 [data-system="parasympathetic"] { --a: #2f7a3e; --a-soft: #e1f1e4; --a-ink: #1f5a2c; --a-d: #6fcf86; --a-soft-d: #15301b; --a-ink-d: #a9e5b8; }
 [data-system="sympathetic"] { --a: #c2410c; --a-soft: #fbe9df; --a-ink: #8f2f08; --a-d: #ff9d6b; --a-soft-d: #3f2316; --a-ink-d: #ffc4a3; }
+[data-system="opioids"] { --a: #6d28d9; --a-soft: #ede9fe; --a-ink: #4c1d95; --a-d: #b79cf7; --a-soft-d: #2a1d4a; --a-ink-d: #d9cbfb; }
 [data-system="pharmacokinetics"] { --a: #6a3d9a; --a-soft: #ece4f4; --a-ink: #4b2a72; --a-d: #c3a0ea; --a-soft-d: #2c1f3d; --a-ink-d: #dcc6f5; }
 
 [data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
