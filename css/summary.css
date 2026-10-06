@@ -15,6 +15,9 @@
 [data-system="pharmacokinetics"] { --a: #6a3d9a; --a-soft: #ece4f4; --a-ink: #4b2a72; --a-d: #c3a0ea; --a-soft-d: #2c1f3d; --a-ink-d: #dcc6f5; }
 [data-system="nsaids"] { --a: #4338ca; --a-soft: #e8e7fb; --a-ink: #312e81; --a-d: #a5a1ff; --a-soft-d: #25254d; --a-ink-d: #c9c7ff; }
 [data-system="coagulation"] { --a: #be185d; --a-soft: #fbe3ee; --a-ink: #831843; --a-d: #ff8fbf; --a-soft-d: #411a2e; --a-ink-d: #ffc2dc; }
+[data-system="pharma-git"] { --a: #a16207; --a-soft: #f6ecd2; --a-ink: #713f12; --a-d: #e9b84e; --a-soft-d: #37290f; --a-ink-d: #f4d58e; }
+[data-system="pharma-respiratory"] { --a: #0369a1; --a-soft: #dcebf5; --a-ink: #075985; --a-d: #5cb8ea; --a-soft-d: #112f42; --a-ink-d: #a5d8f3; }
+[data-system="pharma-immunosuppression"] { --a: #b91c1c; --a-soft: #f9e1e1; --a-ink: #7f1d1d; --a-d: #ff8f8f; --a-soft-d: #411919; --a-ink-d: #ffc2c2; }
 
 [data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
 @media (prefers-color-scheme: dark) {
@@ -175,6 +178,9 @@
 /* The amber "asked in past exams" flag on the pharmacology summary */
 [data-system="pharmacodynamics"] .exam,
 [data-system="parasympathetic"] .exam,
+[data-system="pharma-git"] .exam,
+[data-system="pharma-respiratory"] .exam,
+[data-system="pharma-immunosuppression"] .exam,
 [data-system="sympathetic"] .exam { background: #f59e0b; color: #1a1305; }
 [data-system="pharmacodynamics"] .h1-en,
 [data-system="parasympathetic"] .h1-en,

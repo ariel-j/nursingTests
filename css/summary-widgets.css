@@ -149,9 +149,10 @@
 :root[data-contrast="high"] .summary .selftest button[aria-pressed="true"] { background: #000; }
 .summary .selftest-status { flex-basis: 100%; margin: 0; font-size: 0.85rem; color: var(--muted); }
 
-.summary .rel.is-hidden { cursor: pointer; }
-.summary .rel.is-hidden:hover, .summary .rel.is-hidden:focus-visible { border-color: var(--accent); }
-.summary .rel.is-hidden .rel-effect { position: relative; }
+.summary .rel.is-hidden, .summary dl.def.is-hidden { cursor: pointer; }
+.summary .rel.is-hidden:hover, .summary .rel.is-hidden:focus-visible,
+.summary dl.def.is-hidden:hover, .summary dl.def.is-hidden:focus-visible { border-color: var(--accent); }
+.summary .rel.is-hidden .rel-effect, .summary dl.def.is-hidden dd { position: relative; }
 .summary .rel-blur { display: block; filter: blur(6px); opacity: 0.4; user-select: none; }
 .summary .rel-hint { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 0.4rem; font-size: 0.85rem; font-weight: 700; text-align: center; color: var(--accent-ink); pointer-events: none; }
 

@@ -1,4 +1,5 @@
-// Widgets shared by the interactive summaries (pharmacodynamics, parasympathetic, sympathetic, opioids): the
+// Widgets shared by the interactive summaries (pharmacodynamics, parasympathetic, sympathetic, opioids, the
+// pharma-git / pharma-respiratory / pharma-immunosuppression pages and the others): the
 // reading-progress bar, search with filter pills, flip flashcards, the cause → effect self-test, the
 // "chapter done" tracker, the receptor explorer, and the small DOM helpers their scripts use. Each page's own script wires them to its ids and data. The article text works without
 // any of this (and in all.html, which drops the [data-interactive] blocks).
@@ -46,6 +47,19 @@ export function initReadingProgress() {
   };
   window.addEventListener('scroll', update, { passive: true });
   update();
+}
+
+/**
+ * The filter pills of the plain study pages (all / exam recalls / traps / cause → effect), for
+ * `initSearch`: exam rows carry `is-exam` or an exam badge, traps are `.call` blocks.
+ */
+export function studyFilter(filter, card, text) {
+  switch (filter) {
+    case 'exam': return card.classList.contains('is-exam') || text.includes('נשאל');
+    case 'traps': return card.classList.contains('call');
+    case 'rel': return card.classList.contains('rel');
+    default: return true;
+  }
 }
 
 /**
@@ -151,9 +165,13 @@ export function initFlashcards(cards) {
 /**
  * Self-test mode over the cause → effect rows inside `#<chainsId>`: hides each row's result until the reader
  * opens it. Needs `#selftest-toggle`, `#selftest-reveal` and `#selftest-status`.
+ * With `{ all: true }` (chainsId is then ignored) it covers every chapter's cause → effect rows and
+ * definitions (`dl.def`: the explanation is hidden, the term stays), not the glossary.
  */
-export function initSelfTest(chainsId) {
-  const rows = [...$(chainsId).querySelectorAll('.rel')];
+export function initSelfTest(chainsId, { all = false } = {}) {
+  const rows = all
+    ? [...document.querySelectorAll('.summary .topic-section .rel, .summary .topic-section dl.def')]
+    : [...$(chainsId).querySelectorAll('.rel')];
   const toggle = $('selftest-toggle');
   const status = $('selftest-status');
   let on = false;
@@ -162,7 +180,8 @@ export function initSelfTest(chainsId) {
 
   function updateStatus() {
     if (!on) status.textContent = '';
-    else if (hiddenCount() === 0) status.textContent = 'כל התוצאות נחשפו.';
+    else if (hiddenCount() === 0) status.textContent = all ? 'כל הפריטים נחשפו.' : 'כל התוצאות נחשפו.';
+    else if (all) status.textContent = `${hiddenCount()} פריטים מוסתרים. לחצו על פריט (או Enter) כדי לחשוף אותו.`;
     else status.textContent = `${hiddenCount()} תוצאות מוסתרות. לחצו על שורה (או Enter) כדי לחשוף את התוצאה.`;
   }
 
@@ -170,12 +189,13 @@ export function initSelfTest(chainsId) {
     row.classList.add('is-hidden');
     row.setAttribute('role', 'button');
     row.tabIndex = 0;
-    row.setAttribute('aria-label', `חשוף את התוצאה: ${row.querySelector('.rel-cause').textContent.trim()}`);
+    const label = row.querySelector('.rel-cause, dt').textContent.trim();
+    row.setAttribute('aria-label', all ? `חשוף את ההסבר: ${label}` : `חשוף את התוצאה: ${label}`);
     // The effect's text is blurred through a wrapper (it is bare text nodes mixed with <b>/<span>).
-    const effect = row.querySelector('.rel-effect');
+    const effect = row.querySelector('.rel-effect, dd');
     const blurred = el('span', 'rel-blur');
     blurred.append(...effect.childNodes);
-    effect.append(blurred, el('span', 'rel-hint', 'לחצו לחשיפת התוצאה 👁️'));
+    effect.append(blurred, el('span', 'rel-hint', all ? 'לחצו לחשיפה 👁️' : 'לחצו לחשיפת התוצאה 👁️'));
   }
 
   function reveal(row) {
@@ -184,7 +204,7 @@ export function initSelfTest(chainsId) {
     row.removeAttribute('tabindex');
     row.removeAttribute('aria-label');
     const blurred = row.querySelector('.rel-blur');
-    if (blurred) row.querySelector('.rel-effect').replaceChildren(...blurred.childNodes);
+    if (blurred) row.querySelector('.rel-effect, dd').replaceChildren(...blurred.childNodes);
   }
 
   function setMode(next) {
@@ -195,7 +215,7 @@ export function initSelfTest(chainsId) {
     toggle.setAttribute('aria-pressed', String(on));
     toggle.replaceChildren(
       el('span', null, on ? '🔒' : '👁️'),
-      document.createTextNode(on ? ' מצב בחינה פעיל (לחצו לביטול)' : ' מצב בחינה עצמית (הסתר תוצאות)'),
+      document.createTextNode(on ? ' מצב בחינה פעיל (לחצו לביטול)' : ` מצב בחינה עצמית (הסתר ${all ? 'תוצאות והגדרות' : 'תוצאות'})`),
     );
     toggle.firstChild.setAttribute('aria-hidden', 'true');
     updateStatus();
@@ -209,7 +229,7 @@ export function initSelfTest(chainsId) {
   toggle.addEventListener('click', () => setMode(!on));
   $('selftest-reveal').addEventListener('click', () => {
     setMode(false);
-    status.textContent = 'כל התוצאות נחשפו.';
+    status.textContent = all ? 'כל הפריטים נחשפו.' : 'כל התוצאות נחשפו.';
   });
   for (const row of rows) {
     row.addEventListener('click', () => { if (row.classList.contains('is-hidden')) revealOne(row); });
