@@ -133,6 +133,31 @@ SUBJECT NOTES
   "עקרונות הקבוצה" or "חישובי מינונים". A drug with fewer than 3 questions joins a shared topic.
 ```
 
+Course outline (פרמקולוגיה ב', 18 lectures, in teaching order). The number is the lecture; the catalog
+unit name is in `quizzes/subjects.json` and is what a quiz's `unit` must match. Lectures 1+2 share
+one unit; 16-18 have no unit yet (add it to the catalog before adding its quiz).
+
+| # | Topic | Catalog unit |
+|---|-------|--------------|
+| 1 | פרמקוקינטיקה | פרמקוקינטיקה ופרמקודינמיקה |
+| 2 | פרמקודינמיקה | פרמקוקינטיקה ופרמקודינמיקה |
+| 3 | תרופות במערכת הפראסימפתטית | מערכת פאראסימפתטית |
+| 4 | תרופות במערכת הסימפתטית | מערכת סימפתטית |
+| 5 | אופיואידים | אופיואידים |
+| 6 | NSAIDs (נוגדי דלקת לא סטרואידליים) | NSAIDs |
+| 7 | קרישה (תרופות נוגדות קרישה) | קרישה |
+| 8 | היפרליפידמיה (תרופות להורדת שומנים בדם) | היפרליפידמיה (תרופות להורדת שומנים בדם) |
+| 9 | פרקינסון | פרקינסון |
+| 10 | חרדה | חרדה |
+| 11 | דיכאון | דיכאון |
+| 12 | פסיכוזה | פסיכוזה |
+| 13 | אפילפסיה | אפילפסיה |
+| 14 | הרדמה | הרדמה |
+| 15 | אנטיהיסטמינים | אנטיהיסטמינים |
+| 16 | עיכול (מערכת העיכול) | - |
+| 17 | נשימה (מערכת הנשימה) | - |
+| 18 | דיכוי חיסוני | - |
+
 ## After receiving a file
 
 1. Save it as `quizzes/<id>.json` (or convert it with `npm run import`, see README).
