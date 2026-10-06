@@ -72,21 +72,69 @@ export const SUMMARIES = [
   },
   {
     subject: 'pharmacology',
+    id: 'pharma-hyperlipidemia',
+    title: 'היפרליפידמיה ושומנים בדם',
+    blurb: 'LDL ו‑HDL, סטטינים, Ezetimibe, פיברטים, Niacin ותרופות חדשות.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-parkinson',
+    title: 'פרקינסון ומחלות ניווניות',
+    blurb: 'דופמין מול אצטילכולין, L-Dopa ותוספי עזר, אגוניסטים, אלצהיימר ו‑ALS.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-anxiety',
+    title: 'נוגדי חרדה ומשרי שינה',
+    blurb: 'GABA‑A, בנזודיאזפינים, ברביטורטים, Buspirone, תרופות Z.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-depression',
+    title: 'נוגדי דיכאון ומייצבי מצב רוח',
+    blurb: 'SSRI, SNRI, TCA ו‑MAOI, סינדרום סרוטונין, טיראמין, ליתיום.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-psychosis',
+    title: 'תרופות אנטי‑פסיכוטיות',
+    blurb: 'חסימת D2, ארבעת המסלולים הדופמינרגיים, דור ראשון מול שני, EPS, Clozapine.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-epilepsy',
+    title: 'נוגדי פרכוסים (אפילפסיה)',
+    blurb: 'סוגי התקפים, ארבעת המנגנונים, תרופה לפי סוג התקף, הריון ו‑status epilepticus.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-anesthesia',
+    title: 'חומרי הרדמה',
+    blurb: 'גזים נדיפים ו‑MAC, חומרי הרדמה תוך‑ורידיים, חוסמים נוירומוסקולריים, הרדמה מקומית.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-antihistamines',
+    title: 'אנטיהיסטמינים',
+    blurb: 'היסטמין ורצפטורי H1–H4, דור ראשון מול דור שני, שימושים ותופעות לוואי.',
+  },
+  {
+    subject: 'pharmacology',
     id: 'pharma-git',
     title: 'תרופות במערכת העיכול',
-    blurb: 'בקרת חומצה וכיב, שלשול ועצירות, בחילות והקאות, מעי רגיז ומחלות מעי דלקתיות. עם חיפוש, מצב בחינה עצמית ומילון מונחים.',
+    blurb: 'בקרת חומצה וכיב, שלשול ועצירות, בחילות והקאות, מעי רגיז ומחלות מעי דלקתיות.',
   },
   {
     subject: 'pharmacology',
     id: 'pharma-respiratory',
     title: 'תרופות למערכת הנשימה',
-    blurb: 'אסטמה ו-COPD: מרחיבי סמפונות, נוגדי דלקת, טיפול ביולוגי, ניהול הטיפול ותופעות הלוואי של סטרואידים. עם חיפוש, מצב בחינה עצמית ומילון מונחים.',
+    blurb: 'אסטמה ו-COPD: מרחיבי סמפונות, נוגדי דלקת, טיפול ביולוגי, ניהול הטיפול ותופעות הלוואי של סטרואידים.',
   },
   {
     subject: 'pharmacology',
     id: 'pharma-immunosuppression',
     title: 'תרופות לדיכוי חיסוני',
-    blurb: 'מניעת דחיית שתל: שלבי הטיפול, נוגדנים, מעכבי קלצינאורין ו-mTOR, אנטי-פרוליפרטיביים וסטרואידים, וסיעוד. עם חיפוש, מצב בחינה עצמית ומילון מונחים.',
+    blurb: 'מניעת דחיית שתל: שלבי הטיפול, נוגדנים, מעכבי קלצינאורין ו-mTOR, אנטי-פרוליפרטיביים וסטרואידים, וסיעוד.',
   },
 ];
 

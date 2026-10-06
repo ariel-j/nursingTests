@@ -8,14 +8,13 @@
   <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/summary.css">
-  <link rel="stylesheet" href="../css/summary-widgets.css">
+  <link rel="stylesheet" href="../css/summary-study.css">
   <script type="module" src="../js/summary.js"></script>
-  <script type="module" src="../js/pharma-respiratory.js"></script>
+  <script type="module" src="../js/summary-study.js"></script>
   <script type="module" src="../js/nav.js"></script>
   <script type="module" src="../js/a11y.js"></script>
 </head>
 <body class="summary-page">
-  <div id="read-progress" class="read-progress no-print" aria-hidden="true"></div>
   <main class="page wide">
     <nav class="top-nav no-print">
       <a href="./?subject=pharmacology">→ כל הסיכומים</a>
@@ -36,128 +35,99 @@
     </div>
   </header>
 
-  <section class="intro" id="pr-intro">
+  <section class="intro" id="pharma-respiratory-intro">
     <h2>מבוא: על מה כל זה?</h2>
     <p>האוויר עובר בריאות דרך צינורות שמתפצלים ומצטמצמים, והקטנים שבהם נקראים סמפונות. באסטמה ובמחלת <span class="en">COPD</span> הסמפונות מצטמצמות, ולכן קשה לנשום. באסטמה זה קורה בהתקפים: השריר שמסביב לסמפון מתכווץ, הרירית דלקתית ונפוחה, ומופרש ריר רב. ב-<span class="en">COPD</span> החסימה קבועה יותר, לרוב בעקבות עישון.</p>
     <p>לכן יש שני סוגי תרופות, וההבדל ביניהם הוא העיקר בנושא. <b>מרחיבי סמפונות</b> מרפים את השריר ופותחים את הדרך מיד, ולכן הם תרופות ההצלה בהתקף. <b>נוגדי דלקת</b> מטפלים בדלקת עצמה ומונעים התקפים בעתיד, אבל פועלים לאט ונלקחים כל יום. טעות נפוצה היא להסתמך על מרחיב לבד ולא לטפל בדלקת, וכך הסיכון להחמרות עולה.</p>
     <p>הסיכום עובר על מרחיבי הסמפונות (בטא-אגוניסטים ואנטגוניסטים מוסקריניים), על נוגדי הדלקת (סטרואידים בשאיפה, אנטגוניסטים ללויקוטריאנים וטיפול ביולוגי), על ניהול הטיפול לפי ההנחיות ועל תופעות הלוואי של סטרואידים, ועל <span class="en">COPD</span>. בסוף יש טבלת סיבה ← תוצאה ונקודות ששבו ועלו בשחזורים. המילון שמתחת מסביר כל מונח.</p>
   </section>
 
-  <!-- חיפוש, מסננים ומצב בחינה עצמית (אינטראקטיבי) -->
-  <div class="toolbar no-print" data-interactive>
-    <nav class="toc" aria-label="קפיצה לפרק">
-      <a href="#pr-glossary"><span aria-hidden="true">📖</span> מילון מונחים</a>
-      <a href="#pr-sec-2"><span aria-hidden="true">🫁</span> מרחיבי סמפונות</a>
-      <a href="#pr-sec-3"><span aria-hidden="true">🔥</span> נוגדי דלקת</a>
-      <a href="#pr-sec-4"><span aria-hidden="true">🧭</span> ניהול הטיפול</a>
-      <a href="#pr-sec-5"><span aria-hidden="true">🚬</span> COPD</a>
-      <a href="#pr-sec-6"><span aria-hidden="true">🔄</span> סיבה ← תוצאה</a>
-      <a href="#pr-sec-7" class="toc-exam"><span aria-hidden="true">⭐</span> שחזורים</a>
-    </nav>
-    <div class="search-row">
-      <label class="search-label" for="pr-search">חיפוש בסיכום</label>
-      <input type="search" id="pr-search" class="search-input" placeholder="חיפוש מהיר של מרחיבים, סטרואידים, הנחיות..." autocomplete="off">
-      <p id="pr-search-count" class="search-count" role="status">מציג את כל הנושאים</p>
-    </div>
-    <div class="pills" role="group" aria-label="סינון לפי נושא">
-      <button type="button" class="pill" data-filter="all" aria-pressed="true">הכל (7 פרקים)</button>
-      <button type="button" class="pill" data-filter="exam" aria-pressed="false"><span aria-hidden="true">⭐</span> שחזורים בלבד</button>
-      <button type="button" class="pill" data-filter="traps" aria-pressed="false"><span aria-hidden="true">⚠️</span> מלכודות</button>
-      <button type="button" class="pill" data-filter="rel" aria-pressed="false"><span aria-hidden="true">🔄</span> סיבה ← תוצאה</button>
-    </div>
-    <div class="selftest no-print" data-interactive>
-      <button type="button" id="selftest-toggle" class="secondary" aria-pressed="false"><span aria-hidden="true">👁️</span> מצב בחינה עצמית (הסתר תוצאות והגדרות)</button>
-      <button type="button" id="selftest-reveal" class="secondary">חשוף הכל</button>
-      <p id="selftest-status" class="selftest-status" role="status"></p>
-    </div>
-  </div>
-
-  <section class="glossary" id="pr-glossary">
+  <section class="glossary" id="pharma-respiratory-glossary">
     <h2>מילון מונחים</h2>
-    <p class="sec-note">כל מונח שמופיע בהמשך, בשפה פשוטה. אפשר לחפש מונח בשורת החיפוש.</p>
+    <p class="sec-note">כל מונח שמופיע בהמשך, בשפה פשוטה. אפשר לחפש מונח בשורת החיפוש שמעל הסיכום.</p>
 
     <h3>מחלות ותסמינים</h3>
-    <dl class="def sc"><dt>דרכי הנשימה וסמפונות</dt><dd>הצינורות שמובילים אוויר אל הריאות. הסמפונות הן הצינורות הקטנים בתוך הריאה, ושריר חלק מקיף אותן.</dd></dl>
-    <dl class="def sc"><dt>אסטמה</dt><dd>מחלה של דרכי הנשימה שמתבטאת בהתקפים: כיווץ סמפונות, דלקת והפרשת ריר מרובה.</dd></dl>
-    <dl class="def sc"><dt><span class="en">COPD</span></dt><dd><span class="en">Chronic Obstructive Pulmonary Disease</span>, מחלת ריאות חסימתית כרונית. חסימה קבועה יחסית של דרכי הנשימה, לרוב מעישון.</dd></dl>
-    <dl class="def sc"><dt>ברונכוקונסטריקציה</dt><dd>כיווץ של שריר הסמפון שמצמצם אותו. ההפך הוא <b>ברונכודילטציה</b>: הרחבת הסמפון.</dd></dl>
-    <dl class="def sc"><dt>ברונכוספאזם</dt><dd>כיווץ פתאומי וחזק של הסמפונות, כמו בהתקף אסטמה.</dd></dl>
-    <dl class="def sc"><dt>מוקוזה</dt><dd>הריר שמופרש בדרכי הנשימה. בהתקף אסטמה מופרש ממנו יותר מדי והוא סותם את הסמפונות.</dd></dl>
-    <dl class="def sc"><dt>דלקת ובצקת</dt><dd>דלקת: תגובת הגוף לגירוי, עם אדמומיות ונפיחות. בצקת: נפיחות מנוזל שנאגר ברקמה. בדרכי הנשימה שתיהן מצרות את המעבר.</dd></dl>
-    <dl class="def sc"><dt>צפצוף והיפרוונטילציה</dt><dd>צפצוף: קול שורק בנשיפה, מהאוויר שעובר בסמפונות צרות. היפרוונטילציה: נשימה מהירה ועמוקה מהרגיל.</dd></dl>
-    <dl class="def sc"><dt>אלרגן</dt><dd>חומר שגורם לתגובה אלרגית, כמו אבקנים או אבק. אחד הגורמים להתקף אסטמה.</dd></dl>
-    <dl class="def sc"><dt>התקף אקוטי</dt><dd>התקף חריף שמתחיל פתאום ודורש טיפול מיידי.</dd></dl>
+    <dl class="def"><dt>דרכי הנשימה וסמפונות</dt><dd>הצינורות שמובילים אוויר אל הריאות. הסמפונות הן הצינורות הקטנים בתוך הריאה, ושריר חלק מקיף אותן.</dd></dl>
+    <dl class="def"><dt>אסטמה</dt><dd>מחלה של דרכי הנשימה שמתבטאת בהתקפים: כיווץ סמפונות, דלקת והפרשת ריר מרובה.</dd></dl>
+    <dl class="def"><dt><span class="en">COPD</span></dt><dd><span class="en">Chronic Obstructive Pulmonary Disease</span>, מחלת ריאות חסימתית כרונית. חסימה קבועה יחסית של דרכי הנשימה, לרוב מעישון.</dd></dl>
+    <dl class="def"><dt>ברונכוקונסטריקציה</dt><dd>כיווץ של שריר הסמפון שמצמצם אותו. ההפך הוא <b>ברונכודילטציה</b>: הרחבת הסמפון.</dd></dl>
+    <dl class="def"><dt>ברונכוספאזם</dt><dd>כיווץ פתאומי וחזק של הסמפונות, כמו בהתקף אסטמה.</dd></dl>
+    <dl class="def"><dt>מוקוזה</dt><dd>הריר שמופרש בדרכי הנשימה. בהתקף אסטמה מופרש ממנו יותר מדי והוא סותם את הסמפונות.</dd></dl>
+    <dl class="def"><dt>דלקת ובצקת</dt><dd>דלקת: תגובת הגוף לגירוי, עם אדמומיות ונפיחות. בצקת: נפיחות מנוזל שנאגר ברקמה. בדרכי הנשימה שתיהן מצרות את המעבר.</dd></dl>
+    <dl class="def"><dt>צפצוף והיפרוונטילציה</dt><dd>צפצוף: קול שורק בנשיפה, מהאוויר שעובר בסמפונות צרות. היפרוונטילציה: נשימה מהירה ועמוקה מהרגיל.</dd></dl>
+    <dl class="def"><dt>אלרגן</dt><dd>חומר שגורם לתגובה אלרגית, כמו אבקנים או אבק. אחד הגורמים להתקף אסטמה.</dd></dl>
+    <dl class="def"><dt>התקף אקוטי</dt><dd>התקף חריף שמתחיל פתאום ודורש טיפול מיידי.</dd></dl>
 
     <h3>תאים, מתווכים ונוגדנים</h3>
-    <dl class="def sc"><dt>תא מאסט והיסטמין</dt><dd>תא מאסט הוא תא חיסון שמשחרר היסטמין כשפוגשים בו אלרגן. היסטמין גורם לכיווץ סמפונות, בצקת וגרד.</dd></dl>
-    <dl class="def sc"><dt>לויקוטריאנים (<span class="en">LT</span>)</dt><dd>חומרים דלקתיים שהגוף מייצר, שגורמים לכיווץ סמפונות ולבצקת. הם חלק מהמנגנון של אסטמה אלרגית.</dd></dl>
-    <dl class="def sc"><dt><span class="en">5-LOX</span></dt><dd>האנזים שמייצר לויקוטריאנים. <span class="en">Zileuton</span> מעכב אותו.</dd></dl>
-    <dl class="def sc"><dt>אאוזינופילים</dt><dd>סוג של תאי דם לבנים שמעורבים באלרגיה ובדלקת אסטמטית.</dd></dl>
-    <dl class="def sc"><dt><span class="en">IgE</span></dt><dd>סוג של נוגדן שמעורב בתגובות אלרגיות. הוא נקשר לתאי מאסט ומכין אותם להפריש היסטמין.</dd></dl>
-    <dl class="def sc"><dt><span class="en">IL-5</span>, <span class="en">IL-4</span>, <span class="en">IL-13</span></dt><dd>אינטרלויקינים: חלבוני איתות של מערכת החיסון (ציטוקינים). <span class="en">IL-5</span> מגייס אאוזינופילים, ו-<span class="en">IL-4</span> ו-<span class="en">IL-13</span> מעודדים תגובה אלרגית.</dd></dl>
+    <dl class="def"><dt>תא מאסט והיסטמין</dt><dd>תא מאסט הוא תא חיסון שמשחרר היסטמין כשפוגשים בו אלרגן. היסטמין גורם לכיווץ סמפונות, בצקת וגרד.</dd></dl>
+    <dl class="def"><dt>לויקוטריאנים (<span class="en">LT</span>)</dt><dd>חומרים דלקתיים שהגוף מייצר, שגורמים לכיווץ סמפונות ולבצקת. הם חלק מהמנגנון של אסטמה אלרגית.</dd></dl>
+    <dl class="def"><dt><span class="en">5-LOX</span></dt><dd>האנזים שמייצר לויקוטריאנים. <span class="en">Zileuton</span> מעכב אותו.</dd></dl>
+    <dl class="def"><dt>אאוזינופילים</dt><dd>סוג של תאי דם לבנים שמעורבים באלרגיה ובדלקת אסטמטית.</dd></dl>
+    <dl class="def"><dt><span class="en">IgE</span></dt><dd>סוג של נוגדן שמעורב בתגובות אלרגיות. הוא נקשר לתאי מאסט ומכין אותם להפריש היסטמין.</dd></dl>
+    <dl class="def"><dt><span class="en">IL-5</span>, <span class="en">IL-4</span>, <span class="en">IL-13</span></dt><dd>אינטרלויקינים: חלבוני איתות של מערכת החיסון (ציטוקינים). <span class="en">IL-5</span> מגייס אאוזינופילים, ו-<span class="en">IL-4</span> ו-<span class="en">IL-13</span> מעודדים תגובה אלרגית.</dd></dl>
 
     <h3>רצפטורים ומנגנונים</h3>
-    <dl class="def sc"><dt>אגוניסט ואנטגוניסט</dt><dd>אגוניסט מפעיל רצפטור, ואנטגוניסט חוסם אותו. אנטגוניסט תחרותי מתחרה עם החומר הטבעי על אותו רצפטור.</dd></dl>
-    <dl class="def sc"><dt>רצפטור בטא-2</dt><dd>רצפטור על שריר הסמפון. כשמפעילים אותו, השריר נרפה והסמפון נפתח.</dd></dl>
-    <dl class="def sc"><dt>רצפטור מוסקריני והעצב הוואגאלי</dt><dd>העצב הוואגאלי (המערכת הפראסימפתטית) מכווץ סמפונות דרך אצטילכולין ורצפטורים מוסקריניים. חסימת הרצפטור הזה מרפה את הסמפון, והפעלתו מכווצת.</dd></dl>
-    <dl class="def sc"><dt>אנטגוניסט לעומת אגוניסט מוסקריני</dt><dd>אגוניסט מוסקריני מכווץ סמפונות ולכן אסור באסטמה. אנטגוניסט מוסקריני מרחיב ולכן מתאים.</dd></dl>
-    <dl class="def sc"><dt><span class="en">PDE4</span></dt><dd>אנזים שמפרק את <span class="en">cAMP</span> בתאי דלקת. מעכב <span class="en">PDE4</span> (<span class="en">Roflumilast</span>) מפחית דלקת.</dd></dl>
+    <dl class="def"><dt>אגוניסט ואנטגוניסט</dt><dd>אגוניסט מפעיל רצפטור, ואנטגוניסט חוסם אותו. אנטגוניסט תחרותי מתחרה עם החומר הטבעי על אותו רצפטור.</dd></dl>
+    <dl class="def"><dt>רצפטור בטא-2</dt><dd>רצפטור על שריר הסמפון. כשמפעילים אותו, השריר נרפה והסמפון נפתח.</dd></dl>
+    <dl class="def"><dt>רצפטור מוסקריני והעצב הוואגאלי</dt><dd>העצב הוואגאלי (המערכת הפראסימפתטית) מכווץ סמפונות דרך אצטילכולין ורצפטורים מוסקריניים. חסימת הרצפטור הזה מרפה את הסמפון, והפעלתו מכווצת.</dd></dl>
+    <dl class="def"><dt>אנטגוניסט לעומת אגוניסט מוסקריני</dt><dd>אגוניסט מוסקריני מכווץ סמפונות ולכן אסור באסטמה. אנטגוניסט מוסקריני מרחיב ולכן מתאים.</dd></dl>
+    <dl class="def"><dt><span class="en">PDE4</span></dt><dd>אנזים שמפרק את <span class="en">cAMP</span> בתאי דלקת. מעכב <span class="en">PDE4</span> (<span class="en">Roflumilast</span>) מפחית דלקת.</dd></dl>
 
     <h3>קיצורים של התרופות</h3>
-    <dl class="def sc"><dt><span class="en">SABA</span> / <span class="en">LABA</span></dt><dd>בטא-אגוניסט קצר טווח (<span class="en">Short-Acting</span>) או ארוך טווח (<span class="en">Long-Acting</span>). קצר: להתקף. ארוך: לטיפול מתמשך.</dd></dl>
-    <dl class="def sc"><dt><span class="en">SAMA</span> / <span class="en">LAMA</span></dt><dd>אנטגוניסט מוסקריני קצר או ארוך טווח (<span class="en">Short/Long-Acting Muscarinic Antagonist</span>).</dd></dl>
-    <dl class="def sc"><dt><span class="en">ICS</span> ו-<span class="en">OCS</span></dt><dd><span class="en">ICS</span>: סטרואיד בשאיפה (<span class="en">Inhaled Corticosteroid</span>). <span class="en">OCS</span>: סטרואיד פומי (<span class="en">Oral Corticosteroid</span>), כלומר כדורים.</dd></dl>
-    <dl class="def sc"><dt>תרופת הצלה לעומת תרופת מניעה</dt><dd>תרופת הצלה מקלה התקף מיידי (<span class="en">SABA</span>). תרופת מניעה נלקחת קבוע כדי שההתקפים לא יקרו (<span class="en">ICS</span>).</dd></dl>
-    <dl class="def sc"><dt>משאף משולב ו-<span class="en">MART</span></dt><dd>משאף משולב מכיל שתי תרופות יחד (<span class="en">ICS-LABA</span>). <span class="en">MART</span> היא שיטה שבה אותו משאף משמש גם לטיפול קבוע וגם לפי הצורך.</dd></dl>
-    <dl class="def sc"><dt>הנחיות <span class="en">GINA</span></dt><dd>ההנחיות הבין-לאומיות לטיפול באסטמה. מגדירות "שלבים", ושלב 5 הוא אסטמה קשה.</dd></dl>
-    <dl class="def sc"><dt>מונותרפיה</dt><dd>טיפול בתרופה אחת בלבד.</dd></dl>
+    <dl class="def"><dt><span class="en">SABA</span> / <span class="en">LABA</span></dt><dd>בטא-אגוניסט קצר טווח (<span class="en">Short-Acting</span>) או ארוך טווח (<span class="en">Long-Acting</span>). קצר: להתקף. ארוך: לטיפול מתמשך.</dd></dl>
+    <dl class="def"><dt><span class="en">SAMA</span> / <span class="en">LAMA</span></dt><dd>אנטגוניסט מוסקריני קצר או ארוך טווח (<span class="en">Short/Long-Acting Muscarinic Antagonist</span>).</dd></dl>
+    <dl class="def"><dt><span class="en">ICS</span> ו-<span class="en">OCS</span></dt><dd><span class="en">ICS</span>: סטרואיד בשאיפה (<span class="en">Inhaled Corticosteroid</span>). <span class="en">OCS</span>: סטרואיד פומי (<span class="en">Oral Corticosteroid</span>), כלומר כדורים.</dd></dl>
+    <dl class="def"><dt>תרופת הצלה לעומת תרופת מניעה</dt><dd>תרופת הצלה מקלה התקף מיידי (<span class="en">SABA</span>). תרופת מניעה נלקחת קבוע כדי שההתקפים לא יקרו (<span class="en">ICS</span>).</dd></dl>
+    <dl class="def"><dt>משאף משולב ו-<span class="en">MART</span></dt><dd>משאף משולב מכיל שתי תרופות יחד (<span class="en">ICS-LABA</span>). <span class="en">MART</span> היא שיטה שבה אותו משאף משמש גם לטיפול קבוע וגם לפי הצורך.</dd></dl>
+    <dl class="def"><dt>הנחיות <span class="en">GINA</span></dt><dd>ההנחיות הבין-לאומיות לטיפול באסטמה. מגדירות "שלבים", ושלב 5 הוא אסטמה קשה.</dd></dl>
+    <dl class="def"><dt>מונותרפיה</dt><dd>טיפול בתרופה אחת בלבד.</dd></dl>
 
     <h3>תופעות לוואי ושיקולים כלליים</h3>
-    <dl class="def sc"><dt>קנדידיאזיס (פטרת בפה)</dt><dd>זיהום פטרייתי שמופיע ככתמים לבנים בפה. נגרם מסטרואידים בשאיפה, ומונעים אותו בשטיפת פה.</dd></dl>
-    <dl class="def sc"><dt>ספיגה סיסטמית</dt><dd>כמה מהתרופה נספג לדם ופועל בכל הגוף. בשאיפה היא נמוכה, ולכן תופעות הלוואי בגוף מינימליות.</dd></dl>
-    <dl class="def sc"><dt>טכיקרדיה, אריתמיה ורעד</dt><dd>טכיקרדיה: דופק מהיר. אריתמיה: הפרעת קצב הלב. רעד: ריצוד בידיים. כולם תופעות של בטא-אגוניסטים.</dd></dl>
-    <dl class="def sc"><dt>היפרגליקמיה והיפוקלמיה</dt><dd>היפרגליקמיה: סוכר גבוה בדם. היפוקלמיה: רמת אשלגן נמוכה בדם.</dd></dl>
-    <dl class="def sc"><dt>סבילות</dt><dd>הגוף מתרגל לתרופה, ולכן השפעה מסוימת נחלשת עם הזמן, כמו הרעד של בטא-אגוניסטים. במובן הרחב: צורך במינון גבוה יותר לאותה השפעה.</dd></dl>
-    <dl class="def sc"><dt>מעכבי <span class="en">MAO</span></dt><dd>תרופות נגד דיכאון. אסור לשלב אותן עם בטא-אגוניסטים.</dd></dl>
-    <dl class="def sc"><dt>חלון טיפולי צר</dt><dd>טווח צר בין המינון היעיל למינון המסוכן. ל-<span class="en">Theophylline</span> זה מחייב זהירות וניטור.</dd></dl>
-    <dl class="def sc"><dt>פרכוסים והפרעות קצב</dt><dd>פרכוסים: התכווצויות בלתי נשלטות של השרירים. הפרעות קצב: הלב פועם בקצב לא תקין. שניהם סכנה של <span class="en">Theophylline</span>.</dd></dl>
-    <dl class="def sc"><dt><span class="en">CYP450</span> ותגובות בין-תרופתיות</dt><dd>אנזימי כבד שמפרקים תרופות. תרופה שמשנה את פעילותם משנה גם את רמות התרופות האחרות, למשל <span class="en">Theophylline</span> ו-<span class="en">Warfarin</span>.</dd></dl>
-    <dl class="def sc"><dt>רעילות לכבד</dt><dd>פגיעה בכבד מתרופה. לכן מנטרים אנזימי כבד בטיפול ב-<span class="en">Zileuton</span>.</dd></dl>
-    <dl class="def sc"><dt>עמידות לאנטיביוטיקה</dt><dd>חיידקים שמפסיקים להגיב לאנטיביוטיקה אחרי שימוש חוזר בה.</dd></dl>
+    <dl class="def"><dt>קנדידיאזיס (פטרת בפה)</dt><dd>זיהום פטרייתי שמופיע ככתמים לבנים בפה. נגרם מסטרואידים בשאיפה, ומונעים אותו בשטיפת פה.</dd></dl>
+    <dl class="def"><dt>ספיגה סיסטמית</dt><dd>כמה מהתרופה נספג לדם ופועל בכל הגוף. בשאיפה היא נמוכה, ולכן תופעות הלוואי בגוף מינימליות.</dd></dl>
+    <dl class="def"><dt>טכיקרדיה, אריתמיה ורעד</dt><dd>טכיקרדיה: דופק מהיר. אריתמיה: הפרעת קצב הלב. רעד: ריצוד בידיים. כולם תופעות של בטא-אגוניסטים.</dd></dl>
+    <dl class="def"><dt>היפרגליקמיה והיפוקלמיה</dt><dd>היפרגליקמיה: סוכר גבוה בדם. היפוקלמיה: רמת אשלגן נמוכה בדם.</dd></dl>
+    <dl class="def"><dt>סבילות</dt><dd>הגוף מתרגל לתרופה, ולכן השפעה מסוימת נחלשת עם הזמן, כמו הרעד של בטא-אגוניסטים. במובן הרחב: צורך במינון גבוה יותר לאותה השפעה.</dd></dl>
+    <dl class="def"><dt>מעכבי <span class="en">MAO</span></dt><dd>תרופות נגד דיכאון. אסור לשלב אותן עם בטא-אגוניסטים.</dd></dl>
+    <dl class="def"><dt>חלון טיפולי צר</dt><dd>טווח צר בין המינון היעיל למינון המסוכן. ל-<span class="en">Theophylline</span> זה מחייב זהירות וניטור.</dd></dl>
+    <dl class="def"><dt>פרכוסים והפרעות קצב</dt><dd>פרכוסים: התכווצויות בלתי נשלטות של השרירים. הפרעות קצב: הלב פועם בקצב לא תקין. שניהם סכנה של <span class="en">Theophylline</span>.</dd></dl>
+    <dl class="def"><dt><span class="en">CYP450</span> ותגובות בין-תרופתיות</dt><dd>אנזימי כבד שמפרקים תרופות. תרופה שמשנה את פעילותם משנה גם את רמות התרופות האחרות, למשל <span class="en">Theophylline</span> ו-<span class="en">Warfarin</span>.</dd></dl>
+    <dl class="def"><dt>רעילות לכבד</dt><dd>פגיעה בכבד מתרופה. לכן מנטרים אנזימי כבד בטיפול ב-<span class="en">Zileuton</span>.</dd></dl>
+    <dl class="def"><dt>עמידות לאנטיביוטיקה</dt><dd>חיידקים שמפסיקים להגיב לאנטיביוטיקה אחרי שימוש חוזר בה.</dd></dl>
 
     <h3>סטרואידים ותסמונת <span class="en">Cushing</span></h3>
-    <dl class="def sc"><dt>קורטיקוסטרואידים וקורטיזול</dt><dd>קורטיזול הוא הורמון סטרואידי שבלוטת יותרת הכליה מייצרת, והוא מדכא דלקת. קורטיקוסטרואידים כמו <span class="en">Prednisone</span> הם תרופות שמחקות אותו.</dd></dl>
-    <dl class="def sc"><dt>ציר <span class="en">HPA</span></dt><dd>הציר ההורמונלי של היפותלמוס, יותרת המוח ובלוטת יותרת הכליה, ששולט בייצור קורטיזול.</dd></dl>
-    <dl class="def sc"><dt>תסמונת <span class="en">Cushing</span></dt><dd>מצב של עודף קורטיזול, ממחלה או מסטרואידים. סימנים: <span class="en">Buffalo hump</span> (גבנון שומן בצוואר), שיעור יתר, עלייה במשקל, עור דק וקטרקט.</dd></dl>
-    <dl class="def sc"><dt>מבחן דיכוי דקסמטזון</dt><dd>מבחן אבחון: נותנים דקסמטזון (סטרואיד) ובודקים אם הקורטיזול יורד. בחולי <span class="en">Cushing</span> הוא לא יורד.</dd></dl>
-    <dl class="def sc"><dt>קטרקט ושיעור יתר</dt><dd>קטרקט: עכירות בעדשת העין. שיעור יתר (<span class="en">Hirsutism</span>): צמיחת שיער מוגזמת.</dd></dl>
-    <dl class="def sc"><dt>תרופות שמוזכרות בהקשר</dt><dd><span class="en">Ketoconazole</span>: תרופה נגד פטריות שמעכבת גם ייצור קורטיזול. <span class="en">Ranitidine</span>: חוסם <span class="en">H2</span> לחומצת קיבה, ואינו תרופה לנשימה.</dd></dl>
+    <dl class="def"><dt>קורטיקוסטרואידים וקורטיזול</dt><dd>קורטיזול הוא הורמון סטרואידי שבלוטת יותרת הכליה מייצרת, והוא מדכא דלקת. קורטיקוסטרואידים כמו <span class="en">Prednisone</span> הם תרופות שמחקות אותו.</dd></dl>
+    <dl class="def"><dt>ציר <span class="en">HPA</span></dt><dd>הציר ההורמונלי של היפותלמוס, יותרת המוח ובלוטת יותרת הכליה, ששולט בייצור קורטיזול.</dd></dl>
+    <dl class="def"><dt>תסמונת <span class="en">Cushing</span></dt><dd>מצב של עודף קורטיזול, ממחלה או מסטרואידים. סימנים: <span class="en">Buffalo hump</span> (גבנון שומן בצוואר), שיעור יתר, עלייה במשקל, עור דק וקטרקט.</dd></dl>
+    <dl class="def"><dt>מבחן דיכוי דקסמטזון</dt><dd>מבחן אבחון: נותנים דקסמטזון (סטרואיד) ובודקים אם הקורטיזול יורד. בחולי <span class="en">Cushing</span> הוא לא יורד.</dd></dl>
+    <dl class="def"><dt>קטרקט ושיעור יתר</dt><dd>קטרקט: עכירות בעדשת העין. שיעור יתר (<span class="en">Hirsutism</span>): צמיחת שיער מוגזמת.</dd></dl>
+    <dl class="def"><dt>תרופות שמוזכרות בהקשר</dt><dd><span class="en">Ketoconazole</span>: תרופה נגד פטריות שמעכבת גם ייצור קורטיזול. <span class="en">Ranitidine</span>: חוסם <span class="en">H2</span> לחומצת קיבה, ואינו תרופה לנשימה.</dd></dl>
   </section>
 
-  <section id="pr-sec-1" class="topic-section" data-category="basics">
+  <section>
     <h2>1 · יסודות מהירים</h2>
         <p class="sec-note">המונחים שחוזרים לכל אורך הנושא. שימו לב להבדל בין "מרחיב" ל"נוגד דלקת".</p>
-        <dl class="def sc"><dt>אסטמה</dt><dd>ברונכוקונסטריקציה (כיווץ הסמפונות), דלקת, והפרשת מוקוזה מרובה. תסמינים: קוצר נשימה, שיעול, לחץ בחזה, צפצוף, היפרוונטילציה. גורמי התקף: אלרגנים, מאמץ, סטרס, זיהום אוויר, זיהומים נשימתיים.</dd></dl>
-        <dl class="def sc"><dt>ברונכודילטור (מרחיב סמפונות)</dt><dd>תרופה שמרפה את שריר הסמפונות ופותחת את דרכי הנשימה — פתרון מהיר להתקף. בטא-אגוניסטים ואנטגוניסטים מוסקריניים הם ברונכודילטורים.</dd></dl>
-        <dl class="def sc"><dt>נוגד דלקת</dt><dd>תרופה שמפחיתה את הדלקת והבצקת בדרכי הנשימה — טיפול יסודי ומונע. סטרואידים בשאיפה, אנטגוניסטים ללויקוטריאנים וביולוגיים הם נוגדי דלקת.</dd></dl>
-        <dl class="def sc"><dt><span class="en">SABA / LABA</span></dt><dd>בטא-אגוניסט קצר טווח (<span class="en">Short-Acting Beta Agonist</span>) להתקף, מול ארוך טווח (<span class="en">Long-Acting</span>) לטיפול מתמשך.</dd></dl>
-        <dl class="def sc"><dt><span class="en">SAMA / LAMA</span></dt><dd>אנטגוניסט מוסקריני קצר/ארוך טווח (<span class="en">Short/Long-Acting Muscarinic Antagonist</span>).</dd></dl>
-        <dl class="def sc"><dt><span class="en">ICS</span></dt><dd>סטרואיד בשאיפה (<span class="en">Inhaled Corticosteroid</span>).</dd></dl>
-        <dl class="def sc"><dt><span class="en">COPD</span></dt><dd>מחלת ריאות חסימתית כרונית (<span class="en">Chronic Obstructive Pulmonary Disease</span>) — חסימה קבועה של דרכי הנשימה, לרוב מעישון.</dd></dl>
+        <dl class="def"><dt>אסטמה</dt><dd>ברונכוקונסטריקציה (כיווץ הסמפונות), דלקת, והפרשת מוקוזה מרובה. תסמינים: קוצר נשימה, שיעול, לחץ בחזה, צפצוף, היפרוונטילציה. גורמי התקף: אלרגנים, מאמץ, סטרס, זיהום אוויר, זיהומים נשימתיים.</dd></dl>
+        <dl class="def"><dt>ברונכודילטור (מרחיב סמפונות)</dt><dd>תרופה שמרפה את שריר הסמפונות ופותחת את דרכי הנשימה — פתרון מהיר להתקף. בטא-אגוניסטים ואנטגוניסטים מוסקריניים הם ברונכודילטורים.</dd></dl>
+        <dl class="def"><dt>נוגד דלקת</dt><dd>תרופה שמפחיתה את הדלקת והבצקת בדרכי הנשימה — טיפול יסודי ומונע. סטרואידים בשאיפה, אנטגוניסטים ללויקוטריאנים וביולוגיים הם נוגדי דלקת.</dd></dl>
+        <dl class="def"><dt><span class="en">SABA / LABA</span></dt><dd>בטא-אגוניסט קצר טווח (<span class="en">Short-Acting Beta Agonist</span>) להתקף, מול ארוך טווח (<span class="en">Long-Acting</span>) לטיפול מתמשך.</dd></dl>
+        <dl class="def"><dt><span class="en">SAMA / LAMA</span></dt><dd>אנטגוניסט מוסקריני קצר/ארוך טווח (<span class="en">Short/Long-Acting Muscarinic Antagonist</span>).</dd></dl>
+        <dl class="def"><dt><span class="en">ICS</span></dt><dd>סטרואיד בשאיפה (<span class="en">Inhaled Corticosteroid</span>).</dd></dl>
+        <dl class="def"><dt><span class="en">COPD</span></dt><dd>מחלת ריאות חסימתית כרונית (<span class="en">Chronic Obstructive Pulmonary Disease</span>) — חסימה קבועה של דרכי הנשימה, לרוב מעישון.</dd></dl>
   </section>
 
-  <section id="pr-sec-2" class="topic-section" data-category="bronchodilators">
+  <section>
     <h2>2 · מרחיבי הסמפונות</h2>
         <p class="sec-note">שתי דרכים לפתוח סמפון: להפעיל בטא-2 (אגוניסט) או לחסום את הפראסימפתטי (אנטגוניסט מוסקריני).</p>
         <h3>אגוניסטים לבטא-2 (<span class="en">Beta agonists</span>)</h3>
-        <dl class="def sc"><dt><span class="en">SABA</span> (<span class="en">Salbutamol/Albuterol</span>, <span class="en">Terbutaline</span>)</dt><dd>אגוניסט ישיר לבטא-2 קצר טווח — <b>תרופת הבחירה להקלה מיידית בהתקף אסטמה אקוטי</b> או בברונכוספאזם.</dd></dl>
-        <dl class="def sc"><dt><span class="en">LABA</span> (<span class="en">Salmeterol</span>, <span class="en">Formoterol</span>)</dt><dd>ארוכי טווח להתקפים מתמשכים/חוזרים. היום מעדיפים <span class="en">Formoterol</span> (אונסט קצר + משך ארוך). לא ניתנים לבד — תמיד עם <span class="en">ICS</span>.</dd></dl>
+        <dl class="def"><dt><span class="en">SABA</span> (<span class="en">Salbutamol/Albuterol</span>, <span class="en">Terbutaline</span>)</dt><dd>אגוניסט ישיר לבטא-2 קצר טווח — <b>תרופת הבחירה להקלה מיידית בהתקף אסטמה אקוטי</b> או בברונכוספאזם.</dd></dl>
+        <dl class="def"><dt><span class="en">LABA</span> (<span class="en">Salmeterol</span>, <span class="en">Formoterol</span>)</dt><dd>ארוכי טווח להתקפים מתמשכים/חוזרים. היום מעדיפים <span class="en">Formoterol</span> (אונסט קצר + משך ארוך). לא ניתנים לבד — תמיד עם <span class="en">ICS</span>.</dd></dl>
         <p>תופעות לוואי: רעד (מתפתחת סבילות), אי-שקט, חרדה; במתן פומי — טכיקרדיה, אריתמיה, היפרגליקמיה, היפוקלמיה. התווית נגד עם מעכבי <span class="en">MAO</span>.</p>
         
         <h3>אנטגוניסטים מוסקריניים</h3>
-        <dl class="def sc"><dt><span class="en">SAMA</span> (<span class="en">Ipratropium</span>) ו-<span class="en">LAMA</span> (<span class="en">Tiotropium, Aclidinium, Glycopyrrolate</span>)</dt><dd>חוסמים את הברונכוקונסטריקציה הוואגאלית (הפראסימפתטית) ← הרחבת סמפונות. ספיגה מאוד נמוכה, כמעט ללא תופעות לוואי — העיקרית יובש בפה וטעם מר/מתכתי. בסיס הטיפול ב-<span class="en">COPD</span>, וגם באסטמה חמורה.</dd></dl>
+        <dl class="def"><dt><span class="en">SAMA</span> (<span class="en">Ipratropium</span>) ו-<span class="en">LAMA</span> (<span class="en">Tiotropium, Aclidinium, Glycopyrrolate</span>)</dt><dd>חוסמים את הברונכוקונסטריקציה הוואגאלית (הפראסימפתטית) ← הרחבת סמפונות. ספיגה מאוד נמוכה, כמעט ללא תופעות לוואי — העיקרית יובש בפה וטעם מר/מתכתי. בסיס הטיפול ב-<span class="en">COPD</span>, וגם באסטמה חמורה.</dd></dl>
         
-        <div class="call sc is-exam">
+        <div class="call">
           <h4><span aria-hidden="true">⚠️</span> מלכודות שכיחות</h4>
           <ul class="flush">
             <li><span class="en">Ipratropium</span> עוזר באסטמה כי הוא <b>אנטגוניסט</b> מוסקריני (חוסם כיווץ), לא אגוניסט. <span class="exam">נשאל בשחזורים</span></li>
@@ -167,61 +137,61 @@
         </div>
   </section>
 
-  <section id="pr-sec-3" class="topic-section" data-category="antiinflammatory">
+  <section>
     <h2>3 · נוגדי הדלקת</h2>
         <p class="sec-note">הטיפול שמונע התקפים לאורך זמן — דורש שימוש יומיומי קבוע.</p>
-        <dl class="def sc"><dt>סטרואידים בשאיפה — <span class="en">ICS</span> (<span class="en">Fluticasone, Budesonide</span>)</dt><dd><b>קו ראשון</b> להפחתת דלקת, בצקת והפרשת לויקוטריאנים (מחייב שימוש יומיומי; הקלה משמעותית אחרי כמה חודשים). בשאיפה — משך חיים קצר, עיקר ההשפעה בריאות, ספיגה סיסטמית נמוכה, תופעות לוואי מינימליות — בעיקר קנדידיאזיס (פטרת) בפה. <b>הדרכה: לשאוף נכון ולשטוף את הפה אחרי כל שימוש.</b> במקרים קשים נותנים סטרואיד סיסטמי (<span class="en">PO/IV</span>) — עם כל תופעות הלוואי הקלאסיות.</dd></dl>
-        <dl class="def sc"><dt>אנטגוניסטים ללויקוטריאנים</dt><dd><span class="en">Montelukast, Zafirlukast</span> — אנטגוניסטים תחרותיים לרצפטור הלויקוטריאנים ← מניעת ברונכוקונסטריקציה, בצקת ואלרגיה. <span class="en">Zileuton</span> — מעכב את האנזים <span class="en">5-LOX</span> (רעילות לכבד — ניטור אנזימי כבד; תגובות בין-תרופתיות דרך <span class="en">CYP450</span>). לאסטמה שאינה נענית לקו ראשון.</dd></dl>
-        <dl class="def sc"><dt>טיפול ביולוגי (נוגדנים)</dt><dd>כנגד <span class="en">IgE</span> (<span class="en">Omalizumab</span>) — מונע שחרור היסטמין מתאי מאסט; כנגד <span class="en">IL-5</span> (<span class="en">Mepolizumab, Benralizumab, Reslizumab</span>) — הציטוקין המרכזי בגיוס אאוזינופילים; <span class="en">Dupilumab</span> כנגד <span class="en">IL-4/IL-13</span>. קו אחרון, יקרים, ניתנים <span class="en">IV/SC</span>. תופעות לוואי: כאבי מפרקים, חום, סיכון מוגבר לזיהומים ולגידולים.</dd></dl>
-        <dl class="def sc"><dt>תרופות וותיקות בשימוש נדיר</dt><dd><span class="en">Cromolyn</span> — מונע שחרור היסטמין, <b>אינו</b> מרחיב סמפונות; תופעות לוואי קלות (שיעול והפרעות בטעם) והיענות נמוכה (4×/יום). <span class="en">Theophylline</span> — ברונכודילטור (וגם נוגד דלקת, מנגנון לא מובן); שימוש נדיר בגלל חלון טיפולי צר, פרכוסים, הפרעות קצב ותגובות בין-תרופתיות.</dd></dl>
+        <dl class="def"><dt>סטרואידים בשאיפה — <span class="en">ICS</span> (<span class="en">Fluticasone, Budesonide</span>)</dt><dd><b>קו ראשון</b> להפחתת דלקת, בצקת והפרשת לויקוטריאנים (מחייב שימוש יומיומי; הקלה משמעותית אחרי כמה חודשים). בשאיפה — משך חיים קצר, עיקר ההשפעה בריאות, ספיגה סיסטמית נמוכה, תופעות לוואי מינימליות — בעיקר קנדידיאזיס (פטרת) בפה. <b>הדרכה: לשאוף נכון ולשטוף את הפה אחרי כל שימוש.</b> במקרים קשים נותנים סטרואיד סיסטמי (<span class="en">PO/IV</span>) — עם כל תופעות הלוואי הקלאסיות.</dd></dl>
+        <dl class="def"><dt>אנטגוניסטים ללויקוטריאנים</dt><dd><span class="en">Montelukast, Zafirlukast</span> — אנטגוניסטים תחרותיים לרצפטור הלויקוטריאנים ← מניעת ברונכוקונסטריקציה, בצקת ואלרגיה. <span class="en">Zileuton</span> — מעכב את האנזים <span class="en">5-LOX</span> (רעילות לכבד — ניטור אנזימי כבד; תגובות בין-תרופתיות דרך <span class="en">CYP450</span>). לאסטמה שאינה נענית לקו ראשון.</dd></dl>
+        <dl class="def"><dt>טיפול ביולוגי (נוגדנים)</dt><dd>כנגד <span class="en">IgE</span> (<span class="en">Omalizumab</span>) — מונע שחרור היסטמין מתאי מאסט; כנגד <span class="en">IL-5</span> (<span class="en">Mepolizumab, Benralizumab, Reslizumab</span>) — הציטוקין המרכזי בגיוס אאוזינופילים; <span class="en">Dupilumab</span> כנגד <span class="en">IL-4/IL-13</span>. קו אחרון, יקרים, ניתנים <span class="en">IV/SC</span>. תופעות לוואי: כאבי מפרקים, חום, סיכון מוגבר לזיהומים ולגידולים.</dd></dl>
+        <dl class="def"><dt>תרופות וותיקות בשימוש נדיר</dt><dd><span class="en">Cromolyn</span> — מונע שחרור היסטמין, <b>אינו</b> מרחיב סמפונות; תופעות לוואי קלות (שיעול והפרעות בטעם) והיענות נמוכה (4×/יום). <span class="en">Theophylline</span> — ברונכודילטור (וגם נוגד דלקת, מנגנון לא מובן); שימוש נדיר בגלל חלון טיפולי צר, פרכוסים, הפרעות קצב ותגובות בין-תרופתיות.</dd></dl>
   </section>
 
-  <section id="pr-sec-4" class="topic-section" data-category="management">
+  <section>
     <h2>4 · ניהול הטיפול וסיבוכי הסטרואידים</h2>
         <p class="sec-note">למה לא מסתפקים ב-<span class="en">SABA</span>, ומה הסכנה בסטרואיד סיסטמי.</p>
         <h3>הנחיות <span class="en">2021 (GINA)</span></h3>
-        <div class="rel sc"><div class="rel-cause"><span class="en">SABA</span> בלבד</div><span class="rel-arrow">←</span><div class="rel-effect">סבילות, יותר אלרגיות וזיהומים, סיכון מוגבר להחמרות ולמוות</div></div>
-        <div class="rel sc"><div class="rel-cause">תוספת <span class="en">ICS</span></div><span class="rel-arrow">←</span><div class="rel-effect">הפחתת סיכון למוות, לאשפוז ולשימוש בסטרואיד פומי (<span class="en">OCS</span>)</div></div>
+        <div class="rel"><div class="rel-cause"><span class="en">SABA</span> בלבד</div><span class="rel-arrow">←</span><div class="rel-effect">סבילות, יותר אלרגיות וזיהומים, סיכון מוגבר להחמרות ולמוות</div></div>
+        <div class="rel"><div class="rel-cause">תוספת <span class="en">ICS</span></div><span class="rel-arrow">←</span><div class="rel-effect">הפחתת סיכון למוות, לאשפוז ולשימוש בסטרואיד פומי (<span class="en">OCS</span>)</div></div>
         <p>מסלול מומלץ — <span class="en">MART</span> (<span class="en">maintenance and reliever therapy</span>): משאף משולב <span class="en">ICS-LABA</span> גם כטיפול קבוע וגם לפי הצורך. אסטמה קשה (שלב 5): בלתי נשלטת למרות מינון גבוה של <span class="en">ICS-LABA</span> ← מוסיפים <span class="en">LAMA</span> (<span class="en">ICS-LABA-LAMA</span>); לשקול אזיתרומיצין 3×/שבוע וטיפול ביולוגי.</p>
         
         <h3>תסמיני <span class="en">Cushing</span> / תופעות לוואי של קורטיקואידים</h3>
-        <dl class="def sc"><dt>מחלת <span class="en">Cushing</span></dt><dd>פעילות יתר של ציר <span class="en">HPA</span> (היפותלמוס-היפופיזה-אדרנל) ← קורטיזול גבוה. אבחון: מבחן דיכוי דקסמטזון. טיפול: <span class="en">Ketoconazole</span> (מעכב ייצור קורטיזול).</dd></dl>
+        <dl class="def"><dt>מחלת <span class="en">Cushing</span></dt><dd>פעילות יתר של ציר <span class="en">HPA</span> (היפותלמוס-היפופיזה-אדרנל) ← קורטיזול גבוה. אבחון: מבחן דיכוי דקסמטזון. טיפול: <span class="en">Ketoconazole</span> (מעכב ייצור קורטיזול).</dd></dl>
         <p>תופעות: <span class="en">Buffalo hump</span>, שיעור יתר (<span class="en">Hirsutism</span>), עלייה במשקל, פירוק שריר, אקנה, עור דק, קטרקט. מכאן החשיבות של <span class="en">ICS</span> שמונע מעבר לסטרואיד סיסטמי.</p>
   </section>
 
-  <section id="pr-sec-5" class="topic-section" data-category="copd">
+  <section>
     <h2>5 · <span class="en">COPD</span></h2>
         <p class="sec-note">בניגוד לאסטמה — כאן האנטגוניסטים המוסקריניים הם עמוד השדרה.</p>
-        <dl class="def sc"><dt>בסיס הטיפול</dt><dd>אנטגוניסטים מוסקריניים (<span class="en">LAMA/SAMA</span>) לפי דרגת החומרה, לרוב בשילוב עם <span class="en">LABA</span> ו-<span class="en">ICS</span>.</dd></dl>
-        <dl class="def sc"><dt>תרופות נוספות</dt><dd><span class="en">Theophylline</span> (חלון טיפולי צר, רק בשילוב עם <span class="en">LABA</span>); מעכבי <span class="en">PDE4</span> (<span class="en">Roflumilast</span>) בעלי פעילות אנטי-דלקתית; אנטיביוטיקות (אריתרומיצין, אזיתרומיצין) שמפחיתות החמרות אך מגבירות סיכון לעמידות.</dd></dl>
+        <dl class="def"><dt>בסיס הטיפול</dt><dd>אנטגוניסטים מוסקריניים (<span class="en">LAMA/SAMA</span>) לפי דרגת החומרה, לרוב בשילוב עם <span class="en">LABA</span> ו-<span class="en">ICS</span>.</dd></dl>
+        <dl class="def"><dt>תרופות נוספות</dt><dd><span class="en">Theophylline</span> (חלון טיפולי צר, רק בשילוב עם <span class="en">LABA</span>); מעכבי <span class="en">PDE4</span> (<span class="en">Roflumilast</span>) בעלי פעילות אנטי-דלקתית; אנטיביוטיקות (אריתרומיצין, אזיתרומיצין) שמפחיתות החמרות אך מגבירות סיכון לעמידות.</dd></dl>
   </section>
 
-  <section id="pr-sec-6" class="topic-section" data-category="rel">
+  <section>
     <h2>6 · טבלת סיבה ← תוצאה למבחן</h2>
-        <div class="rel sc"><div class="rel-cause"><span class="en">SABA (Salbutamol)</span></div><span class="rel-arrow">←</span><div class="rel-effect">הפעלת בטא-2 ← הרחבת סמפונות מיידית ← תרופת הבחירה בהתקף אקוטי</div></div>
-        <div class="rel sc"><div class="rel-cause"><span class="en">Ipratropium</span> חוסם מוסקרין</div><span class="rel-arrow">←</span><div class="rel-effect">ביטול הכיווץ הוואגאלי ← ברונכודילטציה</div></div>
-        <div class="rel sc"><div class="rel-cause"><span class="en">Montelukast</span> חוסם רצפטור <span class="en">LT</span></div><span class="rel-arrow">←</span><div class="rel-effect">מניעת ברונכוקונסטריקציה ובצקת ← מניעת אסטמה</div></div>
-        <div class="rel sc"><div class="rel-cause"><span class="en">ICS</span> בשאיפה ללא שטיפת פה</div><span class="rel-arrow">←</span><div class="rel-effect">קנדידיאזיס בפה ← הדרכה לשטוף פה אחרי שימוש</div></div>
-        <div class="rel sc"><div class="rel-cause"><span class="en">SABA</span> בלבד ללא <span class="en">ICS</span></div><span class="rel-arrow">←</span><div class="rel-effect">סבילות וסיכון מוגבר להחמרות ולמוות</div></div>
-        <div class="rel sc"><div class="rel-cause"><span class="en">Theophylline</span> חלון טיפולי צר</div><span class="rel-arrow">←</span><div class="rel-effect">פרכוסים והפרעות קצב ← שימוש נדיר</div></div>
+        <div class="rel"><div class="rel-cause"><span class="en">SABA (Salbutamol)</span></div><span class="rel-arrow">←</span><div class="rel-effect">הפעלת בטא-2 ← הרחבת סמפונות מיידית ← תרופת הבחירה בהתקף אקוטי</div></div>
+        <div class="rel"><div class="rel-cause"><span class="en">Ipratropium</span> חוסם מוסקרין</div><span class="rel-arrow">←</span><div class="rel-effect">ביטול הכיווץ הוואגאלי ← ברונכודילטציה</div></div>
+        <div class="rel"><div class="rel-cause"><span class="en">Montelukast</span> חוסם רצפטור <span class="en">LT</span></div><span class="rel-arrow">←</span><div class="rel-effect">מניעת ברונכוקונסטריקציה ובצקת ← מניעת אסטמה</div></div>
+        <div class="rel"><div class="rel-cause"><span class="en">ICS</span> בשאיפה ללא שטיפת פה</div><span class="rel-arrow">←</span><div class="rel-effect">קנדידיאזיס בפה ← הדרכה לשטוף פה אחרי שימוש</div></div>
+        <div class="rel"><div class="rel-cause"><span class="en">SABA</span> בלבד ללא <span class="en">ICS</span></div><span class="rel-arrow">←</span><div class="rel-effect">סבילות וסיכון מוגבר להחמרות ולמוות</div></div>
+        <div class="rel"><div class="rel-cause"><span class="en">Theophylline</span> חלון טיפולי צר</div><span class="rel-arrow">←</span><div class="rel-effect">פרכוסים והפרעות קצב ← שימוש נדיר</div></div>
   </section>
 
-  <section id="pr-sec-7" class="topic-section" data-category="exam">
+  <section>
     <h2>7 · נקודות שחזרו בשחזורים — לא לפספס</h2>
         <div class="flags">
           <ul>
-            <li class="sc is-exam"><span class="en">Ipratropium</span> ניתן באסטמה כי הוא אנטגוניסט מוסקריני הגורם לברונכודילטציה. <span class="exam">נשאל בשחזורים</span></li>
-            <li class="sc is-exam">המנגנון המועדף לטיפול באסטמה: אגוניסט לבטא-2. <span class="exam">נשאל בשחזורים</span></li>
-            <li class="sc is-exam">להתקף אסטמה אקוטי משתמשים ב-<span class="en">Salbutamol/Albuterol</span>. <span class="exam">נשאל בשחזורים</span></li>
-            <li class="sc is-exam">מנגנון <span class="en">Montelukast</span>: חוסם רצפטורים ללויקוטריאנים. <span class="exam">נשאל בשחזורים</span></li>
-            <li class="sc is-exam">ההתוויה לאנטגוניסטים ללויקוטריאנים: אסטמה (קשה). <span class="exam">נשאל בשחזורים</span></li>
-            <li class="sc is-exam">מנגנון שאינו מתאים לאסטמה: הרחבת עורקים קורונריים. <span class="exam">נשאל בשחזורים</span></li>
-            <li class="sc is-exam">תרופה שאינה יעילה באסטמה: <span class="en">Ranitidine</span> (חוסם <span class="en">H2</span> לחומצה, לא לנשימה). <span class="exam">נשאל בשחזורים</span></li>
-            <li class="sc is-exam">אגוניסט מוסקריני אינו יכול לשמש לטיפול באסטמה. <span class="exam">נשאל בשחזורים</span></li>
-            <li class="sc"><span class="en">ICS</span> הוא קו ראשון נוגד דלקת; חובה הדרכה לשטיפת פה (קנדידיאזיס).</li>
-            <li class="sc"><span class="en">LABA</span> אף פעם אינו ניתן לבד — תמיד עם <span class="en">ICS</span>.</li>
-            <li class="sc"><span class="en">Cromolyn</span> מונע שחרור היסטמין אך אינו מרחיב סמפונות.</li>
-            <li class="sc">בטא-אגוניסטים עם מעכבי <span class="en">MAO</span> — התווית נגד.</li>
+            <li><span class="en">Ipratropium</span> ניתן באסטמה כי הוא אנטגוניסט מוסקריני הגורם לברונכודילטציה. <span class="exam">נשאל בשחזורים</span></li>
+            <li>המנגנון המועדף לטיפול באסטמה: אגוניסט לבטא-2. <span class="exam">נשאל בשחזורים</span></li>
+            <li>להתקף אסטמה אקוטי משתמשים ב-<span class="en">Salbutamol/Albuterol</span>. <span class="exam">נשאל בשחזורים</span></li>
+            <li>מנגנון <span class="en">Montelukast</span>: חוסם רצפטורים ללויקוטריאנים. <span class="exam">נשאל בשחזורים</span></li>
+            <li>ההתוויה לאנטגוניסטים ללויקוטריאנים: אסטמה (קשה). <span class="exam">נשאל בשחזורים</span></li>
+            <li>מנגנון שאינו מתאים לאסטמה: הרחבת עורקים קורונריים. <span class="exam">נשאל בשחזורים</span></li>
+            <li>תרופה שאינה יעילה באסטמה: <span class="en">Ranitidine</span> (חוסם <span class="en">H2</span> לחומצה, לא לנשימה). <span class="exam">נשאל בשחזורים</span></li>
+            <li>אגוניסט מוסקריני אינו יכול לשמש לטיפול באסטמה. <span class="exam">נשאל בשחזורים</span></li>
+            <li><span class="en">ICS</span> הוא קו ראשון נוגד דלקת; חובה הדרכה לשטיפת פה (קנדידיאזיס).</li>
+            <li><span class="en">LABA</span> אף פעם אינו ניתן לבד — תמיד עם <span class="en">ICS</span>.</li>
+            <li><span class="en">Cromolyn</span> מונע שחרור היסטמין אך אינו מרחיב סמפונות.</li>
+            <li>בטא-אגוניסטים עם מעכבי <span class="en">MAO</span> — התווית נגד.</li>
           </ul>
         </div>
   </section>

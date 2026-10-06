@@ -15,6 +15,14 @@
 [data-system="pharmacokinetics"] { --a: #6a3d9a; --a-soft: #ece4f4; --a-ink: #4b2a72; --a-d: #c3a0ea; --a-soft-d: #2c1f3d; --a-ink-d: #dcc6f5; }
 [data-system="nsaids"] { --a: #4338ca; --a-soft: #e8e7fb; --a-ink: #312e81; --a-d: #a5a1ff; --a-soft-d: #25254d; --a-ink-d: #c9c7ff; }
 [data-system="coagulation"] { --a: #be185d; --a-soft: #fbe3ee; --a-ink: #831843; --a-d: #ff8fbf; --a-soft-d: #411a2e; --a-ink-d: #ffc2dc; }
+[data-system="pharma-hyperlipidemia"]   { --a: #b03a6a; --a-soft: #f6e1ea; --a-ink: #862a50; --a-d: #f08fb4; --a-soft-d: #3d1c2b; --a-ink-d: #f8bfd5; }
+[data-system="pharma-parkinson"]        { --a: #8b4a2b; --a-soft: #f3e4dc; --a-ink: #6a361d; --a-d: #e29a76; --a-soft-d: #3b2218; --a-ink-d: #f0c3ab; }
+[data-system="pharma-anxiety"]          { --a: #2b7a57; --a-soft: #dff0e8; --a-ink: #1d5a40; --a-d: #6fd0a0; --a-soft-d: #143328; --a-ink-d: #a8e6c8; }
+[data-system="pharma-depression"]       { --a: #7a5a2b; --a-soft: #f1e8d8; --a-ink: #58401d; --a-d: #d9b676; --a-soft-d: #35291a; --a-ink-d: #ecd3a4; }
+[data-system="pharma-psychosis"]        { --a: #1e7a74; --a-soft: #dcefee; --a-ink: #14595a; --a-d: #6fd1c9; --a-soft-d: #123532; --a-ink-d: #a6e6e0; }
+[data-system="pharma-epilepsy"]         { --a: #8a3a7e; --a-soft: #f2e4ef; --a-ink: #692a5f; --a-d: #e59ad8; --a-soft-d: #3a1d36; --a-ink-d: #f2c2ea; }
+[data-system="pharma-anesthesia"]       { --a: #556070; --a-soft: #e6e9ee; --a-ink: #3c4552; --a-d: #a9b6c8; --a-soft-d: #242b35; --a-ink-d: #cdd6e2; }
+[data-system="pharma-antihistamines"]   { --a: #2a64a0; --a-soft: #dfeaf5; --a-ink: #1c4a7a; --a-d: #7db4ec; --a-soft-d: #16304a; --a-ink-d: #b4d4f6; }
 [data-system="pharma-git"] { --a: #a16207; --a-soft: #f6ecd2; --a-ink: #713f12; --a-d: #e9b84e; --a-soft-d: #37290f; --a-ink-d: #f4d58e; }
 [data-system="pharma-respiratory"] { --a: #0369a1; --a-soft: #dcebf5; --a-ink: #075985; --a-d: #5cb8ea; --a-soft-d: #112f42; --a-ink-d: #a5d8f3; }
 [data-system="pharma-immunosuppression"] { --a: #b91c1c; --a-soft: #f9e1e1; --a-ink: #7f1d1d; --a-d: #ff8f8f; --a-soft-d: #411919; --a-ink-d: #ffc2c2; }

@@ -8,14 +8,13 @@
   <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/summary.css">
-  <link rel="stylesheet" href="../css/summary-widgets.css">
+  <link rel="stylesheet" href="../css/summary-study.css">
   <script type="module" src="../js/summary.js"></script>
-  <script type="module" src="../js/pharma-immunosuppression.js"></script>
+  <script type="module" src="../js/summary-study.js"></script>
   <script type="module" src="../js/nav.js"></script>
   <script type="module" src="../js/a11y.js"></script>
 </head>
 <body class="summary-page">
-  <div id="read-progress" class="read-progress no-print" aria-hidden="true"></div>
   <main class="page wide">
     <nav class="top-nav no-print">
       <a href="./?subject=pharmacology">→ כל הסיכומים</a>
@@ -36,148 +35,122 @@
     </div>
   </header>
 
-  <section class="intro" id="pi-intro">
+  <section class="intro" id="pharma-immunosuppression-intro">
     <h2>מבוא: על מה כל זה?</h2>
     <p>מערכת החיסון מזהה כל מה ש"לא שלנו" ותוקפת אותו, וזה גם מה שקורה לאיבר מושתל מאדם אחר: הגוף מזהה אותו כזר ועלול לדחות אותו. תרופות לדיכוי חיסוני מחלישות את התגובה הזאת, כדי שהשתל יישאר בגוף. הן משמשות גם במחלות אוטואימוניות, שבהן המערכת תוקפת את הגוף עצמו.</p>
     <p>הבעיה היא שאי אפשר לדכא רק את התקיפה של השתל. הדיכוי חל על כל מערכת החיסון, ולכן המחיר המשותף לכל התרופות בנושא הוא <b>סיכון מוגבר לזיהומים ולגידולים</b>. בנוסף, לחלק מהתרופות יש טווח בטוח צר ותופעות לוואי קשות, ולכן משלבים כמה תרופות במינון נמוך של כל אחת, במקום תרופה אחת במינון גבוה.</p>
     <p>הטיפול מחולק לשלבים. באינדוקציה (בתחילת ההשתלה) נותנים דיכוי חזק, לרוב נוגדנים. באחזקה, לטווח ארוך, נותנים דיכוי חלש יותר. בדחיה מטפלים לפי האיבר והתסמינים. הסיכום עובר על הרעיונות הכלליים, על תרופות האינדוקציה והדחיה, על תרופות האחזקה ועל מה שהאחות צריכה לעקוב אחריו. המילון שמתחת מסביר כל מונח שמופיע בהמשך.</p>
   </section>
 
-  <!-- חיפוש, מסננים ומצב בחינה עצמית (אינטראקטיבי) -->
-  <div class="toolbar no-print" data-interactive>
-    <nav class="toc" aria-label="קפיצה לפרק">
-      <a href="#pi-glossary"><span aria-hidden="true">📖</span> מילון מונחים</a>
-      <a href="#pi-sec-2"><span aria-hidden="true">💉</span> אינדוקציה ודחיה</a>
-      <a href="#pi-sec-3"><span aria-hidden="true">💊</span> אחזקה</a>
-      <a href="#pi-sec-4"><span aria-hidden="true">🩺</span> תופעות וסיעוד</a>
-      <a href="#pi-sec-5" class="toc-exam"><span aria-hidden="true">⭐</span> נקודות למבחן</a>
-    </nav>
-    <div class="search-row">
-      <label class="search-label" for="pi-search">חיפוש בסיכום</label>
-      <input type="search" id="pi-search" class="search-input" placeholder="חיפוש תרופה, מנגנון, תופעת לוואי..." autocomplete="off">
-      <p id="pi-search-count" class="search-count" role="status">מציג את כל הנושאים</p>
-    </div>
-    <div class="pills" role="group" aria-label="סינון לפי נושא">
-      <button type="button" class="pill" data-filter="all" aria-pressed="true">הכל (5 פרקים)</button>
-      <button type="button" class="pill" data-filter="exam" aria-pressed="false"><span aria-hidden="true">⭐</span> שחזורים בלבד</button>
-      <button type="button" class="pill" data-filter="rel" aria-pressed="false"><span aria-hidden="true">🔄</span> סיבה ← תוצאה</button>
-    </div>
-    <div class="selftest no-print" data-interactive>
-      <button type="button" id="selftest-toggle" class="secondary" aria-pressed="false"><span aria-hidden="true">👁️</span> מצב בחינה עצמית (הסתר תוצאות והגדרות)</button>
-      <button type="button" id="selftest-reveal" class="secondary">חשוף הכל</button>
-      <p id="selftest-status" class="selftest-status" role="status"></p>
-    </div>
-  </div>
-
-  <section class="glossary" id="pi-glossary">
+  <section class="glossary" id="pharma-immunosuppression-glossary">
     <h2>מילון מונחים</h2>
-    <p class="sec-note">כל מונח שמופיע בהמשך, בשפה פשוטה. אפשר לחפש מונח בשורת החיפוש.</p>
+    <p class="sec-note">כל מונח שמופיע בהמשך, בשפה פשוטה. אפשר לחפש מונח בשורת החיפוש שמעל הסיכום.</p>
 
     <h3>מערכת החיסון והשתלה</h3>
-    <dl class="def sc"><dt>השתלה ודחיית שתל</dt><dd>השתלה: העברת איבר או רקמה מאדם אחד לאחר. דחיית שתל: מערכת החיסון של המקבל תוקפת את השתל כי היא מזהה אותו כזר.</dd></dl>
-    <dl class="def sc"><dt>מערכת החיסון</dt><dd>מערך התאים והחלבונים שמגן על הגוף מפני חיידקים, נגיפים וגופים זרים.</dd></dl>
-    <dl class="def sc"><dt>לימפוציטים: תאי <span class="en">T</span> ותאי <span class="en">B</span></dt><dd>סוג של תאי דם לבנים. תאי <span class="en">T</span> מזהים ותוקפים את הגוף הזר ומפעילים תאי חיסון אחרים. תאי <span class="en">B</span> מייצרים נוגדנים.</dd></dl>
-    <dl class="def sc"><dt>נוגדן</dt><dd>חלבון שנקשר לגוף זר או למטרה מסוימת ומסמן אותו להשמדה.</dd></dl>
-    <dl class="def sc"><dt>תאי פלזמה</dt><dd>תאי <span class="en">B</span> בשלים שמייצרים נוגדנים בכמויות גדולות.</dd></dl>
-    <dl class="def sc"><dt>מערכת המשלים</dt><dd>קבוצת חלבונים בדם שמסייעת לנוגדנים להשמיד תאים זרים.</dd></dl>
-    <dl class="def sc"><dt>ציטוקין</dt><dd>חלבון איתות של מערכת החיסון, למשל <span class="en">IL-2</span>, שמפעיל תאי <span class="en">T</span>. חסימתו מכבה את תגובת החיסון.</dd></dl>
-    <dl class="def sc"><dt>אינטרלויקינים ו-<span class="en">TNF</span></dt><dd>סוגים של ציטוקינים שמקדמים דלקת ותגובה חיסונית. סטרואידים מעכבים אותם.</dd></dl>
-    <dl class="def sc"><dt>מחלה אוטואימונית</dt><dd>מחלה שבה מערכת החיסון תוקפת את רקמות הגוף עצמו.</p></dl>
-    <dl class="def sc"><dt><span class="en">CD20</span> ו-<span class="en">CD52</span></dt><dd>"תגיות" על פני תאי חיסון. <span class="en">CD20</span> נמצא על תאי <span class="en">B</span>, ו-<span class="en">CD52</span> נמצא על תאי <span class="en">T</span> ו-<span class="en">B</span>. נוגדנים שנקשרים אליהן גורמים להשמדת התא.</dd></dl>
+    <dl class="def"><dt>השתלה ודחיית שתל</dt><dd>השתלה: העברת איבר או רקמה מאדם אחד לאחר. דחיית שתל: מערכת החיסון של המקבל תוקפת את השתל כי היא מזהה אותו כזר.</dd></dl>
+    <dl class="def"><dt>מערכת החיסון</dt><dd>מערך התאים והחלבונים שמגן על הגוף מפני חיידקים, נגיפים וגופים זרים.</dd></dl>
+    <dl class="def"><dt>לימפוציטים: תאי <span class="en">T</span> ותאי <span class="en">B</span></dt><dd>סוג של תאי דם לבנים. תאי <span class="en">T</span> מזהים ותוקפים את הגוף הזר ומפעילים תאי חיסון אחרים. תאי <span class="en">B</span> מייצרים נוגדנים.</dd></dl>
+    <dl class="def"><dt>נוגדן</dt><dd>חלבון שנקשר לגוף זר או למטרה מסוימת ומסמן אותו להשמדה.</dd></dl>
+    <dl class="def"><dt>תאי פלזמה</dt><dd>תאי <span class="en">B</span> בשלים שמייצרים נוגדנים בכמויות גדולות.</dd></dl>
+    <dl class="def"><dt>מערכת המשלים</dt><dd>קבוצת חלבונים בדם שמסייעת לנוגדנים להשמיד תאים זרים.</dd></dl>
+    <dl class="def"><dt>ציטוקין</dt><dd>חלבון איתות של מערכת החיסון, למשל <span class="en">IL-2</span>, שמפעיל תאי <span class="en">T</span>. חסימתו מכבה את תגובת החיסון.</dd></dl>
+    <dl class="def"><dt>אינטרלויקינים ו-<span class="en">TNF</span></dt><dd>סוגים של ציטוקינים שמקדמים דלקת ותגובה חיסונית. סטרואידים מעכבים אותם.</dd></dl>
+    <dl class="def"><dt>מחלה אוטואימונית</dt><dd>מחלה שבה מערכת החיסון תוקפת את רקמות הגוף עצמו.</p></dl>
+    <dl class="def"><dt><span class="en">CD20</span> ו-<span class="en">CD52</span></dt><dd>"תגיות" על פני תאי חיסון. <span class="en">CD20</span> נמצא על תאי <span class="en">B</span>, ו-<span class="en">CD52</span> נמצא על תאי <span class="en">T</span> ו-<span class="en">B</span>. נוגדנים שנקשרים אליהן גורמים להשמדת התא.</dd></dl>
 
     <h3>שלבי הטיפול</h3>
-    <dl class="def sc"><dt>אינדוקציה</dt><dd>השלב הראשון, בתחילת ההשתלה: דיכוי חזק, לרוב בנוגדנים ובמינון גבוה של תרופות האחזקה.</dd></dl>
-    <dl class="def sc"><dt>אחזקה</dt><dd>טיפול ארוך טווח במינון נמוך, שמונע דחיה ומפחית תופעות לוואי.</dd></dl>
-    <dl class="def sc"><dt>דחיה (כשלב טיפול)</dt><dd>טיפול ייעודי כשמתחילה דחיה, לפי האיבר המושתל ולפי התסמינים.</dd></dl>
+    <dl class="def"><dt>אינדוקציה</dt><dd>השלב הראשון, בתחילת ההשתלה: דיכוי חזק, לרוב בנוגדנים ובמינון גבוה של תרופות האחזקה.</dd></dl>
+    <dl class="def"><dt>אחזקה</dt><dd>טיפול ארוך טווח במינון נמוך, שמונע דחיה ומפחית תופעות לוואי.</dd></dl>
+    <dl class="def"><dt>דחיה (כשלב טיפול)</dt><dd>טיפול ייעודי כשמתחילה דחיה, לפי האיבר המושתל ולפי התסמינים.</dd></dl>
 
     <h3>סוגי נוגדנים</h3>
-    <dl class="def sc"><dt>נוגדן חד-שבטי</dt><dd>נוגדן מהונדס שמכוון למטרה אחת מדויקת. שמות רבים כאלה מסתיימים ב-<span class="en">-mab</span>.</dd></dl>
-    <dl class="def sc"><dt>נוגדן כימרי</dt><dd>נוגדן שמשלב חלקים של עכבר ושל אדם. <span class="en">Basiliximab</span> ו-<span class="en">Rituximab</span> הם כאלה.</dd></dl>
-    <dl class="def sc"><dt>נוגדן פוליקלונלי</dt><dd>תערובת של נוגדנים רבים שמכוונים למטרות שונות, להבדיל מנוגדן חד-שבטי. <span class="en">Antithymocyte globulins</span> הוא כזה.</dd></dl>
-    <dl class="def sc"><dt>נוגדן מדלל לעומת לא מדלל</dt><dd>מדלל משמיד את תאי החיסון שאליהם הוא נקשר (<span class="en">Alemtuzumab</span>). לא מדלל רק חוסם אותם בלי להשמיד (<span class="en">Basiliximab</span>).</dd></dl>
-    <dl class="def sc"><dt><span class="en">IVIG</span></dt><dd>אימונוגלובולין תוך-ורידי: נוגדנים שנאספים מפלזמה של כמה תורמים ומוזרקים לווריד. יש לו אפקט אימונומודולטורי, כלומר הוא מווסת את מערכת החיסון.</dd></dl>
-    <dl class="def sc"><dt>פרוטאזום ו-<span class="en">Bortezomib</span></dt><dd>הפרוטאזום הוא מכונה בתוך התא שמפרקת חלבונים. חסימתו על ידי <span class="en">Bortezomib</span> פוגעת בתאי פלזמה, ולכן מטפלים בו בדחיה שמתווכת על ידי נוגדנים.</dd></dl>
+    <dl class="def"><dt>נוגדן חד-שבטי</dt><dd>נוגדן מהונדס שמכוון למטרה אחת מדויקת. שמות רבים כאלה מסתיימים ב-<span class="en">-mab</span>.</dd></dl>
+    <dl class="def"><dt>נוגדן כימרי</dt><dd>נוגדן שמשלב חלקים של עכבר ושל אדם. <span class="en">Basiliximab</span> ו-<span class="en">Rituximab</span> הם כאלה.</dd></dl>
+    <dl class="def"><dt>נוגדן פוליקלונלי</dt><dd>תערובת של נוגדנים רבים שמכוונים למטרות שונות, להבדיל מנוגדן חד-שבטי. <span class="en">Antithymocyte globulins</span> הוא כזה.</dd></dl>
+    <dl class="def"><dt>נוגדן מדלל לעומת לא מדלל</dt><dd>מדלל משמיד את תאי החיסון שאליהם הוא נקשר (<span class="en">Alemtuzumab</span>). לא מדלל רק חוסם אותם בלי להשמיד (<span class="en">Basiliximab</span>).</dd></dl>
+    <dl class="def"><dt><span class="en">IVIG</span></dt><dd>אימונוגלובולין תוך-ורידי: נוגדנים שנאספים מפלזמה של כמה תורמים ומוזרקים לווריד. יש לו אפקט אימונומודולטורי, כלומר הוא מווסת את מערכת החיסון.</dd></dl>
+    <dl class="def"><dt>פרוטאזום ו-<span class="en">Bortezomib</span></dt><dd>הפרוטאזום הוא מכונה בתוך התא שמפרקת חלבונים. חסימתו על ידי <span class="en">Bortezomib</span> פוגעת בתאי פלזמה, ולכן מטפלים בו בדחיה שמתווכת על ידי נוגדנים.</dd></dl>
 
     <h3>משפחות תרופות האחזקה</h3>
-    <dl class="def sc"><dt>קלצינאורין ומעכביו</dt><dd>קלצינאורין הוא אנזים בתוך תא <span class="en">T</span> שמפעיל ייצור <span class="en">IL-2</span>. מעכביו (<span class="en">Cyclosporine</span>, <span class="en">Tacrolimus</span>) מונעים הפעלת תאי <span class="en">T</span>.</dd></dl>
-    <dl class="def sc"><dt>אנטי-פרוליפרטיבי</dt><dd>תרופה שמונעת חלוקת תאים. בדיכוי חיסוני היא מונעת מלימפוציטים להתרבות (<span class="en">Azathioprine</span>, <span class="en">Mycophenolate</span>).</dd></dl>
-    <dl class="def sc"><dt>מעכבי <span class="en">mTOR</span></dt><dd>מסלול בתוך התא ששולט בצמיחה ובחלוקה. מעכביו (<span class="en">Sirolimus</span>, <span class="en">Everolimus</span>) מאטים את חלוקת תאי החיסון.</dd></dl>
-    <dl class="def sc"><dt>קורטיקוסטרואידים</dt><dd>תרופות שמחקות את ההורמון קורטיזול ומדכאות דלקת ותגובה חיסונית (<span class="en">Methylprednisolone</span>, <span class="en">Prednisone</span>).</dd></dl>
-    <dl class="def sc"><dt>פרו-תרופה</dt><dd>תרופה שהגוף צריך להפוך לצורה פעילה. <span class="en">Prednisone</span> הופך ל-<span class="en">Prednisolone</span>.</dd></dl>
+    <dl class="def"><dt>קלצינאורין ומעכביו</dt><dd>קלצינאורין הוא אנזים בתוך תא <span class="en">T</span> שמפעיל ייצור <span class="en">IL-2</span>. מעכביו (<span class="en">Cyclosporine</span>, <span class="en">Tacrolimus</span>) מונעים הפעלת תאי <span class="en">T</span>.</dd></dl>
+    <dl class="def"><dt>אנטי-פרוליפרטיבי</dt><dd>תרופה שמונעת חלוקת תאים. בדיכוי חיסוני היא מונעת מלימפוציטים להתרבות (<span class="en">Azathioprine</span>, <span class="en">Mycophenolate</span>).</dd></dl>
+    <dl class="def"><dt>מעכבי <span class="en">mTOR</span></dt><dd>מסלול בתוך התא ששולט בצמיחה ובחלוקה. מעכביו (<span class="en">Sirolimus</span>, <span class="en">Everolimus</span>) מאטים את חלוקת תאי החיסון.</dd></dl>
+    <dl class="def"><dt>קורטיקוסטרואידים</dt><dd>תרופות שמחקות את ההורמון קורטיזול ומדכאות דלקת ותגובה חיסונית (<span class="en">Methylprednisolone</span>, <span class="en">Prednisone</span>).</dd></dl>
+    <dl class="def"><dt>פרו-תרופה</dt><dd>תרופה שהגוף צריך להפוך לצורה פעילה. <span class="en">Prednisone</span> הופך ל-<span class="en">Prednisolone</span>.</dd></dl>
 
     <h3>תופעות לוואי וניטור</h3>
-    <dl class="def sc"><dt>טווח תרפויטי צר</dt><dd>הפער בין מינון יעיל למינון מסוכן קטן. לכן נדרשים מינון נמוך וניטור רמות התרופה בדם.</dd></dl>
-    <dl class="def sc"><dt><span class="en">CYP3A4</span> ו-<span class="en">P-glycoprotein</span></dt><dd>אנזים כבד ומשאבה שמטפלים בתרופות. תרופות שמשפיעות עליהם משנות את רמות התרופה בדם, ולכן יש הרבה תגובות בין-תרופתיות.</dd></dl>
-    <dl class="def sc"><dt>נפרוטוקסיות ונוירוטוקסיות</dt><dd>נפרוטוקסיות: פגיעה בכליה. נוירוטוקסיות: פגיעה במערכת העצבים, כמו רעד, כאב ראש ופרכוסים.</dd></dl>
-    <dl class="def sc"><dt>היפרקלמיה</dt><dd>רמת אשלגן גבוהה בדם.</dd></dl>
-    <dl class="def sc"><dt>דיכוי מח עצם, לויקופניה וטרומבוציטופניה</dt><dd>מח העצם מייצר את תאי הדם. דיכויו מוריד את מספרם: לויקופניה: מעט תאי דם לבנים (סכנת זיהום). טרומבוציטופניה: מעט טסיות (סכנת דימום).</dd></dl>
-    <dl class="def sc"><dt>תגובות עירוי</dt><dd>תגובה בזמן או אחרי מתן נוגדנים בעירוי: צמרמורות, חום ושינויי לחץ דם.</dd></dl>
-    <dl class="def sc"><dt>הפעלה מחדש של הפטיטיס <span class="en">B</span></dt><dd>נגיף שנמצא בגוף במצב רדום והופך שוב פעיל כשמערכת החיסון מדוכאת.</dd></dl>
-    <dl class="def sc"><dt>מנינגיטיס, כשל כלייתי וקרישיות יתר</dt><dd>מנינגיטיס: דלקת בקרומי המוח. כשל כלייתי: הכליות מפסיקות לתפקד. קרישיות יתר: נטייה לקרישי דם. שלושתן תופעות נדירות ומסוכנות של <span class="en">IVIG</span>.</dd></dl>
-    <dl class="def sc"><dt>היפרפלזיה בחניכיים ושיעור יתר</dt><dd>היפרפלזיה: גדילה מוגזמת של רקמה, כאן החניכיים. שיעור יתר: צמיחת שיער מוגזמת. שתיהן תופעות של <span class="en">Cyclosporine</span>.</dd></dl>
-    <dl class="def sc"><dt>פנקריאטיטיס, פנאומוניטיס וסטומטיטיס</dt><dd>דלקת בלבלב, דלקת ברקמת הריאה ודלקת בפה, לפי הסדר.</dd></dl>
-    <dl class="def sc"><dt>פרוטאינוריה והיפרליפידמיה</dt><dd>פרוטאינוריה: חלבון בשתן. היפרליפידמיה: שומנים גבוהים בדם.</dd></dl>
-    <dl class="def sc"><dt>אוסטאופורוזיס והיפרגליקמיה</dt><dd>אוסטאופורוזיס: עצמות חלשות ושבירות. היפרגליקמיה: סוכר גבוה בדם. שתיהן תופעות של סטרואידים.</dd></dl>
-    <dl class="def sc"><dt><span class="en">Allopurinol</span></dt><dd>תרופה לטיפול בשיגדון (גאוט). אסור לשלב אותה עם <span class="en">Azathioprine</span>.</dd></dl>
-    <dl class="def sc"><dt>סופחי מלחי מרה</dt><dd>תרופות שנקשרות למלחי מרה במעי (למשל להורדת כולסטרול), וקושרות איתן גם תרופות אחרות ומפחיתות את ספיגתן.</dd></dl>
+    <dl class="def"><dt>טווח תרפויטי צר</dt><dd>הפער בין מינון יעיל למינון מסוכן קטן. לכן נדרשים מינון נמוך וניטור רמות התרופה בדם.</dd></dl>
+    <dl class="def"><dt><span class="en">CYP3A4</span> ו-<span class="en">P-glycoprotein</span></dt><dd>אנזים כבד ומשאבה שמטפלים בתרופות. תרופות שמשפיעות עליהם משנות את רמות התרופה בדם, ולכן יש הרבה תגובות בין-תרופתיות.</dd></dl>
+    <dl class="def"><dt>נפרוטוקסיות ונוירוטוקסיות</dt><dd>נפרוטוקסיות: פגיעה בכליה. נוירוטוקסיות: פגיעה במערכת העצבים, כמו רעד, כאב ראש ופרכוסים.</dd></dl>
+    <dl class="def"><dt>היפרקלמיה</dt><dd>רמת אשלגן גבוהה בדם.</dd></dl>
+    <dl class="def"><dt>דיכוי מח עצם, לויקופניה וטרומבוציטופניה</dt><dd>מח העצם מייצר את תאי הדם. דיכויו מוריד את מספרם: לויקופניה: מעט תאי דם לבנים (סכנת זיהום). טרומבוציטופניה: מעט טסיות (סכנת דימום).</dd></dl>
+    <dl class="def"><dt>תגובות עירוי</dt><dd>תגובה בזמן או אחרי מתן נוגדנים בעירוי: צמרמורות, חום ושינויי לחץ דם.</dd></dl>
+    <dl class="def"><dt>הפעלה מחדש של הפטיטיס <span class="en">B</span></dt><dd>נגיף שנמצא בגוף במצב רדום והופך שוב פעיל כשמערכת החיסון מדוכאת.</dd></dl>
+    <dl class="def"><dt>מנינגיטיס, כשל כלייתי וקרישיות יתר</dt><dd>מנינגיטיס: דלקת בקרומי המוח. כשל כלייתי: הכליות מפסיקות לתפקד. קרישיות יתר: נטייה לקרישי דם. שלושתן תופעות נדירות ומסוכנות של <span class="en">IVIG</span>.</dd></dl>
+    <dl class="def"><dt>היפרפלזיה בחניכיים ושיעור יתר</dt><dd>היפרפלזיה: גדילה מוגזמת של רקמה, כאן החניכיים. שיעור יתר: צמיחת שיער מוגזמת. שתיהן תופעות של <span class="en">Cyclosporine</span>.</dd></dl>
+    <dl class="def"><dt>פנקריאטיטיס, פנאומוניטיס וסטומטיטיס</dt><dd>דלקת בלבלב, דלקת ברקמת הריאה ודלקת בפה, לפי הסדר.</dd></dl>
+    <dl class="def"><dt>פרוטאינוריה והיפרליפידמיה</dt><dd>פרוטאינוריה: חלבון בשתן. היפרליפידמיה: שומנים גבוהים בדם.</dd></dl>
+    <dl class="def"><dt>אוסטאופורוזיס והיפרגליקמיה</dt><dd>אוסטאופורוזיס: עצמות חלשות ושבירות. היפרגליקמיה: סוכר גבוה בדם. שתיהן תופעות של סטרואידים.</dd></dl>
+    <dl class="def"><dt><span class="en">Allopurinol</span></dt><dd>תרופה לטיפול בשיגדון (גאוט). אסור לשלב אותה עם <span class="en">Azathioprine</span>.</dd></dl>
+    <dl class="def"><dt>סופחי מלחי מרה</dt><dd>תרופות שנקשרות למלחי מרה במעי (למשל להורדת כולסטרול), וקושרות איתן גם תרופות אחרות ומפחיתות את ספיגתן.</dd></dl>
   </section>
 
-  <section id="pi-sec-1" class="topic-section" data-category="basics">
+  <section>
     <h2>1 · יסודות מהירים</h2>
         <p class="sec-note">המבנה הכללי של הטיפול, ושלושה מנגנונים שכל התרופות נופלות לאחד מהם.</p>
-        <dl class="def sc"><dt>שלושת שלבי הטיפול</dt><dd><b>אינדוקציה</b> — דיכוי חזק בתחילת ההשתלה (לרוב נוגדנים + מינון גבוה מתרופות האחזקה). <b>אחזקה</b> — דיכוי חלש יותר במינון נמוך, לטווח ארוך, למניעת דחיה ולהפחתת תופעות לוואי. <b>דחיה</b> — טיפול ייעודי לפי האיבר ולפי תסמיני הדחיה. בדרך כלל משלבים <span class="en">2–4</span> תרופות.</dd></dl>
-        <dl class="def sc"><dt>שלושת המנגנונים</dt><dd>כל תרופת דיכוי חיסוני עושה אחד מאלה: מונעת חלוקת לימפוציטים <span class="en">T</span> ו-<span class="en">B</span>; מונעת ייצור/פעולת ציטוקינים; או מונעת ייצור/פעולת נוגדנים.</dd></dl>
-        <dl class="def sc"><dt>ציטוקין</dt><dd>חלבון איתות של מערכת החיסון (למשל <span class="en">IL-2</span> שמפעיל תאי <span class="en">T</span>). חסימתו מכבה את תגובת החיסון.</dd></dl>
-        <dl class="def sc"><dt>נוגדן חד-שבטי</dt><dd>נוגדן מהונדס שמכוון למטרה אחת מדויקת (למשל רצפטור על תא <span class="en">T</span>). שמות רבים כאלה מסתיימים ב-<span class="en">-mab</span>.</dd></dl>
-        <dl class="def sc"><dt>מעכב קלצינאורין</dt><dd>משפחה (<span class="en">Cyclosporine</span>, <span class="en">Tacrolimus</span>) שחוסמת את האנזים קלצינאורין בתוך תא ה-<span class="en">T</span> ← מניעת ייצור <span class="en">IL-2</span> ← מניעת הפעלת תאי <span class="en">T</span>.</dd></dl>
+        <dl class="def"><dt>שלושת שלבי הטיפול</dt><dd><b>אינדוקציה</b> — דיכוי חזק בתחילת ההשתלה (לרוב נוגדנים + מינון גבוה מתרופות האחזקה). <b>אחזקה</b> — דיכוי חלש יותר במינון נמוך, לטווח ארוך, למניעת דחיה ולהפחתת תופעות לוואי. <b>דחיה</b> — טיפול ייעודי לפי האיבר ולפי תסמיני הדחיה. בדרך כלל משלבים <span class="en">2–4</span> תרופות.</dd></dl>
+        <dl class="def"><dt>שלושת המנגנונים</dt><dd>כל תרופת דיכוי חיסוני עושה אחד מאלה: מונעת חלוקת לימפוציטים <span class="en">T</span> ו-<span class="en">B</span>; מונעת ייצור/פעולת ציטוקינים; או מונעת ייצור/פעולת נוגדנים.</dd></dl>
+        <dl class="def"><dt>ציטוקין</dt><dd>חלבון איתות של מערכת החיסון (למשל <span class="en">IL-2</span> שמפעיל תאי <span class="en">T</span>). חסימתו מכבה את תגובת החיסון.</dd></dl>
+        <dl class="def"><dt>נוגדן חד-שבטי</dt><dd>נוגדן מהונדס שמכוון למטרה אחת מדויקת (למשל רצפטור על תא <span class="en">T</span>). שמות רבים כאלה מסתיימים ב-<span class="en">-mab</span>.</dd></dl>
+        <dl class="def"><dt>מעכב קלצינאורין</dt><dd>משפחה (<span class="en">Cyclosporine</span>, <span class="en">Tacrolimus</span>) שחוסמת את האנזים קלצינאורין בתוך תא ה-<span class="en">T</span> ← מניעת ייצור <span class="en">IL-2</span> ← מניעת הפעלת תאי <span class="en">T</span>.</dd></dl>
   </section>
 
-  <section id="pi-sec-2" class="topic-section" data-category="induction">
+  <section>
     <h2>2 · תרופות אינדוקציה ודחיה (דיכוי חזק)</h2>
         <p class="sec-note">רובן נוגדנים שמחסלים או מנטרלים תאי חיסון בעוצמה.</p>
-        <dl class="def sc"><dt><span class="en">Basiliximab</span></dt><dd>נוגדן כימרי כנגד רצפטור <span class="en">IL-2</span> על תאי <span class="en">T</span> מופעלים (אנטגוניסט <b>לא מדלדל</b>) ← מונע הפעלת לימפוציטים <span class="en">T</span>. בעיקר באינדוקציה. מאפשר מינון נמוך יותר של תרופות עם תופעות לוואי קשות וטווח צר. מעט תופעות לוואי נסבלות: הפרעות עיכול, יתר לחץ דם, זיהומים.</dd></dl>
-        <dl class="def sc"><dt><span class="en">Alemtuzumab</span></dt><dd>נקשר ל-<span class="en">CD52</span> על תאי <span class="en">T</span> ו-<span class="en">B</span> וגורם לדילולם. משמש לאינדוקציה ולטיפול בדחיה.</dd></dl>
-        <dl class="def sc"><dt><span class="en">Antithymocyte globulins</span></dt><dd>נוגדן <b>פוליקלונלי</b> שמדלל תאי <span class="en">T</span>, לשימוש באינדוקציה ובדחיה.</dd></dl>
-        <dl class="def sc"><dt>תופעות לוואי של נוגדנים מדללים</dt><dd>תגובות עירוי (צמרמורות, חום), לויקופניה חמורה וזיהומים. זה משותף ל-<span class="en">Alemtuzumab</span> ול-<span class="en">Antithymocyte globulins</span>.</dd></dl>
-        <dl class="def sc"><dt><span class="en">Rituximab</span></dt><dd>נוגדן כימרי שנקשר ל-<span class="en">CD20</span> על תאי <span class="en">B</span> ← הרס תאי <span class="en">B</span>. תופעות לוואי: תגובות עירוי, זיהומים (ביניהם הפעלה מחדש של הפטיטיס <span class="en">B</span>).</dd></dl>
-        <dl class="def sc"><dt><span class="en">Bortezomib</span></dt><dd>מעכב את הפרוטאזום ← דילול תאי פלזמה. משמש בדחיה שמתווכת על ידי נוגדנים.</dd></dl>
-        <dl class="def sc"><dt><span class="en">IVIG</span> (אימונוגלובולין תוך-ורידי)</dt><dd>נוגדנים מכמה תורמי פלסמה, בעל אפקט אימונומודולטורי (מנגנון מדויק לא ידוע). מוריד פעילות תאי <span class="en">B</span>, מונע קישור נוגדנים לשתל והפעלת מערכת המשלים; גם למחלות אוטואימוניות. תופעות לוואי: כאב ראש, חום, צמרמורות, כאבי שרירים, שינויי לחץ דם; מסוכנות ונדירות: מנינגיטיס, כשל כלייתי, קרישיות יתר.</dd></dl>
+        <dl class="def"><dt><span class="en">Basiliximab</span></dt><dd>נוגדן כימרי כנגד רצפטור <span class="en">IL-2</span> על תאי <span class="en">T</span> מופעלים (אנטגוניסט <b>לא מדלדל</b>) ← מונע הפעלת לימפוציטים <span class="en">T</span>. בעיקר באינדוקציה. מאפשר מינון נמוך יותר של תרופות עם תופעות לוואי קשות וטווח צר. מעט תופעות לוואי נסבלות: הפרעות עיכול, יתר לחץ דם, זיהומים.</dd></dl>
+        <dl class="def"><dt><span class="en">Alemtuzumab</span></dt><dd>נקשר ל-<span class="en">CD52</span> על תאי <span class="en">T</span> ו-<span class="en">B</span> וגורם לדילולם. משמש לאינדוקציה ולטיפול בדחיה.</dd></dl>
+        <dl class="def"><dt><span class="en">Antithymocyte globulins</span></dt><dd>נוגדן <b>פוליקלונלי</b> שמדלל תאי <span class="en">T</span>, לשימוש באינדוקציה ובדחיה.</dd></dl>
+        <dl class="def"><dt>תופעות לוואי של נוגדנים מדללים</dt><dd>תגובות עירוי (צמרמורות, חום), לויקופניה חמורה וזיהומים. זה משותף ל-<span class="en">Alemtuzumab</span> ול-<span class="en">Antithymocyte globulins</span>.</dd></dl>
+        <dl class="def"><dt><span class="en">Rituximab</span></dt><dd>נוגדן כימרי שנקשר ל-<span class="en">CD20</span> על תאי <span class="en">B</span> ← הרס תאי <span class="en">B</span>. תופעות לוואי: תגובות עירוי, זיהומים (ביניהם הפעלה מחדש של הפטיטיס <span class="en">B</span>).</dd></dl>
+        <dl class="def"><dt><span class="en">Bortezomib</span></dt><dd>מעכב את הפרוטאזום ← דילול תאי פלזמה. משמש בדחיה שמתווכת על ידי נוגדנים.</dd></dl>
+        <dl class="def"><dt><span class="en">IVIG</span> (אימונוגלובולין תוך-ורידי)</dt><dd>נוגדנים מכמה תורמי פלסמה, בעל אפקט אימונומודולטורי (מנגנון מדויק לא ידוע). מוריד פעילות תאי <span class="en">B</span>, מונע קישור נוגדנים לשתל והפעלת מערכת המשלים; גם למחלות אוטואימוניות. תופעות לוואי: כאב ראש, חום, צמרמורות, כאבי שרירים, שינויי לחץ דם; מסוכנות ונדירות: מנינגיטיס, כשל כלייתי, קרישיות יתר.</dd></dl>
   </section>
 
-  <section id="pi-sec-3" class="topic-section" data-category="maintenance">
+  <section>
     <h2>3 · דיכוי מתמשך (אחזקה — דיכוי חלש)</h2>
         <p class="sec-note">טיפול יומיומי לטווח ארוך. שים לב מי מעכב קלצינאורין, מי אנטי-פרוליפרטיבי, ומי מעכב <span class="en">mTOR</span>.</p>
-        <dl class="def sc"><dt>מעכבי קלצינאורין — <span class="en">Cyclosporine</span>, <span class="en">Tacrolimus</span></dt><dd>מעכבים הפעלת תאי <span class="en">T</span> ← מניעת ייצור <span class="en">IL-2</span>. יחד הם מרכיב מרכזי בפרוטוקול למניעת דחיה. חשש עיקרי: <b>פגיעה בכליה</b> — ולכן במינון נמוך בשילוב. הרבה אינטראקציות (<span class="en">CYP3A4</span>, <span class="en">P-glycoprotein</span>). תופעות לוואי נוספות של <span class="en">Cyclosporine</span>: יתר לחץ דם, רעד, שיעור יתר, היפרפלזיה בחניכיים, זיהומים. <span class="en">Tacrolimus</span> גורם גם לנוירוטוקסיות (רעד בידיים, כאב ראש, פרכוסים) ולהיפרקלמיה.</dd></dl>
-        <dl class="def sc"><dt>אנטי-פרוליפרטיביים — <span class="en">Azathioprine</span>, <span class="en">Mycophenolate</span></dt><dd>מונעים חלוקת לימפוציטים. תופעות לוואי: דיכוי מח עצם (לויקופניה, טרומבוציטופניה), בחילה, הקאה, שלשול; <span class="en">Azathioprine</span> גם פנקריאטיטיס ורעילות כבד. אינטראקציות חשובות: <span class="en">Azathioprine</span> עם <span class="en">allopurinol</span>; <span class="en">Mycophenolate</span> עם סופחי מלחי מרה ונוגדי חומצה, שמפחיתים את ספיגתו.</dd></dl>
-        <dl class="def sc"><dt>מעכבי <span class="en">mTOR</span> — <span class="en">Sirolimus</span>, <span class="en">Everolimus</span></dt><dd>מעכבים מסלול חלוקת תאים. תופעות לוואי: יתר לחץ דם, היפרליפידמיה, סטומטיטיס, פרוטאינוריה, פגיעה בריפוי פצעים, דיכוי מח עצם; <span class="en">Sirolimus</span> גם פנאומוניטיס.</dd></dl>
-        <dl class="def sc"><dt>קורטיקוסטרואידים — <span class="en">Methylprednisolone</span>, <span class="en">Prednisone</span></dt><dd>עיכוב לא-ספציפי של אינטרלויקינים ו-<span class="en">TNF</span>. משמשים בכל שלושת השלבים. <span class="en">Prednisone</span> הוא פרו-תרופה שמומרת ל-<span class="en">Prednisolone</span>. תופעות לוואי קלאסיות: יתר לחץ דם, היפרגליקמיה, בצקת, אוסטאופורוזיס, עלייה במשקל, שינויי מצב רוח.</dd></dl>
+        <dl class="def"><dt>מעכבי קלצינאורין — <span class="en">Cyclosporine</span>, <span class="en">Tacrolimus</span></dt><dd>מעכבים הפעלת תאי <span class="en">T</span> ← מניעת ייצור <span class="en">IL-2</span>. יחד הם מרכיב מרכזי בפרוטוקול למניעת דחיה. חשש עיקרי: <b>פגיעה בכליה</b> — ולכן במינון נמוך בשילוב. הרבה אינטראקציות (<span class="en">CYP3A4</span>, <span class="en">P-glycoprotein</span>). תופעות לוואי נוספות של <span class="en">Cyclosporine</span>: יתר לחץ דם, רעד, שיעור יתר, היפרפלזיה בחניכיים, זיהומים. <span class="en">Tacrolimus</span> גורם גם לנוירוטוקסיות (רעד בידיים, כאב ראש, פרכוסים) ולהיפרקלמיה.</dd></dl>
+        <dl class="def"><dt>אנטי-פרוליפרטיביים — <span class="en">Azathioprine</span>, <span class="en">Mycophenolate</span></dt><dd>מונעים חלוקת לימפוציטים. תופעות לוואי: דיכוי מח עצם (לויקופניה, טרומבוציטופניה), בחילה, הקאה, שלשול; <span class="en">Azathioprine</span> גם פנקריאטיטיס ורעילות כבד. אינטראקציות חשובות: <span class="en">Azathioprine</span> עם <span class="en">allopurinol</span>; <span class="en">Mycophenolate</span> עם סופחי מלחי מרה ונוגדי חומצה, שמפחיתים את ספיגתו.</dd></dl>
+        <dl class="def"><dt>מעכבי <span class="en">mTOR</span> — <span class="en">Sirolimus</span>, <span class="en">Everolimus</span></dt><dd>מעכבים מסלול חלוקת תאים. תופעות לוואי: יתר לחץ דם, היפרליפידמיה, סטומטיטיס, פרוטאינוריה, פגיעה בריפוי פצעים, דיכוי מח עצם; <span class="en">Sirolimus</span> גם פנאומוניטיס.</dd></dl>
+        <dl class="def"><dt>קורטיקוסטרואידים — <span class="en">Methylprednisolone</span>, <span class="en">Prednisone</span></dt><dd>עיכוב לא-ספציפי של אינטרלויקינים ו-<span class="en">TNF</span>. משמשים בכל שלושת השלבים. <span class="en">Prednisone</span> הוא פרו-תרופה שמומרת ל-<span class="en">Prednisolone</span>. תופעות לוואי קלאסיות: יתר לחץ דם, היפרגליקמיה, בצקת, אוסטאופורוזיס, עלייה במשקל, שינויי מצב רוח.</dd></dl>
   </section>
 
-  <section id="pi-sec-4" class="topic-section" data-category="nursing">
+  <section>
     <h2>4 · הקו המשותף — תופעות לוואי וסיעוד</h2>
         <p class="sec-note">מה שחוזר כמעט בכל תרופה, ועל מה האחות עוקבת.</p>
-        <div class="rel sc"><div class="rel-cause">דיכוי מערכת החיסון</div><span class="rel-arrow">←</span><div class="rel-effect">סיכון מוגבר לזיהומים (ולגידולים) ← ניטור חום וסימני זיהום</div></div>
-        <div class="rel sc"><div class="rel-cause">מעכבי קלצינאורין</div><span class="rel-arrow">←</span><div class="rel-effect">נפרוטוקסיות ← מעקב תפקודי כליה ורמות התרופה בדם</div></div>
-        <div class="rel sc"><div class="rel-cause">טווח תרפויטי צר + אינטראקציות <span class="en">CYP</span></div><span class="rel-arrow">←</span><div class="rel-effect">שילוב במינון נמוך וניטור קפדני</div></div>
-        <div class="rel sc"><div class="rel-cause">אנטי-פרוליפרטיביים / מעכבי <span class="en">mTOR</span></div><span class="rel-arrow">←</span><div class="rel-effect">דיכוי מח עצם ← מעקב ספירת דם</div></div>
+        <div class="rel"><div class="rel-cause">דיכוי מערכת החיסון</div><span class="rel-arrow">←</span><div class="rel-effect">סיכון מוגבר לזיהומים (ולגידולים) ← ניטור חום וסימני זיהום</div></div>
+        <div class="rel"><div class="rel-cause">מעכבי קלצינאורין</div><span class="rel-arrow">←</span><div class="rel-effect">נפרוטוקסיות ← מעקב תפקודי כליה ורמות התרופה בדם</div></div>
+        <div class="rel"><div class="rel-cause">טווח תרפויטי צר + אינטראקציות <span class="en">CYP</span></div><span class="rel-arrow">←</span><div class="rel-effect">שילוב במינון נמוך וניטור קפדני</div></div>
+        <div class="rel"><div class="rel-cause">אנטי-פרוליפרטיביים / מעכבי <span class="en">mTOR</span></div><span class="rel-arrow">←</span><div class="rel-effect">דיכוי מח עצם ← מעקב ספירת דם</div></div>
   </section>
 
-  <section id="pi-sec-5" class="topic-section" data-category="exam">
+  <section>
     <h2>5 · נקודות חשובות למבחן — לא לפספס</h2>
         <div class="flags">
           <ul>
-            <li class="sc is-exam">תופעת הלוואי המשותפת לכל מדכאי החיסון (כדוגמת <span class="en">Cyclosporine</span>): סיכון מוגבר לזיהומים. <span class="exam">נשאל בשחזורים</span></li>
-            <li class="sc">הטיפול בנוי בשלבים: אינדוקציה (דיכוי חזק) ← אחזקה (דיכוי חלש) ← דחיה.</li>
-            <li class="sc">משלבים <span class="en">2–4</span> תרופות כדי לקבל דיכוי יעיל במינון נמוך של כל אחת.</li>
-            <li class="sc"><span class="en">Rituximab</span> נקשר ל-<span class="en">CD20</span> על תאי <span class="en">B</span>; <span class="en">Alemtuzumab</span> נקשר ל-<span class="en">CD52</span> ומדלל תאי <span class="en">T</span> ו-<span class="en">B</span>.</li>
-            <li class="sc"><span class="en">Bortezomib</span> מעכב פרוטאזום ומדלל תאי פלזמה, לדחיה שמתווכת על ידי נוגדנים.</li>
-            <li class="sc"><span class="en">Basiliximab</span> הוא אנטגוניסט לרצפטור <span class="en">IL-2</span> על תאי <span class="en">T</span>, בעיקר לאינדוקציה.</li>
-            <li class="sc"><span class="en">Cyclosporine</span> ו-<span class="en">Tacrolimus</span> הם מעכבי קלצינאורין החוסמים ייצור <span class="en">IL-2</span>.</li>
-            <li class="sc">החשש העיקרי ממעכבי קלצינאורין: פגיעה בכליה (נפרוטוקסיות).</li>
-            <li class="sc"><span class="en">Cyclosporine</span> גורם להיפרפלזיה בחניכיים ולשיעור יתר.</li>
-            <li class="sc">שלושת המנגנונים: מניעת חלוקת לימפוציטים, מניעת ציטוקינים, מניעת נוגדנים.</li>
-            <li class="sc"><span class="en">IVIG</span> — נוגדנים מתורמים רבים, אפקט אימונומודולטורי, גם למחלות אוטואימוניות.</li>
-            <li class="sc">אנטי-פרוליפרטיביים ומעכבי <span class="en">mTOR</span> מדכאים מח עצם — מעקב ספירת דם.</li>
+            <li>תופעת הלוואי המשותפת לכל מדכאי החיסון (כדוגמת <span class="en">Cyclosporine</span>): סיכון מוגבר לזיהומים. <span class="exam">נשאל בשחזורים</span></li>
+            <li>הטיפול בנוי בשלבים: אינדוקציה (דיכוי חזק) ← אחזקה (דיכוי חלש) ← דחיה.</li>
+            <li>משלבים <span class="en">2–4</span> תרופות כדי לקבל דיכוי יעיל במינון נמוך של כל אחת.</li>
+            <li><span class="en">Rituximab</span> נקשר ל-<span class="en">CD20</span> על תאי <span class="en">B</span>; <span class="en">Alemtuzumab</span> נקשר ל-<span class="en">CD52</span> ומדלל תאי <span class="en">T</span> ו-<span class="en">B</span>.</li>
+            <li><span class="en">Bortezomib</span> מעכב פרוטאזום ומדלל תאי פלזמה, לדחיה שמתווכת על ידי נוגדנים.</li>
+            <li><span class="en">Basiliximab</span> הוא אנטגוניסט לרצפטור <span class="en">IL-2</span> על תאי <span class="en">T</span>, בעיקר לאינדוקציה.</li>
+            <li><span class="en">Cyclosporine</span> ו-<span class="en">Tacrolimus</span> הם מעכבי קלצינאורין החוסמים ייצור <span class="en">IL-2</span>.</li>
+            <li>החשש העיקרי ממעכבי קלצינאורין: פגיעה בכליה (נפרוטוקסיות).</li>
+            <li><span class="en">Cyclosporine</span> גורם להיפרפלזיה בחניכיים ולשיעור יתר.</li>
+            <li>שלושת המנגנונים: מניעת חלוקת לימפוציטים, מניעת ציטוקינים, מניעת נוגדנים.</li>
+            <li><span class="en">IVIG</span> — נוגדנים מתורמים רבים, אפקט אימונומודולטורי, גם למחלות אוטואימוניות.</li>
+            <li>אנטי-פרוליפרטיביים ומעכבי <span class="en">mTOR</span> מדכאים מח עצם — מעקב ספירת דם.</li>
           </ul>
         </div>
   </section>
