@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>תרופות במערכת הפאראסימפתטית — סיכום</title>
+  <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/summary.css">
+  <link rel="stylesheet" href="../css/summary-widgets.css">
+  <link rel="stylesheet" href="../css/parasympathetic.css">
+  <script type="module" src="../js/summary.js"></script>
+  <script type="module" src="../js/parasympathetic.js"></script>
+  <script type="module" src="../js/nav.js"></script>
+  <script type="module" src="../js/a11y.js"></script>
+</head>
+<body class="summary-page">
+  <div id="read-progress" class="read-progress no-print" aria-hidden="true"></div>
+  <main class="page wide">
+    <nav class="top-nav no-print">
+      <a href="./?subject=pharmacology">→ כל הסיכומים</a>
+      <button type="button" class="secondary" data-print>הדפסה / שמירה כ‑PDF</button>
+    </nav>
+
+<article class="summary" data-system="parasympathetic">
+  <header>
+    <p class="kicker">פרמקולוגיה · מערכת העצבים האוטונומית · סיכום נושא</p>
+    <h1>המערכת הפאראסימפתטית <span class="en h1-en">(Parasympathetic Nervous System)</span></h1>
+    <p class="lede">החלק של המערכת האוטונומית האחראי על מצב <b>"מנוחה ועיכול" (<span class="en">rest &amp; digest</span>)</b>, שבו הנוירוטרנסמיטר היחיד הוא אצטילכולין (<span class="en">Acetylcholine, ACh</span>). כל הפרמקולוגיה כאן נגזרת משאלה אחת: האם <b>מגבירים</b> את פעולת ה-<span class="en">ACh</span> (אגוניסטים ישירים ומעכבי האנזים המפרק) או <b>חוסמים</b> אותה (אנטגוניסטים מוסקריניים וניקוטיניים).</p>
+    <svg class="motif" viewBox="0 0 480 64" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 32 Q60 8 120 32 Q180 56 240 32 Q300 8 360 32 Q420 56 480 32"/>
+    </svg>
+    <div class="legend">
+      <span><span class="arrowmark">←</span> <b>גורם ← תוצאה</b> (קוראים מימין לשמאל)</span>
+      <span><span class="exam exam-legend">נשאל בשחזורים</span> נקודות זהב שחזרו בבחינות הגמר</span>
+    </div>
+  </header>
+
+  <section class="intro" id="ps-intro">
+    <h2>מבוא: על מה כל זה?</h2>
+    <p>המערכת העצבית האוטונומית שולטת בפעולות שאנחנו לא שולטים בהן ברצון: דופק, עיכול, הפרשות, גודל האישון. היא מחולקת לשני חלקים שפועלים בניגוד זה לזה. <b>הסימפתטי</b> מכין לתגובת "הילחם או ברח", ו<b>הפאראסימפתטי</b> אחראי על "מנוחה ועיכול": מאט את הלב, מעורר עיכול, מכווץ את האישון ומעודד השתנה. החומר שמעביר את האות במערכת הפאראסימפתטית הוא <b>אצטילכולין</b> (<span class="en">ACh</span>).</p>
+    <p>פרמקולוגיה של המערכת הזו היא בעצם שאלה אחת: איפה בסינפסה (המפגש בין שני תאי עצב) התרופה מתערבת. יש שישה שלבים, מייצור האצטילכולין ועד מיחזור הכולין. תרופה יכולה <b>להגביר</b> את האצטילכולין (אגוניסטים ומעכבי <span class="en">AChE</span>) או <b>לחסום</b> אותו (אנטגוניסטים). האפקט הצפוי נגזר מהשאלה אם המערכת מופעלת או חסומה, ולכן אם מבינים מה אצטילכולין עושה בכל איבר, אפשר להסיק את כל השאר.</p>
+    <p>הסיכום עובר על היסודות, הסינפסה, שני סוגי הרצפטורים (מוסקריני וניקוטיני), השפעות <span class="en">ACh</span> באיברים, אגוניסטים, אנטגוניסטים וחוסמי עצב-שריר, ובסוף טבלת סיבה ← תוצאה ושחזורים. המילון שמתחת מסביר כל מונח.</p>
+  </section>
+
+  <!-- חיפוש ומסננים (אינטראקטיבי) -->
+  <div class="toolbar no-print" data-interactive>
+    <nav class="toc" aria-label="קפיצה לפרק">
+      <a href="#ps-glossary"><span aria-hidden="true">📖</span> מילון מונחים</a>
+      <a href="#ps-organs"><span aria-hidden="true">🫀</span> סימולטור איברים</a>
+      <a href="#ps-synapse"><span aria-hidden="true">⚡</span> הסינפסה הכולינרגית</a>
+      <a href="#ps-nmj"><span aria-hidden="true">🥊</span> שיתוק שרירים (<span class="en">NMJ</span>)</a>
+      <a href="#ps-sec-5">אגוניסטים</a>
+      <a href="#ps-sec-6">אנטגוניסטים</a>
+      <a href="#ps-practice" class="toc-exam"><span aria-hidden="true">⭐</span> 13 שחזורים</a>
+    </nav>
+    <div class="search-row">
+      <label class="search-label" for="ps-search">חיפוש בסיכום</label>
+      <input type="search" id="ps-search" class="search-input" placeholder="חיפוש מהיר בכל התרופות (Atropine, Pilocarpine, Neostigmine...), הרצפטורים, המלכודות והשחזורים..." autocomplete="off">
+      <p id="ps-search-count" class="search-count" role="status">מציג את כל הנושאים</p>
+    </div>
+    <div class="pills" role="group" aria-label="סינון לפי נושא">
+      <button type="button" class="pill" data-filter="all" aria-pressed="true">הכל (8 פרקים)</button>
+      <button type="button" class="pill" data-filter="exam" aria-pressed="false"><span aria-hidden="true">⭐</span> שחזורים בלבד</button>
+      <button type="button" class="pill" data-filter="agonists" aria-pressed="false"><span aria-hidden="true">💊</span> אגוניסטים ומעכבי <span class="en">AChE</span></button>
+      <button type="button" class="pill" data-filter="antagonists" aria-pressed="false"><span aria-hidden="true">🛑</span> אנטגוניסטים וחוסמים</button>
+      <button type="button" class="pill" data-filter="traps" aria-pressed="false"><span aria-hidden="true">⚠️</span> מלכודות מבחן</button>
+      <button type="button" class="pill" data-filter="rel" aria-pressed="false"><span aria-hidden="true">🔄</span> סיבה ← תוצאה</button>
+    </div>
+  </div>
+
+  <section class="glossary" id="ps-glossary">
+    <h2>מילון מונחים</h2>
+    <p class="sec-note">כל מונח שמופיע בהמשך, בשפה פשוטה. אפשר לחפש מונח בשורת החיפוש.</p>
+
+    <h3>המערכת והסינפסה</h3>
+    <dl class="def sc"><dt>מערכת אוטונומית (<span class="en">ANS</span>)</dt><dd>המערכת שמבקרת תפקודים בלתי רצוניים בגוף. מתחלקת לסימפתטי ולפאראסימפתטי.</dd></dl>
+    <dl class="def sc"><dt>פאראסימפתטי / סימפתטי</dt><dd>פאראסימפתטי: "מנוחה ועיכול" (<span class="en">rest &amp; digest</span>), הנוירוטרנסמיטר שלו אצטילכולין. סימפתטי: "הילחם או ברח" (<span class="en">fight or flight</span>), הנוירוטרנסמיטר שלו נוראפינפרין.</dd></dl>
+    <dl class="def sc"><dt>נוירוטרנסמיטר</dt><dd>חומר כימי שתא עצב משחרר כדי להעביר אות לתא הבא.</dd></dl>
+    <dl class="def sc"><dt>אצטילכולין (<span class="en">ACh</span>)</dt><dd>הנוירוטרנסמיטר של המערכת הפאראסימפתטית, של הגנגליונים ושל מפגש העצב-שריר.</dd></dl>
+    <dl class="def sc"><dt>כולינרגי</dt><dd>קשור לאצטילכולין. "עודף כולינרגי" הוא מצב שבו יש יותר מדי השפעה של <span class="en">ACh</span>.</dd></dl>
+    <dl class="def sc"><dt>גנגליון</dt><dd>צביר של גופי תאי עצב מחוץ למערכת העצבים המרכזית, שבו הסיב הפרה-גנגליוני מעביר אות לסיב הפוסט-גנגליוני.</dd></dl>
+    <dl class="def sc"><dt>פרה-גנגליוני / פוסט-גנגליוני</dt><dd>הסיב שלפני הגנגליון ושאחריו. בפאראסימפתטי הפרה-גנגליוני ארוך והפוסט-גנגליוני קצר.</dd></dl>
+    <dl class="def sc"><dt>קרניוסקרלי / טורקולומברי</dt><dd>מקום היציאה מהמערכת המרכזית. פאראסימפתטי: עצבים קרניאליים 3, 7, 9, 10 ועצבי S2–S4. סימפתטי: מקטעים T1–L2.</dd></dl>
+    <dl class="def sc"><dt>סינפסה</dt><dd>המפגש בין שני תאי עצב, או בין עצב לשריר, שבו מועבר האות בעזרת נוירוטרנסמיטר.</dd></dl>
+    <dl class="def sc"><dt>שלב קובע קצב (<span class="en">Rate-limiting</span>)</dt><dd>השלב שקובע את קצב כל השרשרת. בסינתזה של <span class="en">ACh</span> זו כניסת הכולין לנוירון.</dd></dl>
+    <dl class="def sc"><dt>כולין / <span class="en">ChAT</span></dt><dd>כולין: חומר הגלם של <span class="en">ACh</span>. <span class="en">ChAT</span> (<span class="en">Choline acetyltransferase</span>): האנזים שמחבר אותו ל-<span class="en">Acetyl-CoA</span> ויוצר <span class="en">ACh</span>.</dd></dl>
+    <dl class="def sc"><dt>שחרור אקסוציטוטי / <span class="en">SNARE</span></dt><dd>שחרור <span class="en">ACh</span> מהשלפוחיות אל המרווח הסינפטי, בעזרת סידן וחלבוני <span class="en">SNARE</span>.</dd></dl>
+    <dl class="def sc"><dt><span class="en">AChE</span> (אצטילכולין-אסטראז)</dt><dd>האנזים שמפרק <span class="en">ACh</span> לכולין וחומצה אצטית, תוך שבריר אלפית השנייה, ומסיים את האות.</dd></dl>
+
+    <h3>רצפטורים והשפעות</h3>
+    <dl class="def sc"><dt>רצפטור מוסקריני (<span class="en">M1–M5</span>)</dt><dd>רצפטור צמוד חלבון <span class="en">G</span>, תגובה איטית יחסית. <span class="en">M1, M3, M5</span> דרך <span class="en">Gq</span>: כיווץ שריר חלק והפרשות. <span class="en">M2, M4</span> דרך <span class="en">Gi</span>: האטת הלב.</dd></dl>
+    <dl class="def sc"><dt>רצפטור ניקוטיני (<span class="en">Nn</span>, <span class="en">Nm</span>)</dt><dd>תעלת יון, תגובה מהירה. <span class="en">Nn</span> בגנגליונים ובמדולה של האדרנל. <span class="en">Nm</span> במפגש העצב-שריר.</dd></dl>
+    <dl class="def sc"><dt>מפגש עצב-שריר (<span class="en">NMJ</span>)</dt><dd>הסינפסה בין עצב מוטורי לשריר שלד.</dd></dl>
+    <dl class="def sc"><dt><span class="en">SLUDGE</span> / <span class="en">DUMBELS</span></dt><dd>קיצורים לזכירת סימני עודף כולינרגי: ריור, דמעות, השתנה, שלשול, הקאות והפרשות.</dd></dl>
+    <dl class="def sc"><dt>ברדיקרדיה / טכיקרדיה</dt><dd>האטת קצב הלב / האצתו.</dd></dl>
+    <dl class="def sc"><dt><span class="en">Miosis</span> / <span class="en">Mydriasis</span></dt><dd><span class="en">Miosis</span>: כיווץ האישון. <span class="en">Mydriasis</span>: הרחבת האישון.</dd></dl>
+    <dl class="def sc"><dt><span class="en">Cycloplegia</span></dt><dd>שיתוק שריר ההתאמה בעין, כך שאי אפשר להתמקד בקרוב.</dd></dl>
+    <dl class="def sc"><dt>דטרוזור</dt><dd>שריר דופן שלפוחית השתן. כיווצו מעודד השתנה.</dd></dl>
+    <dl class="def sc"><dt>גלאוקומה</dt><dd>מחלת עיניים עם עלייה בלחץ התוך-עיני. בזווית סגורה אסורים אנטגוניסטים מוסקריניים.</dd></dl>
+    <dl class="def sc"><dt><span class="en">BPH</span></dt><dd>הגדלת ערמונית שפירה. אנטגוניסט מוסקריני עלול לגרום לאצירת שתן, ולכן אסור.</dd></dl>
+    <dl class="def sc"><dt><span class="en">BBB</span> (מחסום הדם-מוח)</dt><dd>מחסום שמגביל מעבר חומרים מהדם למוח. תרופה ליפופילית חוצה אותו ופועלת במוח (למשל <span class="en">Physostigmine</span>).</dd></dl>
+
+    <h3>תרופות ומצבים</h3>
+    <dl class="def sc"><dt>אגוניסט ישיר (<span class="en">Parasympathomimetic</span>)</dt><dd>מפעיל את הרצפטור בעצמו, למשל <span class="en">Pilocarpine</span>, <span class="en">Carbachol</span>, <span class="en">Bethanechol</span>.</dd></dl>
+    <dl class="def sc"><dt>אגוניסט עקיף / מעכב <span class="en">AChE</span></dt><dd>מונע פירוק של <span class="en">ACh</span>, שמצטבר ופועל על כל המטרות. יכול להיות הפיך (הסטיגמינים) או בלתי הפיך (זרחנים אורגניים).</dd></dl>
+    <dl class="def sc"><dt>מיאסתניה גרביס (<span class="en">Myasthenia Gravis</span>)</dt><dd>מחלה שבה השרירים נחלשים. מאבחנים עם <span class="en">Edrophonium</span> ומטפלים ב-<span class="en">Neostigmine</span> או <span class="en">Pyridostigmine</span>.</dd></dl>
+    <dl class="def sc"><dt>זרחנים אורגניים</dt><dd>גזי עצבים ורעלים חקלאיים שמעכבים <span class="en">AChE</span> באופן בלתי הפיך. סם-הנגד: <span class="en">Atropine</span> עם <span class="en">Pralidoxime</span> (<span class="en">2-PAM</span>).</dd></dl>
+    <dl class="def sc"><dt>אנטגוניסט מוסקריני (<span class="en">Parasympatholytic</span>)</dt><dd>חוסם רצפטורים מוסקריניים, למשל <span class="en">Atropine</span>, <span class="en">Scopolamine</span>, <span class="en">Ipratropium</span>.</dd></dl>
+    <dl class="def sc"><dt><span class="en">SAMA</span> / <span class="en">LAMA</span></dt><dd>חוסמי מוסקריני במשאף, קצרי טווח (<span class="en">Ipratropium</span>) וארוכי טווח (<span class="en">Tiotropium</span>).</dd></dl>
+    <dl class="def sc"><dt><span class="en">EPS</span> (תסמינים אקסטרה-פירמידליים)</dt><dd>תופעות לוואי תנועתיות של תרופות אנטי-פסיכוטיות, שמטפלים בהן עם <span class="en">Benztropine</span>.</dd></dl>
+    <dl class="def sc"><dt>חוסם עצב-שריר תחרותי (קורארה)</dt><dd>חוסם את <span class="en">Nm</span> ללא הפעלה. שיתוק רפה, הפיך על ידי <span class="en">Neostigmine</span>.</dd></dl>
+    <dl class="def sc"><dt>חוסם מדפולריז (<span class="en">Succinylcholine</span>)</dt><dd>אגוניסט ממושך ל-<span class="en">Nm</span>: דפולריזציה מתמשכת, פסיקולציות ואז שיתוק רפה. לא הפיך על ידי מעכב <span class="en">AChE</span>.</dd></dl>
+    <dl class="def sc"><dt>פסיקולציות / שיתוק רפה</dt><dd>פסיקולציות: התכווצויות קצרות ולא מבוקרות של סיבי שריר. שיתוק רפה: חולשת שריר מלאה, בלי טונוס.</dd></dl>
+    <dl class="def sc"><dt>היפרתרמיה ממארת / <span class="en">Dantrolene</span></dt><dd>עלייה מסכנת חיים בחום הגוף כסיבוך של <span class="en">Succinylcholine</span>. מטפלים ב-<span class="en">Dantrolene</span>.</dd></dl>
+  </section>
+
+  <!-- סימולטור איברים (אינטראקטיבי) -->
+  <section id="ps-organs" class="panel no-print" data-interactive aria-labelledby="ps-organs-title">
+    <div class="panel-head">
+      <div>
+        <p class="panel-kicker"><span aria-hidden="true">🫀</span> סימולטור השוואתי בזמן אמת</p>
+        <h2 id="ps-organs-title">השפעות על מערכות הגוף: פאראסימפתטי מול אנטי-כולינרגי</h2>
+        <p class="sec-note flush">הקליקו על המצבים כדי להשוות איבר אחר איבר: מה קורה כשהאצטילכולין מופעל, ומה קורה כשאטרופין חוסם את המערכת.</p>
+      </div>
+      <div class="seg-row" role="group" aria-label="מצב הסימולטור">
+        <button type="button" class="seg" data-organ-mode="cholinergic" data-tone="emerald" aria-pressed="true"><span aria-hidden="true">🌿</span> מצב פאראסימפתטי (<span class="en">ACh</span> מוגבר)</button>
+        <button type="button" class="seg" data-organ-mode="antichol" data-tone="rose" aria-pressed="false"><span aria-hidden="true">🛑</span> מצב חסימת אטרופין (חוסם <span class="en">M</span>)</button>
+      </div>
+    </div>
+    <div id="organ-cards" class="organ-grid" aria-live="polite"></div>
+  </section>
+
+  <!-- סיור בסינפסה (אינטראקטיבי) -->
+  <section id="ps-synapse" class="lab no-print" data-interactive aria-labelledby="ps-synapse-title">
+    <p class="lab-kicker"><span aria-hidden="true">⚡</span> 6 שלבי הסינפסה הכולינרגית</p>
+    <h2 id="ps-synapse-title">סיור אינטראקטיבי בסינפסה: אתרי מטרה לתרופות ולרעלים</h2>
+    <p class="sec-note">כל תרופה או רעלן בפרמקולוגיה כולינרגית פוגעים באחד מ-6 השלבים הללו. לחצו על שלב כדי להציג את התרופות הפועלות עליו:</p>
+    <div class="syn-steps" role="group" aria-label="שלבי הסינפסה">
+      <button type="button" class="syn-step" data-step="1" aria-pressed="true"><span class="syn-n">שלב 1</span>קליטת כולין (קובע-קצב)</button>
+      <button type="button" class="syn-step" data-step="2" aria-pressed="false"><span class="syn-n">שלב 2</span>סינתזת <span class="en">ACh</span> ואחסון</button>
+      <button type="button" class="syn-step" data-step="3" aria-pressed="false"><span class="syn-n">שלב 3</span>שחרור אקסוציטוטי</button>
+      <button type="button" class="syn-step" data-step="4" aria-pressed="false"><span class="syn-n">שלב 4</span>קישור לרצפטור (<span class="en">M/N</span>)</button>
+      <button type="button" class="syn-step" data-step="5" aria-pressed="false"><span class="syn-n">שלב 5</span>פירוק ע"י <span class="en">AChE</span></button>
+      <button type="button" class="syn-step" data-step="6" aria-pressed="false"><span class="syn-n">שלב 6</span>מיחזור כולין (<span class="en">Recycling</span>)</button>
+    </div>
+    <div id="synapse-display" class="syn-display" aria-live="polite"></div>
+  </section>
+
+  <!-- חוסמי עצב-שריר: תחרותי מול מדפולריז (אינטראקטיבי) -->
+  <section id="ps-nmj" class="panel no-print" data-interactive aria-labelledby="ps-nmj-title">
+    <div class="panel-head">
+      <div>
+        <p class="panel-kicker"><span aria-hidden="true">🥊</span> סימולטור התאוששות וחסימת שריר</p>
+        <h2 id="ps-nmj-title">חוסמי עצב-שריר (<span class="en">NMJ</span>): תחרותי מול מדפולריז</h2>
+        <p class="sec-note flush">המלכודת הגדולה ביותר במבחן: האם ניתן להפוך את השיתוק בעזרת מעכב אצטילכולין-אסטראז (<span class="en">Neostigmine</span>)?</p>
+      </div>
+      <button type="button" id="nmj-toggle" class="nmj-btn" aria-pressed="false"></button>
+    </div>
+
+    <div class="nmj-grid">
+      <div class="nmj-card" data-tone="emerald">
+        <div class="nmj-top"><span class="tag">תחרותי לא-מדפולריז</span><span class="pcard-icon" aria-hidden="true">🏹</span></div>
+        <h3>משפחת הקורארה (<span class="en">Curare Derivatives</span>)</h3>
+        <p class="drugs en">Cisatracurium, Pancuronium, Rocuronium, Vecuronium</p>
+        <p><b>מנגנון:</b> אנטגוניסט תחרותי שחוסם את הרצפטור הניקוטיני (<span class="en">Nm</span>) במפגש העצב-שריר. אין פוטנציאל פעולה ← שיתוק רפה ישיר.</p>
+        <div id="curare-status" class="nmj-status" aria-live="polite"></div>
+      </div>
+
+      <div class="nmj-card" data-tone="rose">
+        <div class="nmj-top"><span class="tag">מדפולריז לא-תחרותי</span><span class="pcard-icon" aria-hidden="true">⚡</span></div>
+        <h3>סוקצינילכולין (<span class="en">Succinylcholine</span>)</h3>
+        <p class="drugs">אגוניסט ממושך לרצפטור <span class="en">Nm</span></p>
+        <p><b>מנגנון:</b> גורם לדפולריזציה מתמשכת שאינה נפתרת ← תחילה פסיקולציות (התכווצויות קצרות) ואז שיתוק רפה עקב דה-סנסיטיזציה וחוסר אפשרות לרפולריזציה.</p>
+        <div id="succ-status" class="nmj-status" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <div class="nmj-warn">
+      <div class="pcard" data-tone="amber">
+        <div class="pcard-head"><h4><span aria-hidden="true">⚠️</span> אין הרדמה או שיכוך כאב!</h4></div>
+        <p class="flush">חוסמי עצב-שריר משתקים את שרירי השלד בלבד! המטופל ער לגמרי ומרגיש כאב אם לא ניתנים חומרי הרדמה ואלחוש במקביל.</p>
+      </div>
+      <div class="pcard" data-tone="rose">
+        <div class="pcard-head"><h4><span aria-hidden="true">🚨</span> סכנות חיים ב-<span class="en">Succinylcholine</span></h4></div>
+        <p class="flush"><b>היפרתרמיה מליגנית</b> (מטופלת בדנטרולן / <span class="en">Dantrolene</span>) ו<b>היפרקלמיה מסוכנת</b> (שחרור עודף של אשלגן מהתאים).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1 יסודות מהירים -->
+  <section id="ps-sec-1" class="topic-section" data-category="rel">
+    <h2>1 · יסודות מהירים</h2>
+    <p class="sec-note">אם תזכרו שהפאראסימפתטי = "מנוחה ועיכול" ו-<span class="en">ACh</span>, כל שרשרת ההשפעות נגזרת מעצמה.</p>
+
+    <div class="cards">
+      <div class="pcard sc">
+        <div class="pcard-head"><h3>מערכת אוטונומית (<span class="en">ANS</span>)</h3><span class="tag">חלוקה ראשית</span></div>
+        <p class="flush">מבקרת תפקודים בלתי-רצוניים בגוף. מתחלקת ל<b>סימפתטי</b> ("<span class="en">fight or flight</span>", נוראפינפרין) ול<b>פאראסימפתטי</b> ("<span class="en">rest &amp; digest</span>", אצטילכולין).</p>
+      </div>
+      <div class="pcard sc" data-tone="teal">
+        <div class="pcard-head"><h3>יציאה מה-<span class="en">CNS</span></h3><span class="tag">אנטומיה</span></div>
+        <p class="flush"><b>פאראסימפתטי:</b> קרניוסקרלי (<span class="en">craniosacral</span>: עצבים קרניאליים 3, 7, 9, 10 ועצבי השדרה <span class="en">S2–S4</span>).<br><b>סימפתטי:</b> טורקולומברי (<span class="en">thoracolumbar</span>, מקטעים <span class="en">T1–L2</span>).</p>
+      </div>
+      <div class="pcard sc" data-tone="blue">
+        <div class="pcard-head"><h3>אורכי הסיבים והעצבוב</h3><span class="tag">מבנה סיבים</span></div>
+        <p class="flush"><b>פאראסימפתטי:</b> סיב פרה-גנגליוני ארוך, פוסט-גנגליוני קצר (גנגליון קרוב לאיבר המטרה). יחס עצבוב ממוקד ≈ 1:1.<br><b>סימפתטי:</b> סיב פרה קצר, פוסט ארוך. יחס מפושט (1 לרבים).</p>
+      </div>
+    </div>
+
+    <div class="rel sc">
+      <div class="rel-cause">כיווץ כלי דם (<span class="en">vasoconstriction</span>)</div>
+      <span class="rel-arrow">←</span>
+      <div class="rel-effect"><b>לחץ דם↑</b> (עולה)</div>
+    </div>
+    <div class="rel sc">
+      <div class="rel-cause">הרחבת כלי דם (<span class="en">vasodilation</span>)</div>
+      <span class="rel-arrow">←</span>
+      <div class="rel-effect"><b>לחץ דם↓</b> (יורד)</div>
+    </div>
+  </section>
+
+  <!-- 2 הסינפסה הכולינרגית -->
+  <section id="ps-sec-2" class="topic-section" data-category="agonists">
+    <h2>2 · הסינפסה הכולינרגית</h2>
+    <p class="sec-note">הבינו את ששת השלבים — כל תרופה בנושא פוגעת באחד מהם.</p>
+
+    <div class="call sc">
+      <h4>השרשרת המלאה</h4>
+      <p class="flush">סינתזת <span class="en">ACh</span> (ע"י <span class="en">Choline acetyltransferase</span>) <span class="seq">←</span> אחסון בשלפוחיות <span class="seq">←</span> שחרור אקסוציטוטי <span class="seq">←</span> קשירה לרצפטור <span class="seq">←</span> פירוק מהיר ע"י האנזים <span class="en">AChE</span> <span class="seq">←</span> החזרת הכולין לנוירון (<span class="en">recycling</span>) לייצור חדש.</p>
+    </div>
+
+    <div class="call sc is-exam">
+      <h4>השלב קובע-הקצב (<span class="en">Rate-Limiting Step</span>) <span class="exam">חשוב למבחן</span></h4>
+      <p class="flush">הכנסת הכולין (<span class="en">choline</span>) לנוירון הפרה-סינפטי. החומר הניסויי <b class="en">Hemicholinium</b> חוסם שלב זה ומונע את ייצור ה-<span class="en">ACh</span>.</p>
+    </div>
+
+    <div class="cards">
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h4>רעלן בוטולינום (<span class="en">Botulinum</span>)</h4></div>
+        <p class="flush">← חוסם שחרור <span class="en">ACh</span> ע"י פירוק חלבוני <span class="en">SNARE</span> (גורם לשיתוק רפה).</p>
+      </div>
+      <div class="pcard sc" data-tone="amber">
+        <div class="pcard-head"><h4>ארס עכביש (אלמנה שחורה)</h4></div>
+        <p class="flush">← גורם לפריקה מסיבית ושחרור מוגבר של <span class="en">ACh</span> במכה אחת.</p>
+      </div>
+      <div class="pcard sc" data-tone="emerald">
+        <div class="pcard-head"><h4>עיכוב האנזים <span class="en">AChE</span></h4></div>
+        <p class="flush">← <span class="en">ACh</span> מצטבר במרווח הסינפטי ← פעולתו מתארכת ומתעצמת משמעותית.</p>
+      </div>
+    </div>
+
+    <h3>ששת השלבים ומה פועל על כל אחד</h3>
+    <dl class="def"><dt>1 · קליטת כולין</dt><dd>נשא תלוי-נתרן מכניס כולין לטרמינל — השלב קובע-הקצב. <b class="en">Hemicholinium</b> חוסם אותו.</dd></dl>
+    <dl class="def"><dt>2 · סינתזה ואחסון</dt><dd><span class="en">ChAT</span> מחבר כולין ו-<span class="en">Acetyl-CoA</span>, וה-<span class="en">ACh</span> נאגר בשלפוחיות. <b class="en">Vesamicol</b> חוסם את הכניסה לשלפוחיות.</dd></dl>
+    <dl class="def"><dt>3 · שחרור אקסוציטוטי</dt><dd>תלוי <span class="en">Ca²⁺</span> וחלבוני <span class="en">SNARE</span>. בוטולינום (<span class="en">Botox</span>) חוסם שחרור ← שיתוק רפה; ארס אלמנה שחורה (<span class="en">Latrotoxin</span>) גורם לשחרור מאסיבי. בוטולינום אינו פוגע ברצפטורים. <span class="exam">נשאל</span></dd></dl>
+    <dl class="def"><dt>4 · קישור לרצפטור</dt><dd>מוסקריני (<span class="en">M1–M5, GPCR</span>) או ניקוטיני (<span class="en">Nm / Nn</span>). אגוניסטים: <span class="en">Pilocarpine, Bethanechol</span>. אנטגוניסטים: <span class="en">Atropine, Scopolamine, Curare</span>.</dd></dl>
+    <dl class="def"><dt>5 · פירוק ע"י <span class="en">AChE</span></dt><dd>פירוק לכולין וחומצה אצטית בשבריר אלפית השנייה. מעכבים הפיכים: <span class="en">Edrophonium</span> (אבחון), <span class="en">Neostigmine / Pyridostigmine</span> (טיפול), <span class="en">Donepezil</span> (אלצהיימר); בלתי-הפיכים: זרחנים אורגניים.</dd></dl>
+    <dl class="def"><dt>6 · מיחזור כולין</dt><dd>הכולין נשאב חזרה לנוירון כחומר גלם לסינתזה חוזרת — חיוני בעירור ממושך.</dd></dl>
+  </section>
+
+  <!-- 3 הרצפטורים -->
+  <section id="ps-sec-3" class="topic-section" data-category="agonists">
+    <h2>3 · הרצפטורים לאצטילכולין (<span class="en">AChR</span>)</h2>
+    <p class="sec-note">שני טיפוסים: מוסקריני (איטי יחסית, <span class="en">GPCR</span>) וניקוטיני (מהיר, תעלת יון).</p>
+
+    <div class="cards c2">
+      <div class="pcard top sc" data-tone="emerald">
+        <div class="pcard-head"><span class="tag en">GPCR</span><span class="pcard-icon" aria-hidden="true">🍄</span></div>
+        <h3>מוסקריני (<span class="en">Muscarinic, M1–M5</span>)</h3>
+        <p class="sub">מצומד חלבון G</p>
+        <p>קרוי על שם הרעלן <b>מוסקרין</b> (מפטריות). מחולקים לתת-סוגים הפועלים דרך חלבוני G שונים:</p>
+        <p><b class="en">M1, M3, M5 (Gq):</b> שפעול <span class="en">PLC</span> ← <span class="en">IP3 + DAG</span> ← דפולריזציה, כיווץ שריר חלק (סמפונות, עיכול, שלפוחית) והגברת הפרשות בלוטות.</p>
+        <p class="flush"><b class="en">M2, M4 (Gi):</b> עיכוב אדנילט ציקלאז (<span class="en">cAMP↓</span>), פתיחת תעלות <span class="en">K⁺</span> ← <b>היפרפולריזציה בלב (<span class="en">SA/AV node</span>)</b> ← קצב לב↓ וכוח כיווץ↓.</p>
+      </div>
+      <div class="pcard top sc" data-tone="cyan">
+        <div class="pcard-head"><span class="tag">תעלת יונים מווסתת-ליגנד</span><span class="pcard-icon" aria-hidden="true">🚬</span></div>
+        <h3>ניקוטיני (<span class="en">Nicotinic</span>)</h3>
+        <p class="sub">תעלת יון פנטמרית</p>
+        <p>כניסת <span class="en">Na⁺</span> מהירה ← דפולריזציה מיידית ← יצירת פוטנציאל פעולה (מילישניות). קרוי על שם ניקוטין (צמח הטבק).</p>
+        <p><b class="en">Nn (Neuronal / Ganglionic):</b> נמצא בכל הגנגליונים האוטונומיים (הן סימפתטיים והן פאראסימפתטיים!) וכן במדולה של בלוטת יותרת הכליה (<span class="en">Adrenal medulla</span>).</p>
+        <p class="flush"><b class="en">Nm (Muscular / NMJ):</b> במפגש העצב-שריר (<span class="en">Neuromuscular Junction</span>) בשריר השלד הרצוני. הפעלתו גורמת לכיווץ שריר שלד.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 אפקטים של ACh -->
+  <section id="ps-sec-4" class="topic-section" data-category="rel">
+    <h2>4 · אפקטים של <span class="en">ACh</span> (<span class="en">rest &amp; digest</span>)</h2>
+    <p class="sec-note">הכול "מאט ומפריש" — חוץ מהעיכול וההשתנה שמתגברים.</p>
+
+    <div class="cards">
+      <div class="pcard top sc" data-tone="emerald">
+        <div class="pcard-head"><span class="tag">לב וכלי דם</span></div>
+        <h3>פעילות ואגלית ב-<span class="en">SA node</span></h3>
+        <p>האטה ישירה של הקוצב, קצב לב יורד (<span class="en">Bradycardia</span>) ולחץ דם יורד.</p>
+        <p class="foot flush">← קצב לב↓, לחץ דם↓</p>
+      </div>
+      <div class="pcard top sc" data-tone="emerald">
+        <div class="pcard-head"><span class="tag">מערכת עיכול</span></div>
+        <h3>הפעלת מערכת העיכול</h3>
+        <p>עליה בפריסטלטיקה, הרפיית סוגרים, והפרשה עשירה של מיצי קיבה ורוק.</p>
+        <p class="foot flush">← הפרשות↑, מוטיליות↑, רוק↑</p>
+      </div>
+      <div class="pcard top sc" data-tone="emerald">
+        <div class="pcard-head"><span class="tag">מערכת שתן</span></div>
+        <h3>הגברת טונוס הדטרוזור</h3>
+        <p>כיווץ שריר גוף השלפוחית (<span class="en">Detrusor</span>) והרפיית הסוגר המשולש (<span class="en">Trigone</span>).</p>
+        <p class="foot flush">← השתנה (עידוד מתן שתן)</p>
+      </div>
+      <div class="pcard top sc" data-tone="emerald">
+        <div class="pcard-head"><span class="tag">אישון וראייה</span></div>
+        <h3>כיווץ שריר האישון והציליארי</h3>
+        <p>כיווץ השריר הקונסטריקטורי גורם לאישון סיכה, והשריר הציליארי מרפה את הזונולות לראייה מקרוב.</p>
+        <p class="foot flush">← <span class="en">miosis</span> + ראייה מקרוב</p>
+      </div>
+    </div>
+
+    <h3>איבר אחר איבר: הפעלה מול חסימה</h3>
+    <p class="sec-note">אותו מנגנון, משני הצדדים: ההפעלה מחקה את הפאראסימפתטי, והחסימה (אטרופין) הופכת אותו.</p>
+    <div class="table-wrap">
+      <table class="rtable">
+        <thead>
+          <tr><th scope="col">איבר</th><th scope="col">הפעלה כולינרגית (<span class="en">ACh↑</span>)</th><th scope="col">חסימה מוסקרינית (<span class="en">Atropine</span>)</th></tr>
+        </thead>
+        <tbody>
+          <tr class="sc"><td><b>עין</b></td><td><span class="en">Miosis</span> + התאמה לקרוב; ניקוז תוך-עיני משופר (<span class="en">Pilocarpine</span>).</td><td><span class="en">Mydriasis</span> + שיתוק התאמה (<span class="en">cycloplegia</span>); סכנת עליית לחץ תוך-עיני בגלאוקומה.</td></tr>
+          <tr class="sc"><td><b>לב</b> (<span class="en">M2</span>)</td><td>ברדיקרדיה, כוח כיווץ↓, לחץ דם↓ (עצב הואגוס).</td><td>טכיקרדיה; משמש בהחייאה ובברדיקרדיה סימפטומטית.</td></tr>
+          <tr class="sc"><td><b>דרכי נשימה</b> (<span class="en">M3</span>)</td><td>כיווץ סמפונות והפרשת ריר מוגברת — מסוכן באסתמה ו-<span class="en">COPD</span>.</td><td>הרחבת סמפונות וייבוש הפרשות (<span class="en">Ipratropium, Tiotropium</span>).</td></tr>
+          <tr class="sc"><td><b>מערכת עיכול</b></td><td>מוטיליות↑, חומצה ואנזימים↑, סוגרים רפויים, ריור; עודף ← שלשולים עוויתיים. ייעוד: אטוניה של המעי אחרי ניתוח.</td><td>עצירות קשה, ריקון קיבה איטי, יובש קיצוני בפה (<span class="en">xerostomia</span>) — "יבש כמו עצם".</td></tr>
+          <tr class="sc"><td><b>שלפוחית שתן</b></td><td>דטרוזור מתכווץ, סוגר פנימי נרפה ← עידוד השתנה (<span class="en">Bethanechol</span>).</td><td>דטרוזור נרפה ← <b>אצירת שתן</b>; התווית נגד בהגדלת ערמונית (<span class="en">BPH</span>).</td></tr>
+          <tr class="sc"><td><b>בלוטות והזעה</b></td><td>ריור, דמעות, הזעה והפרשות נשימה — סינדרום <span class="en">SLUDGE / DUMBELS</span>.</td><td>עיכוב בלוטות הזיעה ← עור יבש, אדום וחם; <span class="en">Atropine fever</span> מסכן חיים בילדים ובקשישים ("חם כמו ארנבת, אדום כמו סלק").</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 5 אגוניסטים -->
+  <section id="ps-sec-5" class="topic-section" data-category="agonists">
+    <h2>5 · אגוניסטים — מגבירים את <span class="en">ACh</span></h2>
+    <p class="sec-note">ישירים = מפעילים את הרצפטור בעצמם. עקיפים = מעכבי <span class="en">AChE</span> ← <span class="en">ACh</span> מצטבר ומפעיל את כל המטרות.</p>
+
+    <h3>אגוניסטים ישירים (<span class="en">Parasympathomimetics</span>)</h3>
+    <div class="cards">
+      <div class="pcard sc">
+        <div class="pcard-head"><h4 class="en">Pilocarpine</h4><span class="exam">נשאל</span></div>
+        <p class="flush">אגוניסט מוסקריני (<span class="en">M</span>) ישיר.<br>• <b>גלאוקומה ו-<span class="en">miosis</span>:</b> טיפות עיניים מקומיות לפתיחת תעלת שלם.<br>• <b>יובש בפה (<span class="en">xerostomia</span>):</b> מתן פומי (<span class="en">PO</span>) כגון בתסמונת סיוגרן או לאחר הקרנות.</p>
+      </div>
+      <div class="pcard sc">
+        <div class="pcard-head"><h4 class="en">Carbachol</h4><span class="tag en">M + N</span></div>
+        <p class="flush">אגוניסט ישיר לשני הרצפטורים (מוסקריני + ניקוטיני). משמש לגלאוקומה במתן טופיקלי (טיפות) במהלך ניתוחי עיניים להשגת מיוזיס מיידי.</p>
+      </div>
+      <div class="pcard sc">
+        <div class="pcard-head"><h4 class="en">Bethanechol</h4><span class="tag"><span class="en">M</span> סלקטיבי</span></div>
+        <p class="flush">אגוניסט מוסקריני ישיר סלקטיבי למערכת השתן והעיכול. טיפול הבחירה באצירת שתן לאחר ניתוח או לידה (אטוניה ללא חסימה מכנית).</p>
+      </div>
+    </div>
+
+    <h3>עקיפים — מעכבי האנזים <span class="en">AChE</span></h3>
+    <div class="cards">
+      <div class="pcard sc" data-tone="blue">
+        <div class="pcard-head"><h4 class="en">Edrophonium</h4><span class="tag">הפיך קצר</span></div>
+        <p class="flush">פעולה מהירה וקצרה של 10–20 דקות בלבד. משמש ל<b>אבחון בלבד</b> של מיאסתניה גרביס (<span class="en">Tensilon test</span>) ולא לטיפול ממושך.</p>
+      </div>
+      <div class="pcard sc" data-tone="amber">
+        <div class="pcard-head"><h4>הסטיגמינים (<span class="en">Stigmines</span>)</h4><span class="exam">נשאל</span></div>
+        <p class="flush"><b class="en">Physostigmine</b> (חוצה <span class="en">BBB</span>!), <b class="en">Neostigmine</b> ו-<b class="en">Pyridostigmine</b>. פעולה 30 דק'–8 שעות. <b>טיפול</b> במיאסתניה והפיכת שיתוק קורארה.</p>
+      </div>
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h4>זרחנים אורגניים</h4><span class="tag">בלתי-הפיך</span></div>
+        <p class="flush">גזי עצבים (סארין, <span class="en">VX</span>) ורעלים חקלאיים (<span class="en">Parathion, Malathion</span>). קישור קוולנטי בלתי-הפיך הדורש סם-נגד (אטרופין + פרלידוקסים).</p>
+      </div>
+      <div class="pcard sc" data-tone="purple">
+        <div class="pcard-head"><h4>לאלצהיימר (<span class="en">CNS</span>)</h4><span class="exam">נשאל</span></div>
+        <p class="flush"><b class="en">Donepezil, Rivastigmine, Galantamine</b> — חומרים ליפופיליים ש<b>חוצים את מחסום הדם-מוח (<span class="en">BBB</span>)</b> ומעלים <span class="en">ACh</span> בקורטקס.</p>
+      </div>
+    </div>
+
+    <div class="call sc">
+      <h4>⚠️ מלכודות קריטיות לבחינה באגוניסטים ומעכבי <span class="en">AChE</span></h4>
+      <ul class="flush">
+        <li><b class="en">Edrophonium</b> = <b>אבחון</b> בלבד; <b class="en">Neostigmine / Pyridostigmine</b> = <b>טיפול</b> קבוע — אל תחליפו ביניהם!</li>
+        <li>סם-הנגד הבלעדי לעודף כולינרגי ולהרעלת זרחנים אורגניים הוא <b class="en">Atropine</b> (ולזרחנים מוסיפים גם <span class="en">Pralidoxime / 2-PAM</span>) — ולא חלילה מעכב <span class="en">AChE</span> נוסף שרק יחמיר את ההרעלה!</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6 אנטגוניסטים -->
+  <section id="ps-sec-6" class="topic-section" data-category="antagonists">
+    <h2>6 · אנטגוניסטים — חוסמים את <span class="en">ACh</span></h2>
+    <p class="sec-note">מוסקריניים (<span class="en">parasympatholytics</span>) + ניקוטיניים (חוסמי גנגליון ו-<span class="en">NMJ</span>).</p>
+
+    <h3>מוסקריניים (חוסמי <span class="en">M</span>)</h3>
+    <div class="cards">
+      <div class="pcard sc">
+        <div class="pcard-head"><h4 class="en">Atropine</h4><span class="exam">נשאל</span></div>
+        <p class="flush">אנטגוניסט מוסקריני אבטיפוסי: הפחתת הפרשות רוק וריר לפני הרדמה; <b>סם-נגד</b> לעודף כולינרגי ולהרעלת פטריות; <b class="en">mydriasis</b> (הרחבת אישונים); נוגד עוויתות עיכול; <b>טיפול בברדיקרדיה סינוסאלית</b>; העלאת קצב לב במבחן מאמץ.</p>
+      </div>
+      <div class="pcard sc">
+        <div class="pcard-head"><h4 class="en">Scopolamine</h4><span class="exam">נשאל</span></div>
+        <p class="flush">מדבקה עורית למניעת <b>מחלת ים (<span class="en">Motion sickness</span>)</b> ובחילות/הקאות לאחר ניתוח (<span class="en">PONV</span>).<br><b>התווית נגד מוחלטת:</b> גלאוקומה עם זווית סגורה!</p>
+      </div>
+      <div class="pcard sc">
+        <div class="pcard-head"><h4 class="en">Ipratropium / Tiotropium</h4><span class="exam">נשאל</span></div>
+        <p class="flush">מרחיבי סימפונות במשאף למחלת <span class="en">COPD</span> ואסתמה:<br>• <b class="en">Ipratropium</b> = <span class="en">SAMA</span> (קצר-טווח).<br>• <b class="en">Tiotropium</b> = <span class="en">LAMA</span> (ארוך-טווח).</p>
+      </div>
+      <div class="pcard sc">
+        <div class="pcard-head"><h4 class="en">Tropicamide / Cyclopentolate</h4><span class="tag">עיניים</span></div>
+        <p class="flush">טיפות להרחבת אישונים מהירה (<span class="en">mydriasis</span>) ושיתוק שריר ההתאמה (<span class="en">cycloplegia</span>) לצורך בדיקת קרקעית העין.</p>
+      </div>
+      <div class="pcard sc">
+        <div class="pcard-head"><h4 class="en">Benztropine / Trihexyphenidyl</h4><span class="exam">נשאל</span></div>
+        <p class="flush">חוסמי <span class="en">M</span> מרכזיים המשמשים לאיזון עודף כולינרגי ב<b>מחלת פרקינסון</b> ולטיפול בתופעות לוואי אקסטראפירמידליות (<span class="en">EPS</span>) מתרופות אנטי-פסיכוטיות.</p>
+      </div>
+    </div>
+
+    <h3>אנטגוניסטים ניקוטיניים</h3>
+    <div class="cards c2">
+      <div class="pcard sc">
+        <div class="pcard-head"><h4>חוסמי גנגליון (<span class="en">Nn</span>)</h4></div>
+        <p class="flush">חוסמים את כל הגנגליונים האוטונומיים — הן סימפתטי והן פאראסימפתטי כאחד. תופעות לוואי נרחבות וקשות ולכן <b>אין להם כמעט שימוש קליני מודרני</b>, למעט תרופות עזר לגמילה מעישון.</p>
+      </div>
+      <div class="pcard sc">
+        <div class="pcard-head"><h4>חוסמי עצב-שריר (<span class="en">Nm, NMJ</span>)</h4><span class="exam">נשאל</span></div>
+        <p class="flush"><b>תחרותיים לא-מדפולריזים:</b> <b class="en">Cisatracurium, Pancuronium, Rocuronium, Vecuronium, Mivacurium</b> (קורארה).<br><b>לא-תחרותי מדפולריז:</b> <b class="en">Succinylcholine</b>.</p>
+      </div>
+    </div>
+
+    <dl class="def"><dt>קורארה (תחרותי)</dt><dd>חוסם את <span class="en">Nm</span> תחרותית ← אין פוטנציאל פעולה ← שיתוק רפה. <b>הפיך</b> ע"י מעכב <span class="en">AChE</span> (<span class="en">Neostigmine</span>), כי ה-<span class="en">ACh</span> שמצטבר דוחק אותו מהרצפטור.</dd></dl>
+    <dl class="def"><dt><span class="en">Succinylcholine</span> (מדפולריז)</dt><dd>אגוניסט ממושך ל-<span class="en">Nm</span> ← דפולריזציה מתמשכת ← פסיקולציות ואז שיתוק רפה (דה-סנסיטיזציה, אין רפולריזציה). <b>לא הפיך</b> ע"י מעכב <span class="en">AChE</span> — מתן נאוסטיגמין יחמיר את השיתוק.</dd></dl>
+
+    <div class="call sc">
+      <h4>⚠️ מלכודות קריטיות באנטגוניסטים וחוסמי שריר</h4>
+      <ul class="flush">
+        <li>תחרותי (<span class="en">curare</span>) <b>הפיך</b> לחלוטין ע"י מעכב <span class="en">AChE</span> (<span class="en">Neostigmine</span>); <b class="en">Succinylcholine</b> <b>אינו הפיך</b> כך (מתן נאוסטיגמין יחמיר שיתוק!).</li>
+        <li>חוסמי עצב-שריר משתקים בלבד — אין בהם הרגעה או שיכוך כאב; יש לתת תמיד בשילוב חומרי הרדמה.</li>
+        <li><span class="en">Succinylcholine</span>: גורם לסיבוכים מסכני חיים של היפרתרמיה מליגנית (מטופלת ב-<span class="en">Dantrolene</span>) והיפרקלמיה.</li>
+        <li><span class="en">Pancuronium</span>: חוסם גם רצפטורי <span class="en">M2</span> בלב ← מוביל לטכיקרדיה ויתר לחץ דם.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 7 טבלת סיבה ← תוצאה -->
+  <section id="ps-sec-7" class="topic-section" data-category="rel">
+    <h2>7 · טבלת סיבה ← תוצאה למבחן</h2>
+    <p class="sec-note">השורות שחוזרות הכי הרבה — דעו לקרוא אותן לשני הכיוונים.</p>
+
+    <div class="table-wrap">
+      <table class="rtable">
+        <thead>
+          <tr><th scope="col">גורם פרמקולוגי</th><th scope="col" class="arrow-col"><span class="visually-hidden">מוביל ל</span></th><th scope="col">תוצאה קלינית ישירה</th></tr>
+        </thead>
+        <tbody>
+          <tr class="sc"><td>אגוניסט מוסקריני (למשל <b class="en">Pilocarpine</b>)</td><td class="arrow-col" aria-hidden="true">←</td><td><b class="en">miosis</b>, קצב לב↓, הפרשות↑, שלשול, ברונכוספזם</td></tr>
+          <tr class="sc"><td>אנטגוניסט מוסקריני (<b class="en">Atropine</b>)</td><td class="arrow-col" aria-hidden="true">←</td><td><b class="en">mydriasis</b>, טכיקרדיה, יובש בפה, עצירות, אצירת שתן</td></tr>
+          <tr class="sc"><td>מעכב <span class="en">AChE</span> (<b class="en">Neostigmine</b>)</td><td class="arrow-col" aria-hidden="true">←</td><td><span class="en">ACh</span> מצטבר ← אפקט כולינרגי מוגבר (טיפול ב-<span class="en">Myasthenia</span> / אטוניה)</td></tr>
+          <tr class="sc"><td><b>זרחן אורגני</b> (עיכוב בלתי-הפיך)</td><td class="arrow-col" aria-hidden="true">←</td><td>חנק מכיווץ והפרשות בדרכי הנשימה ← סם-נגד <b class="en">Atropine</b></td></tr>
+          <tr class="sc"><td>חוסם עצב-שריר תחרותי (<span class="en">curare</span>)</td><td class="arrow-col" aria-hidden="true">←</td><td>אין פוטנציאל פעולה ← שיתוק רפה (<b>הפיך ע"י <span class="en">Neostigmine</span></b>)</td></tr>
+          <tr class="sc"><td><b class="en">Succinylcholine</b> (מדפולריז)</td><td class="arrow-col" aria-hidden="true">←</td><td>דפולריזציה מתמשכת ← פסיקולציות ← שיתוק רפה (<b>לא הפיך ע"י <span class="en">AChE</span></b>)</td></tr>
+          <tr class="sc"><td><span class="en">Atropine</span> בברדיקרדיה</td><td class="arrow-col" aria-hidden="true">←</td><td>חסימת <span class="en">M2</span> בלב ← קצב לב↑ (עולה)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 8 נקודות שחזורים -->
+  <section id="ps-sec-8" class="topic-section" data-category="exam">
+    <h2>8 · נקודות שחזרו בשחזורים — לא לפספס</h2>
+    <p class="sec-note">13 נקודות זהב שלוקטו ישירות ממבחני גמר ושחזורים של השנים האחרונות.</p>
+
+    <div class="cards c2 points">
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">שחזור 1</span><p class="flush">מנגנון <b class="en">Atropine</b> = <b>חסימת רצפטורים מוסקריניים</b> (אנטגוניסט תחרותי).</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">שחזור 2</span><p class="flush">מנגנון <b class="en">Pilocarpine</b> = <b>הפעלה ישירה</b> של רצפטורים מוסקריניים.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">שחזור 3</span><p class="flush"><b class="en">Physostigmine</b> = <b>מעכב <span class="en">AChE</span></b> (לא אגוניסט ישיר ולא אנטגוניסט; חוצה <span class="en">BBB</span>).</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">שחזור 4</span><p class="flush"><b class="en">Benztropine</b> משמש ל<b>מחלת פרקינסון</b> (איזון עודף כולינרגי).</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">שחזור 5</span><p class="flush"><b class="en">Scopolamine</b> ניתן ל<b>מחלת ים</b> ולבחילות/הקאות אחרי ניתוח (אסור בגלאוקומה).</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">שחזור 6</span><p class="flush"><b class="en">Donepezil</b> שייך למעכבי <span class="en">AChE</span> ומשמש ב<b>מחלת אלצהיימר</b>.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">שחזור 7</span><p class="flush"><b class="en">Ipratropium</b> הוא אנטגוניסט מוסקריני לאסתמה ו-<span class="en">COPD</span> (<span class="en">SAMA</span> במשאף).</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">שחזור 8</span><p class="flush">סם-הנגד להרעלת זרחנים אורגניים / עודף כולינרגי: <b class="en">Atropine</b> (יחד עם <span class="en">Pralidoxime</span>).</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">שחזור 9</span><p class="flush"><b class="en">Edrophonium</b> ל<b>אבחון</b> <span class="en">Myasthenia Gravis</span>; <b class="en">Neostigmine</b> ל<b>טיפול</b>.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">שחזור 10</span><p class="flush">מה גורם ל-<b class="en">miosis</b>: <b>אגוניסט כולינרגי</b> (ולא <span class="en">Atropine / Scopolamine</span> שגורמים ל-<span class="en">mydriasis</span>).</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">שחזור 11</span><p class="flush"><b class="en">Succinylcholine</b> = חוסם עצב-שריר מדפולריז, <b>אינו הפיך</b> ע"י מעכבי <span class="en">AChE</span>.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">שחזור 12</span><p class="flush">חוסמי עצב-שריר תחרותיים (<span class="en">curare</span>) <b>הפיכים</b> ע"י <b class="en">Neostigmine</b>.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">שחזור 13</span><p class="flush"><b>חום מאנטגוניסטים מוסקריניים</b> ("<span class="en">Atropine fever</span>") מסוכן במיוחד בילדים ובקשישים עקב עיכוב מוחלט של בלוטות הזיעה.</p></div>
+    </div>
+  </section>
+
+  <!-- כרטיסיות תרגול (אינטראקטיבי) -->
+  <section id="ps-practice" class="lab deck no-print" data-interactive aria-labelledby="ps-deck-title">
+    <p class="lab-kicker lab-kicker-hot"><span aria-hidden="true">⭐</span> מצב תרגול אישי לשחזורים</p>
+    <h2 id="ps-deck-title">כרטיסיות שחזורים (<span class="en">Flashcards</span>) לבחינה</h2>
+    <p class="sec-note">נסו לענות בעל פה ואז לחצו על הכרטיסייה כדי לחשוף את התשובה והנימוק.</p>
+    <p class="flash-progress"><span>התקדמות:</span> <strong id="flash-progress" role="status">0 מתוך 13 נלמדו בהצלחה</strong></p>
+
+    <div class="flash-stage">
+      <button type="button" id="flashcard" class="flash" data-flipped="false">
+        <span class="flash-inner">
+          <span id="card-front" class="face face-front" aria-hidden="false">
+            <span class="face-top"><b>שחזור <span id="card-num">1 / 13</span></b><span class="face-hint">לחצו לחשיפת התשובה ↻</span></span>
+            <span id="card-question" class="face-text">טוען שאלה...</span>
+            <span class="face-bottom">הקליקו בכל מקום בכרטיסייה לחשיפת התשובה</span>
+          </span>
+          <span id="card-back" class="face face-back" aria-hidden="true">
+            <span class="face-top"><b>תשובה מלאה ומדויקת</b><span class="face-hint">לחצו לחזרה לשאלה ↻</span></span>
+            <span id="card-answer" class="face-text">טוען תשובה...</span>
+            <span class="face-bottom">סמנו למטה כדי לתעד הצלחה</span>
+          </span>
+        </span>
+      </button>
+
+      <div class="flash-controls">
+        <button type="button" id="card-prev" class="flash-btn">→ הקודם</button>
+        <span class="flash-marks">
+          <button type="button" id="card-known" class="flash-btn flash-ok"><span aria-hidden="true">✓</span> ידעתי מצוין</button>
+          <button type="button" id="card-again" class="flash-btn flash-bad"><span aria-hidden="true">✗</span> לחזור שוב</button>
+        </span>
+        <button type="button" id="card-next" class="flash-btn">הבא ←</button>
+      </div>
+    </div>
+  </section>
+
+  <p class="source">סיכום לימודי המבוסס על חומרי הקורס בנושא "המערכת הפאראסימפתטית". נועד לחזרה — אין בו אבחון או ייעוץ רפואי.</p>
+</article>
+  </main>
+
+  <footer class="site-footer page wide">
+    <nav>
+      <a href="../accessibility.html">הצהרת נגישות</a>
+      <a href="../privacy.html">מדיניות פרטיות</a>
+    </nav>
+    <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+  </footer>
+</body>
+</html>
