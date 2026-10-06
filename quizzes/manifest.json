@@ -180,6 +180,108 @@
         }
       ],
       "quizzes": []
+    },
+    {
+      "name": "פרמקולוגיה",
+      "units": [
+        {
+          "name": "היפרליפידמיה (תרופות להורדת שומנים בדם)",
+          "quizzes": [
+            {
+              "id": "pharma-hyperlipidemia-1",
+              "title": "מבחן 1",
+              "description": "מבחן מקיף על תרופות להורדת שומנים בדם: סטטינים, רזינים, Ezetimibe, פיברטים, Niacin, אומגה 3, מעכבי PCSK9 ותרופות נוספות — מנגנון, תופעות לוואי, השוואת יעילות וסיעוד.",
+              "questionCount": 130,
+              "topicCount": 13
+            }
+          ]
+        },
+        {
+          "name": "פרקינסון",
+          "quizzes": [
+            {
+              "id": "pharma-parkinson-1",
+              "title": "מבחן 1",
+              "description": "מבחן מקיף על תרופות לפרקינסון ולמחלות ניווניות: L-Dopa ותוספי עזר, מעכבי MAO-B, אגוניסטים דופמינרגיים, Amantadine, אנטי-מוסקריניים, וכן אלצהיימר ו-ALS — מנגנון, תופעות לוואי, השוואה וסיעוד.",
+              "questionCount": 130,
+              "topicCount": 13
+            }
+          ]
+        },
+        {
+          "name": "חרדה",
+          "quizzes": [
+            {
+              "id": "pharma-anxiety-1",
+              "title": "מבחן 1",
+              "description": "נוגדי חרדה ומשרי שינה: GABA, בנזודיאזפינים, ברביטורטים, Buspirone, תרופות Z, אגוניסטים למלטונין ואנטגוניסטים לאורקסין.",
+              "questionCount": 51,
+              "topicCount": 13
+            }
+          ]
+        },
+        {
+          "name": "דיכאון",
+          "quizzes": [
+            {
+              "id": "pharma-depression-1",
+              "title": "מבחן 1",
+              "description": "נוגדי דיכאון ומייצבי מצב רוח: SSRI, SNRI, NRI, TCA, MAOI וטיראמין, סינדרום סרוטונין, נוגדי דיכאון לא טיפוסיים וחדשים, ו-Lithium.",
+              "questionCount": 56,
+              "topicCount": 14
+            }
+          ]
+        },
+        {
+          "name": "פסיכוזה",
+          "quizzes": [
+            {
+              "id": "pharma-psychosis-1",
+              "title": "מבחן 1",
+              "description": "מבחן על תרופות אנטי-פסיכוטיות: פסיכוזה וסכיזופרניה, מסלולי דופמין, דור ראשון מול שני, Clozapine, תופעות לוואי (EPS, מטבוליות, אוטונומיות, NMS), שימושים קליניים וסיעוד.",
+              "questionCount": 56,
+              "topicCount": 11
+            }
+          ]
+        },
+        {
+          "name": "אפילפסיה",
+          "quizzes": [
+            {
+              "id": "pharma-epilepsy-1",
+              "title": "מבחן 1",
+              "description": "מבחן על תרופות נוגדות פרכוסים: עקרונות וסיווג התקפים, מנגנוני הפעולה, התרופות המרכזיות (Valproic acid, Phenytoin, Carbamazepine, Lamotrigine, Topiramate, Levetiracetam, Ethosuximide), ברביטורטים ובנזודיאזפינים, status epilepticus, הריון, בחירת תרופה וסיעוד.",
+              "questionCount": 64,
+              "topicCount": 15
+            }
+          ]
+        },
+        {
+          "name": "הרדמה",
+          "quizzes": [
+            {
+              "id": "pharma-anesthesia-1",
+              "title": "מבחן 1",
+              "description": "שאלות על הרדמה כללית ומקומית: שלבי ההרדמה, MAC, גזים נדיפים, חומרי הרדמה IV, תרופות עזר, חוסמים נוירומוסקולריים, היפרתרמיה ממאירה וסיעוד.",
+              "questionCount": 66,
+              "topicCount": 13
+            }
+          ]
+        },
+        {
+          "name": "אנטיהיסטמינים",
+          "quizzes": [
+            {
+              "id": "pharma-antihistamines-1",
+              "title": "מבחן 1",
+              "description": "שאלות על היסטמין, רצפטורים H1-H4, אנטיהיסטמינים דור ראשון ושני, שימושים קליניים, תופעות לוואי, תגובות בין-תרופתיות וסיעוד.",
+              "questionCount": 42,
+              "topicCount": 11
+            }
+          ]
+        }
+      ],
+      "quizzes": []
     }
   ]
 }
