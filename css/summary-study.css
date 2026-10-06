@@ -1,0 +1,49 @@
+/* Study tools on the plain pharmacology summaries (js/summary-study.js). Loaded after summary.css
+   and uses its tokens (--surface, --line, --accent*). */
+
+.summary [hidden], .study [hidden] { display: none !important; }
+
+.study { margin-block: 0.75rem 1.25rem; padding: 0.8rem 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; display: grid; gap: 0.7rem; }
+.study-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.study-nav a { display: inline-block; padding: 0.2rem 0.7rem; border: 1px solid var(--line); border-radius: 999px; font-size: 0.875rem; text-decoration: none; color: var(--ink); }
+.study-nav a[aria-current="page"] { background: var(--ink); color: var(--bg); border-color: var(--ink); font-weight: 700; }
+.study-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; }
+.study-search { flex: 1 1 14rem; display: block; }
+.study-label { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.study-search input { inline-size: 100%; padding: 0.5rem 0.8rem; font: inherit; font-size: 0.95rem; color: var(--ink); background: var(--bg); border: 2px solid var(--line); border-radius: 6px; }
+.study-toggle { padding: 0.4rem 0.9rem; font-size: 0.95rem; }
+.study-toggle[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.study-status { margin: 0; min-block-size: 1.2em; font-size: 0.875rem; color: var(--muted); }
+.study-status:empty { display: none; }
+.study-progress { display: flex; align-items: center; gap: 0.7rem; font-size: 0.875rem; color: var(--muted); }
+.study-progress progress { flex: 1; block-size: 0.6rem; accent-color: var(--accent); }
+.study-count { min-inline-size: 3.5em; font-variant-numeric: tabular-nums; }
+
+/* Self-test: effects are blurred until clicked. */
+.summary.recall .rel-effect { cursor: pointer; position: relative; }
+.summary.recall .rel-effect:not(.is-revealed) .effect-text { filter: blur(7px); opacity: 0.35; user-select: none; }
+.summary.recall .rel-effect:not(.is-revealed)::after { content: "לחצו לחשיפה"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; color: var(--accent-ink); }
+
+/* Exam focus: everything but the "asked in exams" list fades back. */
+.summary.focus section:not(.is-flags) { opacity: 0.4; }
+.summary.focus section.is-flags .flags { border-color: var(--accent); border-width: 2px; }
+
+/* Learned checklist. */
+.summary .flags li.has-check { padding-inline-start: 0; }
+.summary .flags li.has-check::before { display: none; }
+.summary .flag-item { display: flex; align-items: flex-start; gap: 0.6rem; cursor: pointer; }
+.summary .flag-item input { flex: none; inline-size: 1.15rem; block-size: 1.15rem; margin-block-start: 0.35rem; accent-color: var(--accent); }
+.summary .flags li.is-done .flag-text { opacity: 0.55; }
+
+:root[data-contrast="high"] .study,
+:root[data-contrast="high"] .study-search input { border: 2px solid #000; }
+
+@media (max-width: 560px) {
+  .study-toggle { flex: 1 1 auto; justify-content: center; }
+}
+
+@media print {
+  .summary .effect-text { filter: none !important; opacity: 1 !important; }
+  .summary .rel-effect::after { display: none !important; }
+  .summary section { opacity: 1 !important; }
+}

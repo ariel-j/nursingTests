@@ -33,6 +33,7 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 * `quizzes/<id>.json`: one quiz per file; required `subject`, plus `unit` when its subject declares units. Subject/unit must exist in the catalog. `quizzes/manifest.json` is generated (a subjects → units → quizzes tree; titles numeric-aware).
 * Authoring format (options as strings + `correctIndex` + `wrongExplanations`, or the variant `stem` + `answer` + option-aligned `notes`) is converted with `npm run import`.
 * Quiz format is documented in README.md.
+* `js/summary-study.js` + `css/summary-study.css` (pure helpers in `js/summary-logic.js`, tested): opt-in study tools for the plain pharmacology summaries (`pharma-*`): subject nav, search, self-test, exam focus, learned checklist (`summary-checks:<id>`). A page opts in by loading both files; the other summaries are unchanged.
 
 ## Subjects
 
