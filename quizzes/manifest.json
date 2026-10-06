@@ -41,54 +41,6 @@
       "name": "פרמקולוגיה",
       "units": [
         {
-          "name": "אפילפסיה",
-          "quizzes": [
-            {
-              "id": "pharma-epilepsy-1",
-              "title": "מבחן 1",
-              "description": "מבחן על תרופות נוגדות פרכוסים: עקרונות וסיווג התקפים, מנגנוני הפעולה, התרופות המרכזיות (Valproic acid, Phenytoin, Carbamazepine, Lamotrigine, Topiramate, Levetiracetam, Ethosuximide), ברביטורטים ובנזודיאזפינים, status epilepticus, הריון, בחירת תרופה וסיעוד.",
-              "questionCount": 64,
-              "topicCount": 15
-            }
-          ]
-        },
-        {
-          "name": "פסיכוזה",
-          "quizzes": [
-            {
-              "id": "pharma-psychosis-1",
-              "title": "מבחן 1",
-              "description": "מבחן על תרופות אנטי-פסיכוטיות: פסיכוזה וסכיזופרניה, מסלולי דופמין, דור ראשון מול שני, Clozapine, תופעות לוואי (EPS, מטבוליות, אוטונומיות, NMS), שימושים קליניים וסיעוד.",
-              "questionCount": 56,
-              "topicCount": 11
-            }
-          ]
-        },
-        {
-          "name": "אנטיהיסטמינים",
-          "quizzes": [
-            {
-              "id": "pharma-antihistamines-1",
-              "title": "מבחן 1",
-              "description": "שאלות על היסטמין, רצפטורים H1-H4, אנטיהיסטמינים דור ראשון ושני, שימושים קליניים, תופעות לוואי, תגובות בין-תרופתיות וסיעוד.",
-              "questionCount": 42,
-              "topicCount": 11
-            }
-          ]
-        },
-        {
-          "name": "הרדמה",
-          "quizzes": [
-            {
-              "id": "pharma-anesthesia-1",
-              "title": "מבחן 1",
-              "description": "שאלות על הרדמה כללית ומקומית: שלבי ההרדמה, MAC, גזים נדיפים, חומרי הרדמה IV, תרופות עזר, חוסמים נוירומוסקולריים, היפרתרמיה ממאירה וסיעוד.",
-              "questionCount": 66,
-              "topicCount": 13
-            }
-          ]
-        },
-        {
           "name": "היפרליפידמיה (תרופות להורדת שומנים בדם)",
           "quizzes": [
             {
@@ -133,6 +85,54 @@
               "description": "נוגדי דיכאון ומייצבי מצב רוח: SSRI, SNRI, NRI, TCA, MAOI וטיראמין, סינדרום סרוטונין, נוגדי דיכאון לא טיפוסיים וחדשים, ו-Lithium.",
               "questionCount": 56,
               "topicCount": 14
+            }
+          ]
+        },
+        {
+          "name": "פסיכוזה",
+          "quizzes": [
+            {
+              "id": "pharma-psychosis-1",
+              "title": "מבחן 1",
+              "description": "מבחן על תרופות אנטי-פסיכוטיות: פסיכוזה וסכיזופרניה, מסלולי דופמין, דור ראשון מול שני, Clozapine, תופעות לוואי (EPS, מטבוליות, אוטונומיות, NMS), שימושים קליניים וסיעוד.",
+              "questionCount": 56,
+              "topicCount": 11
+            }
+          ]
+        },
+        {
+          "name": "אפילפסיה",
+          "quizzes": [
+            {
+              "id": "pharma-epilepsy-1",
+              "title": "מבחן 1",
+              "description": "מבחן על תרופות נוגדות פרכוסים: עקרונות וסיווג התקפים, מנגנוני הפעולה, התרופות המרכזיות (Valproic acid, Phenytoin, Carbamazepine, Lamotrigine, Topiramate, Levetiracetam, Ethosuximide), ברביטורטים ובנזודיאזפינים, status epilepticus, הריון, בחירת תרופה וסיעוד.",
+              "questionCount": 64,
+              "topicCount": 15
+            }
+          ]
+        },
+        {
+          "name": "הרדמה",
+          "quizzes": [
+            {
+              "id": "pharma-anesthesia-1",
+              "title": "מבחן 1",
+              "description": "שאלות על הרדמה כללית ומקומית: שלבי ההרדמה, MAC, גזים נדיפים, חומרי הרדמה IV, תרופות עזר, חוסמים נוירומוסקולריים, היפרתרמיה ממאירה וסיעוד.",
+              "questionCount": 66,
+              "topicCount": 13
+            }
+          ]
+        },
+        {
+          "name": "אנטיהיסטמינים",
+          "quizzes": [
+            {
+              "id": "pharma-antihistamines-1",
+              "title": "מבחן 1",
+              "description": "שאלות על היסטמין, רצפטורים H1-H4, אנטיהיסטמינים דור ראשון ושני, שימושים קליניים, תופעות לוואי, תגובות בין-תרופתיות וסיעוד.",
+              "questionCount": 42,
+              "topicCount": 11
             }
           ]
         }
