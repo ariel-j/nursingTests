@@ -273,6 +273,42 @@
               "topicCount": 11
             }
           ]
+        },
+        {
+          "name": "מערכת העיכול",
+          "quizzes": [
+            {
+              "id": "pharma-git-1",
+              "title": "מבחן 1",
+              "description": "מבחן מקיף על תרופות במערכת העיכול: כיב וצרבת, בקרת חומצה, שלשול ועצירות, בחילות והקאות, ומעי רגיז.",
+              "questionCount": 52,
+              "topicCount": 12
+            }
+          ]
+        },
+        {
+          "name": "מערכת הנשימה",
+          "quizzes": [
+            {
+              "id": "pharma-respiratory-1",
+              "title": "מבחן 1",
+              "description": "מבחן מקיף על תרופות למערכת הנשימה: אסטמה ו-COPD, מרחיבי סמפונות, נוגדי דלקת, ביולוגיים וניהול הטיפול.",
+              "questionCount": 52,
+              "topicCount": 11
+            }
+          ]
+        },
+        {
+          "name": "דיכוי חיסוני",
+          "quizzes": [
+            {
+              "id": "pharma-immunosuppression-1",
+              "title": "מבחן 1",
+              "description": "מבחן מקיף על תרופות לדיכוי חיסוני ומניעת דחיית שתל: עקרונות הטיפול, נוגדנים, מעכבי קלצינאורין, mTOR, אנטי-פרוליפרטיביים וסיעוד.",
+              "questionCount": 39,
+              "topicCount": 9
+            }
+          ]
         }
       ],
       "quizzes": []
