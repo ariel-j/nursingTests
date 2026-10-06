@@ -23,6 +23,9 @@
 [data-system="pharma-epilepsy"]         { --a: #8a3a7e; --a-soft: #f2e4ef; --a-ink: #692a5f; --a-d: #e59ad8; --a-soft-d: #3a1d36; --a-ink-d: #f2c2ea; }
 [data-system="pharma-anesthesia"]       { --a: #556070; --a-soft: #e6e9ee; --a-ink: #3c4552; --a-d: #a9b6c8; --a-soft-d: #242b35; --a-ink-d: #cdd6e2; }
 [data-system="pharma-antihistamines"]   { --a: #2a64a0; --a-soft: #dfeaf5; --a-ink: #1c4a7a; --a-d: #7db4ec; --a-soft-d: #16304a; --a-ink-d: #b4d4f6; }
+[data-system="pharma-git"] { --a: #a16207; --a-soft: #f6ecd2; --a-ink: #713f12; --a-d: #e9b84e; --a-soft-d: #37290f; --a-ink-d: #f4d58e; }
+[data-system="pharma-respiratory"] { --a: #0369a1; --a-soft: #dcebf5; --a-ink: #075985; --a-d: #5cb8ea; --a-soft-d: #112f42; --a-ink-d: #a5d8f3; }
+[data-system="pharma-immunosuppression"] { --a: #b91c1c; --a-soft: #f9e1e1; --a-ink: #7f1d1d; --a-d: #ff8f8f; --a-soft-d: #411919; --a-ink-d: #ffc2c2; }
 
 [data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
 @media (prefers-color-scheme: dark) {
@@ -183,6 +186,9 @@
 /* The amber "asked in past exams" flag on the pharmacology summary */
 [data-system="pharmacodynamics"] .exam,
 [data-system="parasympathetic"] .exam,
+[data-system="pharma-git"] .exam,
+[data-system="pharma-respiratory"] .exam,
+[data-system="pharma-immunosuppression"] .exam,
 [data-system="sympathetic"] .exam { background: #f59e0b; color: #1a1305; }
 [data-system="pharmacodynamics"] .h1-en,
 [data-system="parasympathetic"] .h1-en,

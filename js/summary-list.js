@@ -118,6 +118,24 @@ export const SUMMARIES = [
     title: 'אנטיהיסטמינים',
     blurb: 'היסטמין ורצפטורי H1–H4, דור ראשון מול דור שני, שימושים ותופעות לוואי.',
   },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-git',
+    title: 'תרופות במערכת העיכול',
+    blurb: 'בקרת חומצה וכיב, שלשול ועצירות, בחילות והקאות, מעי רגיז ומחלות מעי דלקתיות.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-respiratory',
+    title: 'תרופות למערכת הנשימה',
+    blurb: 'אסטמה ו-COPD: מרחיבי סמפונות, נוגדי דלקת, טיפול ביולוגי, ניהול הטיפול ותופעות הלוואי של סטרואידים.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-immunosuppression',
+    title: 'תרופות לדיכוי חיסוני',
+    blurb: 'מניעת דחיית שתל: שלבי הטיפול, נוגדנים, מעכבי קלצינאורין ו-mTOR, אנטי-פרוליפרטיביים וסטרואידים, וסיעוד.',
+  },
 ];
 
 /** The summaries of one subject, in list order. */
