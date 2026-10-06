@@ -7,8 +7,11 @@ No build step and no runtime dependencies. Node is only needed for the tests and
 
 ## How a quiz plays
 
-- The home page lists quizzes grouped by subject. Each quiz opens on a start screen where you resume
-  an unfinished session, or start a new one over all topics or only the ones you tick.
+- The home page lists the subjects (מקצועות). A subject's page (`./?subject=<id>`) has its mixed practice,
+  printable exam, summaries and videos, then its quizzes grouped by unit. A side menu (the "תפריט" button on
+  every page) lists every subject with its units and those same parts.
+- Each quiz opens on a start screen where you resume an unfinished session, or start a new one over
+  all topics or only the ones you tick.
 - Questions are shown in random order. The 4 options are reshuffled every time a question is shown.
 - A **wrong** or **skipped** question goes back into the queue and comes back 2–5 questions later,
   never immediately next. The one exception is when it is the only question left.
@@ -23,24 +26,33 @@ No build step and no runtime dependencies. Node is only needed for the tests and
 - An unfinished session is saved in `localStorage` and resumes after a refresh.
   The quiz list shows which quizzes are in progress and your best first-try score
   (best score counts only runs over the whole quiz).
+- **Printable exam** (`print.html?id=…` for one quiz, linked from the start screen, or
+  `print.html?subject=<id>` for the whole subject): pick topics, a question count
+  (default 100, sampled in proportion to each topic's size) and an order (mixed, or grouped by topic).
+  Options are shuffled once and lettered א–ד. The answer key, optionally with explanations, starts on
+  a new page. Printing uses the browser's print dialog, so "Save as PDF" gives a file.
 - Keyboard: `1`–`4` choose, `S` skips, `Enter` continues. These use key codes, so they also work with a Hebrew layout.
 
 ## Adding a quiz
 
 Writing guidelines, plus a brief you can paste into the session that writes the questions, are in
-[docs/quiz-authoring.md](docs/quiz-authoring.md).
+[docs/quiz-authoring.md](docs/quiz-authoring.md). A whole new subject (catalog entry, quizzes,
+summaries, and what it gets automatically) is covered step by step in [docs/new-subject.md](docs/new-subject.md).
 
 1. Make sure the quiz's `subject` (and `unit`, if that subject has units) exist in
    `quizzes/subjects.json`. Add them there first if needed.
 2. Save the quiz as `quizzes/<id>.json`. The file name must match `id`. If you were given the quiz in
-   the authoring format (options as plain strings + `correctIndex` + `wrongExplanations`), convert it:
+   the authoring format (options as plain strings + `correctIndex` + `wrongExplanations`, or its variant
+   `stem` + `answer` + `notes` with one note per option and `null` for the correct one, or no `notes` at all), convert it:
    `npm run import -- <src.json> --id <id> --subject "<subject>" --unit "<unit>" --title "<title>"`.
 3. `npm run manifest` to regenerate `quizzes/manifest.json`.
 4. `npm run validate` to check everything.
 5. Commit the quiz, the catalog and the manifest together.
 
-`quizzes/subjects.json` is the hand-written catalog: an ordered list of subjects, each with an optional
-ordered list of units. It sets the sections and their order on the home page; empty units show as "בקרוב".
+`quizzes/subjects.json` is the hand-written catalog: an ordered list of subjects, each with an `id`
+(lowercase, hyphens; used in links like `?subject=pharmacology` and by summaries), a Hebrew `name`
+(what quizzes put in `subject`) and an optional ordered list of `units`. It sets the subjects and their
+order on the home page and in the menu; empty units and subjects show as "בקרוב".
 
 ### Quiz format
 
@@ -95,36 +107,65 @@ It is dropped, and the quiz starts fresh.
 
 ## Short summaries (סיכומים קצרים)
 
-The home page links to `summaries/`, a hub with one condensed summary per body system. Each summary is a
-static page, `summaries/<id>.html`, with a print button; the browser's print dialog saves it as a PDF
-(light colors, A4, rows kept whole across pages). `summaries/all.html` loads every summary into one page,
-so they print as a single PDF.
+`summaries/` is a hub with one condensed summary per unit or topic, grouped by subject;
+`summaries/?subject=<id>` shows one subject's (linked from its page). Each summary is a static page,
+`summaries/<id>.html`, with a print button; the browser's print dialog saves it as a PDF (light colors,
+A4, rows kept whole across pages). `summaries/all.html` loads every summary into one page, so they print
+as a single PDF; `all.html?subject=<id>` prints one subject's.
 
-To add a summary:
+To add a summary, see [docs/summary-authoring.md](docs/summary-authoring.md): a brief for writing one in the
+site's style, then these steps:
 
 1. Save it as `summaries/<id>.html`, copying the structure of an existing one: its content goes in
    `<article class="summary" data-system="<id>">` and uses the same classes (`rel`, `def`, `call`, `flags`, `exam`).
-2. Add `{ id, title, blurb }` to `js/summary-list.js` (this sets the order on the hub and in the combined PDF).
+2. Add `{ subject, id, title, blurb }` to `js/summary-list.js` (`subject` is the catalog id; the order sets
+   the order on the hub and in the combined PDF).
 3. Give it accent colors in `css/summary.css` (a `[data-system="<id>"]` rule with light and dark values).
-4. `npm run validate` checks it: listed, self-hosted only, no inline styles or handlers, toolbar and footer present.
+4. `npm run validate` checks it: listed, a known subject, self-hosted only, no inline styles or handlers,
+   toolbar, menu and footer present.
+
+## Videos and artifacts (סרטוני הסבר קצרים)
+
+`media.html?subject=<id>` shows a subject's short explainer videos and the owner's own artifacts (images,
+PDFs, HTML pages), one section per sub-subject. The files live in `media/<subject-id>/`, optionally one
+folder per sub-subject; names give the titles and order (`01 - …`). GitHub Pages can't list a folder,
+so `media/manifest.json` lists them. It is not committed: the deploy workflow builds it every time it
+publishes the site, and `npm run manifest` builds it locally, so uploading through the GitHub web UI is enough. Captions:
+a `.vtt` next to the video, same name. `npm run validate` rejects course files (`.pptx`, `.docx`),
+unplayable video (`.mov`), unsupported types and files over 50MB, and warns about videos without
+captions and HTML pages that load from a CDN. How to upload: [media/README.md](media/README.md).
+
+A summary can also carry interactive widgets (search, simulators, flashcards), as `pharmacodynamics.html` does:
+mark each widget `data-interactive` (and `no-print`), keep its script and styles in their own files
+(`js/pharmacodynamics.js`, `css/pharmacodynamics.css`, pure maths in `js/pharma-math.js`; the search, flashcards, panels and progress bar come from `js/summary-widgets.js` and `css/summary-widgets.css`), and keep the article's
+text complete without them. `all.html` drops every `[data-interactive]` block, so only the text is printed.
 
 ## Development
 
 ```sh
 npm test          # unit tests for js/core.js and the scripts (node:test)
-npm run validate  # validate all quizzes and summaries, and check the manifest is current
-npm run manifest  # regenerate quizzes/manifest.json
+npm run validate  # validate all quizzes, summaries and media files, and check the quiz manifest is current
+npm run manifest  # regenerate quizzes/manifest.json and media/manifest.json
 npm run serve     # http://localhost:8000 (fetch() does not work over file://)
 ```
+
+## Deploying
+
+`.github/workflows/pages.yml` publishes the site on every push to `main`, after building
+`media/manifest.json`. It needs **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+A run takes about a minute; GitHub Actions are free for public repositories.
 
 | Path | Role |
 | --- | --- |
 | `js/core.js` | pure logic: queue, scoring, stats, validation. No DOM, no storage |
-| `js/ecg.js` | pure SVG path for the ECG progress strip |
 | `js/storage.js` | guarded `localStorage` wrapper (prefix `anatomy-quizzes:v1:`) |
-| `js/index.js`, `js/quiz.js` | page UI |
+| `js/index.js`, `js/quiz.js`, `js/print.js` | page UI (`js/load-quiz.js`: quiz loading shared by quiz.js and print.js). `quiz.html?id=<quiz>` plays one quiz; `quiz.html?subject=<id>` is mixed practice across the subject's units (the subject page's "בחירת נושאים למבחן" card) |
+| `js/catalog.js` | the manifest as the pages see it: one cached fetch, plus pure helpers (find a subject, its quizzes, counts, links) |
+| `js/nav.js` | the top bar and side menu on every page (a modal `<dialog>`), built from the manifest and the summaries list |
 | `summaries/`, `css/summary.css` | short summaries, the hub and the combined print page |
 | `js/summary-list.js` | the list of summaries (no DOM); `js/summaries.js`, `js/summary.js`, `js/summaries-all.js` drive the pages |
-| `scripts/` | manifest, validate, and a tiny static dev server |
-| `fonts/` | self-hosted Assistant and Frank Ruhl Libre (SIL OFL, licenses included) |
+| `scripts/` | manifest, validate (quizzes, summaries, and that every page has the toolbar, menu and footer), and a tiny static dev server |
+| `css/style.css` | the whole site's styles; follows `design/STYLE.md` |
+| `design/` | design spec (`STYLE.md`) and the reference page it was taken from. Not used by the site |
+| `fonts/` | self-hosted Rubik and Frank Ruhl Libre (SIL OFL, licenses included) |
 | `test/` | unit tests. `test/fixtures/` holds placeholder content only |

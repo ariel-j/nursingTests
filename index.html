@@ -5,24 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <title>תרגול למבחנים בסיעוד</title>
-  <link rel="preload" href="fonts/assistant-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/style.css">
   <script type="module" src="js/index.js"></script>
+  <script type="module" src="js/nav.js"></script>
   <script type="module" src="js/a11y.js"></script>
 </head>
 <body>
   <main class="page">
+    <nav id="subject-nav" class="top-nav" hidden><a href="./">→ כל המקצועות</a></nav>
     <header class="site-header">
-      <svg class="ecg ecg-hero" viewBox="0 0 1000 64" preserveAspectRatio="none" aria-hidden="true">
-        <line x1="0" y1="40" x2="1000" y2="40" class="ecg-baseline"/>
-        <path id="hero-trace" class="ecg-trace" d="M0 40"/>
-      </svg>
-      <h1>תרגול למבחנים בסיעוד</h1>
-      <p class="lede">בחרו בוחן. שאלה שטעיתם בה חוזרת עד שעונים עליה נכון פעמיים ברצף, וההתקדמות נשמרת בדפדפן.</p>
-      <p><a class="button secondary" href="summaries/">סיכומים קצרים</a></p>
+      <h1 id="page-title">תרגול למבחנים בסיעוד</h1>
+      <p id="lede" class="lede">בחרו מקצוע. שאלה שטעיתם בה חוזרת עד שעונים עליה נכון פעמיים ברצף, וההתקדמות נשמרת בדפדפן.</p>
     </header>
     <p id="status" class="status" role="status">טוען…</p>
-    <div id="subjects"></div>
+    <div id="content"></div>
   </main>
 
   <footer class="site-footer page">
