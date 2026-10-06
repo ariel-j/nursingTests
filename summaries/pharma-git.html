@@ -8,9 +8,11 @@
   <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/summary.css">
+  <link rel="stylesheet" href="../css/summary-widgets.css">
   <link rel="stylesheet" href="../css/summary-study.css">
   <script type="module" src="../js/summary.js"></script>
   <script type="module" src="../js/summary-study.js"></script>
+  <script type="module" src="../js/pharma-cards.js"></script>
   <script type="module" src="../js/nav.js"></script>
   <script type="module" src="../js/a11y.js"></script>
 </head>
@@ -207,6 +209,39 @@
           </ul>
         </div>
   </section>
+  <section id="pharma-git-practice" class="lab deck no-print" data-interactive aria-labelledby="pharma-git-deck-title">
+    <p class="lab-kicker lab-kicker-hot"><span aria-hidden="true">⭐</span> מצב תרגול אישי לשינון</p>
+    <h2 id="pharma-git-deck-title">כרטיסיות שינון (<span class="en">Flashcards</span>)</h2>
+    <p class="sec-note">נסו לענות בעל פה ואז לחצו על הכרטיסייה כדי לחשוף את התשובה. עם המיקוד בכרטיסייה, החצים ← → עוברים בין הכרטיסים.</p>
+    <p class="flash-progress"><span>התקדמות:</span> <strong id="flash-progress" role="status">0 מתוך 12 נלמדו בהצלחה</strong></p>
+
+    <div class="flash-stage">
+      <button type="button" id="flashcard" class="flash" data-flipped="false">
+        <span class="flash-inner">
+          <span id="card-front" class="face face-front" aria-hidden="false">
+            <span class="face-top"><b>שאלה <span id="card-num">1 / 12</span></b><span id="card-repeat" class="exam" hidden></span></span>
+            <span id="card-question" class="face-text">טוען שאלה...</span>
+            <span class="face-bottom">הקליקו בכל מקום בכרטיסייה לחשיפת התשובה ↻</span>
+          </span>
+          <span id="card-back" class="face face-back" aria-hidden="true">
+            <span class="face-top"><b>תשובה מלאה ומנומקת</b><span class="face-hint">לחצו לחזרה לשאלה ↻</span></span>
+            <span id="card-answer" class="face-text">טוען תשובה...</span>
+            <span class="face-bottom">סמנו למטה כדי לתעד הצלחה</span>
+          </span>
+        </span>
+      </button>
+
+      <div class="flash-controls">
+        <button type="button" id="card-prev" class="flash-btn">→ הקודם</button>
+        <span class="flash-marks">
+          <button type="button" id="card-known" class="flash-btn flash-ok"><span aria-hidden="true">✓</span> ידעתי מצוין</button>
+          <button type="button" id="card-again" class="flash-btn flash-bad"><span aria-hidden="true">✗</span> לחזור שוב</button>
+        </span>
+        <button type="button" id="card-next" class="flash-btn">הבא ←</button>
+      </div>
+    </div>
+  </section>
+
   <p class="source">סיכום לימודי המבוסס על חומרי הקורס בנושא "תרופות במערכת העיכול". נועד לחזרה — אין בו אבחון או ייעוץ רפואי.</p>
 </article>
   </main>
