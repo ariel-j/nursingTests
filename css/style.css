@@ -231,6 +231,8 @@ kbd {
   text-decoration: none;
 }
 .quiz-card:hover { border-color: var(--accent); }
+.quiz-card.is-soon { cursor: default; }
+.quiz-card.is-soon:hover { border-color: var(--line); }
 .mix-card { background: var(--accent-soft); border-color: var(--accent); }
 .mix-card .card-title { color: var(--accent); }
 .card-title { margin: 0 0 0.2rem; font-family: var(--sans); font-size: 1.0625rem; font-weight: 600; line-height: 1.35; }

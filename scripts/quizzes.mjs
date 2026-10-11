@@ -35,11 +35,17 @@ export function validateCatalog(catalog) {
       errors.push(`${where}: duplicate id "${s.id}"`);
     }
     ids.add(s.id);
-    if (s.units === undefined) return;
-    if (!Array.isArray(s.units) || !s.units.every(isText)) {
-      errors.push(`${where}: units must be an array of non-empty strings`);
-    } else if (new Set(s.units).size !== s.units.length) {
-      errors.push(`${where}: duplicate unit name`);
+    if (s.units !== undefined) {
+      if (!Array.isArray(s.units) || !s.units.every(isText)) {
+        errors.push(`${where}: units must be an array of non-empty strings`);
+      } else if (new Set(s.units).size !== s.units.length) {
+        errors.push(`${where}: duplicate unit name`);
+      }
+    }
+    if (s.upcoming !== undefined) {
+      const ok = Array.isArray(s.upcoming) && s.upcoming.every((t) => t && isText(t.title)
+        && (t.status === undefined || isText(t.status)));
+      if (!ok) errors.push(`${where}: upcoming must be an array of { title, status? } with non-empty text`);
     }
   });
   return errors;
@@ -122,6 +128,7 @@ export function buildManifest(quizzes, catalog) {
           quizzes: own.filter((q) => q.unit === unit).map(entry).sort(byTitle),
         })),
         quizzes: own.filter((q) => q.unit === undefined).map(entry).sort(byTitle),
+        upcoming: (s.upcoming ?? []).map((t) => ({ title: t.title, status: t.status ?? 'בקרוב' })),
       };
     }),
   };

@@ -126,6 +126,12 @@ function renderTools(subject, media) {
     items.push(card(paths.media, 'tool-card', 'סרטוני הסבר קצרים',
       el('p', 'muted', `סרטון וחומרי עזר לכל תת‑נושא · ${videoCount} פריטים.`)));
   }
+  // Tools the subject plans but has not built yet: shown with their status, not as links.
+  for (const tool of subject.upcoming ?? []) {
+    const box = el('div', 'quiz-card tool-card is-soon');
+    box.append(el('h3', 'card-title', tool.title), el('p', 'meta', tool.status));
+    items.push(box);
+  }
   if (items.length === 0) return null;
   const list = el('ul', 'quiz-list tool-list');
   list.setAttribute('aria-label', 'כלים');
