@@ -6,6 +6,7 @@ const PREFIX = 'anatomy-quizzes:v1:';
 export const keys = {
   session: (quizId) => `session:${quizId}`,
   results: (quizId) => `results:${quizId}`,
+  history: (quizId) => `history:${quizId}`,
 };
 
 // Global (not per quiz) preferences.
@@ -37,4 +38,18 @@ export function remove(key) {
   } catch {
     // nothing to clean up if storage is unavailable
   }
+}
+
+/** Keys (without the prefix) that start with `start`, e.g. every `history:` entry. */
+export function listKeys(start) {
+  const found = [];
+  try {
+    for (let i = 0; i < window.localStorage.length; i++) {
+      const key = window.localStorage.key(i);
+      if (key !== null && key.startsWith(PREFIX + start)) found.push(key.slice(PREFIX.length));
+    }
+  } catch {
+    // unavailable storage simply has no keys
+  }
+  return found;
 }

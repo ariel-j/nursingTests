@@ -1,17 +1,22 @@
 import {
   MASTERY_STREAK,
+  addAttempt,
+  analyzeHistory,
   answer,
+  buildAttempt,
   createSession,
   currentQuestion,
   isComplete,
   isSessionCompatible,
   isolateNumberRanges as fmt,
   listTopics,
+  newAttemptId,
   presentOptions,
   progressInfo,
   questionById,
   questionIdsForTopics,
   recordResult,
+  sanitizeHistory,
   sampleQuestionIds,
   skip,
   summarize,
@@ -39,6 +44,12 @@ const ui = {
   topicList: $('topic-list'),
   startButton: $('start-button'),
   best: $('best'),
+  stats: $('stats'),
+  statsSummary: $('stats-summary'),
+  statsList: $('stats-list'),
+  practiceWeak: $('practice-weak'),
+  practiceQuestions: $('practice-questions'),
+  clearStats: $('clear-stats'),
   printLink: $('print-link'),
   homeLinks: [$('home-link'), $('done-home-link')],
   // play
@@ -74,6 +85,9 @@ const ui = {
   noRetried: $('no-retried'),
 };
 
+const LEVEL_LABELS = { unknown: 'אין עדיין מספיק נתונים', weak: 'דורש חיזוק', fair: 'בינוני', solid: 'שולט' };
+const TREND_LABELS = { up: '↑ משתפר', down: '↓ יורד', flat: '→ יציב' };
+
 const MODE_LABELS = { full: 'כל הבוחן', topics: 'נושאים נבחרים', retry: 'שאלות שחזרו' };
 const LETTERS = ['א', 'ב', 'ג', 'ד'];
 // After a correct answer, move on by itself unless the user asked for less motion.
@@ -89,6 +103,7 @@ let state = null;
 let phase = 'start';
 let optionButtons = [];
 let lastSummary = null;
+let analysis = null;
 let autoAdvance = null;
 
 function el(tag, className, text) {
@@ -130,6 +145,73 @@ function persist() {
 function loadSavedSession() {
   const saved = load(keys.session(quiz.id));
   return saved && isSessionCompatible(saved, quiz) && !isComplete(saved) ? saved : null;
+}
+
+
+// ---------- statistics ----------
+
+function loadHistory() {
+  return sanitizeHistory(load(keys.history(quiz.id)));
+}
+
+function recordAttempt() {
+  const now = new Date();
+  const attempt = buildAttempt(state, quiz, { id: newAttemptId(now), date: now.toISOString() });
+  // Statistics are best effort: if storage is full or blocked the quiz itself still works.
+  save(keys.history(quiz.id), addAttempt(loadHistory(), attempt));
+}
+
+function renderStatRow(t) {
+  const li = el('li', `stat-row level-${t.level}`);
+  const bar = el('span', 'bar');
+  bar.setAttribute('aria-hidden', 'true');
+  const fill = el('i');
+  fill.style.inlineSize = `${t.score === null ? 0 : Math.round(t.score * 100)}%`;
+  bar.append(fill);
+
+  const parts = [LEVEL_LABELS[t.level]];
+  if (t.level !== 'unknown') parts.push(`${Math.round(t.score * 100)}%`);
+  if (t.trend) parts.push(TREND_LABELS[t.trend]);
+  const text = el('span', 'stat-text', parts.join(' · '));
+  if (t.recovered) text.append(el('span', 'recovered', '✓ הייתה חלשה והתחזקה'));
+  li.append(el('span', null, t.topic), bar, text);
+  return li;
+}
+
+function renderStats() {
+  analysis = analyzeHistory(loadHistory(), quiz);
+  ui.stats.hidden = analysis.attempts === 0;
+  if (analysis.attempts === 0) return;
+
+  const weak = analysis.topics.filter((t) => t.level === 'weak');
+  ui.statsSummary.textContent = `${analysis.attempts} סבבים נשמרו · `
+    + (weak.length === 0 ? 'אין כרגע נושאים שדורשים חיזוק.' : `${weak.length} נושאים דורשים חיזוק.`);
+  // Weak topics first (stable sort keeps the quiz order within each group).
+  const ordered = [...analysis.topics].sort((a, b) => (b.level === 'weak') - (a.level === 'weak'));
+  ui.statsList.replaceChildren(...ordered.map(renderStatRow));
+
+  const weakIds = questionIdsForTopics(quiz, weak.map((t) => t.topic));
+  ui.practiceWeak.hidden = weakIds.length === 0;
+  ui.practiceWeak.textContent = `תרגל את הנושאים החלשים · ${weakIds.length} שאלות`;
+  ui.practiceQuestions.hidden = analysis.weakQuestions.length === 0;
+  ui.practiceQuestions.textContent = `תרגל ${analysis.weakQuestions.length} שאלות שחוזרות לטעות`;
+}
+
+function practiceWeakTopics() {
+  const weak = analysis.topics.filter((t) => t.level === 'weak').map((t) => t.topic);
+  const ids = questionIdsForTopics(quiz, weak);
+  if (ids.length > 0) begin(ids, 'topics');
+}
+
+function practiceWeakQuestions() {
+  if (analysis.weakQuestions.length > 0) begin(analysis.weakQuestions.map((q) => q.id), 'retry');
+}
+
+function clearStats() {
+  if (!window.confirm('הסטטיסטיקה של הבוחן הזה תימחק. להמשיך?')) return;
+  remove(keys.history(quiz.id));
+  renderStart();
+  ui.startButton.focus({ preventScroll: true });
 }
 
 // ---------- start screen ----------
@@ -208,6 +290,7 @@ function renderTopics() {
 function renderStart() {
   phase = 'start';
   show(ui.start);
+  renderStats();
 
   const saved = loadSavedSession();
   ui.resumeBox.hidden = !saved;
@@ -364,10 +447,14 @@ function startAutoAdvance() {
 function apply(result, chosenIndex) {
   state = result.state;
   persist();
-  // Best score only means something for a run over the whole of one quiz.
-  if (isComplete(state) && state.mode === 'full' && !quiz.mixed) {
-    const summary = summarize(state, quiz);
-    save(keys.results(quiz.id), recordResult(load(keys.results(quiz.id)), summary, new Date().toISOString()));
+  if (isComplete(state)) {
+    // Best score only means something for a run over the whole of one quiz.
+    if (state.mode === 'full' && !quiz.mixed) {
+      const summary = summarize(state, quiz);
+      save(keys.results(quiz.id), recordResult(load(keys.results(quiz.id)), summary, new Date().toISOString()));
+    }
+    // Every finished run feeds the weak-area statistics, whatever its mode.
+    recordAttempt();
   }
   showFeedback(result, chosenIndex);
 }
@@ -509,6 +596,9 @@ async function main() {
     for (const c of topicCheckboxes()) c.checked = false;
     updateStartButton();
   });
+  ui.practiceWeak.addEventListener('click', practiceWeakTopics);
+  ui.practiceQuestions.addEventListener('click', practiceWeakQuestions);
+  ui.clearStats.addEventListener('click', clearStats);
   ui.autoToggle.checked = autoAdvanceOn();
   ui.autoToggle.addEventListener('change', () => {
     save(prefs.autoAdvance, ui.autoToggle.checked);

@@ -26,6 +26,13 @@ No build step and no runtime dependencies. Node is only needed for the tests and
 - An unfinished session is saved in `localStorage` and resumes after a refresh.
   The quiz list shows which quizzes are in progress and your best first-try score
   (best score counts only runs over the whole quiz).
+- **Statistics:** every finished run, in any mode, is saved as an attempt in `history:<quizId>`
+  (misses per question, at most the last 30 attempts). The start screen shows each topic as
+  weak / fair / solid with a trend, flags topics that *recovered*, and offers one-click practice of the
+  weak topics or the questions that keep coming back. Each question counts once, weighted toward its
+  recent answers, so retrying a few hard questions doesn't drag a topic down. A topic needs about 5 answered
+  questions before it gets a label. Statistics can be exported to a JSON file and imported (merged, never
+  overwriting) from the home page, which is how they move between devices.
 - **Printable exam** (`print.html?id=…` for one quiz, linked from the start screen, or
   `print.html?subject=<id>` for the whole subject): pick topics, a question count
   (default 100, sampled in proportion to each topic's size) and an order (mixed, or grouped by topic).
@@ -162,6 +169,7 @@ A run takes about a minute; GitHub Actions are free for public repositories.
 | `js/index.js`, `js/quiz.js`, `js/print.js` | page UI (`js/load-quiz.js`: quiz loading shared by quiz.js and print.js). `quiz.html?id=<quiz>` plays one quiz; `quiz.html?subject=<id>` is mixed practice across the subject's units (the subject page's "בחירת נושאים למבחן" card) |
 | `js/catalog.js` | the manifest as the pages see it: one cached fetch, plus pure helpers (find a subject, its quizzes, counts, links) |
 | `js/nav.js` | the top bar and side menu on every page (a modal `<dialog>`), built from the manifest and the summaries list |
+| `js/stats-transfer.js` | export / import of statistics (home page) |
 | `summaries/`, `css/summary.css` | short summaries, the hub and the combined print page |
 | `js/summary-list.js` | the list of summaries (no DOM); `js/summaries.js`, `js/summary.js`, `js/summaries-all.js` drive the pages |
 | `scripts/` | manifest, validate (quizzes, summaries, and that every page has the toolbar, menu and footer), and a tiny static dev server |

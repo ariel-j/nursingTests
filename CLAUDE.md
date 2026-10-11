@@ -15,7 +15,8 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 ## Layout
 
 * `js/core.js`: pure logic (queue, scoring, stats, topics, quiz validation). No DOM, no storage; imported by Node tests and the scripts. Randomness is injected as an `rng` argument; state is plain JSON and never mutated.
-* `js/storage.js`: guarded localStorage wrapper (prefix `anatomy-quizzes:v1:`). Keys: `session:<id>` (in-progress state), `results:<id>` (attempts, best score).
+* `js/storage.js`: guarded localStorage wrapper (prefix `anatomy-quizzes:v1:`). Keys: `session:<id>` (in-progress state), `results:<id>` (attempts, best score), `history:<id>` (finished attempts of any mode: misses per question, newest 30; analysed by `analyzeHistory` in core.js into per-topic weak/fair/solid, trend and "recovered"). Attempts have unique ids and histories merge by union on id, so import/sync is conflict-free.
+* `js/stats-transfer.js`: statistics export/import (JSON file) on the home page.
 * `js/catalog.js`: the manifest for the pages: `loadManifest()` (one cached fetch per page) and pure helpers (`findSubject` by id or, for old links, name; `subjectQuizzes`, `subjectStats`, `subjectPaths`). Tested in Node.
 * `js/index.js`: home page. No `?subject=` → subject cards; `?subject=<id>` → that subject: mixed practice, printable exam, summaries and videos cards, then quizzes by unit (sections `#unit-N`).
 * `js/nav.js`: top bar + side menu on every page: a modal `<dialog>` drawer listing each subject with its units, mixed practice, print and summaries; the current subject starts open. Links resolve from `import.meta.url`, so subfolder pages work. Deliberately a drawer at every width, not a persistent desktop sidebar: the quiz page stays a focus screen, and the subject page already lists every unit.
