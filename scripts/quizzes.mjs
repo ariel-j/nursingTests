@@ -11,7 +11,12 @@ export const CATALOG_FILE = 'subjects.json';
 
 const isText = (v) => typeof v === 'string' && v.trim() !== '';
 
-/** Problems with the catalog: [{ name, units?: [unit names] }] under "subjects". */
+/** A catalog unit is a name, or { name, status } where status (e.g. "בתהליך") shows while it is empty. */
+const unitName = (u) => (typeof u === 'string' ? u : u.name);
+const isUnit = (u) => isText(u) || (u !== null && typeof u === 'object' && isText(u.name)
+  && (u.status === undefined || isText(u.status)));
+
+/** Problems with the catalog: [{ name, units?: [unit names or { name, status }] }] under "subjects". */
 export function validateCatalog(catalog) {
   const errors = [];
   if (!catalog || !Array.isArray(catalog.subjects) || catalog.subjects.length === 0) {
@@ -27,9 +32,9 @@ export function validateCatalog(catalog) {
     if (names.has(s.name)) errors.push(`${where}: duplicate subject "${s.name}"`);
     names.add(s.name);
     if (s.units === undefined) return;
-    if (!Array.isArray(s.units) || !s.units.every(isText)) {
-      errors.push(`${where}: units must be an array of non-empty strings`);
-    } else if (new Set(s.units).size !== s.units.length) {
+    if (!Array.isArray(s.units) || !s.units.every(isUnit)) {
+      errors.push(`${where}: units must be non-empty strings or { name, status } objects`);
+    } else if (new Set(s.units.map(unitName)).size !== s.units.length) {
       errors.push(`${where}: duplicate unit name`);
     }
   });
@@ -45,7 +50,9 @@ export function placementErrors(quiz, catalog) {
     return quiz.unit === undefined ? [] : [`subject "${quiz.subject}" has no units, remove "unit"`];
   }
   if (quiz.unit === undefined) return [`subject "${quiz.subject}" has units, so "unit" is required`];
-  return units.includes(quiz.unit) ? [] : [`unit "${quiz.unit}" is not listed under "${quiz.subject}" in ${CATALOG_FILE}`];
+  return units.some((u) => unitName(u) === quiz.unit)
+    ? []
+    : [`unit "${quiz.unit}" is not listed under "${quiz.subject}" in ${CATALOG_FILE}`];
 }
 
 export async function loadCatalog(dir = QUIZ_DIR) {
@@ -108,8 +115,9 @@ export function buildManifest(quizzes, catalog) {
       return {
         name: s.name,
         units: (s.units ?? []).map((unit) => ({
-          name: unit,
-          quizzes: own.filter((q) => q.unit === unit).map(entry).sort(byTitle),
+          name: unitName(unit),
+          ...(typeof unit === 'object' && unit.status ? { status: unit.status } : {}),
+          quizzes: own.filter((q) => q.unit === unitName(unit)).map(entry).sort(byTitle),
         })),
         quizzes: own.filter((q) => q.unit === undefined).map(entry).sort(byTitle),
       };

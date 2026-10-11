@@ -35,6 +35,17 @@ test('validateCatalog rejects malformed catalogs', () => {
   assert.ok(validateCatalog({ subjects: [{ name: '' }] }).some((e) => /name/.test(e)));
 });
 
+test('catalog units may carry a status shown while they are empty', () => {
+  assert.deepEqual(validateCatalog({ subjects: [{ name: 'א', units: [{ name: 'x', status: 'בתהליך' }, 'y'] }] }), []);
+  assert.ok(validateCatalog({ subjects: [{ name: 'א', units: [{ status: 'בתהליך' }] }] })[0].includes('units must be'));
+  assert.ok(validateCatalog({ subjects: [{ name: 'א', units: ['x', { name: 'x' }] }] }).some((e) => /duplicate unit/.test(e)));
+
+  const cat = { subjects: [{ name: 'א', units: [{ name: 'x', status: 'בתהליך' }] }] };
+  assert.deepEqual(placementErrors(q('a', 'א', 'מבחן 1', ['t'], 'x'), cat), []);
+  const manifest = buildManifest([], cat);
+  assert.deepEqual(manifest.subjects[0].units[0], { name: 'x', status: 'בתהליך', quizzes: [] });
+});
+
 test('placementErrors checks a quiz against the catalog', () => {
   assert.deepEqual(placementErrors(q('a', 'אנטומיה', 'מבחן 1', ['t'], 'הלב'), catalog), []);
   assert.deepEqual(placementErrors(q('a', 'פרמקולוגיה', 'מבחן 1', ['t']), catalog), []);

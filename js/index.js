@@ -37,12 +37,12 @@ function renderQuiz(entry) {
   return item;
 }
 
-/** A group of quizzes under a heading, or a "coming soon" note when it has none. */
-function renderGroup(name, quizzes, headingTag) {
+/** A group of quizzes under a heading, or its status note (default "בקרוב") when it has none. */
+function renderGroup(name, quizzes, headingTag, status = 'בקרוב') {
   const group = el('div', 'group');
   group.append(el(headingTag, null, name));
   if (quizzes.length === 0) {
-    group.append(el('p', 'muted soon', 'בקרוב'));
+    group.append(el('p', 'muted soon', status));
   } else {
     const list = el('ul', 'quiz-list');
     list.append(...quizzes.filter((q) => isValidQuizId(q.id)).map(renderQuiz));
@@ -61,7 +61,7 @@ function renderSubject(subject) {
     section.append(list);
   }
   for (const unit of subject.units) {
-    section.append(renderGroup(unit.name, unit.quizzes, 'h3'));
+    section.append(renderGroup(unit.name, unit.quizzes, 'h3', unit.status));
   }
   return section;
 }

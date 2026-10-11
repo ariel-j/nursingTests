@@ -41,6 +41,7 @@ Writing guidelines, plus a brief you can paste into the session that writes the 
 
 `quizzes/subjects.json` is the hand-written catalog: an ordered list of subjects, each with an optional
 ordered list of units. It sets the sections and their order on the home page; empty units show as "בקרוב".
+A unit can be `{ "name": "…", "status": "בתהליך" }` to show that text instead of "בקרוב".
 
 ### Quiz format
 
