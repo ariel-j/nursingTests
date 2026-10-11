@@ -5,16 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <title>מערכת העיכול — סיכום</title>
-  <link rel="preload" href="../fonts/assistant-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/summary.css">
   <script type="module" src="../js/summary.js"></script>
+  <script type="module" src="../js/nav.js"></script>
   <script type="module" src="../js/a11y.js"></script>
 </head>
 <body class="summary-page">
   <main class="page wide">
     <nav class="top-nav no-print">
-      <a href="./">→ כל הסיכומים</a>
+      <a href="./?subject=anatomy">→ כל הסיכומים</a>
       <button type="button" class="secondary" data-print>הדפסה / שמירה כ‑PDF</button>
     </nav>
 
@@ -31,6 +32,44 @@
       <span><span class="exam exam-legend">נשאל בשחזורים</span> נקודה שחזרה במבחנים</span>
     </div>
   </header>
+
+  <section class="intro" id="dig-intro">
+    <h2>מבוא: על מה כל זה?</h2>
+    <p>מערכת העיכול היא צינור אחד ארוך, מהפה ועד פי הטבעת, שמפרק מזון לחלקיקים קטנים מספיק כדי לעבור לדם או ללימפה. את העבודה עושים שלושה דברים: <b>פירוק מכני</b> (לעיסה, ערבול, תחלוב), <b>פירוק כימי</b> (אנזימים שבורים קשרים) ו<b>ספיגה</b> (מעבר דרך דופן המעי).</p>
+    <p>כל קטע בצינור מתמחה: הפה מתחיל עם פחמימות, הקיבה עם חלבונים וחומצה, התריסריון מקבל "עוזרים" (לבלב, כבד, כיס מרה) שמפרקים הכול, המעי הדק סופג ~90%, והמעי הגס סופג מים ויוצר צואה. הורמונים (גסטרין, סקרטין, <span class="en">CCK</span>) ועצבים (סימפתטי ופאראסימפתטי) מתזמנים את ההפרשות.</p>
+    <p>אפשר ללמוד את הפרק כמו מפה: <b>איפה זה קורה, מי מפריש, מה הוא מפרק, ומי מאותת לו.</b> המילון שלמטה מסביר כל מונח.</p>
+  </section>
+
+  <section class="glossary" id="dig-glossary">
+    <h2>מילון מונחים</h2>
+    <p class="sec-note">כל מונח שמופיע בסיכום, בשפה פשוטה.</p>
+    <dl class="def"><dt>צינור העיכול</dt><dd>צינור אחד רציף: פה, ושט, קיבה, מעי דק, מעי גס, פי הטבעת. הלבלב, הכבד וכיס המרה הם "עוזרים" מחוץ לצינור.</dd></dl>
+    <dl class="def"><dt>רירית / תת‑רירית / שריר / סרוזה</dt><dd>ארבע שכבות הדופן, מבפנים החוצה. רירית: הפנימית, בקשר עם המזון. סרוזה: המעטפת החיצונית.</dd></dl>
+    <dl class="def"><dt>פירוק מכני מול כימי</dt><dd>מכני: מקטין חלקיקים בלי לשבור קשרים (לעיסה, תחלוב). כימי: אנזים שובר קשרים בין מולקולות.</dd></dl>
+    <dl class="def"><dt>תחלוב (<span class="en">Emulsification</span>)</dt><dd>פירוק של טיפת שומן גדולה לטיפות זעירות על ידי מלחי מרה, כדי שיהיה שטח גדול לאנזימים.</dd></dl>
+    <dl class="def"><dt>אנזים</dt><dd>חלבון שמאיץ תגובה כימית. אנזימי העיכול מפרקים: עמילאז (פחמימות), פפסין ופרוטאזות (חלבונים), ליפאז (שומנים).</dd></dl>
+    <dl class="def"><dt>פחמימות / חלבונים / שומנים</dt><dd>שלושת רכיבי המזון העיקריים. מפורקים בהתאמה לגלוקוז (וסוכרים), חומצות אמינו וגליצרול עם חומצות שומן.</dd></dl>
+    <dl class="def"><dt>עמילאז / ליפאז / פפסין</dt><dd>עמילאז (ברוק ובלבלב): מפרק עמילן. ליפאז: מפרק שומן. פפסין (בקיבה): מפרק חלבון.</dd></dl>
+    <dl class="def"><dt><span class="en">HCl</span> (חומצת מלח)</dt><dd>חומצה חזקה שמפרישים תאי הדופן בקיבה. מפעילה פפסינוגן והורגת חיידקים.</dd></dl>
+    <dl class="def"><dt>פפסינוגן / פפסין</dt><dd>פפסינוגן: צורה לא פעילה של האנזים, מופרשת מתאים ראשיים. <span class="en">HCl</span> הופכת אותו לפפסין פעיל.</dd></dl>
+    <dl class="def"><dt>גורם פנימי (<span class="en">IF</span>) / ויטמין <span class="en">B12</span></dt><dd><span class="en">IF</span>: חלבון שתאי הדופן מפרישים, חיוני לספיגת ויטמין <span class="en">B12</span> במעי הדק. בלי הקיבה אין <span class="en">IF</span>.</dd></dl>
+    <dl class="def"><dt>גסטרין</dt><dd>הורמון מתאי <span class="en">G</span> בקיבה. מגרה הפרשת <span class="en">HCl</span> ופפסינוגן.</dd></dl>
+    <dl class="def"><dt><span class="en">LES</span> / פילורוס</dt><dd><span class="en">LES</span>: סוגר בין הוושט לקיבה, מונע חזרת חומצה. פילורוס: סוגר בין הקיבה לתריסריון.</dd></dl>
+    <dl class="def"><dt>צרבת (ריפלוקס)</dt><dd>חזרה של חומצת קיבה לוושט כשה‑<span class="en">LES</span> נרפה.</dd></dl>
+    <dl class="def"><dt>תריסריון / ג'וג'ונום / אילאום</dt><dd>שלושת חלקי המעי הדק. תריסריון: מקבל מיצים ומפרק. אילאום: החלק האחרון, מחובר לצקום (תחילת המעי הגס).</dd></dl>
+    <dl class="def"><dt>מיץ לבלב / ביקרבונט</dt><dd>הלבלב מפריש אנזימים לכל שלושת רכיבי המזון, וביקרבונט שמנטרל את חומצת הקיבה ומעלה <span class="en">pH</span>.</dd></dl>
+    <dl class="def"><dt><span class="en">pH</span></dt><dd>מדד חומציות: נמוך = חומצי. אנזימי הקיבה פועלים ב‑<span class="en">pH</span> חומצי ונעצרים בתריסריון, שם ה‑<span class="en">pH</span> גבוה.</dd></dl>
+    <dl class="def"><dt>כבד / מרה / כיס מרה</dt><dd>הכבד מייצר מרה, כיס המרה אוגר אותה ומשחרר לתריסריון. המרה מכילה מלחי מרה (לתחלוב) ובילירובין (צבע).</dd></dl>
+    <dl class="def"><dt>בילירובין</dt><dd>חומר צהוב‑חום, תוצר פירוק של המוגלובין. מופרש במרה וצובע את הצואה.</dd></dl>
+    <dl class="def"><dt><span class="en">CCK</span> / סקרטין</dt><dd><span class="en">CCK</span>: נוצר בתגובה לשומן וחלבון, מגרה כיס מרה ולבלב. סקרטין: נוצר בתגובה לחומצה בתריסריון, מגרה ביקרבונט מהלבלב.</dd></dl>
+    <dl class="def"><dt>ספיגה</dt><dd>מעבר חומרים מהמעי אל הדם או הלימפה. נעשה בעיקר במעי הדק, שמכוסה בקפלים וסיסים.</dd></dl>
+    <dl class="def"><dt>כילומיקרונים / לימפה</dt><dd>שומנים נארזים בחלקיקים גדולים (כילומיקרונים) שלא נכנסים לנימי דם ולכן עוברים לכלי הלימפה קודם.</dd></dl>
+    <dl class="def"><dt>וריד שער (פורטל)</dt><dd>וריד שמוביל דם עשיר בחומרים שנספגו (פחמימות, חלבונים) מהמעי אל הכבד לפני שהוא ממשיך לגוף.</dd></dl>
+    <dl class="def"><dt>צלולוז / סיבים</dt><dd>חומר צמחי שהאדם לא מפרק. עובר בצינור ומופרש בצואה.</dd></dl>
+    <dl class="def"><dt>סימפתטי / פאראסימפתטי</dt><dd>פאראסימפתטי ("האכל ונוח"): מגביר תנועתיות והפרשה. סימפתטי ("הילחם או ברח"): מפחית אותם.</dd></dl>
+    <dl class="def"><dt>תנועתיות</dt><dd>התכווצויות שריר הדופן שמזיזות את התוכן קדימה ומערבבות אותו.</dd></dl>
+  </section>
+
 
   <!-- 1 יסודות -->
   <section>
