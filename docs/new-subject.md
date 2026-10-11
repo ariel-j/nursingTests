@@ -24,6 +24,9 @@ Add the subject to `quizzes/subjects.json`, in the order it should appear (the u
   don't change it later.
 - `name`: the Hebrew name. Every quiz's `subject` must match it exactly. Mixed-practice progress is
   saved under it, so renaming it later restarts that progress.
+- `upcoming`: optional tools the subject plans but has not built yet, e.g.
+  `[{ "title": "כרטיסיות תרופות", "status": "בתהליך" }]`. They show as cards in the tools list
+  with the status (default "בקרוב") and are not links until the tool exists.
 - `units`: optional, in display order. Once a subject has units, every quiz needs one of them as `unit`.
   A subject without units lists its quizzes directly. Choose before the first quiz arrives.
   Prefer a few broad units with topics inside them over many tiny units: in pharmacology a unit is a
