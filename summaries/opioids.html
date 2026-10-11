@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>אופיואידים — סיכום</title>
+  <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/summary.css">
+  <link rel="stylesheet" href="../css/summary-widgets.css">
+  <link rel="stylesheet" href="../css/opioids.css">
+  <script type="module" src="../js/summary.js"></script>
+  <script type="module" src="../js/opioids.js"></script>
+  <script type="module" src="../js/nav.js"></script>
+  <script type="module" src="../js/a11y.js"></script>
+</head>
+<body class="summary-page">
+  <div id="read-progress" class="read-progress no-print" aria-hidden="true"></div>
+  <main class="page wide">
+    <nav class="top-nav no-print">
+      <a href="./?subject=pharmacology">→ כל הסיכומים</a>
+      <button type="button" class="secondary" data-print>הדפסה / שמירה כ‑PDF</button>
+    </nav>
+
+<article class="summary" data-system="opioids">
+  <header>
+    <p class="kicker">פרמקולוגיה · משככי כאב · סיכום נושא</p>
+    <h1>אופיואידים <span class="en h1-en">(Opioids Pharmacology)</span></h1>
+    <p class="lede">משככי הכאב העוצמתיים ביותר פועלים דרך הפעלת רצפטורי <b><span class="en">μ</span> (מו)</b> וחלבון <b><span class="en">Gi</span></b>, שמעכב את הפעילות החשמלית של הנוירון. הרעיון המאחד: <b>כמעט כל ההשפעות, הרצויות והמסוכנות, נובעות מאותו קישור לרצפטור</b>. לכן שיכוך כאב, אופוריה, עצירות קשה ודיכוי נשימה מסכן חיים הולכים תמיד יחד.</p>
+    <svg class="motif" viewBox="0 0 480 64" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 40 C40 40 50 20 90 20 C120 20 126 52 160 52 C195 52 200 14 240 14 C280 14 286 48 320 48 C356 48 362 26 400 26 C440 26 448 40 480 40"/>
+    </svg>
+    <div class="legend">
+      <span><span class="arrowmark">←</span> <b>גורם ← תוצאה</b> (קוראים מימין לשמאל)</span>
+      <span><span class="exam exam-legend">נשאל בשחזורים</span> דגש בעל חזרתיות בבחינות</span>
+    </div>
+  </header>
+
+  <section class="intro" id="op-intro">
+    <h2>מבוא: על מה כל זה?</h2>
+    <p>אופיואידים הם משככי הכאב החזקים ביותר שיש. הם פועלים על <b>רצפטורים אופיואידיים</b> בגוף ובמוח, בעיקר רצפטור <span class="en">μ</span> (מו), שמעכב את הפעילות החשמלית של תאי העצב. התוצאה: פחות כאב, תחושת רוגע ואופוריה. אבל אותו רצפטור יושב גם במרכז הנשימה, בעין ובמעי, ולכן אותה תרופה גורמת גם לדיכוי נשימה, לכיווץ אישונים ולעצירות.</p>
+    <p>זה הרעיון המרכזי של הנושא: <b>היעילות והסכנות הן אותה פעולה</b>. מכאן נגזרות רוב השאלות: למה תופעת הלוואי המסוכנת ביותר היא דום נשימה, למה לעצירות ולכיווץ האישונים אין סבילות, למה יש סם-נגד (<span class="en">Naloxone</span>) ומה הסכנה בו, ומתי אסור לתת אופיואידים (פגיעת ראש, אסטמה, יילודים, שילוב עם מעכבי <span class="en">MAO</span>).</p>
+    <p>הסיכום עובר על הרצפטורים, מנגנון הפעולה, ההשפעות, סבילות וגמילה, השימושים, נוהל החירום להרעלה, ארבע המשפחות הכימיות (ומי אלרגי למה) ואגוניסטים חלקיים ואנטגוניסטים. בסוף יש סיבה ← תוצאה ושחזורים. המילון שמתחת מסביר כל מונח.</p>
+  </section>
+
+  <!-- חיפוש, מסננים ומעקב התקדמות (אינטראקטיבי) -->
+  <div class="toolbar no-print" data-interactive>
+    <nav class="toc" aria-label="קפיצה לפרק">
+      <a href="#op-glossary"><span aria-hidden="true">📖</span> מילון מונחים</a>
+      <a href="#op-receptors"><span aria-hidden="true">🎯</span> סייר רצפטורים</a>
+      <a href="#op-sec-3"><span aria-hidden="true">⚠️</span> תופעות לוואי</a>
+      <a href="#op-sec-7"><span aria-hidden="true">🚨</span> נוהל חירום</a>
+      <a href="#op-sec-8"><span aria-hidden="true">⚖️</span> 4 משפחות ואלרגיה צולבת</a>
+      <a href="#op-sec-10"><span aria-hidden="true">🔄</span> סיבה ← תוצאה</a>
+      <a href="#op-practice" class="toc-exam"><span aria-hidden="true">⭐</span> 10 שחזורים</a>
+    </nav>
+    <div class="search-row">
+      <label class="search-label" for="op-search">חיפוש בסיכום</label>
+      <input type="search" id="op-search" class="search-input" placeholder="חיפוש חופשי: תרופה, רצפטור, תופעת לוואי, סם-נגד (למשל: Naloxone, עצירות, Miosis, Fentanyl, שיעול)..." autocomplete="off">
+      <p id="op-search-count" class="search-count" role="status">מציג את כל הנושאים</p>
+    </div>
+    <div class="pills" role="group" aria-label="סינון לפי נושא">
+      <button type="button" class="pill" data-filter="all" aria-pressed="true">הכל (11 פרקים)</button>
+      <button type="button" class="pill" data-filter="exam" aria-pressed="false"><span aria-hidden="true">⭐</span> שחזורים בלבד</button>
+      <button type="button" class="pill" data-filter="drugs" aria-pressed="false"><span aria-hidden="true">💊</span> תרופות ומשפחות</button>
+      <button type="button" class="pill" data-filter="traps" aria-pressed="false"><span aria-hidden="true">⚠️</span> מלכודות מבחן</button>
+      <button type="button" class="pill" data-filter="emergency" aria-pressed="false"><span aria-hidden="true">🚨</span> חירום</button>
+      <button type="button" class="pill" data-filter="rel" aria-pressed="false"><span aria-hidden="true">🔄</span> סיבה ← תוצאה</button>
+    </div>
+    <div class="tracker">
+      <div class="tracker-top">
+        <span id="op-tracker-label" class="tracker-label">מעקב התקדמות בלמידה</span>
+        <strong id="op-percent">0%</strong>
+      </div>
+      <div id="op-bar" class="tracker-bar" role="progressbar" aria-labelledby="op-tracker-label" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div id="op-fill" class="tracker-fill"></div>
+      </div>
+      <div class="tracker-foot">
+        <span id="op-count" role="status">0 מתוך 11 פרקים הושלמו</span>
+        <button type="button" id="op-reset" class="secondary tracker-reset">איפוס סימונים</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="glossary" id="op-glossary">
+    <h2>מילון מונחים</h2>
+    <p class="sec-note">כל מונח שמופיע בהמשך, בשפה פשוטה. אפשר לחפש מונח בשורת החיפוש.</p>
+
+    <h3>הגדרות ורצפטורים</h3>
+    <dl class="def sc"><dt>אופיאטים (<span class="en">Opiates</span>)</dt><dd>תרכובות טבעיות מצמח הפרג, כמו <span class="en">Morphine</span> ו-<span class="en">Codeine</span>.</dd></dl>
+    <dl class="def sc"><dt>אופיואידים (<span class="en">Opioids</span>)</dt><dd>המונח הרחב: כל חומר, טבעי, חצי סינתטי או סינתטי, שפועל כמו מורפין. כולל גם חומרים שהגוף מייצר.</dd></dl>
+    <dl class="def sc"><dt>אופיואידים אנדוגניים</dt><dd>חומרים שהגוף מייצר בעצמו וגם נקשרים לרצפטורים: <span class="en">Enkephalins</span>, <span class="en">Endorphins</span>, <span class="en">Dynorphins</span>.</dd></dl>
+    <dl class="def sc"><dt>רצפטור <span class="en">μ</span> (מו)</dt><dd>דרכו עוברת רוב הפעולה: שיכוך כאב, אופוריה, דיכוי נשימה, כיווץ אישונים, עצירות והתמכרות.</dd></dl>
+    <dl class="def sc"><dt>רצפטור <span class="en">κ</span> (קאפה)</dt><dd>שיכוך כאב בחוט השדרה, סדציה, ודיספוריה (אי נוחות) במקום אופוריה.</dd></dl>
+    <dl class="def sc"><dt>רצפטור <span class="en">δ</span> (דלתא)</dt><dd>שיכוך כאב פריפרי, ויסות רגשי. האנקפלינים נקשרים אליו הכי חזק.</dd></dl>
+    <dl class="def sc"><dt><span class="en">Gi / Go</span></dt><dd>חלבון <span class="en">G</span> מעכב שאליו מצומדים כל הרצפטורים האופיואידיים. מוריד <span class="en">cAMP</span>.</dd></dl>
+    <dl class="def sc"><dt>היפרפולריזציה</dt><dd>הממברנה של התא נעשית שלילית יותר, ולכן קשה לו יותר לירות. כך האופיואיד "בולם" את הנוירון.</dd></dl>
+    <dl class="def sc"><dt>קרן אחורית של חוט השדרה</dt><dd>המקום שבו אותות כאב נכנסים לחוט השדרה ועוברים למוח. שם יש נוירון מקרין, אינטרנוירון מעכב ומסלולים יורדים מעכבים.</dd></dl>
+    <dl class="def sc"><dt>מקלעת מיאנטרית (<span class="en">Auerbach</span>)</dt><dd>רשת עצבים בדופן המעי ששולטת בתנועתיות. אופיואידים מעכבים בה שחרור אצטילכולין, ולכן המעי מאט.</dd></dl>
+
+    <h3>השפעות ותופעות לוואי</h3>
+    <dl class="def sc"><dt>אנלגזיה</dt><dd>שיכוך כאב.</dd></dl>
+    <dl class="def sc"><dt>אופוריה / דיספוריה</dt><dd>אופוריה: תחושת רוגע ועונג. דיספוריה: תחושת אי נוחות ודכדוך.</dd></dl>
+    <dl class="def sc"><dt>סדציה</dt><dd>הרגעה עד ישנוניות.</dd></dl>
+    <dl class="def sc"><dt>דיכוי נשימתי</dt><dd>ירידה ברגישות מרכז הנשימה בגזע המוח. תופעת הלוואי המסוכנת ביותר וגורם המוות העיקרי בהרעלה.</dd></dl>
+    <dl class="def sc"><dt><span class="en">Miosis</span> / <span class="en">Pinpoint pupils</span></dt><dd>כיווץ האישונים עד גודל של סיכה. סימן אופייני להרעלה. ההפך, <span class="en">Mydriasis</span> (הרחבה), מופיע בגמילה.</dd></dl>
+    <dl class="def sc"><dt>עצירות אופיואידית (<span class="en">OIC</span>)</dt><dd>עצירות שנגרמת מהאטת התנועתיות וטונוס ספינקטרים. אין לה סבילות, ולכן מטפלים בה כל הזמן.</dd></dl>
+    <dl class="def sc"><dt>שחרור היסטמין</dt><dd>מורפין גורם לתאי פיטום לשחרר היסטמין, ולכן גרד, הרחבת כלי דם ובאסטמה ברונכוקונסטריקציה.</dd></dl>
+    <dl class="def sc"><dt>לחץ תוך-גולגולתי (<span class="en">ICP</span>)</dt><dd>הלחץ בתוך הגולגולת. דיכוי נשימה מעלה <span class="en">CO₂</span> שמרחיב כלי דם במוח ומעלה את הלחץ, ולכן אופיואידים אסורים בפגיעת ראש.</dd></dl>
+    <dl class="def sc"><dt>היפוטנשן / ברדיקרדיה</dt><dd>ירידת לחץ דם / האטת הדופק, במינון גבוה.</dd></dl>
+
+    <h3>סבילות, תלות וגמילה</h3>
+    <dl class="def sc"><dt>סבילות (<span class="en">Tolerance</span>)</dt><dd>צורך במינון גבוה יותר לאותו אפקט. מתפתחת לשיכוך כאב, אופוריה, דיכוי נשימה ובחילות, אבל <b>לא</b> לעצירות ולכיווץ אישונים.</dd></dl>
+    <dl class="def sc"><dt>תלות גופנית / התמכרות</dt><dd>תלות גופנית: הגוף מתרגל לתרופה ומגיב להפסקתה בגמילה. התמכרות: צורך כפייתי בסם.</dd></dl>
+    <dl class="def sc"><dt>תסמונת גמילה (<span class="en">Withdrawal</span>)</dt><dd>תסמינים בהפסקת התרופה: אי שקט, נזלת, הזעה, הרחבת אישונים, שלשול, הקאות, רעד. שלוש רמות לפי שעות.</dd></dl>
+    <dl class="def sc"><dt>כמיהה (<span class="en">Craving</span>)</dt><dd>תשוקה עזה לסם. יכולה להימשך שבועות עד חודשים.</dd></dl>
+    <dl class="def sc"><dt>מטופל נאיבי</dt><dd>מי שלא נחשף קודם לאופיואידים. אנטגוניסט אופיואידי כמעט לא משפיע עליו.</dd></dl>
+    <dl class="def sc"><dt>גמילה מזורזת חריפה (<span class="en">Acute Precipitated Withdrawal</span>)</dt><dd>גמילה פתאומית וחזקה אצל מכור שקיבל מנה גדולה מדי של <span class="en">Naloxone</span>.</dd></dl>
+
+    <h3>תרופות, משפחות ומצבים</h3>
+    <dl class="def sc"><dt>אגוניסט חלקי</dt><dd>מפעיל את הרצפטור חלקית (<span class="en">Buprenorphine</span>). אצל נאיבי הוא חלש, אצל מכור הוא יכול לדחוק אגוניסט מלא ולגרום לגמילה.</dd></dl>
+    <dl class="def sc"><dt>אגוניסט-אנטגוניסט מעורב</dt><dd>מפעיל רצפטור אחד וחוסם אחר, למשל <span class="en">Pentazocine</span> (אגוניסט <span class="en">κ</span>, אנטגוניסט חלש <span class="en">μ</span>).</dd></dl>
+    <dl class="def sc"><dt>דמויי אופיואיד</dt><dd><span class="en">Tramadol</span> ו-<span class="en">Tapentadol</span>: אגוניסט <span class="en">μ</span> חלש ועיכוב ספיגה חוזרת של סרוטונין ונוראדרנלין. גורמים לפרכוסים ולתסמונת סרוטונין.</dd></dl>
+    <dl class="def sc"><dt><span class="en">Naloxone</span> / <span class="en">Naltrexone</span></dt><dd>אנטגוניסטים תחרותיים. <span class="en">Naloxone</span>: היפוך מהיר של הרעלה. <span class="en">Naltrexone</span>: ארוך טווח, למניעת הישנות.</dd></dl>
+    <dl class="def sc"><dt><span class="en">PAMORA</span></dt><dd>אנטגוניסטים פריפריים ל-<span class="en">μ</span> שלא חוצים את מחסום הדם-מוח (<span class="en">Methylnaltrexone</span>, <span class="en">Naloxegol</span>). מבטלים עצירות בלי לבטל שיכוך כאב.</dd></dl>
+    <dl class="def sc"><dt><span class="en">BBB</span> (מחסום הדם-מוח)</dt><dd>מחסום שמגביל מעבר חומרים למוח.</dd></dl>
+    <dl class="def sc"><dt><span class="en">Loperamide</span> / <span class="en">Diphenoxylate</span></dt><dd>דמויי אופיואיד שמעכבים שלשול דרך הרצפטורים במעי, ולא חודרים למוח במינון רגיל.</dd></dl>
+    <dl class="def sc"><dt>משפחה כימית ואלרגיה צולבת</dt><dd>אלרגיה אמיתית לתרופה אחת מחייבת זהירות רק בתוך אותה משפחה כימית. אין מעבר בין המשפחות.</dd></dl>
+    <dl class="def sc"><dt>טריאדת ההרעלה</dt><dd>קומה, דיכוי נשימתי ואישוני סיכה. חשד מיידי להרעלת אופיואידים.</dd></dl>
+    <dl class="def sc"><dt>טיטרציה</dt><dd>מתן תרופה במנות קטנות והעלאה הדרגתית לפי התגובה.</dd></dl>
+    <dl class="def sc"><dt><span class="en">Re-sedination</span></dt><dd>חזרת ההרדמה והדיכוי הנשימתי כש-<span class="en">Naloxone</span> מפסיק לפעול, כי זמן מחצית החיים שלו קצר משל מורפין או מתדון.</dd></dl>
+    <dl class="def sc"><dt><span class="en">IR</span> / <span class="en">ER</span></dt><dd>טבליות עם שחרור מיידי (<span class="en">Immediate</span>) או מושהה (<span class="en">Extended</span>). אסור לרסק טבליות <span class="en">ER</span>.</dd></dl>
+    <dl class="def sc"><dt>מעכבי <span class="en">MAO</span> / תסמונת סרוטונין</dt><dd>שילוב עם אופיואידים אסור. תסמונת סרוטונין: רעד, חום ופרכוסים, מסכנת חיים.</dd></dl>
+    <dl class="def sc"><dt><span class="en">QT</span></dt><dd>מקטע בקרדיוגרמה. <span class="en">Methadone</span> מאריך אותו, ולכן נדרש ניטור <span class="en">ECG</span>.</dd></dl>
+    <dl class="def sc"><dt>סם-נגד (<span class="en">Antidote</span>)</dt><dd>תרופה שמבטלת את ההשפעה של תרופה אחרת. לאופיואידים: <span class="en">Naloxone</span>.</dd></dl>
+  </section>
+
+  <!-- סייר רצפטורים (אינטראקטיבי) -->
+  <section id="op-receptors" class="panel no-print" data-interactive aria-labelledby="op-receptors-title">
+    <div class="panel-head">
+      <div>
+        <p class="panel-kicker"><span aria-hidden="true">🎯</span> סייר רצפטורים אופיואידיים</p>
+        <h2 id="op-receptors-title">מסלול חלבון ה-<span class="en">G</span>, איברי המטרה והתרופות של כל רצפטור</h2>
+        <p class="sec-note flush">לחצו על רצפטור כדי לחקור את מסלול ההתמרה, האפקטים הפיזיולוגיים והתרופות הפועלות עליו.</p>
+      </div>
+    </div>
+    <div class="seg-row" role="group" aria-label="בחירת רצפטור">
+      <button type="button" class="seg" data-receptor="mu" data-tone="purple" aria-pressed="true"><span class="en">μ</span> (<span class="en">Gi</span>)</button>
+      <button type="button" class="seg" data-receptor="kappa" data-tone="amber" aria-pressed="false"><span class="en">κ</span> (<span class="en">Gi</span>)</button>
+      <button type="button" class="seg" data-receptor="delta" data-tone="cyan" aria-pressed="false"><span class="en">δ</span> (<span class="en">Gi</span>)</button>
+      <button type="button" class="seg" data-receptor="peripheral_mu" data-tone="rose" aria-pressed="false"><span class="en">μ</span> פריפרי ב-<span class="en">GIT</span></button>
+    </div>
+    <div id="receptor-detail" class="receptor-detail" aria-live="polite"></div>
+  </section>
+
+  <!-- 1 יסודות מהירים -->
+  <section id="op-sec-1" class="topic-section" data-category="basics">
+    <h2>1 · יסודות מהירים והגדרות יסוד</h2>
+    <p class="sec-note">מהיכן החומר מופק, לאילו קולטנים הוא נקשר, והיכן הם ממוקמים בגוף.</p>
+
+    <div class="cards">
+      <div class="pcard sc" data-tone="amber">
+        <div class="pcard-head"><h3>אופיאטים (<span class="en">Opiates</span>)</h3><span class="tag">טבעי בלבד</span></div>
+        <p>תרכובות <b>טבעיות</b> המופקות ישירות משרף צמח הפרג (<span class="en">opium poppy</span>), כולל <b class="en">Morphine</b> ו-<b class="en">Codeine</b>.</p>
+        <p class="foot flush">מקור היסטורי ראשוני של התרופות המשככות.</p>
+      </div>
+      <div class="pcard sc" data-tone="purple">
+        <div class="pcard-head"><h3>אופיואידים (<span class="en">Opioids</span>)</h3><span class="tag">המונח הכולל</span></div>
+        <p>כל תרכובת טבעית, חצי-סינתטית או <b>סינתטית</b> המחוללת אפקט דמוי מורפין, כולל נגזרות חזקות כמו <b class="en">Fentanyl</b> ו-<b class="en">Methadone</b>.</p>
+        <p class="foot flush">כולל גם אנדוגניים: <span class="en">Enkephalins, Endorphins, Dynorphins</span>.</p>
+      </div>
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h3>רצפטורים ופיזורם</h3><span class="tag"><span class="en">μ, κ, δ</span></span></div>
+        <p>רוב האפקט המשכך והמזיק עובר דרך <b>קולטן <span class="en">μ</span> (מו)</b>. מיקומי הקולטנים: <b>מוח, עמוד שדרה, מערכת העיכול (<span class="en">GIT</span>), עיניים ושלפוחית השתן</b>.</p>
+        <p class="foot flush"><span aria-hidden="true">💡</span> מפיזור הרצפטורים ב-<span class="en">GIT</span> ובעין נגזרות תופעות הלוואי!</p>
+      </div>
+    </div>
+
+    <div class="call sc is-exam">
+      <h4><span aria-hidden="true">📌</span> כלל ברזל</h4>
+      <p class="flush">אין הפרדה קלינית מוחלטת בין שיכוך כאב לבין דיכוי נשימה ועצירות: כולם מתווכים על ידי הפעלת אותו רצפטור <span class="en">μ</span> עצמו.</p>
+    </div>
+
+    <h3>ארבעת הרצפטורים: מסלול, מיקום, אפקטים ותרופות</h3>
+    <p class="sec-note">כל הרצפטורים האופיואידיים מצומדים לחלבון <span class="en">Gi / Go</span> (מעכב). ההבדל ביניהם הוא במיקום ובאפקט.</p>
+    <div class="cards c2">
+      <div class="pcard sc" data-tone="purple">
+        <div class="pcard-head"><h3>קולטן <span class="en">μ</span> (מו)</h3><span class="tag">חלבון <span class="en">Gi / Go</span></span></div>
+        <p class="sub">מיקום: קליפת המוח, תלמוס, חומר אפור מרכזי (<span class="en">PAG</span>), קרן אחורית בחוט השדרה, מרכז הנשימה במדולה, גרעין <span class="en">Edinger-Westphal</span> (עין), מערכת העיכול (מקלעת מיאנטרית)</p>
+        <p><b>מסלול:</b> עיכוב <span class="en">Adenylyl Cyclase</span> (<span class="en">cAMP</span>↓) ← סגירת תעלות <span class="en">Ca²⁺</span> פרה-סינפטיות ופתיחת תעלות <span class="en">K⁺</span> פוסט-סינפטיות ← היפרפולריזציה ובלימת ירי פוטנציאלי פעולה.</p>
+        <p><b>אפקטים:</b></p>
+        <ul>
+          <li>שיכוך כאב בעמוד השדרה ומעליו (<span class="en">Supraspinal &amp; Spinal Analgesia</span>)</li>
+          <li>אופוריה ותחושת רוגע (שחרור דופמין במסלול התגמול <span class="en">Mesolimbic</span>)</li>
+          <li>דיכוי נשימתי מרכזי חמור, גורם התמותה הראשי בהרעלה</li>
+          <li>כיווץ אישונים חד (<span class="en">Miosis</span>, אישוני סיכה)</li>
+          <li>עצירות קשה עקב האטת הפריסטלטיקה במעי</li>
+          <li>פיתוח סבילות, תלות גופנית והתמכרות</li>
+        </ul>
+        <p><b>אגוניסטים:</b> <span class="en">Morphine, Fentanyl, Methadone, Oxycodone, Hydromorphone, Codeine, Heroin</span><br><b>אנטגוניסטים:</b> <span class="en">Naloxone</span> (היפוך מהיר), <span class="en">Naltrexone</span> (גמילה ממושכת), <span class="en">Methylnaltrexone</span> (פריפרי)</p>
+        <p class="foot flush"><span aria-hidden="true">💡</span> כמעט כל ההשפעות, המועילות והמסוכנות, מתווכות ע"י אותו רצפטור <span class="en">μ</span> עצמו. <b>לעצירות ול-</b><b class="en">Miosis</b><b> אין סבילות לעולם!</b></p>
+      </div>
+      <div class="pcard sc" data-tone="amber">
+        <div class="pcard-head"><h3>קולטן <span class="en">κ</span> (קאפה)</h3><span class="tag">חלבון <span class="en">Gi / Go</span></span></div>
+        <p class="sub">מיקום: חוט השדרה, מערכת לימבית, היפותלמוס, קליפת המוח</p>
+        <p><b>מסלול:</b> עיכוב תעלות סידן תלויות-מתח ועצירת שחרור נוירוטרנסמיטרים בחוט השדרה.</p>
+        <p><b>אפקטים:</b></p>
+        <ul>
+          <li>שיכוך כאב ברמת חוט השדרה (<span class="en">Spinal Analgesia</span>)</li>
+          <li>סדציה והרגעה משמעותית</li>
+          <li>דיספוריה (תחושת אי-נוחות ודכדוך), תגובות פסיכומימטיות והזיות</li>
+          <li>כיווץ אישונים (<span class="en">Miosis</span>)</li>
+          <li>פחות דיכוי נשימתי בהשוואה ל-<span class="en">μ</span></li>
+        </ul>
+        <p><b>אגוניסטים:</b> <span class="en">Pentazocine, Butorphanol, Dynorphins</span> (אנדוגני)<br><b>אנטגוניסטים:</b> <span class="en">Naloxone, Naltrexone</span></p>
+        <p class="foot flush"><span aria-hidden="true">💡</span> הפעלת רצפטור <span class="en">κ</span> גורמת <b>לדיספוריה ולא לאופוריה</b>. <span class="en">Pentazocine</span> הוא אגוניסט ל-<span class="en">κ</span> ואנטגוניסט חלש ל-<span class="en">μ</span>.</p>
+      </div>
+      <div class="pcard sc" data-tone="cyan">
+        <div class="pcard-head"><h3>קולטן <span class="en">δ</span> (דלתא)</h3><span class="tag">חלבון <span class="en">Gi / Go</span></span></div>
+        <p class="sub">מיקום: מערכת לימבית, קורטקס מוחי, חוט השדרה</p>
+        <p><b>מסלול:</b> פתיחת תעלות אשלגן, היפרפולריזציה תאית ועיכוב שחרור נוירוטרנסמיטרים.</p>
+        <p><b>אפקטים:</b></p>
+        <ul>
+          <li>שיכוך כאב פריפרי ובחוט השדרה</li>
+          <li>ויסות רגשי והשפעה נוגדת דיכאון וחרדה</li>
+          <li>השתתפות במנגנוני תלות גופנית וסבילות</li>
+        </ul>
+        <p><b>אגוניסטים:</b> <span class="en">Enkephalins</span> (אנדוגני ראשי), אגוניסטים מחקריים ניסיוניים<br><b>אנטגוניסטים:</b> <span class="en">Naloxone</span> (בזיקה נמוכה יותר), <span class="en">Naltrexone</span></p>
+        <p class="foot flush"><span aria-hidden="true">💡</span> אנקפלינים נקשרים בזיקה הגבוהה ביותר לקולטני <span class="en">δ</span>. כיום אין כמעט תרופות קליניות סלקטיביות בלעדיות לקולטן זה.</p>
+      </div>
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h3>קולטן <span class="en">μ</span> פריפרי במערכת העיכול</h3><span class="tag">חלבון <span class="en">Gi</span></span></div>
+        <p class="sub">מיקום: קיבה, מעי דק, מעי גס, ספינקטר ע"ש אודי (<span class="en">Sphincter of Oddi</span>)</p>
+        <p><b>מסלול:</b> עיכוב שחרור אצטילכולין במקלעת המיאנטרית (<span class="en">Auerbach's plexus</span>) בדופן המעי.</p>
+        <p><b>אפקטים:</b></p>
+        <ul>
+          <li>האטה קיצונית של התנועתיות הפריסטלטית במעי</li>
+          <li>עלייה בספיגת נוזלים מהמעי והתייבשות תוכן הצואה</li>
+          <li>עלייה בטונוס הספינקטרים ועצירת מעבר צואה (<span class="en">OIC</span>, עצירות הנגרמת מאופיואידים)</li>
+          <li>הפסקת שלשול חריף (הבסיס לפעולת <span class="en">Loperamide</span>)</li>
+        </ul>
+        <p><b>אגוניסטים:</b> <span class="en">Loperamide, Diphenoxylate</span> (דמויי-אופיואיד נגד שלשול)<br><b>אנטגוניסטים:</b> <span class="en">Methylnaltrexone, Naloxegol, Naldemedine</span> (<span class="en">PAMORA</span>: אינם חודרים למוח ומשחררים עצירות)</p>
+        <p class="foot flush"><span aria-hidden="true">💡</span> תרופות <span class="en">PAMORA</span> (כמו <span class="en">Methylnaltrexone</span>) הן אנטגוניסטים טעונים שאינם חודרים את ה-<span class="en">BBB</span>. הן מבטלות את העצירות <b>בלי לפגוע בשיכוך הכאב המוחי</b>!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 מנגנון פעולה -->
+  <section id="op-sec-2" class="topic-section" data-category="mechanism">
+    <h2>2 · מנגנון פעולה תאי ובקרת כאב בחוט השדרה</h2>
+    <p class="sec-note">חלבון <span class="en">Gi</span> מעכב. לזכור: אופיואיד = בלם ישיר על הפעילות החשמלית של הנוירון.</p>
+
+    <div class="call sc">
+      <h4><span aria-hidden="true">⛓️</span> שרשרת המנגנון המולקולרי</h4>
+      <p class="flush">קישור לרצפטור <span class="en">μ</span> <span class="seq">←</span> הפעלת חלבון <span class="en">Gi</span> <span class="seq">←</span> עיכוב <span class="en">Adenylyl Cyclase</span> (<span class="en">cAMP</span>↓) <span class="seq">←</span> פתיחת <span class="en">K⁺</span> וסגירת <span class="en">Ca²⁺</span> <span class="seq">←</span> <b>היפרפולריזציה של הנוירון</b></p>
+    </div>
+
+    <div class="cards c2">
+      <div class="pcard sc" data-tone="purple">
+        <div class="pcard-head"><h3>היפרפולריזציה של הנוירון</h3></div>
+        <p>פוטנציאל הממברנה הופך לשלילי יותר ← <b>ירידה חדה בירי פוטנציאלי פעולה</b> ← פחות שטף אותות סנסוריים עולים למוח ← הפחתה משמעותית בתפיסת הכאב.</p>
+      </div>
+      <div class="pcard sc" data-tone="cyan">
+        <div class="pcard-head"><h3>מעגל בקרת הכאב בקרן האחורית</h3><span class="tag">חוט השדרה</span></div>
+        <ul class="flush">
+          <li><b>נוירון מקרין (<span class="en">P</span>):</b> מעביר תחושת כאב מחוט השדרה כלפי מעלה למוח.</li>
+          <li><b>אינטרנוירון מעכב (<span class="en">I</span>):</b> נוירון מקומי שבולם את הנוירון המקרין <span class="en">P</span>.</li>
+          <li><b>מסלולים יורדים מעכבים (<span class="en">D</span>):</b> משחררים אופיואידים אנדוגניים שמגבירים את הבלימה.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 השפעות ותופעות לוואי -->
+  <section id="op-sec-3" class="topic-section" data-category="effects">
+    <h2>3 · השפעות ותופעות לוואי לפי מערכות</h2>
+    <p class="sec-note">אותה פעולה פרמקולוגית באתרים שונים בגוף מייצרת הן יעילות והן סיכונים קטלניים.</p>
+
+    <div class="cards c2">
+      <div class="pcard sc" data-tone="purple">
+        <div class="pcard-head"><h3>מערכת העצבים המרכזית (<span class="en">CNS</span>)</h3></div>
+        <p class="flush">שיכוך כאב (<span class="en">analgesia</span>), אופוריה (לעיתים דיספוריה), סדציה והרגעה עמוקה, דיכוי רפלקס השיעול במדולה.</p>
+      </div>
+      <div class="pcard sc is-exam" data-tone="rose">
+        <div class="pcard-head"><h3>דיכוי נשימתי (<span class="en">Respiratory</span>)</h3><span class="exam">נשאל בשחזור</span></div>
+        <p class="flush"><b>תופעת הלוואי המסוכנת ביותר וגורם המוות העיקרי!</b> ירידה ברגישות מרכז הנשימה בגזע המוח לעליית <span class="en">CO₂</span>.</p>
+      </div>
+      <div class="pcard sc is-exam" data-tone="amber">
+        <div class="pcard-head"><h3>עיניים: כיווץ אישונים</h3><span class="exam">נשאל בשחזור</span></div>
+        <p class="flush"><b class="en">Miosis</b>, "אישוני סיכה" (<span class="en">Pinpoint pupils</span>) עקב גירוי גרעין <span class="en">Edinger-Westphal</span> של העצב ה-<span class="en">III</span>.</p>
+      </div>
+      <div class="pcard sc" data-tone="emerald">
+        <div class="pcard-head"><h3>מערכת העיכול (<span class="en">GIT</span>)</h3></div>
+        <p class="flush">ירידה דרמטית בפריסטלטיקה והגברת טונוס ספינקטרים ← <b>עצירות קשה</b>. בנוסף: בחילות והקאות בשל גירוי ה-<span class="en">CTZ</span> ב-<span class="en">Area postrema</span>.</p>
+      </div>
+      <div class="pcard sc" data-tone="blue">
+        <div class="pcard-head"><h3>מערכת קרדיווסקולרית והיסטמין</h3></div>
+        <p class="flush">במינון גבוה: תת לחץ-דם (היפוטנשן) וברדיקרדיה. מורפין גורם לשחרור <b>היסטמין</b> מתאי פיטום ← גרד עז, אודם והרחבת כלי דם.</p>
+      </div>
+      <div class="pcard sc" data-tone="indigo">
+        <div class="pcard-head"><h3>שימוש ממושך: השפעה הורמונלית</h3></div>
+        <p class="flush">עלייה ב-<span class="en">GH</span>, פרולקטין ו-<span class="en">ADH</span>. <b>ירידה חדה בהורמוני מין</b> (<span class="en">Androgen deficiency</span>): פגיעה בתפקוד המיני, חולשה, דכאון, אוסטאופורוזיס ופגיעה בפוריות.</p>
+      </div>
+    </div>
+
+    <div class="call sc is-exam">
+      <h4><span aria-hidden="true">⚠️</span> מלכודות קלאסיות במבחנים</h4>
+      <ul class="flush">
+        <li><b><span class="en">Miosis</span> מול <span class="en">Mydriasis</span>:</b> מורפין גורם ל-<b class="en">Miosis</b> (כיווץ). הרחבת אישונים (<span class="en">Mydriasis</span>) מופיעה דווקא בתסמונת <b>גמילה</b>!</li>
+        <li><b>עצירות מול שלשול:</b> מורפין גורם ל<b>עצירות</b> (ולכן אופיואידים משמשים כתרופות נגד שלשול, ואינם גורמים לשלשול).</li>
+        <li><b>טריאדת הרעלה:</b> קומה + דיכוי נשימתי + אישוני סיכה מכווצים = חשד מיידי להרעלת אופיואידים ← <b class="en">Naloxone</b> דחוף!</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4 סבילות, תלות וגמילה -->
+  <section id="op-sec-4" class="topic-section" data-category="tolerance">
+    <h2>4 · סבילות (<span class="en">Tolerance</span>), תלות ושלבי גמילה</h2>
+    <p class="sec-note">לא לכל ההשפעות מתפתחת סבילות, וזו אחת משאלות המבחן הנפוצות והמכשילות ביותר.</p>
+
+    <div class="cards c2">
+      <div class="pcard sc is-exam" data-tone="rose">
+        <div class="pcard-head"><h3>❌ אין סבילות (ללא הסתגלות)</h3><span class="exam">נשאל בשחזור</span></div>
+        <p class="sub"><b>עצירות (<span class="en">Constipation</span>) ו-<span class="en">Miosis</span> (כיווץ אישונים)</b></p>
+        <p class="flush">תופעות אלו נמשכות לאורך כל משך הטיפול באותה עוצמה! לכן חובה לטפל מראש בעצירות, ואישוני סיכה נשארים סימן מזהה תמידי.</p>
+      </div>
+      <div class="pcard sc" data-tone="emerald">
+        <div class="pcard-head"><h3>✔️ מתפתחת סבילות</h3><span class="tag">דורש עליית מינון</span></div>
+        <p class="sub"><b>שיכוך כאב, אופוריה, סדציה, דיכוי נשימה ובחילות</b></p>
+        <p class="flush">עם הזמן נדרש מינון הולך ועולה כדי להשיג את אותו אפקט אנלגטי, ובמקביל הגוף מפתח עמידות חלקית לדיכוי הנשימתי.</p>
+      </div>
+    </div>
+
+    <h3>שלבי תסמונת הגמילה הפיזית (<span class="en">Withdrawal Syndrome</span>)</h3>
+    <div class="cards">
+      <div class="pcard sc" data-tone="amber">
+        <div class="pcard-head"><h3>שלב <span class="en">I</span></h3><span class="tag">עד 8 שעות</span></div>
+        <p class="flush">אי-שקט, חרדה גוברת, תשוקה נפשית עזה לסם (<span class="en">craving</span>).</p>
+      </div>
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h3>שלב <span class="en">II</span></h3><span class="tag">8–24 שעות</span></div>
+        <p class="flush">נדודי שינה, נזלת ודמעת, הזעה, הפרעות עיכול, <b>הרחבת אישונים (<span class="en">mydriasis</span>)</b>.</p>
+      </div>
+      <div class="pcard sc" data-tone="purple">
+        <div class="pcard-head"><h3>שלב <span class="en">III</span></h3><span class="tag">עד 3 ימים, שיא</span></div>
+        <p class="flush">טכיקרדיה, יל"ד, הקאות, שלשול, חום, צמרמורות, רעד (<span class="en">tremor</span>), פרכוסים והתכווצויות שרירים כואבות.</p>
+      </div>
+    </div>
+    <p class="sec-note">הערה: דיכאון, חרדה וכמיהה לסם עלולים להימשך שבועות עד חודשים רבים לאחר סיום השלב הגופני החריף.</p>
+  </section>
+
+  <!-- 5 שימושים, התוויות נגד ואינטראקציות -->
+  <section id="op-sec-5" class="topic-section" data-category="uses">
+    <h2>5 · שימושים קליניים, התוויות נגד ותגובות בין-תרופתיות</h2>
+    <p class="sec-note">אותה התרופה, שימושים מגוונים, וסכנות קליניות שחוזרות בבחינות.</p>
+
+    <h3>שימושים קליניים מרכזיים</h3>
+    <div class="cards c2">
+      <div class="pcard sc" data-tone="emerald">
+        <div class="pcard-head"><h3>שיכוך כאב בינוני עד חמור</h3></div>
+        <p class="flush">סרטן, כאב נוירולוגי, כאב פנטום, בלידה, עזר להרדמה כללית, לפני ובמהלך ניתוח.</p>
+      </div>
+      <div class="pcard sc" data-tone="emerald">
+        <div class="pcard-head"><h3>עצירת שלשול</h3></div>
+        <p class="flush"><b class="en">Loperamide</b> ו-<b class="en">Diphenoxylate</b> (מפחיתים פריסטלטיקה ומגבירים טונוס מעי; אינם חודרים <span class="en">BBB</span> במינון רגיל).</p>
+      </div>
+      <div class="pcard sc is-exam" data-tone="emerald">
+        <div class="pcard-head"><h3>דיכוי שיעול</h3><span class="exam">נשאל בשחזור</span></div>
+        <p class="flush"><b class="en">Codeine</b> ו-<b class="en">Dextromethorphan</b>.</p>
+      </div>
+      <div class="pcard sc" data-tone="emerald">
+        <div class="pcard-head"><h3>בצקת ריאות חריפה עם אי-ספיקת לב שמאלית</h3></div>
+        <p class="flush"><span class="en">Morphine</span> מפחית עומס מקדים (<span class="en">preload</span>), מרחיב ורידים ומרגיע חרדה וקוצר נשימה.</p>
+      </div>
+    </div>
+
+    <h3>התוויות נגד מוחלטות ואזהרות</h3>
+    <div class="cards c2">
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h3>פגיעת ראש</h3></div>
+        <p class="flush">דיכוי נשימה ← עליית <span class="en">CO₂</span> בדם ← הרחבת כלי דם במוח ← <b>עלייה מסוכנת בלחץ התוך-גולגולתי (<span class="en">ICP</span>)</b>.</p>
+      </div>
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h3>אסטמה</h3></div>
+        <p class="flush">שחרור היסטמין גורם לברונכוקונסטריקציה והחמרת ספאזם נשימתי.</p>
+      </div>
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h3>הריון ויילודים</h3></div>
+        <p class="flush">חוצה שליה ומגיע לעובר; זהירות בכבד/כליה/קשישים; <b>אסור לחלוטין ליילודים!</b></p>
+      </div>
+      <div class="pcard sc is-exam" data-tone="amber">
+        <div class="pcard-head"><h3>מלכודת מבחן: חום</h3><span class="exam">נשאל</span></div>
+        <p class="flush">אופיואידים <b>אינם מורידים חום</b>. הורדת חום איננה התוויה שלהם!</p>
+      </div>
+    </div>
+
+    <div class="call sc is-exam">
+      <h4><span aria-hidden="true">🚫</span> תגובות בין-תרופתיות מסוכנות</h4>
+      <ul class="flush">
+        <li><b>מעכבי <span class="en">MAO</span> (<span class="en">MAOI</span>):</b> שילוב אסור בהחלט (<span class="en">contraindicated</span>) מחשש להיפרתרמיה וקריסה המודינמית.</li>
+        <li><b>בנזודיאזפינים (<span class="en">BZ</span>), סדטיבים, נוגדי דיכאון ופסיכוזה:</b> מגבירים באופן סינרגיסטי ומסכן חיים את דיכוי מערכת העצבים והנשימה.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6 דרכי מתן וסיעוד -->
+  <section id="op-sec-6" class="topic-section" data-category="nursing">
+    <h2>6 · דרכי מתן ודגשים סיעודיים</h2>
+    <p class="sec-note">גמישות רחבה בדרכי מתן, ודווקא לכן חובה לדעת מה האחות חייבת לנטר.</p>
+
+    <div class="call sc">
+      <h4><span aria-hidden="true">💉</span> מגוון דרכי מתן</h4>
+      <p class="flush">פומי <span class="en">PO</span> (שחרור מיידי <span class="en">IR</span> ושחרור מושהה <span class="en">ER</span>, <b>אסור לרסק טבליות <span class="en">ER</span>!</b>), תת-לשוני <span class="en">SL</span> (תרסיס וטבליות מצץ), רקטלי <span class="en">PR</span>, תוך-שרירי <span class="en">IM</span>, תוך-ורידי <span class="en">IV</span>, תת-עורי <span class="en">SC</span>, תוך-שדרתי (<span class="en">intrathecal</span>), אפידורלי, תרסיס לאף ומדבקות טרנסדרמליות.</p>
+    </div>
+
+    <div class="cards c2">
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h3>1 · ניטור נשימה ול"ד</h3></div>
+        <p class="flush">בדיקת קצב ועומק נשימה ולחץ דם לפני כל מתן. דיכוי נשימתי הוא תמרור האזהרה הקריטי לניטור!</p>
+      </div>
+      <div class="pcard sc" data-tone="emerald">
+        <div class="pcard-head"><h3>2 · מניעת עצירות מראש</h3></div>
+        <p class="flush">התחלת משלשל, שתייה מרובה ועידוד ניידות במקביל למתן התרופה, <b>כי לעצירות אין סבילות לעולם</b>.</p>
+      </div>
+      <div class="pcard sc" data-tone="amber">
+        <div class="pcard-head"><h3>3 · אוכלוסיות מיוחדות</h3></div>
+        <p class="flush">הפחתת מינון בקשישים; ניטור קפדני בחולי אי-ספיקת כבד וכליה; <b>איסור מוחלט על מתן ליילודים</b>.</p>
+      </div>
+      <div class="pcard sc" data-tone="blue">
+        <div class="pcard-head"><h3>4 · סם-נגד בהישג יד</h3></div>
+        <p class="flush"><b class="en">Naloxone</b> חייב להיות זמין פיזית בהישג יד מיידי כסם-נגד (<span class="en">Antidote</span>) לכל מקרה של דיכוי נשימתי.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 נוהל חירום -->
+  <section id="op-sec-7" class="topic-section" data-category="emergency">
+    <h2>7 · נוהל חירום: הרעלת אופיואידים ודום נשימה</h2>
+    <p class="sec-note">פרוטוקול עבודה מיידי במלר"ד, בחדר ניתוח, בטיפול נמרץ ובשטח.</p>
+
+    <div class="cards c2">
+      <div class="pcard sc is-exam" data-tone="rose">
+        <div class="pcard-head"><h3>1 · זיהוי קליני: טריאדת ההרעלה</h3><span class="tag">שלב 1</span></div>
+        <ul class="flush">
+          <li><b>דיכוי נשימתי חמור</b> (פחות מ-10–12 נשימות בדקה, או דום נשימה).</li>
+          <li><b>אישוני סיכה מכווצים</b> (<span class="en">Miosis</span>).</li>
+          <li><b>אובדן הכרה / קומה</b> (<span class="en">Stupor / Coma</span>).</li>
+        </ul>
+      </div>
+      <div class="pcard sc" data-tone="amber">
+        <div class="pcard-head"><h3>2 · פתיחת נתיב אוויר וחמצון</h3><span class="tag">שלב 2</span></div>
+        <p class="flush">פתיחת נתיב אוויר מיידית, מתן 100% חמצן, והנשמה בלחץ חיובי (<span class="en">Ambu-bag</span>) למניעת איסכמיה מוחית ודום לבבי היפוקסי.</p>
+      </div>
+      <div class="pcard sc is-exam" data-tone="emerald">
+        <div class="pcard-head"><h3>3 · מתן <span class="en">Naloxone</span></h3><span class="tag">שלב 3 · סם-נגד</span></div>
+        <p class="flush">מתן <b class="en">Naloxone</b> במנות טיטרציה (0.4–2 מ"ג <span class="en">IV/IM</span> או ספריי לאף) כל 2–3 דקות, עד לחזרת נשימה ספונטנית מספקת.</p>
+      </div>
+      <div class="pcard sc is-exam" data-tone="blue">
+        <div class="pcard-head"><h3>4 · ניטור חוזר: סכנת <span class="en">Re-sedation</span></h3><span class="tag">שלב 4</span></div>
+        <p class="flush"><b>מלכודת קריטית:</b> זמן מחצית החיים של <span class="en">Naloxone</span> (כ-30–90 דקות) קצר בהרבה מזה של מורפין או מתדון! המטופל עלול לחזור לתרדמת ולדיכוי נשימתי.</p>
+      </div>
+    </div>
+
+    <div class="call sc is-exam">
+      <h4><span aria-hidden="true">💡</span> דגש למבחן: מטופל תלוי (מכור) <span class="exam">נשאל</span></h4>
+      <p class="flush">מתן מינון גבוה מדי של <span class="en">Naloxone</span> במטופל מכור עלול לחולל תסמונת גמילה חריפה, סוערת ומסוכנת (<span class="en">Acute Precipitated Withdrawal</span>). לכן יש לטטר בזהירות ליעד של <b>חזרת נשימה</b> ולא בהכרח עוררות מלאה.</p>
+    </div>
+  </section>
+
+  <!-- 8 משפחות ואלרגיה צולבת -->
+  <section id="op-sec-8" class="topic-section" data-category="drugs">
+    <h2>8 · חלוקה ל-4 משפחות כימיות ואלרגיה צולבת</h2>
+    <p class="sec-note">חובה למבחן: אלרגיה צולבת קיימת רק בתוך אותה המשפחה הכימית! אם למטופל יש אלרגיה אמיתית לתרופה ממשפחה מסוימת, יש לבחור תרופה ממשפחה כימית אחרת בלבד.</p>
+
+    <div class="cards c2">
+      <div class="pcard sc is-exam" data-tone="purple">
+        <div class="pcard-head"><h3>כל השאר (הקבוצה הראשית)</h3><span class="exam">נשאל בשחזור</span></div>
+        <p class="flush"><span class="en">Morphine, Oxycodone, Oxymorphone, Hydromorphone, Hydrocodone, Codeine, Buprenorphine, Naloxone</span></p>
+      </div>
+      <div class="pcard sc" data-tone="indigo">
+        <div class="pcard-head"><h3>משפחה 1 (<span class="en">Phenylpiperidines</span>)</h3></div>
+        <p class="flush"><span class="en">Fentanyl, Alfentanil, Sufentanil, Meperidine</span></p>
+      </div>
+      <div class="pcard sc" data-tone="cyan">
+        <div class="pcard-head"><h3>משפחה 2 (<span class="en">Benzomorphans</span>)</h3></div>
+        <p class="flush"><span class="en">Pentazocine</span> (אגוניסט-אנטגוניסט מעורב)</p>
+      </div>
+      <div class="pcard sc" data-tone="amber">
+        <div class="pcard-head"><h3>משפחה 3 (<span class="en">Diphenylheptanes</span>)</h3></div>
+        <p class="flush"><span class="en">Methadone</span></p>
+      </div>
+    </div>
+
+    <h3>מטריצת אלרגיה צולבת</h3>
+    <div class="table-wrap">
+      <table class="rtable cols4">
+        <thead>
+          <tr><th scope="col">משפחה כימית</th><th scope="col">תרופות בקבוצה</th><th scope="col">אלרגיה צולבת</th><th scope="col">דגשים קליניים למבחן</th></tr>
+        </thead>
+        <tbody>
+          <tr class="sc"><td>כל השאר (<span class="en">Phenanthrenes / Morphine group</span>)</td><td><span class="en">Morphine, Oxycodone, Oxymorphone, Hydromorphone, Codeine, Buprenorphine, Naloxone</span></td><td>אלרגיה צולבת קיימת ביניהן בלבד!</td><td>הקבוצה הנפוצה ביותר. שחרור היסטמין משמעותי במורפין; קודאין משמש לשיעול; נלוקסון כאנטגוניסט.</td></tr>
+          <tr class="sc"><td>משפחה 1 (<span class="en">Phenylpiperidines</span>)</td><td><span class="en">Fentanyl, Alfentanil, Sufentanil, Meperidine</span></td><td>אלרגיה צולבת קיימת בתוך משפחה 1</td><td>בטוח לתת פנטניל למטופל שאלרגי למורפין! פנטניל חזק פי 100 ובטוח בכשל כליה; מפרידין לטווח קצר עקב נורמפרידין.</td></tr>
+          <tr class="sc"><td>משפחה 2 (<span class="en">Benzomorphans</span>)</td><td><span class="en">Pentazocine</span></td><td>אין אלרגיה צולבת למורפין או פנטניל</td><td>אגוניסט-אנטגוניסט מעורב (אגוניסט <span class="en">κ</span>, אנטגוניסט <span class="en">μ</span>); מעלה לחץ דם ועומס לבבי.</td></tr>
+          <tr class="sc"><td>משפחה 3 (<span class="en">Diphenylheptanes</span>)</td><td><span class="en">Methadone</span></td><td>אין אלרגיה צולבת למשפחות האחרות</td><td><span class="en">T½</span> ארוך מאוד (עד 60 שעות); מיועד לגמילה ולכאב כרוני; דורש ניטור <span class="en">ECG</span> (סכנת הארכת <span class="en">QT</span> ו-<span class="en">Torsades</span>).</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>דגשים ספציפיים לתרופות הנבחרות</h3>
+    <div class="cards c2">
+      <div class="pcard sc" data-tone="purple">
+        <div class="pcard-head"><h3 class="en">Morphine</h3></div>
+        <p class="flush">אגוניסט <span class="en">μ</span> אב-טיפוס; לכאב אקוטי וכרוני; יעיל בבצקת ריאות חריפה עם כשל לב שמאלי.</p>
+      </div>
+      <div class="pcard sc" data-tone="indigo">
+        <div class="pcard-head"><h3 class="en">Fentanyl</h3></div>
+        <p class="flush"><b>חזק פי 100 ממורפין ומהיר מאוד</b>; מדבקה לכאב כרוני, <span class="en">IM</span>/ספריי לכאב מתפרץ, <span class="en">IV</span> להרדמה; מתאים בחולי כליה.</p>
+      </div>
+      <div class="pcard sc" data-tone="rose">
+        <div class="pcard-head"><h3 class="en">Meperidine</h3></div>
+        <p class="flush">לטווח קצר בלבד במיילדות; מטבוליט <span class="en">Normeperidine</span> מצטבר וגורם לדליריום ולפרכוסים. אסור בקשישים, בכבד/כליה ועם נוגדי דיכאון.</p>
+      </div>
+      <div class="pcard sc is-exam" data-tone="amber">
+        <div class="pcard-head"><h3 class="en">Codeine</h3><span class="exam">נשאל</span></div>
+        <p class="flush">לכאב קל-בינוני ול<b>דיכוי שיעול</b>; יותר עצירות, פחות התמכרות.</p>
+      </div>
+      <div class="pcard sc" data-tone="cyan">
+        <div class="pcard-head"><h3 class="en">Methadone</h3></div>
+        <p class="flush">זמן שיכוך קצר אך <b><span class="en">T½</span> ארוך מאוד</b>; לכאב כרוני ולגמילה; דורש ניטור <span class="en">ECG</span> (הארכת <span class="en">QT</span>); נרשם רק ע"י רופא מורשה.</p>
+      </div>
+      <div class="pcard sc" data-tone="emerald">
+        <div class="pcard-head"><h3 class="en">Oxycodone</h3></div>
+        <p class="flush">ללא מינון תקרה; <span class="en">Percocet = Oxycodone + Paracetamol</span>; <span class="en">Targin = Oxycodone + Naloxone</span> (נלוקסון מפחית עצירות מקומית במעי).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 אגוניסטים חלקיים ואנטגוניסטים -->
+  <section id="op-sec-9" class="topic-section" data-category="drugs">
+    <h2>9 · אגוניסטים חלקיים, דמויי-אופיואיד ואנטגוניסטים</h2>
+    <p class="sec-note">תרופות לגמילה ולהיפוך הרעלה: אנטגוניסט תחרותי חוסם ומפנה את הרצפטור.</p>
+
+    <div class="cards c2">
+      <div class="pcard sc" data-tone="purple">
+        <div class="pcard-head"><h3 class="en">Buprenorphine</h3><span class="tag">אגוניסט חלקי</span></div>
+        <p class="flush">אגוניסט חלקי ל-<span class="en">μ</span>, אנטגוניסט חלש ל-<span class="en">κ/δ</span>; פועל כאגוניסט חלש בנאיבי אך כאנטגוניסט במכור (יכול לחולל גמילה); פחות אופוריה ופחות דום נשימה; זהירות באנגינה (מעלה ל"ד).</p>
+      </div>
+      <div class="pcard sc" data-tone="cyan">
+        <div class="pcard-head"><h3 class="en">Pentazocine</h3><span class="tag">אגוניסט-אנטגוניסט מעורב</span></div>
+        <p class="flush">אגוניסט <span class="en">κ</span>, אנטגוניסט חלש <span class="en">μ</span>; לכאב בינוני; פחות אופוריה אך גורם לסבילות ולתלות; זהירות באנגינה (מעלה לחץ דם ועומס לבבי).</p>
+      </div>
+      <div class="pcard sc" data-tone="amber">
+        <div class="pcard-head"><h3><span class="en">Tramadol / Tapentadol</span></h3><span class="tag">דמויי-אופיואיד</span></div>
+        <p class="flush">אגוניסט <span class="en">μ</span> חלש + עיכוב <span class="en">Reuptake</span> של סרוטונין ונוראדרנלין (<span class="en">SNRI/NRI</span>); פחות דיכוי נשימתי, אך גורם לפרכוסים ולעירור. <b>סכנת סינדרום סרוטונין עם <span class="en">SSRI/MAOI/TCA</span>!</b></p>
+      </div>
+      <div class="pcard sc is-exam" data-tone="rose">
+        <div class="pcard-head"><h3><span class="en">Naloxone / Naltrexone</span></h3><span class="exam">נשאל ×2 בשחזורים</span></div>
+        <p class="sub">סמי-נגד (<span class="en">Antidotes</span>)</p>
+        <p class="flush">אנטגוניסטים תחרותיים טהורים. <b>אינם משפיעים כלל על מטופל נאיבי</b> (שלא נחשף לאופיואידים); היפוך מיידי של קומה ודיכוי נשימתי (מתן <span class="en">IV</span>). במטופל מכור מעוררים תסמונת גמילה סוערת מיידית!</p>
+      </div>
+      <div class="pcard sc" data-tone="emerald">
+        <div class="pcard-head"><h3>טיפול בעצירות אופיואידית (<span class="en">OIC</span>)</h3></div>
+        <p class="flush">קו ראשון: <b class="en">Senna</b> (משלשל ממריץ / סיבים). במקרים עמידים: אנטגוניסטים פריפריים ייעודיים ל-<span class="en">μ</span> שאינם חודרים מוח: <b class="en">Methylnaltrexone, Naloxegol, Naldemedine</b>.</p>
+      </div>
+      <div class="pcard sc" data-tone="blue">
+        <div class="pcard-head"><h3 class="en">Lofexidine</h3></div>
+        <p class="flush">אגוניסט אדרנרגי <span class="en">α2</span>: מפחית תסמיני גמילה אוטונומיים קשים וסוערים, ניתן בשלב הגמילה החריף.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 שרשראות סיבה ← תוצאה -->
+  <section id="op-sec-10" class="topic-section" data-category="rel">
+    <h2>10 · שרשראות סיבה ← תוצאה מובילות במבחנים</h2>
+    <p class="sec-note">הקשרים שחוזרים הכי הרבה בשאלות, מומלץ לשנן בכיוון המדויק הזה. קוראים מימין לשמאל: הגורם הפרמקולוגי והתוצאה הקלינית שנגזרת ממנו.</p>
+
+    <div class="selftest no-print" data-interactive>
+      <button type="button" id="selftest-toggle" class="secondary" aria-pressed="false"><span aria-hidden="true">👁️</span> מצב בחינה עצמית (הסתר תוצאות)</button>
+      <button type="button" id="selftest-reveal" class="secondary">חשוף הכל</button>
+      <p id="selftest-status" class="selftest-status" role="status"></p>
+    </div>
+
+    <div id="op-chains">
+      <div class="rel sc is-exam">
+        <div class="rel-cause">מתן אופיואיד במינון יתר חריף <span class="exam">נשאל בשחזור</span></div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect">דיכוי נשימתי עמוק המוביל לדום נשימה, היפוקסיה ומוות. סם-הנגד המיידי הוא <b class="en">Naloxone</b> <span class="en">IV</span>.</div>
+      </div>
+      <div class="rel sc is-exam">
+        <div class="rel-cause">הרעלת <span class="en">Morphine</span> (קומה + דיכוי נשימתי + <span class="en">miosis</span>) <span class="exam">נשאל ×2</span></div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect">מתן תוך-ורידי מיידי של <b class="en">Naloxone</b> להיפוך מהיר של חסימת הרצפטורים והצלת חיים.</div>
+      </div>
+      <div class="rel sc is-exam">
+        <div class="rel-cause">צורך בדיכוי שיעול טורדני <span class="exam">נשאל בשחזור</span></div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect">מתן <b class="en">Codeine</b> (או <span class="en">Dextromethorphan</span>) המדכאים את מרכז השיעול במדולה בריכוזים נמוכים מאנלגזיה.</div>
+      </div>
+      <div class="rel sc">
+        <div class="rel-cause">בצקת ריאות חריפה עם אי-ספיקת לב שמאלית</div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect"><span class="en">Morphine</span> מקל על קוצר הנשימה ע"י הרחבת ורידים, הפחתת עומס מקדים (<span class="en">Preload</span>) והורדת חרדה.</div>
+      </div>
+      <div class="rel sc">
+        <div class="rel-cause">עצירות אופיואידית עמידה למשלשלים (<span class="en">OIC</span>)</div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect">מתן אנטגוניסט פריפרי ל-<span class="en">μ</span> (כגון <b class="en">Methylnaltrexone, Naloxegol</b>) שאינו חוצה <span class="en">BBB</span> ואינו מבטל אנלגזיה.</div>
+      </div>
+      <div class="rel sc">
+        <div class="rel-cause">שילוב <span class="en">Tramadol</span> עם <span class="en">SSRI / MAOI / TCA</span> <span class="exam">סכנה קלינית</span></div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect">עיכוב כפול של פינוי סרוטונין המוביל ל-<b class="en">Serotonin Syndrome</b> מסכן חיים (רעד, היפרתרמיה, פרכוסים).</div>
+      </div>
+      <div class="rel sc is-exam">
+        <div class="rel-cause">שימוש ממושך ותדיר באופיואידים <span class="exam">נשאל בשחזור</span></div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect">התפתחות סבילות (<span class="en">Tolerance</span>) למרבית ההשפעות, אך <b>לעולם לא לעצירות ול-<span class="en">Miosis</span></b>!</div>
+      </div>
+      <div class="rel sc is-exam">
+        <div class="rel-cause">אלרגיה צולבת לאופיואידים <span class="exam">נשאל בשחזור</span></div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect">קיימת אך ורק בתוך אותה המשפחה הכימית (למשל מורפין וקודאין); אין מעבר למשפחה 1 (פנטניל).</div>
+      </div>
+      <div class="rel sc is-exam">
+        <div class="rel-cause">מתן <span class="en">Naloxone</span> למטופל נאיבי (ללא חשיפה לאופיואידים) <span class="exam">נשאל בשחזור</span></div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect"><b>אין כל השפעה פיזיולוגית או פרמקולוגית ניכרת!</b> האנטגוניסט פועל רק בנוכחות אגוניסט.</div>
+      </div>
+      <div class="rel sc">
+        <div class="rel-cause">מתן <span class="en">Meperidine</span> ממושך לקשישים או בחולי כליה</div>
+        <span class="rel-arrow">←</span>
+        <div class="rel-effect">הצטברות המטבוליט הרעיל <b class="en">Normeperidine</b> הגורם לדליריום, אי-שקט מוטורי, עוויתות ופרכוסים.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 נקודות שחזרו -->
+  <section id="op-sec-11" class="topic-section" data-category="exam">
+    <h2>11 · נקודות שחזרו בשחזורים: צ'ק-ליסט לקראת הבחינה <span class="tag">High Yield</span></h2>
+    <p class="sec-note">13 נקודות זהב שחזרו שוב ושוב בבחינות הרישוי והאקדמיה.</p>
+
+    <div class="cards c2 points">
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span></span><p class="flush">תופעת הלוואי המסוכנת ביותר של אופיואידים = <b>דום נשימה</b> (<span class="en">Respiratory arrest</span>).</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span></span><p class="flush">אופיואידים <b>אינם מורידים חום</b>. זו איננה התוויה שלהם בשום מצב קליני.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span></span><p class="flush"><b class="en">Codeine:</b> משמש ל<b>דיכוי שיעול</b> (לא לגמילה ולא להרעלת מורפין).</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span></span><p class="flush"><b class="en">Naloxone:</b> סם-הנגד (<span class="en">Antidote</span>) המיידי והספציפי להרעלת <span class="en">Morphine</span> ואופיואידים.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span></span><p class="flush">תרופת הבחירה למטופל עם דיכוי נשימתי + <span class="en">miosis</span> (אישוני סיכה) = <b class="en">Naloxone IV</b>.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span></span><p class="flush"><b class="en">Naltrexone:</b> אנטגוניסט אופיואידי ארוך טווח המשמש למניעת הישנות ולמעקב בגמילה.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span></span><p class="flush">מורפין גורם ל-<b class="en">miosis</b> (כיווץ אישונים), ולא ל-<span class="en">mydriasis</span>.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span></span><p class="flush">אנטגוניסט אופיואידי (כמו <span class="en">Naloxone</span>) <b>אינו משפיע כלל על מטופל נאיבי</b> (ללא חשיפה קודמת).</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span></span><p class="flush"><b>עצירות ו-<span class="en">miosis</span>:</b> שתי ההשפעות העיקריות ש<b>אין</b> להן סבילות לאורך כל הטיפול.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span></span><p class="flush"><b><span class="en">MAOI</span> + אופיואידים:</b> שילוב אסור בהחלט (<span class="en">Contraindicated</span>) מחשש לקריסה.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span></span><p class="flush"><b class="en">Meperidine:</b> לטווח קצר בלבד; סכנת הצטברות <span class="en">Normeperidine</span>, דליריום ופרכוסים בקשישים ובכליה.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span></span><p class="flush"><b class="en">Methadone:</b> <span class="en">T½</span> ארוך במיוחד; דורש ניטור <span class="en">ECG</span> (הארכת מקטע <span class="en">QT</span>) ורישום מורשה בלבד.</p></div>
+      <div class="pcard point sc is-exam" data-tone="amber"><span class="exam"><span class="visually-hidden">נשאל </span><span aria-hidden="true">⭐</span></span><p class="flush"><b class="en">Loperamide</b> ו-<b class="en">Diphenoxylate:</b> דמויי-אופיואיד נגד שלשול, אסורים לשימוש בילדים קטנים.</p></div>
+    </div>
+  </section>
+
+  <!-- כרטיסיות תרגול (אינטראקטיבי) -->
+  <section id="op-practice" class="lab deck no-print" data-interactive aria-labelledby="op-deck-title">
+    <p class="lab-kicker lab-kicker-hot"><span aria-hidden="true">⭐</span> מצב תרגול אישי לשחזורים</p>
+    <h2 id="op-deck-title">כרטיסיות שחזורים (<span class="en">Flashcards</span>) לבחינה</h2>
+    <p class="sec-note">נסו לענות בעל פה ואז לחצו על הכרטיסייה כדי לחשוף את התשובה. עם המיקוד בכרטיסייה, החצים ← → עוברים בין הכרטיסים.</p>
+    <p class="flash-progress"><span>התקדמות:</span> <strong id="flash-progress" role="status">0 מתוך 10 נלמדו בהצלחה</strong></p>
+
+    <div class="flash-stage">
+      <button type="button" id="flashcard" class="flash" data-flipped="false">
+        <span class="flash-inner">
+          <span id="card-front" class="face face-front" aria-hidden="false">
+            <span class="face-top"><b>שאלה <span id="card-num">1 / 10</span></b><span id="card-repeat" class="exam" hidden></span></span>
+            <span id="card-question" class="face-text">טוען שאלה...</span>
+            <span class="face-bottom">הקליקו בכל מקום בכרטיסייה לחשיפת התשובה ↻</span>
+          </span>
+          <span id="card-back" class="face face-back" aria-hidden="true">
+            <span class="face-top"><b>תשובה מלאה ומנומקת</b><span class="face-hint">לחצו לחזרה לשאלה ↻</span></span>
+            <span id="card-answer" class="face-text">טוען תשובה...</span>
+            <span class="face-bottom">סמנו למטה כדי לתעד הצלחה</span>
+          </span>
+        </span>
+      </button>
+
+      <div class="flash-controls">
+        <button type="button" id="card-prev" class="flash-btn">→ הקודם</button>
+        <span class="flash-marks">
+          <button type="button" id="card-known" class="flash-btn flash-ok"><span aria-hidden="true">✓</span> ידעתי מצוין</button>
+          <button type="button" id="card-again" class="flash-btn flash-bad"><span aria-hidden="true">✗</span> לחזור שוב</button>
+        </span>
+        <button type="button" id="card-next" class="flash-btn">הבא ←</button>
+      </div>
+    </div>
+  </section>
+
+  <p class="source">סיכום לימודי המבוסס על חומרי הקורס בנושא "אופיואידים". נועד לחזרה — אין בו אבחון או ייעוץ רפואי.</p>
+</article>
+  </main>
+
+  <footer class="site-footer page wide">
+    <nav>
+      <a href="../accessibility.html">הצהרת נגישות</a>
+      <a href="../privacy.html">מדיניות פרטיות</a>
+    </nav>
+    <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+  </footer>
+</body>
+</html>

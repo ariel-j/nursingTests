@@ -5,16 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <title>המערכת הקרדיווסקולרית — סיכום</title>
-  <link rel="preload" href="../fonts/assistant-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/summary.css">
   <script type="module" src="../js/summary.js"></script>
+  <script type="module" src="../js/nav.js"></script>
   <script type="module" src="../js/a11y.js"></script>
 </head>
 <body class="summary-page">
   <main class="page wide">
     <nav class="top-nav no-print">
-      <a href="./">→ כל הסיכומים</a>
+      <a href="./?subject=anatomy">→ כל הסיכומים</a>
       <button type="button" class="secondary" data-print>הדפסה / שמירה כ‑PDF</button>
     </nav>
 
@@ -31,6 +32,46 @@
       <span><span class="exam exam-legend">נשאל בשחזורים</span> נקודה שחזרה במבחנים</span>
     </div>
   </header>
+
+  <section class="intro" id="car-intro">
+    <h2>מבוא: על מה כל זה?</h2>
+    <p>המערכת הקרדיווסקולרית היא מערכת הובלה סגורה: <b>משאבה</b> (הלב), <b>צינורות</b> (עורקים, נימים, ורידים) ו<b>נוזל</b> (הדם). המטרה פשוטה: להביא חמצן ומזון לכל תא בגוף, ולקחת ממנו פסולת. הדם זורם תמיד מאזור של לחץ גבוה לאזור של לחץ נמוך, והלב הוא זה שיוצר את הלחץ.</p>
+    <p>לכן כמעט כל מה שנלמד בפרק הוא תשובה לשאלה אחת: <b>איך הלב יוצר לחץ בקצב הנכון ובכמות הנכונה, ואיך הגוף מכוון אותו</b>. המבנה (חללים ומסתמים) קובע לאן הדם זורם, החשמל (הולכה, <span class="en">ECG</span>) קובע מתי הלב מתכווץ, מחזור הלב מתאר מה קורה בכל פעימה, ותפוקת הלב ולחץ הדם מראים איך הכול מתאים לצורכי הגוף.</p>
+    <p>בכל נושא תמצאו שורות של <b>גורם ← תוצאה</b>: מה משתנה, ומה זה גורם. אם מבינים את הכיוון, אפשר לפתור גם שאלה שלא ראיתם. המילון שלמטה מסביר כל מונח שמופיע בסיכום.</p>
+  </section>
+
+  <section class="glossary" id="car-glossary">
+    <h2>מילון מונחים</h2>
+    <p class="sec-note">כל מונח שמופיע בסיכום, בשפה פשוטה.</p>
+    <dl class="def"><dt>הדם</dt><dd>רקמה נוזלית: פלסמה (החלק הנוזלי) וחלק תאי: כדוריות אדומות (מובילות חמצן), כדוריות לבנות (חיסון) וטסיות (קרישה).</dd></dl>
+    <dl class="def"><dt>עורק / וריד / נים</dt><dd>עורק: כלי שמוביל דם <b>החוצה</b> מהלב (דופן עבה ושרירית). וריד: מחזיר דם <b>ללב</b> (דופן דקה, שסתומים). נים: כלי זעיר שבו מתבצע חילוף חומרים עם התאים.</dd></dl>
+    <dl class="def"><dt>מחזור ריאתי / מערכתי</dt><dd>ריאתי (קטן): לב ימין ← ריאות ← לב שמאל, שם הדם מקבל חמצן. מערכתי (גדול): לב שמאל ← כל הגוף ← לב ימין.</dd></dl>
+    <dl class="def"><dt>עלייה / חדר</dt><dd>עלייה (<span class="en">Atrium</span>): חלל שמקבל דם ומעביר אותו לחדר. חדר (<span class="en">Ventricle</span>): חלל שמזרים דם החוצה בכוח, לעורק.</dd></dl>
+    <dl class="def"><dt>היענות (<span class="en">Compliance</span>)</dt><dd>עד כמה דופן של כלי או חלל גמישה ומתרחבת כשנכנס אליה נפח. היענות גבוהה = מכילה הרבה דם בלי שהלחץ עולה (ורידים).</dd></dl>
+    <dl class="def"><dt>שכבות הלב</dt><dd>אנדוקרדיום: ציפוי פנימי חלק. מיוקרדיום: שריר הלב, השכבה שמתכווצת. פריקרדיום: שק שעוטף את הלב.</dd></dl>
+    <dl class="def"><dt>מסתם צניפי / סהרוני</dt><dd>מסתם: "דלת" חד‑כיוונית שנפתחת וסוגרת רק לפי הפרש לחצים. צניפי (<span class="en">AV</span>): בין עלייה לחדר. סהרוני (<span class="en">SL</span>): בין חדר לעורק.</dd></dl>
+    <dl class="def"><dt>קול הלב (<span class="en">S1</span>, <span class="en">S2</span>)</dt><dd>הצלילים של סגירת המסתמים. <span class="en">S1</span> ("לאב"): סגירת מסתמי <span class="en">AV</span>, תחילת הסיסטולה. <span class="en">S2</span> ("דאב"): סגירת המסתמים הסהרוניים, תחילת הדיאסטולה.</dd></dl>
+    <dl class="def"><dt>סיסטולה / דיאסטולה</dt><dd>סיסטולה: החדר מתכווץ ומזריק דם. דיאסטולה: החדר נרפה ומתמלא. כל פעימה היא סיסטולה + דיאסטולה.</dd></dl>
+    <dl class="def"><dt>עורקים כליליים</dt><dd>העורקים שמספקים דם לשריר הלב עצמו. יוצאים מאבי העורקים, מיד אחרי המסתם. הוורידים הכליליים מנקזים לגת הכלילית (<span class="en">coronary sinus</span>) בעלייה הימנית.</dd></dl>
+    <dl class="def"><dt>איסכמיה / אוטם</dt><dd>איסכמיה: אספקת דם לא מספיקה לרקמה (חוסר חמצן). אוטם (<span class="en">Infarct</span>): מוות של רקמה אחרי איסכמיה ממושכת, למשל אוטם שריר הלב.</dd></dl>
+    <dl class="def"><dt>דפולריזציה / רפולריזציה</dt><dd>דפולריזציה: התא נטען חשמלית (נהיה פחות שלילי) ← מתכווץ. רפולריזציה: חוזר למצבו ← נרפה. הם הבסיס לגלי ה‑<span class="en">ECG</span>.</dd></dl>
+    <dl class="def"><dt>פוטנציאל פעולה</dt><dd>שינוי חשמלי מהיר ומאורגן על קרום התא. בתא שריר לב יש גם "פלאטו" ארוך (כניסת סידן) שמונע כיווץ חוזר לפני שהשריר נרפה.</dd></dl>
+    <dl class="def"><dt>תקופה רפרקטורית</dt><dd>פרק זמן אחרי פעולה שבו התא עדיין לא יכול להיות מגורה שוב.</dd></dl>
+    <dl class="def"><dt>קוצב (<span class="en">SA</span>, <span class="en">AV</span>)</dt><dd>תאים שיוצרים דחפים חשמליים מעצמם. <span class="en">SA</span> (הקשר הסינוטריאלי) הוא הקוצב הראשי. <span class="en">AV</span> מעכב את הדחף מעט כדי שהעליות יתרוקנו לפני החדרים.</dd></dl>
+    <dl class="def"><dt>צרור היס / סיבי פורקינייה</dt><dd>מסלול ההולכה המהיר בחדרים, שמעביר את הדחף מקשר <span class="en">AV</span> לכל שריר החדר.</dd></dl>
+    <dl class="def"><dt>דסקות ביניים / <span class="en">gap junctions</span></dt><dd>חיבורים בין תאי שריר הלב שמעבירים יונים, ולכן כל השריר מתכווץ כ"יחידה אחת".</dd></dl>
+    <dl class="def"><dt><span class="en">ECG</span> (אק"ג)</dt><dd>רישום חשמלי של פעילות הלב מהעור. <span class="en">P</span>: דפולריזציית העליות. <span class="en">QRS</span>: דפולריזציית החדרים. <span class="en">T</span>: רפולריזציית החדרים.</dd></dl>
+    <dl class="def"><dt>טכיקרדיה / ברדיקרדיה</dt><dd>טכיקרדיה: קצב לב מעל 100 לדקה. ברדיקרדיה: מתחת ל‑50 לדקה.</dd></dl>
+    <dl class="def"><dt><span class="en">EDV</span> / <span class="en">ESV</span> / <span class="en">SV</span></dt><dd><span class="en">EDV</span>: נפח הדם בחדר בסוף הדיאסטולה. <span class="en">ESV</span>: נפח שנשאר בסוף הסיסטולה. <span class="en">SV</span> (נפח פעימה) = <span class="en">EDV</span> − <span class="en">ESV</span>.</dd></dl>
+    <dl class="def"><dt>תפוקת לב (<span class="en">CO</span>)</dt><dd>כמות הדם שהלב מזרים בדקה: נפח פעימה × קצב. כ‑5 ליטר בדקה במנוחה.</dd></dl>
+    <dl class="def"><dt><span class="en">Preload</span> / <span class="en">Afterload</span> / <span class="en">Contractility</span></dt><dd><span class="en">Preload</span>: כמה נמתח השריר לפני הכיווץ (נפח מילוי). <span class="en">Afterload</span>: הלחץ שהחדר צריך להתגבר עליו כדי להזריק. <span class="en">Contractility</span>: כוח הכיווץ בלי קשר למתיחה.</dd></dl>
+    <dl class="def"><dt>חוק פרנק‑סטרלינג</dt><dd>ככל שהחדר מתמלא יותר (נמתח יותר) הוא מתכווץ חזק יותר, עד גבול מסוים.</dd></dl>
+    <dl class="def"><dt>סימפתטי / פאראסימפתטי</dt><dd>סימפתטי: מערכת ה"הילחם או ברח", מאיצה את הלב (נוראדרנלין, קולטן β1). פאראסימפתטי: מערכת המנוחה, מאטה את הלב (אצטילכולין, עצב הוואגוס).</dd></dl>
+    <dl class="def"><dt>ברורצפטורים</dt><dd>חיישני לחץ בדופן העורקים הגדולים. כשהלחץ יורד הם מאותתים למוח להפעיל את המערכת הסימפתטית.</dd></dl>
+    <dl class="def"><dt>לחץ דם (<span class="en">SBP/DBP</span>)</dt><dd><span class="en">SBP</span> (סיסטולי): הלחץ הגבוה בזמן הזרקה. <span class="en">DBP</span> (דיאסטולי): הנמוך בזמן מילוי. לחץ דופק = ההפרש ביניהם. קולות קורוטקוף הם הצלילים ששומעים בזמן המדידה.</dd></dl>
+    <dl class="def"><dt><span class="en">Q</span> = <span class="en">A</span> × <span class="en">V</span></dt><dd>הזרימה (<span class="en">Q</span>) שווה לשטח החתך (<span class="en">A</span>) כפול המהירות (<span class="en">V</span>). לכן, כשהשטח הכולל גדל (נימים), המהירות יורדת.</dd></dl>
+  </section>
+
 
   <!-- ===================== 1. יסודות ===================== -->
   <section>
