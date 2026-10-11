@@ -23,6 +23,13 @@ No build step and no runtime dependencies. Node is only needed for the tests and
 - An unfinished session is saved in `localStorage` and resumes after a refresh.
   The quiz list shows which quizzes are in progress and your best first-try score
   (best score counts only runs over the whole quiz).
+- **Statistics:** every finished run, in any mode, is saved as an attempt in `history:<quizId>`
+  (misses per question, at most the last 30 attempts). The start screen shows each topic as
+  weak / fair / solid with a trend, flags topics that *recovered*, and offers one-click practice of the
+  weak topics or the questions that keep coming back. Each question counts once, weighted toward its
+  recent answers, so retrying a few hard questions doesn't drag a topic down. A topic needs about 5 answered
+  questions before it gets a label. Statistics can be exported to a JSON file and imported (merged, never
+  overwriting) from the home page, which is how they move between devices.
 - Keyboard: `1`–`4` choose, `S` skips, `Enter` continues. These use key codes, so they also work with a Hebrew layout.
 
 ## Adding a quiz
@@ -123,6 +130,7 @@ npm run serve     # http://localhost:8000 (fetch() does not work over file://)
 | `js/ecg.js` | pure SVG path for the ECG progress strip |
 | `js/storage.js` | guarded `localStorage` wrapper (prefix `anatomy-quizzes:v1:`) |
 | `js/index.js`, `js/quiz.js` | page UI |
+| `js/stats-transfer.js` | export / import of statistics (home page) |
 | `summaries/`, `css/summary.css` | short summaries, the hub and the combined print page |
 | `js/summary-list.js` | the list of summaries (no DOM); `js/summaries.js`, `js/summary.js`, `js/summaries-all.js` drive the pages |
 | `scripts/` | manifest, validate, and a tiny static dev server |

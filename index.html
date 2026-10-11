@@ -8,6 +8,7 @@
   <link rel="preload" href="fonts/assistant-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/style.css">
   <script type="module" src="js/index.js"></script>
+  <script type="module" src="js/stats-transfer.js"></script>
   <script type="module" src="js/a11y.js"></script>
 </head>
 <body>
@@ -23,6 +24,17 @@
     </header>
     <p id="status" class="status" role="status">טוען…</p>
     <div id="subjects"></div>
+
+    <details id="data-card" class="card data-card">
+      <summary>הסטטיסטיקה שלי: גיבוי והעברה בין מכשירים</summary>
+      <p>הסטטיסטיקה נשמרת בדפדפן הזה בלבד. כדי לעבור למכשיר אחר או לגבות, מייצאים קובץ ומייבאים אותו במכשיר השני. הייבוא ממזג עם הנתונים הקיימים ולא מוחק אותם.</p>
+      <div class="actions">
+        <button id="export-stats" class="secondary" type="button">ייצוא סטטיסטיקה</button>
+        <button id="import-button" class="secondary" type="button">ייבוא סטטיסטיקה</button>
+        <input id="import-stats" type="file" accept="application/json,.json" hidden>
+      </div>
+      <p id="data-status" class="muted" role="status"></p>
+    </details>
   </main>
 
   <footer class="site-footer page">

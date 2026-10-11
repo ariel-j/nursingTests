@@ -16,7 +16,8 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 
 * `js/core.js`: pure logic (queue, scoring, stats, topics, quiz validation). No DOM, no storage; imported by Node tests and the scripts. Randomness is injected as an `rng` argument; state is plain JSON and never mutated.
 * `js/ecg.js`: pure SVG path for the ECG progress strip.
-* `js/storage.js`: guarded localStorage wrapper (prefix `anatomy-quizzes:v1:`). Keys: `session:<id>` (in-progress state), `results:<id>` (attempts, best score).
+* `js/storage.js`: guarded localStorage wrapper (prefix `anatomy-quizzes:v1:`). Keys: `session:<id>` (in-progress state), `results:<id>` (attempts, best score), `history:<id>` (finished attempts of any mode: misses per question, newest 30; analysed by `analyzeHistory` in core.js into per-topic weak/fair/solid, trend and "recovered"). Attempts have unique ids and histories merge by union on id, so import/sync is conflict-free.
+* `js/stats-transfer.js`: statistics export/import (JSON file) on the home page.
 * `js/index.js`: home page; renders the manifest tree of subjects → units → quizzes.
 * `js/quiz.js`: start screen (resume / choose topics) → play → end screen (retry missed).
 * `js/a11y.js`: accessibility toolbar (text size, high contrast, underline links, stop motion); sets `data-*` on `<html>`, persists in localStorage. Imported by every page.
