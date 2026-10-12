@@ -14,9 +14,10 @@ import {
   validateDrugDeck,
   validateStems,
 } from './drugs-core.js';
-import { drugRows, el, familyOptions, fmt } from './drugs-ui.js';
+import { button, buzz, drugRows, el, familyOptions, fmt, starsEl } from './drugs-ui.js';
+import { formatTime, recordBestTime, starsFor } from './drug-games-core.js';
 import { initReview } from './drugs-review.js';
-import { initOdd, initStems } from './drugs-games.js';
+import { initBlitz, initOdd, initStems } from './drugs-games.js';
 import { keys, load, save } from './storage.js';
 
 const $ = (id) => document.getElementById(id);
@@ -24,7 +25,7 @@ const $ = (id) => document.getElementById(id);
 // ---------- tabs ----------
 
 const TABS = ['browse', 'review', 'games', 'test'];
-const GAMES = ['match', 'stems', 'odd'];
+const GAMES = ['match', 'stems', 'odd', 'blitz'];
 
 function initTabs(onShow) {
   const tabs = TABS.map((name) => $(`tab-${name}`));
@@ -140,7 +141,7 @@ function initBrowse(deck) {
 
 // ---------- matching game ----------
 
-function initMatch(deck, subjectId) {
+function initMatch(deck, subjectId, bestKey) {
   const family = $('match-family');
   const exam = $('match-exam');
   const board = $('match-board');
@@ -152,19 +153,47 @@ function initMatch(deck, subjectId) {
   let selected = null; // { side: 'name' | 'text', id, button }
   let missed = {}; // id → true once a wrong pair included it
   let left = 0;
+  let wrongTries = 0;
+  let startedAt = 0;
+  let clock = null;
+  const hud = el('div', 'game-hud');
+  const timer = el('span', 'game-score');
+  const pairsLeft = el('span', 'game-streak');
+  hud.append(timer, pairsLeft);
+  board.before(hud);
+  const tick = () => {
+    timer.textContent = `⏱ ${formatTime(Date.now() - startedAt)}`;
+  };
 
   const field = () => document.querySelector('input[name="match-field"]:checked').value;
   const fieldLabel = () => DRUG_FIELDS.find((f) => f.key === field()).label;
 
   function finish() {
+    clearInterval(clock);
+    const ms = Date.now() - startedAt;
     const results = Object.fromEntries(round.pairs.map((p) => [p.id, Boolean(missed[p.id])]));
     save(weightsKey, updateMatchWeights(load(weightsKey, {}), results));
     const clean = round.pairs.length - Object.keys(missed).length;
-    status.textContent = `סיימתם! ${clean} מתוך ${round.pairs.length} בלי טעות.`;
-    const again = el('button', 'primary', 'סבב נוסף');
-    again.type = 'button';
-    again.addEventListener('click', newRound);
-    board.append(again);
+    const stars = starsFor(clean, round.pairs.length);
+    // Best time per family and field, only for rounds without a mistake.
+    const bests = load(bestKey, {}) ?? {};
+    const timeKey = `${family.value || 'all'}|${field()}`;
+    const { times, isNew } = clean === round.pairs.length
+      ? recordBestTime(bests.match, timeKey, ms)
+      : { times: bests.match ?? {}, isNew: false };
+    save(bestKey, { ...bests, match: times });
+
+    const end = el('div', 'game-card game-end');
+    end.setAttribute('role', 'status');
+    end.append(el('p', 'game-kicker', 'סיימתם!'), starsEl(stars), el('p', 'game-end-score', `⏱ ${formatTime(ms)}`));
+    if (isNew) end.append(el('p', 'game-new-best', 'שיא זמן חדש!'));
+    const stats = el('p', 'meta game-end-stats');
+    stats.append(el('span', null, `${clean} מתוך ${round.pairs.length} בלי טעות`), el('span', null, `ניסיונות שגויים ${wrongTries}`));
+    if (Number.isFinite(times[timeKey])) stats.append(el('span', null, `הזמן הכי טוב ${formatTime(times[timeKey])}`));
+    const again = button('primary', 'סבב נוסף', newRound);
+    end.append(stats, again);
+    board.append(end);
+    status.textContent = '';
     again.focus();
   }
 
@@ -187,11 +216,17 @@ function initMatch(deck, subjectId) {
     selected = null;
     other.button.setAttribute('aria-pressed', 'false');
     if (other.id === id) {
+      // Each matched pair gets its own colour and number, so the pairs read without colour too.
+      const n = round.pairs.length - left + 1;
       for (const b of [other.button, button]) {
         b.disabled = true;
-        b.classList.add('is-done');
+        b.classList.add('is-done', `pair-${n}`);
+        const badge = el('span', 'pair-badge', String(n));
+        badge.setAttribute('aria-hidden', 'true');
+        b.prepend(badge);
       }
       left -= 1;
+      pairsLeft.textContent = `${round.pairs.length - left} מתוך ${round.pairs.length} זוגות`;
       const pair = round.pairs.find((p) => p.id === id);
       status.textContent = `נכון: ${pair.name}.`;
       if (left === 0) finish();
@@ -199,6 +234,8 @@ function initMatch(deck, subjectId) {
     } else {
       // The drug whose name was picked is the one not known yet.
       missed[side === 'name' ? id : other.id] = true;
+      wrongTries += 1;
+      buzz();
       for (const b of [other.button, button]) {
         b.classList.remove('is-wrong');
         void b.offsetWidth; // restart the shake
@@ -222,7 +259,17 @@ function initMatch(deck, subjectId) {
     round = buildMatchRound(pool, { field: field(), weights: load(weightsKey, {}) });
     selected = null;
     missed = {};
+    wrongTries = 0;
     left = round.pairs.length;
+    clearInterval(clock);
+    startedAt = Date.now();
+    tick();
+    clock = setInterval(() => {
+      // Stop counting when the game is not on screen.
+      if (board.offsetParent === null) clearInterval(clock);
+      else tick();
+    }, 500);
+    pairsLeft.textContent = `0 מתוך ${round.pairs.length} זוגות`;
     if (round.pairs.length < 2) {
       status.textContent = 'אין מספיק תרופות לבחירה הזו. נסו משפחה אחרת או שדה אחר.';
       board.replaceChildren();
@@ -297,10 +344,12 @@ async function main() {
 
   initBrowse(deck);
   const startReview = initReview(deck, subject.id);
+  const bestKey = keys.drugGames(subject.id);
   const showGame = initGames({
-    match: initMatch(deck, subject.id),
-    stems: stems ? initStems(stems, deck) : null,
-    odd: initOdd(deck),
+    match: initMatch(deck, subject.id, bestKey),
+    stems: stems ? initStems(stems, deck, bestKey) : null,
+    odd: initOdd(deck, bestKey),
+    blitz: initBlitz(stems, deck, bestKey),
   });
   let reviewStarted = false;
   initTabs((name) => {

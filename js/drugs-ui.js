@@ -40,11 +40,26 @@ export function drugRows(drug) {
   return rows;
 }
 
-/** Marks the answer buttons after a choice: the right one green, a wrong pick red; all disabled. */
-export function markAnswer(buttons, correct, chosen) {
-  buttons.forEach((b, i) => {
-    b.disabled = true;
-    if (i === correct) b.classList.add('is-done');
-    else if (i === chosen) b.classList.add('is-wrong-final');
-  });
+/** Whether the learner asked for less motion (toolbar's stop-motion or the system setting). */
+export function lessMotion() {
+  return document.documentElement.dataset.motion === 'off'
+    || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+/** A short vibration on phones that support it (not iPhone); never with less motion. */
+export function buzz(ms = 120) {
+  if (lessMotion()) return;
+  try {
+    navigator.vibrate?.(ms);
+  } catch {
+    // vibration is a nicety
+  }
+}
+
+/** "★★☆" with a text alternative. */
+export function starsEl(count, className = 'game-stars') {
+  const node = el('p', className, '★'.repeat(count) + '☆'.repeat(3 - count));
+  node.setAttribute('role', 'img');
+  node.setAttribute('aria-label', `${count} מתוך 3 כוכבים`);
+  return node;
 }

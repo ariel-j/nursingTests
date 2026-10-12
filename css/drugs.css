@@ -40,7 +40,6 @@
 
 .match-status { min-block-size: 1.5em; margin-block: 0.75rem; font-weight: 500; }
 .match-board { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 12px; align-items: start; }
-.match-board > .primary { grid-column: 1 / -1; justify-self: start; }
 .match-col { display: grid; gap: 8px; }
 .match-head { margin: 0; font-size: 0.875rem; font-weight: 500; color: var(--muted); }
 .match-item {
@@ -100,15 +99,6 @@
 .game-picker label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
 .game-picker label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
 .game-area { margin-block-start: 0.5rem; }
-.game-prompt { margin: 0.25rem 0 0.75rem; font-size: 1.35rem; font-weight: 600; overflow-wrap: anywhere; }
-.game-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 8px; }
-.game-family { display: block; margin-block-start: 0.2rem; font-size: 0.8125rem; font-weight: 400; color: var(--muted); }
-.game-feedback { margin-block-start: 0.75rem; }
-.game-feedback p { margin-block: 0.25rem; }
-.game-feedback .is-ok { color: var(--ok); font-weight: 600; }
-.game-feedback .is-bad { color: var(--bad); font-weight: 600; }
-.game-feedback .primary { margin-block-start: 0.5rem; }
-.match-item.is-wrong-final { border-color: var(--bad); background: var(--bad-soft); color: var(--ink); }
 .match-item:disabled { cursor: default; }
 .stems-list { margin-block-start: 1.5rem; }
 .stems-list summary { cursor: pointer; font-weight: 600; }
@@ -124,3 +114,128 @@
 .review-name { font-size: 1.35rem; }
 .review-done { padding: 0.75rem 1rem; background: var(--ok-soft); border-radius: 12px; }
 .review-card .actions { margin-block-start: 0.9rem; }
+
+/* ---------- game shell (drugs-shell.js): HUD, card, feedback, end screen ---------- */
+
+:root {
+  --pair-1: #2E6E6A; --pair-1-soft: #DCEEEC;
+  --pair-2: #8A4B00; --pair-2-soft: #F7E7D2;
+  --pair-3: #3A4FA8; --pair-3-soft: #E1E6F8;
+  --pair-4: #8E2C6E; --pair-4-soft: #F4E0EE;
+  --pair-5: #4E6B12; --pair-5-soft: #E7F0D3;
+  --gold: #B7791F;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --pair-1: #6FC2BB; --pair-1-soft: #1D3533;
+    --pair-2: #F0B068; --pair-2-soft: #3A2A15;
+    --pair-3: #9FB0F5; --pair-3-soft: #222A4A;
+    --pair-4: #E59ACB; --pair-4-soft: #3B2234;
+    --pair-5: #B5D67A; --pair-5-soft: #27311A;
+    --gold: #F2C14E;
+  }
+}
+:root[data-theme="dark"] {
+  --pair-1: #6FC2BB; --pair-1-soft: #1D3533;
+  --pair-2: #F0B068; --pair-2-soft: #3A2A15;
+  --pair-3: #9FB0F5; --pair-3-soft: #222A4A;
+  --pair-4: #E59ACB; --pair-4-soft: #3B2234;
+  --pair-5: #B5D67A; --pair-5-soft: #27311A;
+  --gold: #F2C14E;
+}
+
+.game-hud { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; margin-block: 0.75rem; }
+.game-hud-stats { display: flex; gap: 0.75rem; align-items: center; }
+.game-score { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--accent); }
+.game-streak { font-weight: 600; color: var(--gold); min-inline-size: 4.5rem; }
+.game-dots { display: flex; gap: 6px; }
+.game-dot { inline-size: 12px; block-size: 12px; border-radius: 50%; background: var(--line); }
+.game-dot.is-ok { background: var(--ok); }
+.game-dot.is-bad { background: var(--bad); }
+.game-dot.is-now { outline: 2px solid var(--accent); outline-offset: 2px; }
+.game-timer { position: relative; flex: 1 1 12rem; block-size: 1.6rem; border-radius: 999px; background: var(--loop-track); overflow: hidden; }
+.game-timer-fill { position: absolute; inset-block: 0; inset-inline-start: 0; background: var(--loop); border-radius: 999px; transition: inline-size 0.2s linear; }
+.game-timer.is-low .game-timer-fill { background: var(--bad); }
+.game-timer-text { position: relative; display: block; padding-inline: 0.75rem; line-height: 1.6rem; font-size: 0.85rem; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ink); }
+
+.game-card {
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.05);
+}
+.game-kicker { margin: 0 0 0.35rem; font-size: 0.85rem; font-weight: 500; color: var(--muted); }
+.game-prompt { margin: 0 0 1rem; font-size: 1.5rem; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
+.game-prompt .game-prompt-text { font-size: 1.15rem; }
+.game-options { margin: 0; }
+.game-options .option { position: relative; }
+.game-family { display: block; margin-block-start: 0.3rem; padding: 0.1rem 0.5rem; inline-size: fit-content; font-size: 0.8125rem; font-weight: 500; border-radius: 999px; }
+.game-family.is-group { color: var(--loop); background: var(--loop-track); }
+.game-family.is-odd { color: var(--accent); background: var(--accent-soft); }
+.game-feedback { margin-block-start: 0.9rem; }
+.game-feedback:empty { display: none; }
+.game-feedback p { margin-block: 0.3rem; }
+.game-feedback .is-ok { color: var(--ok); font-weight: 600; }
+.game-feedback .is-bad { color: var(--bad); font-weight: 600; }
+.game-next { margin-block-start: 0.6rem; }
+.stem-word { display: inline-block; unicode-bidi: isolate; }
+.stem-mark { color: var(--accent); background: var(--accent-soft); border-radius: 4px; padding-inline: 1px; }
+
+.game-end, .game-intro { text-align: center; }
+.game-end .game-end-stats, .game-intro .meta { justify-content: center; }
+.game-stars { margin: 0.25rem 0; font-size: 2.6rem; letter-spacing: 0.1em; color: var(--gold); line-height: 1; }
+.game-end-score { margin: 0.3rem 0; font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.game-new-best { display: inline-block; margin: 0.2rem 0 0.5rem; padding: 0.15rem 0.8rem; font-weight: 700; color: var(--surface); background: var(--gold); border-radius: 999px; }
+.game-start { min-inline-size: 10rem; font-size: 1.1rem; }
+
+.game-float {
+  position: absolute;
+  inset-block-start: -0.4rem;
+  inset-inline-end: 0.8rem;
+  font-weight: 700;
+  color: var(--ok);
+  pointer-events: none;
+  animation: game-float 0.9s ease-out forwards;
+}
+@keyframes game-float { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-1.6rem); } }
+
+@media (prefers-reduced-motion: no-preference) {
+  .game-card.is-pop { animation: game-pop 0.3s ease-out; }
+  .game-card.is-shake { animation: match-shake 0.35s; }
+  .game-family { animation: game-flip 0.45s ease-out both; transform-origin: center top; }
+  .game-options .option:nth-child(2) .game-family { animation-delay: 0.08s; }
+  .game-options .option:nth-child(3) .game-family { animation-delay: 0.16s; }
+  .game-options .option:nth-child(4) .game-family { animation-delay: 0.24s; }
+  .game-end .game-stars { animation: game-pop 0.5s ease-out; }
+  .game-options .option:not(:disabled):active { transform: scale(0.98); }
+}
+@keyframes game-pop { 0% { transform: scale(1); } 40% { transform: scale(1.02); } 100% { transform: scale(1); } }
+@keyframes game-flip { from { opacity: 0; transform: rotateX(90deg); } to { opacity: 1; transform: rotateX(0); } }
+
+/* Matching: each matched pair has its colour and a number badge. */
+.pair-badge {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 1.4rem;
+  block-size: 1.4rem;
+  margin-inline-end: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--surface);
+  background: var(--pair-color, var(--ok));
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.match-item.pair-1 { --pair-color: var(--pair-1); border-color: var(--pair-1); background: var(--pair-1-soft); }
+.match-item.pair-2 { --pair-color: var(--pair-2); border-color: var(--pair-2); background: var(--pair-2-soft); }
+.match-item.pair-3 { --pair-color: var(--pair-3); border-color: var(--pair-3); background: var(--pair-3-soft); }
+.match-item.pair-4 { --pair-color: var(--pair-4); border-color: var(--pair-4); background: var(--pair-4-soft); }
+.match-item.pair-5 { --pair-color: var(--pair-5); border-color: var(--pair-5); background: var(--pair-5-soft); }
+.match-board > .game-end { grid-column: 1 / -1; }
+@media (prefers-reduced-motion: no-preference) {
+  .match-item.is-done { animation: game-pop 0.3s ease-out; }
+}
+
+:root[data-contrast="high"] .game-card { border: 2px solid var(--ink); box-shadow: none; }
+:root[data-contrast="high"] .stem-mark { text-decoration: underline; }
