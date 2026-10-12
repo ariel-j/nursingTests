@@ -36,6 +36,9 @@ Add the subject to `quizzes/subjects.json`, in the order it should appear (the u
   appeared in past exams). `drugs.html?subject=<id>` shows them (browse, matching game) and
   `quiz.html?drugs=<id>` (`&exam=1`) / `print.html?drugs=<id>` quiz on them. Link the page with a `tools`
   entry. No source names or lecturers in the file; `npm run validate` checks it and the generated quiz.
+  An optional `data/<id>/stems.json` adds the suffix game: `{ "stems": [{ "stem": "-olol", "pattern": "olol$",
+  "class": "חוסם β", "except": ["word"] }] }`, the pattern tested on each Latin word of a drug name; every
+  suffix must match at least one name.
 - `units`: optional, in display order. Once a subject has units, every quiz needs one of them as `unit`.
   A subject without units lists its quizzes directly. Choose before the first quiz arrives.
   Prefer a few broad units with topics inside them over many tiny units: in pharmacology a unit is a

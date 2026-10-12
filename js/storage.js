@@ -9,6 +9,8 @@ export const keys = {
   history: (quizId) => `history:${quizId}`,
   // Matching-game weights of a subject's drug cards: { [drugId]: weight }, missed drugs weigh more.
   drugMatch: (subjectId) => `drug-match:${subjectId}`,
+  // Daily review (Leitner boxes) of a subject's drug cards: { [drugId]: { box, due, last } }.
+  drugReview: (subjectId) => `drug-review:${subjectId}`,
 };
 
 // Global (not per quiz) preferences.

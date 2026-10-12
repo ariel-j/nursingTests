@@ -18,14 +18,15 @@
     <header class="site-header">
       <p id="subject" class="kicker"></p>
       <h1>כרטיסיות תרופות</h1>
-      <p class="lede">כל התרופות במקום אחד. עיון וחיפוש, משחק התאמה בין שם התרופה לפרטים שלה, ומבחן אמריקאי שנוצר מהכרטיסיות.</p>
+      <p class="lede">כל התרופות במקום אחד: עיון וחיפוש, חזרה יומית שמחזירה כל תרופה בדיוק כשצריך, משחקים לשינון, ומבחן אמריקאי שנוצר מהכרטיסיות.</p>
       <p id="deck-stats" class="meta"></p>
     </header>
     <p id="status" class="status" role="status">טוען…</p>
 
     <div id="tabs" class="tab-list" role="tablist" aria-label="מצבי לימוד" hidden>
       <button type="button" class="tab" role="tab" id="tab-browse" aria-controls="panel-browse" aria-selected="true">עיון</button>
-      <button type="button" class="tab" role="tab" id="tab-match" aria-controls="panel-match" aria-selected="false" tabindex="-1">משחק התאמה</button>
+      <button type="button" class="tab" role="tab" id="tab-review" aria-controls="panel-review" aria-selected="false" tabindex="-1">חזרה יומית</button>
+      <button type="button" class="tab" role="tab" id="tab-games" aria-controls="panel-games" aria-selected="false" tabindex="-1">משחקים</button>
       <button type="button" class="tab" role="tab" id="tab-test" aria-controls="panel-test" aria-selected="false" tabindex="-1">מבחן</button>
     </div>
 
@@ -46,7 +47,25 @@
       <div id="browse-list"></div>
     </section>
 
-    <section id="panel-match" class="tab-panel" role="tabpanel" aria-labelledby="tab-match" hidden>
+    <section id="panel-review" class="tab-panel" role="tabpanel" aria-labelledby="tab-review" hidden>
+      <p class="muted">כל יום כמה תרופות: קודם אלה שהגיע זמן לחזור עליהן, ואחר כך חדשות. תרופה שידעתם חוזרת אחרי יומיים, ארבעה, שמונה ו‑16 ימים; תרופה ששכחתם חוזרת מחר.</p>
+      <div class="drug-controls">
+        <label class="drug-check"><input id="review-exam" type="checkbox"> רק מה שהופיע במבחנים</label>
+        <button id="review-reset" type="button" class="link-button">איפוס ההתקדמות</button>
+      </div>
+      <p id="review-stats" class="meta"></p>
+      <div id="review-area" class="review-area"></div>
+    </section>
+
+    <section id="panel-games" class="tab-panel" role="tabpanel" aria-labelledby="tab-games" hidden>
+      <fieldset class="game-picker">
+        <legend class="visually-hidden">בחירת משחק</legend>
+        <label><input type="radio" name="game" value="match"> התאמה</label>
+        <label><input type="radio" name="game" value="stems"> סיומות</label>
+        <label><input type="radio" name="game" value="odd"> איזו לא שייכת</label>
+      </fieldset>
+
+      <div id="game-match" hidden>
       <p class="muted">בכל סבב כמה תרופות ממשפחה אחת. בחרו שם תרופה ואז את התיאור שלה (או להפך). תרופות שטעיתם בהן יחזרו בתדירות גבוהה יותר.</p>
       <div class="drug-controls">
         <label class="drug-select">
@@ -64,6 +83,30 @@
       </div>
       <p id="match-status" class="match-status" role="status"></p>
       <div id="match-board" class="match-board"></div>
+      </div>
+
+      <div id="game-stems" hidden>
+        <p class="muted">הסיומת של שם התרופה מגלה לאיזו קבוצה היא שייכת: <span dir="ltr">-olol</span> הוא חוסם β, <span dir="ltr">-pril</span> מעכב ACE. מעט סיומות מכסות הרבה תרופות.</p>
+        <div class="drug-controls">
+          <fieldset class="drug-fields">
+            <legend>כיוון</legend>
+            <label><input type="radio" name="stems-mode" value="forward" checked> שם ← קבוצה</label>
+            <label><input type="radio" name="stems-mode" value="reverse"> קבוצה ← שם</label>
+          </fieldset>
+        </div>
+        <p id="stems-score" class="match-status" aria-live="polite"></p>
+        <div id="stems-area" class="game-area"></div>
+        <details id="stems-list" class="stems-list"><summary>כל הסיומות</summary></details>
+      </div>
+
+      <div id="game-odd" hidden>
+        <p class="muted">שלוש תרופות מאותה משפחה ואחת ממשפחה אחרת. מצאו את זו שלא שייכת.</p>
+        <div class="drug-controls">
+          <label class="drug-check"><input id="odd-exam" type="checkbox"> רק מה שהופיע במבחנים</label>
+        </div>
+        <p id="odd-score" class="match-status" aria-live="polite"></p>
+        <div id="odd-area" class="game-area"></div>
+      </div>
     </section>
 
     <section id="panel-test" class="tab-panel" role="tabpanel" aria-labelledby="tab-test" hidden>
