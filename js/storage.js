@@ -11,6 +11,8 @@ export const keys = {
   drugMatch: (subjectId) => `drug-match:${subjectId}`,
   // Daily review (Leitner boxes) of a subject's drug cards: { [drugId]: { box, due, last } }.
   drugReview: (subjectId) => `drug-review:${subjectId}`,
+  // Personal bests of the drug-card games: { stems, odd, blitz: { score, stars, plays }, match: { "<family>|<field>": ms } }.
+  drugGames: (subjectId) => `drug-games:${subjectId}`,
 };
 
 // Global (not per quiz) preferences.

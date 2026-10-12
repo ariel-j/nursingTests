@@ -63,6 +63,7 @@
         <label><input type="radio" name="game" value="match"> התאמה</label>
         <label><input type="radio" name="game" value="stems"> סיומות</label>
         <label><input type="radio" name="game" value="odd"> איזו לא שייכת</label>
+        <label><input type="radio" name="game" value="blitz"> בליץ ⚡</label>
       </fieldset>
 
       <div id="game-match" hidden>
@@ -94,7 +95,6 @@
             <label><input type="radio" name="stems-mode" value="reverse"> קבוצה ← שם</label>
           </fieldset>
         </div>
-        <p id="stems-score" class="match-status" aria-live="polite"></p>
         <div id="stems-area" class="game-area"></div>
         <details id="stems-list" class="stems-list"><summary>כל הסיומות</summary></details>
       </div>
@@ -104,8 +104,11 @@
         <div class="drug-controls">
           <label class="drug-check"><input id="odd-exam" type="checkbox"> רק מה שהופיע במבחנים</label>
         </div>
-        <p id="odd-score" class="match-status" aria-live="polite"></p>
         <div id="odd-area" class="game-area"></div>
+      </div>
+
+      <div id="game-blitz" hidden>
+        <div id="blitz-area" class="game-area"></div>
       </div>
     </section>
 
