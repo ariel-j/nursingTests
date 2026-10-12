@@ -51,7 +51,7 @@ function link(path, text, className) {
 /** The subject the current page is about: ?subject=, the quiz in ?id=, or a summary page's article. */
 function currentSubjectId(manifest) {
   const params = new URLSearchParams(location.search);
-  const bySubject = findSubject(manifest, params.get('subject'));
+  const bySubject = findSubject(manifest, params.get('subject') ?? params.get('drugs'));
   if (bySubject) return bySubject.id;
   const id = params.get('id');
   if (id) return subjectOfQuiz(manifest, id)?.id ?? null;
@@ -71,6 +71,7 @@ function subjectItem(subject, open, media) {
   if (quizCount > 0) items.push(el('li', {}, link(paths.print, 'מבחן להדפסה')));
   if (summariesFor(subject.id).length > 0) items.push(el('li', {}, link(paths.summaries, 'סיכומים קצרים')));
   if (mediaCount(media, subject.id) > 0) items.push(el('li', {}, link(paths.media, 'סרטוני הסבר קצרים')));
+  for (const tool of subject.tools ?? []) items.push(el('li', {}, link(tool.href, tool.title)));
   if (quizCount === 0) items.push(el('li', { class: 'drawer-soon', text: 'בחנים בקרוב' }));
 
   const details = el('details', { class: 'drawer-subject' },

@@ -27,6 +27,15 @@ Add the subject to `quizzes/subjects.json`, in the order it should appear (the u
 - `upcoming`: optional tools the subject plans but has not built yet, e.g.
   `[{ "title": "כרטיסיות תרופות", "status": "בתהליך" }]`. They show as cards in the tools list
   with the status (default "בקרוב") and are not links until the tool exists.
+- `tools`: optional tools the subject has, e.g.
+  `[{ "title": "כרטיסיות תרופות", "href": "drugs.html?subject=pharmacology", "description": "…" }]`.
+  Each is a link card in the tools list and an entry in the side menu; `href` is a relative page of
+  this site and `npm run validate` checks the page exists.
+- Drug cards: a subject may have `data/<id>/drugs.json` (`{ families, drugs: [{ name, family, receptor,
+  mechanism, indications, sideEffects, alsoIn, exam }] }`; unknown fields are `""`, `exam` marks drugs that
+  appeared in past exams). `drugs.html?subject=<id>` shows them (browse, matching game) and
+  `quiz.html?drugs=<id>` (`&exam=1`) / `print.html?drugs=<id>` quiz on them. Link the page with a `tools`
+  entry. No source names or lecturers in the file; `npm run validate` checks it and the generated quiz.
 - `units`: optional, in display order. Once a subject has units, every quiz needs one of them as `unit`.
   A subject without units lists its quizzes directly. Choose before the first quiz arrives.
   Prefer a few broad units with topics inside them over many tiny units: in pharmacology a unit is a

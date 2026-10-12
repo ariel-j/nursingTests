@@ -7,6 +7,8 @@ export const keys = {
   session: (quizId) => `session:${quizId}`,
   results: (quizId) => `results:${quizId}`,
   history: (quizId) => `history:${quizId}`,
+  // Matching-game weights of a subject's drug cards: { [drugId]: weight }, missed drugs weigh more.
+  drugMatch: (subjectId) => `drug-match:${subjectId}`,
 };
 
 // Global (not per quiz) preferences.
