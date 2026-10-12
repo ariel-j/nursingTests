@@ -154,6 +154,36 @@ function renderUnit(unit, index) {
   return group;
 }
 
+/**
+ * The subject's quizzes in one tab, "מבחנים לפי נושאים": quizzes placed directly on the subject
+ * first, then each unit as a section. Returns the tab list and its panel.
+ */
+function renderQuizTabs(subject) {
+  const tab = el('button', 'tab', 'מבחנים לפי נושאים');
+  tab.type = 'button';
+  tab.id = 'quizzes-tab';
+  tab.setAttribute('role', 'tab');
+  tab.setAttribute('aria-selected', 'true');
+  tab.setAttribute('aria-controls', 'quizzes-panel');
+  const tabList = el('div', 'tab-list');
+  tabList.setAttribute('role', 'tablist');
+  tabList.setAttribute('aria-label', 'תצוגות המקצוע');
+  tabList.append(tab);
+
+  const panel = el('div', 'tab-panel');
+  panel.id = 'quizzes-panel';
+  panel.setAttribute('role', 'tabpanel');
+  panel.setAttribute('aria-labelledby', tab.id);
+  const own = subject.quizzes.filter((q) => isValidQuizId(q.id));
+  if (own.length > 0) {
+    const list = el('ul', 'quiz-list');
+    list.append(...own.map(renderQuiz));
+    panel.append(list);
+  }
+  panel.append(...subject.units.map(renderUnit));
+  return [tabList, panel];
+}
+
 function renderSubject(subject, media) {
   document.title = `${subject.name} · ${SITE_TITLE}`;
   ui.subjectNav.hidden = false;
@@ -166,14 +196,7 @@ function renderSubject(subject, media) {
   }
   const tools = renderTools(subject, media);
   if (tools) nodes.push(tools);
-  // Quizzes placed directly on the subject (no unit), then each unit as a section.
-  const own = subject.quizzes.filter((q) => isValidQuizId(q.id));
-  if (own.length > 0) {
-    const list = el('ul', 'quiz-list');
-    list.append(...own.map(renderQuiz));
-    nodes.push(list);
-  }
-  nodes.push(...subject.units.map(renderUnit));
+  nodes.push(...renderQuizTabs(subject));
   ui.content.replaceChildren(...nodes);
 
   // The page is built after load, so jump to a unit (#unit-2, from the side menu) once it exists.

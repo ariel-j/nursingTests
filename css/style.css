@@ -317,6 +317,26 @@ kbd {
 .level-unknown { color: var(--muted); }
 
 .data-card { margin-block: 1rem; }
+
+/* ---------- subject page tabs ---------- */
+
+.tab-list {
+  display: flex;
+  gap: 0.25rem;
+  margin-block: 1.5rem 0;
+  border-block-end: 1px solid var(--line);
+}
+.tab {
+  font: inherit;
+  padding: 0.6rem 1rem;
+  background: none;
+  border: 0;
+  border-block-end: 3px solid transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tab[aria-selected="true"] { color: var(--accent); border-block-end-color: var(--accent); font-weight: 600; }
+.tab-panel { margin-block-start: 0.5rem; }
 .data-card summary { cursor: pointer; font-weight: 600; }
 .data-card input[type="file"] { max-inline-size: 100%; }
 
