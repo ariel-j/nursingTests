@@ -281,3 +281,186 @@ export function updateMatchWeights(weights, results) {
   }
   return next;
 }
+
+// ---------- suffix decoder (סיומות) ----------
+// data/<subject-id>/stems.json: { stems: [{ stem: "-olol", pattern: "olol$", class: "חוסם β", except?: [words] }] }.
+// A pattern is tested, case-insensitively, against each Latin word of a drug's name.
+
+/** Where a subject's drug-name suffixes live, relative to the site root. */
+export const stemsUrl = (subjectId) => `data/${encodeURIComponent(subjectId)}/stems.json`;
+
+const latinWords = (name) => name.split(/[^A-Za-z]+/).filter((w) => w.length > 3);
+
+function stemRegex(pattern) {
+  try {
+    return new RegExp(pattern, 'i');
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Every drug-name word a suffix explains, once each: [{ word, stem (index), drug (name) }],
+ * in deck order. A word in a stem's `except` list (e.g. somatostatin for -statin) is skipped.
+ */
+export function stemWords(stems, deck) {
+  const seen = new Set();
+  const out = [];
+  const tests = stems.map((s) => ({ re: stemRegex(s.pattern), except: new Set((s.except ?? []).map((w) => w.toLowerCase())) }));
+  for (const drug of deck.drugs) {
+    for (const word of latinWords(drug.name)) {
+      const key = word.toLowerCase();
+      if (seen.has(key)) continue;
+      const stem = tests.findIndex(({ re, except }) => re && re.test(word) && !except.has(key));
+      if (stem === -1) continue;
+      seen.add(key);
+      out.push({ word, stem, drug: drug.name });
+    }
+  }
+  return out;
+}
+
+/** Problems with a stems file: shape, valid patterns, and every suffix explaining at least one name. */
+export function validateStems(data, deck) {
+  if (!isPlainObject(data) || !Array.isArray(data.stems) || data.stems.length < OPTION_COUNT) {
+    return [`stems must be an array of at least ${OPTION_COUNT}`];
+  }
+  const errors = [];
+  const classes = new Set();
+  data.stems.forEach((s, i) => {
+    const where = `stems[${i}]${isPlainObject(s) && isText(s.stem) ? ` (${s.stem})` : ''}`;
+    if (!isPlainObject(s) || !isText(s.stem) || !isText(s.class) || !isText(s.pattern)) {
+      errors.push(`${where}: needs stem, pattern and class`);
+      return;
+    }
+    if (!stemRegex(s.pattern)) errors.push(`${where}: pattern is not a valid regular expression`);
+    if (s.except !== undefined && !(Array.isArray(s.except) && s.except.every(isText))) errors.push(`${where}: except must be an array of words`);
+    if (classes.has(s.class)) errors.push(`${where}: duplicate class`);
+    classes.add(s.class);
+  });
+  if (errors.length > 0) return errors;
+  const used = new Set(stemWords(data.stems, deck).map((w) => w.stem));
+  data.stems.forEach((s, i) => {
+    if (!used.has(i)) errors.push(`stems[${i}] (${s.stem}): matches no drug name in the deck`);
+  });
+  return errors;
+}
+
+/**
+ * One suffix question over `words` (from stemWords). Forward: a name, pick its class. Reverse
+ * (`reverse: true`): a class, pick the name that belongs to it. Options come from different suffixes.
+ * Returns { prompt, options: [text], correct, word, stem }.
+ */
+export function buildStemQuestion(stems, words, { reverse = false } = {}, rng = Math.random) {
+  const target = words[Math.floor(rng() * words.length)];
+  const otherStems = shuffle(stems.map((_, i) => i).filter((i) => i !== target.stem), rng).slice(0, OPTION_COUNT - 1);
+  let options;
+  if (reverse) {
+    const wrong = otherStems
+      .map((i) => shuffle(words.filter((w) => w.stem === i), rng)[0])
+      .filter(Boolean)
+      .map((w) => w.word);
+    options = [target.word, ...wrong];
+  } else {
+    options = [stems[target.stem].class, ...otherStems.map((i) => stems[i].class)];
+  }
+  const order = shuffle(options.map((_, i) => i), rng);
+  return {
+    prompt: reverse ? stems[target.stem].class : target.word,
+    options: order.map((i) => options[i]),
+    correct: order.indexOf(0),
+    word: target.word,
+    stem: target.stem,
+  };
+}
+
+// ---------- odd one out (איזו לא שייכת) ----------
+
+/**
+ * Three drugs from one family and one from another: which one doesn't belong? The odd drug is not
+ * also listed in the trio's family (alsoIn), and no two names overlap. Families come from `drugs`
+ * (already filtered by the page). Returns { drugs: [4 in shuffled order], odd (index), family } or null.
+ */
+export function buildOddOneOut(drugs, rng = Math.random) {
+  const byFamily = new Map();
+  for (const d of drugs) byFamily.set(d.family, [...(byFamily.get(d.family) ?? []), d]);
+  const families = shuffle([...byFamily.keys()].filter((f) => byFamily.get(f).length >= 3), rng);
+  for (const family of families) {
+    const trio = [];
+    for (const d of shuffle(byFamily.get(family), rng)) {
+      if (trio.length === 3) break;
+      if (!trio.some((t) => overlaps(t.name, d.name))) trio.push(d);
+    }
+    if (trio.length < 3) continue;
+    const odd = shuffle(drugs.filter((d) => d.family !== family && !d.alsoIn.includes(family)
+      && !trio.some((t) => t.alsoIn.includes(d.family) || overlaps(t.name, d.name))), rng)[0];
+    if (!odd) continue;
+    const four = shuffle([...trio, odd], rng);
+    return { drugs: four, odd: four.indexOf(odd), family };
+  }
+  return null;
+}
+
+// ---------- daily review (חזרה יומית): Leitner boxes ----------
+// State { [drugId]: { box: 1-5, due: "YYYY-MM-DD", last: "YYYY-MM-DD" } }. Known → next box, unknown → box 1.
+
+export const REVIEW_INTERVALS = [1, 2, 4, 8, 16]; // days until the next review, by box 1-5
+export const DAILY_SIZE = 10;
+export const MASTERED_BOX = 4;
+
+/** "YYYY-MM-DD" of a Date, in local time (the learner's day). */
+export function dayKey(date) {
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+export function addDays(day, n) {
+  const [y, m, d] = day.split('-').map(Number);
+  const date = new Date(Date.UTC(y, m - 1, d + n));
+  return date.toISOString().slice(0, 10);
+}
+
+const DAY = /^\d{4}-\d{2}-\d{2}$/;
+
+/** Keeps only well-formed entries, so a damaged or older saved state can't break the page. */
+export function sanitizeReview(raw) {
+  if (!isPlainObject(raw)) return {};
+  const out = {};
+  for (const [id, e] of Object.entries(raw)) {
+    if (isPlainObject(e) && Number.isInteger(e.box) && e.box >= 1 && e.box <= REVIEW_INTERVALS.length
+      && DAY.test(e.due) && DAY.test(e.last)) out[id] = { box: e.box, due: e.due, last: e.last };
+  }
+  return out;
+}
+
+/**
+ * Today's cards: drugs due (oldest first), then new drugs, up to `size`; none already reviewed today.
+ * New drugs are ordered by matching-game weight (missed first), then a shuffle seeded by the day.
+ */
+export function dailySet(drugs, review, today, { size = DAILY_SIZE, weights = {} } = {}) {
+  const due = drugs
+    .filter((d) => review[drugId(d)] && review[drugId(d)].due <= today && review[drugId(d)].last !== today)
+    .sort((a, b) => review[drugId(a)].due.localeCompare(review[drugId(b)].due));
+  const fresh = shuffle(drugs.filter((d) => !review[drugId(d)]), seededRng(today))
+    .sort((a, b) => (weights[drugId(b)] ?? 1) - (weights[drugId(a)] ?? 1));
+  return [...due, ...fresh].slice(0, size);
+}
+
+/** The review state after grading one drug today. */
+export function gradeReview(review, id, known, today) {
+  const box = known ? Math.min((review[id]?.box ?? 0) + 1, REVIEW_INTERVALS.length) : 1;
+  return { ...review, [id]: { box, due: addDays(today, REVIEW_INTERVALS[box - 1]), last: today } };
+}
+
+/** Counts for the progress line: new, learning (box 1-3), mastered (box 4+), due today. */
+export function reviewStats(drugs, review, today) {
+  const stats = { fresh: 0, learning: 0, mastered: 0, due: 0 };
+  for (const d of drugs) {
+    const e = review[drugId(d)];
+    if (!e) stats.fresh += 1;
+    else if (e.box >= MASTERED_BOX) stats.mastered += 1;
+    else stats.learning += 1;
+    if (e && e.due <= today && e.last !== today) stats.due += 1;
+  }
+  return stats;
+}

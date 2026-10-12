@@ -1,6 +1,7 @@
-// כרטיסיות תרופות: drugs.html?subject=<id>. Three tabs over the subject's drug cards
-// (data/<id>/drugs.json): browse (search, family, exam-only, hide details to self-test), the matching
-// game (names ↔ mechanism / indications / side effects) and links to the generated quiz.
+// כרטיסיות תרופות: drugs.html?subject=<id>. Tabs over the subject's drug cards
+// (data/<id>/drugs.json): browse (search, family, exam-only, hide details to self-test), daily review
+// (drugs-review.js), games (matching here; suffixes and odd one out in drugs-games.js) and links to
+// the generated quiz.
 import { findSubject, loadManifest, subjectPaths } from './catalog.js';
 import {
   DRUG_FIELDS,
@@ -8,36 +9,22 @@ import {
   drugDeckUrl,
   drugId,
   filterDrugs,
+  stemsUrl,
   updateMatchWeights,
   validateDrugDeck,
+  validateStems,
 } from './drugs-core.js';
-import { isolateNumberRanges as fmt } from './core.js';
+import { drugRows, el, familyOptions, fmt } from './drugs-ui.js';
+import { initReview } from './drugs-review.js';
+import { initOdd, initStems } from './drugs-games.js';
 import { keys, load, save } from './storage.js';
 
 const $ = (id) => document.getElementById(id);
-const ALL = '';
-
-function el(tag, className, text) {
-  const node = document.createElement(tag);
-  if (className) node.className = className;
-  if (text !== undefined) node.textContent = text;
-  return node;
-}
-
-function familyOptions(select, families, drugs) {
-  const count = (f) => drugs.filter((d) => d.family === f || d.alsoIn.includes(f)).length;
-  const all = el('option', null, `כל המשפחות (${drugs.length})`);
-  all.value = ALL;
-  select.replaceChildren(all, ...families.map((f) => {
-    const option = el('option', null, `${f} (${count(f)})`);
-    option.value = f;
-    return option;
-  }));
-}
 
 // ---------- tabs ----------
 
-const TABS = ['browse', 'match', 'test'];
+const TABS = ['browse', 'review', 'games', 'test'];
+const GAMES = ['match', 'stems', 'odd'];
 
 function initTabs(onShow) {
   const tabs = TABS.map((name) => $(`tab-${name}`));
@@ -49,7 +36,6 @@ function initTabs(onShow) {
       $(`panel-${n}`).hidden = !selected;
     });
     if (focus) tabs[TABS.indexOf(name)].focus();
-    history.replaceState(null, '', `#${name}`);
     onShow(name);
   };
   tabs.forEach((tab, i) => {
@@ -64,7 +50,26 @@ function initTabs(onShow) {
   });
   $('tabs').hidden = false;
   const fromHash = location.hash.slice(1);
-  show(TABS.includes(fromHash) ? fromHash : 'browse');
+  show(GAMES.includes(fromHash) ? 'games' : TABS.includes(fromHash) ? fromHash : 'browse');
+}
+
+/** The game picker inside the games tab; each game starts the first time it is shown. */
+function initGames(starters) {
+  const radios = [...document.querySelectorAll('input[name="game"]')];
+  const started = new Set();
+  const show = (name) => {
+    for (const g of GAMES) $(`game-${g}`).hidden = g !== name;
+    history.replaceState(null, '', `#${name}`);
+    if (!started.has(name) && starters[name]) {
+      started.add(name);
+      starters[name]();
+    }
+  };
+  for (const r of radios) r.addEventListener('change', () => show(r.value));
+  const fromHash = location.hash.slice(1);
+  const first = GAMES.includes(fromHash) ? fromHash : 'match';
+  radios.find((r) => r.value === first).checked = true;
+  return () => show(radios.find((r) => r.checked).value);
 }
 
 // ---------- browse ----------
@@ -81,11 +86,7 @@ function drugCard(drug, hidden) {
   card.append(head);
   if (drug.alsoIn.length > 0) card.append(el('p', 'drug-also', `גם ב: ${drug.alsoIn.join(', ')}`));
 
-  const rows = el('dl', 'drug-rows');
-  for (const { key, label } of DRUG_FIELDS) {
-    const value = drug[key];
-    rows.append(el('dt', null, label), el('dd', value ? null : 'is-empty', value ? fmt(value) : '—'));
-  }
+  const rows = drugRows(drug);
   if (hidden) {
     // Self-test: think of the answer, then reveal.
     rows.id = `rows-${drugId(drug)}`;
@@ -288,15 +289,45 @@ async function main() {
   $('test-exam').href = `quiz.html?${quiz}&exam=1`;
   $('test-print').href = `print.html?${quiz}`;
 
+  const stems = await loadStems(subject.id, deck);
+  if (!stems) {
+    // No suffix list for this subject: drop that game from the picker.
+    document.querySelector('input[name="game"][value="stems"]').closest('label').remove();
+  }
+
   initBrowse(deck);
-  const startMatch = initMatch(deck, subject.id);
-  let matchStarted = false;
-  initTabs((name) => {
-    if (name === 'match' && !matchStarted) {
-      matchStarted = true;
-      startMatch();
-    }
+  const startReview = initReview(deck, subject.id);
+  const showGame = initGames({
+    match: initMatch(deck, subject.id),
+    stems: stems ? initStems(stems, deck) : null,
+    odd: initOdd(deck),
   });
+  let reviewStarted = false;
+  initTabs((name) => {
+    if (name === 'review' && !reviewStarted) {
+      reviewStarted = true;
+      startReview();
+    }
+    if (name === 'games') showGame();
+    else history.replaceState(null, '', `#${name}`);
+  });
+}
+
+/** The subject's suffix list, or null when it has none (or it is broken: reported in the console). */
+async function loadStems(subjectId, deck) {
+  try {
+    const res = await fetch(stemsUrl(subjectId), { cache: 'no-cache' });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const errors = validateStems(data, deck);
+    if (errors.length > 0) {
+      console.error('Invalid stems:', errors);
+      return null;
+    }
+    return data.stems;
+  } catch {
+    return null;
+  }
 }
 
 main();

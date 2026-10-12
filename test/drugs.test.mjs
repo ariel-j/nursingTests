@@ -2,15 +2,25 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { validateQuiz } from '../js/core.js';
 import {
+  addDays,
   buildDrugQuiz,
   buildMatchRound,
+  buildOddOneOut,
+  buildStemQuestion,
+  dailySet,
+  dayKey,
   drugId,
   filterDrugs,
+  gradeReview,
   overlaps,
+  reviewStats,
+  sanitizeReview,
   seededRng,
+  stemWords,
   textItems,
   updateMatchWeights,
   validateDrugDeck,
+  validateStems,
 } from '../js/drugs-core.js';
 import { drugDeckErrors } from '../scripts/drugs.mjs';
 import { isSitePath, validateCatalog } from '../scripts/quizzes.mjs';
@@ -169,4 +179,100 @@ test('catalog tools: title and a relative site page; drugDeckErrors checks the g
   assert.ok(validateCatalog(bad)[0].includes('tools'));
   assert.deepEqual(drugDeckErrors(deck, 'x'), []);
   assert.ok(drugDeckErrors({ families: [], drugs: [] }, 'x').length > 0);
+});
+
+// ---------- suffixes, odd one out, daily review ----------
+
+const nameDeck = {
+  families: ['א', 'ב'],
+  drugs: [
+    drug('Fooolol', 'א', 1),
+    drug('Barolol / Bazpril', 'א', 2),
+    drug('Quxpril', 'ב', 3),
+    drug('Somaxin', 'ב', 4),
+    drug('Taxumab', 'ב', 5),
+    drug('Lemixin', 'א', 6),
+  ],
+};
+const stems = [
+  { stem: '-olol', pattern: 'olol$', class: 'קבוצה 1' },
+  { stem: '-pril', pattern: 'pril$', class: 'קבוצה 2' },
+  { stem: '-xin', pattern: 'xin$', class: 'קבוצה 3', except: ['somaxin'] },
+  { stem: '-mab', pattern: 'mab$', class: 'קבוצה 4' },
+];
+
+test('stemWords finds each Latin word a suffix explains, honouring except', () => {
+  const words = stemWords(stems, nameDeck);
+  assert.deepEqual(words.map((w) => w.word), ['Fooolol', 'Barolol', 'Bazpril', 'Quxpril', 'Taxumab', 'Lemixin']);
+  assert.equal(words.find((w) => w.word === 'Bazpril').drug, 'Barolol / Bazpril');
+  assert.deepEqual(validateStems({ stems }, nameDeck), []);
+  assert.ok(validateStems({ stems: [...stems, { stem: '-zz', pattern: 'zz$', class: 'קבוצה 5' }] }, nameDeck)
+    .some((e) => e.includes('matches no drug')));
+  assert.ok(validateStems({ stems: [...stems, { stem: '-x', pattern: '(', class: 'ק' }] }, nameDeck)
+    .some((e) => e.includes('regular expression')));
+  assert.ok(validateStems({ stems: stems.slice(0, 2) }, nameDeck)[0].includes('at least'));
+});
+
+test('buildStemQuestion: forward asks the class, reverse asks the name, one right option', () => {
+  const words = stemWords(stems, nameDeck);
+  for (let i = 0; i < 20; i++) {
+    const f = buildStemQuestion(stems, words, {}, seededRng(`f${i}`));
+    assert.equal(f.options.length, 4);
+    assert.equal(new Set(f.options).size, 4);
+    assert.equal(f.options[f.correct], stems[f.stem].class);
+    assert.equal(f.prompt, f.word);
+    const r = buildStemQuestion(stems, words, { reverse: true }, seededRng(`r${i}`));
+    assert.equal(r.options[r.correct], r.word);
+    assert.equal(r.prompt, stems[r.stem].class);
+    // The other names come from other suffixes.
+    const stemOf = new Map(words.map((w) => [w.word, w.stem]));
+    assert.ok(r.options.every((o, j) => j === r.correct || stemOf.get(o) !== r.stem));
+  }
+});
+
+test('buildOddOneOut: three from one family, one from another, never an alsoIn of it', () => {
+  for (let i = 0; i < 20; i++) {
+    const round = buildOddOneOut(deck.drugs, seededRng(`o${i}`));
+    assert.equal(round.drugs.length, 4);
+    const odd = round.drugs[round.odd];
+    assert.notEqual(odd.family, round.family);
+    assert.ok(!odd.alsoIn.includes(round.family));
+    assert.equal(round.drugs.filter((d) => d.family === round.family).length, 3);
+  }
+  assert.equal(buildOddOneOut(deck.drugs.slice(0, 2)), null);
+});
+
+test('daily review: due first, then new; grading moves boxes; nothing twice a day', () => {
+  assert.equal(dayKey(new Date(2026, 0, 5)), '2026-01-05');
+  assert.equal(addDays('2026-01-31', 1), '2026-02-01');
+  const today = '2026-03-10';
+  const [a, b, c] = deck.drugs;
+  let review = {};
+  review = gradeReview(review, drugId(a), true, '2026-03-08'); // box 1, due 03-09
+  review = gradeReview(review, drugId(b), true, today); // reviewed today
+  assert.deepEqual(review[drugId(a)], { box: 1, due: '2026-03-09', last: '2026-03-08' });
+  const set = dailySet(deck.drugs, review, today, { size: 3 });
+  assert.equal(set[0], a);
+  assert.ok(!set.includes(b));
+  assert.equal(set.length, 3);
+  // Known again → box 2 (2 days); unknown → back to box 1 (tomorrow).
+  assert.deepEqual(gradeReview(review, drugId(a), true, today)[drugId(a)], { box: 2, due: '2026-03-12', last: today });
+  assert.equal(gradeReview({ x: { box: 5, due: today, last: today } }, 'x', true, today).x.box, 5);
+  assert.deepEqual(gradeReview(review, drugId(a), false, today)[drugId(a)], { box: 1, due: '2026-03-11', last: today });
+  // New drugs missed in the matching game come first.
+  const weighted = dailySet(deck.drugs, {}, today, { size: 1, weights: { [drugId(c)]: 9 } });
+  assert.deepEqual(weighted, [c]);
+  assert.deepEqual(dailySet(deck.drugs, {}, today), dailySet(deck.drugs, {}, today));
+  const stats = reviewStats(deck.drugs, { ...review, [drugId(c)]: { box: 4, due: '2026-04-01', last: today } }, today);
+  assert.deepEqual(stats, { fresh: 3, learning: 2, mastered: 1, due: 1 });
+});
+
+test('sanitizeReview keeps only well-formed entries', () => {
+  assert.deepEqual(sanitizeReview(null), {});
+  assert.deepEqual(sanitizeReview({
+    ok: { box: 2, due: '2026-01-01', last: '2025-12-30' },
+    badBox: { box: 9, due: '2026-01-01', last: '2025-12-30' },
+    badDay: { box: 1, due: 'tomorrow', last: '2025-12-30' },
+    notObj: 3,
+  }), { ok: { box: 2, due: '2026-01-01', last: '2025-12-30' } });
 });

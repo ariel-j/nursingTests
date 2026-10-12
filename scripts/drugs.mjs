@@ -1,10 +1,11 @@
 // Checks for the catalog's tool links and each subject's drug cards (data/<subject-id>/drugs.json):
-// the deck itself, and that the quiz built from it passes the quiz validator.
+// the deck itself, that the quiz built from it passes the quiz validator, and the optional
+// suffix list (stems.json).
 import { access, readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateQuiz } from '../js/core.js';
-import { buildDrugQuiz, drugDeckUrl, validateDrugDeck } from '../js/drugs-core.js';
+import { buildDrugQuiz, drugDeckUrl, stemsUrl, validateDrugDeck, validateStems } from '../js/drugs-core.js';
 
 export const ROOT_DIR = fileURLToPath(new URL('../', import.meta.url));
 
@@ -52,7 +53,17 @@ export async function checkDrugs(catalog, dir = ROOT_DIR) {
       errors.push(`${file}: ${err.code === 'ENOENT' ? 'missing' : `cannot parse: ${err.message}`}`);
       continue;
     }
-    for (const e of drugDeckErrors(deck, id)) errors.push(`${file}: ${e}`);
+    const deckErrors = drugDeckErrors(deck, id);
+    for (const e of deckErrors) errors.push(`${file}: ${e}`);
+    // Optional suffix list for the suffix game, checked against the deck's names.
+    const stemsFile = stemsUrl(id);
+    let stems = null;
+    try {
+      stems = JSON.parse(await readFile(path.join(dir, stemsFile), 'utf8'));
+    } catch (err) {
+      if (err.code !== 'ENOENT') errors.push(`${stemsFile}: cannot parse: ${err.message}`);
+    }
+    if (stems && deckErrors.length === 0) for (const e of validateStems(stems, deck)) errors.push(`${stemsFile}: ${e}`);
   }
   return errors;
 }
