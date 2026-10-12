@@ -126,6 +126,10 @@ function renderTools(subject, media) {
     items.push(card(paths.media, 'tool-card', 'סרטוני הסבר קצרים',
       el('p', 'muted', `סרטון וחומרי עזר לכל תת‑נושא · ${videoCount} פריטים.`)));
   }
+  // The subject's own tools from the catalog, e.g. the drug cards.
+  for (const tool of subject.tools ?? []) {
+    items.push(card(tool.href, 'tool-card', tool.title, tool.description ? el('p', 'muted', tool.description) : null));
+  }
   // Tools the subject plans but has not built yet: shown with their status, not as links.
   for (const tool of subject.upcoming ?? []) {
     const box = el('div', 'quiz-card tool-card is-soon');

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>כרטיסיות תרופות · תרגול למבחנים בסיעוד</title>
+  <link rel="preload" href="fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/drugs.css">
+  <script type="module" src="js/drugs.js"></script>
+  <script type="module" src="js/nav.js"></script>
+  <script type="module" src="js/a11y.js"></script>
+</head>
+<body>
+  <main class="page drugs-page">
+    <nav class="top-nav"><a id="back-link" href="./">→ דף המקצוע</a></nav>
+    <header class="site-header">
+      <p id="subject" class="kicker"></p>
+      <h1>כרטיסיות תרופות</h1>
+      <p class="lede">כל התרופות במקום אחד. עיון וחיפוש, משחק התאמה בין שם התרופה לפרטים שלה, ומבחן אמריקאי שנוצר מהכרטיסיות.</p>
+      <p id="deck-stats" class="meta"></p>
+    </header>
+    <p id="status" class="status" role="status">טוען…</p>
+
+    <div id="tabs" class="tab-list" role="tablist" aria-label="מצבי לימוד" hidden>
+      <button type="button" class="tab" role="tab" id="tab-browse" aria-controls="panel-browse" aria-selected="true">עיון</button>
+      <button type="button" class="tab" role="tab" id="tab-match" aria-controls="panel-match" aria-selected="false" tabindex="-1">משחק התאמה</button>
+      <button type="button" class="tab" role="tab" id="tab-test" aria-controls="panel-test" aria-selected="false" tabindex="-1">מבחן</button>
+    </div>
+
+    <section id="panel-browse" class="tab-panel" role="tabpanel" aria-labelledby="tab-browse" hidden>
+      <div class="drug-controls">
+        <label class="drug-search">
+          <span class="visually-hidden">חיפוש</span>
+          <input id="browse-query" type="search" placeholder="חיפוש תרופה, רצפטור, מנגנון, תופעת לוואי…" autocomplete="off" enterkeyhint="search">
+        </label>
+        <label class="drug-select">
+          <span>משפחה</span>
+          <select id="browse-family"></select>
+        </label>
+        <label class="drug-check"><input id="browse-exam" type="checkbox"> רק מה שהופיע במבחנים</label>
+        <label class="drug-check"><input id="browse-hide" type="checkbox"> מצב שינון: הסתרת הפרטים</label>
+      </div>
+      <p id="browse-count" class="muted drug-count" role="status"></p>
+      <div id="browse-list"></div>
+    </section>
+
+    <section id="panel-match" class="tab-panel" role="tabpanel" aria-labelledby="tab-match" hidden>
+      <p class="muted">בכל סבב כמה תרופות ממשפחה אחת. בחרו שם תרופה ואז את התיאור שלה (או להפך). תרופות שטעיתם בהן יחזרו בתדירות גבוהה יותר.</p>
+      <div class="drug-controls">
+        <label class="drug-select">
+          <span>משפחה</span>
+          <select id="match-family"></select>
+        </label>
+        <fieldset class="drug-fields">
+          <legend>להתאים לפי</legend>
+          <label><input type="radio" name="match-field" value="mechanism" checked> מנגנון</label>
+          <label><input type="radio" name="match-field" value="indications"> אינדיקציות</label>
+          <label><input type="radio" name="match-field" value="sideEffects"> תופעות לוואי</label>
+        </fieldset>
+        <label class="drug-check"><input id="match-exam" type="checkbox"> רק מה שהופיע במבחנים</label>
+        <button id="match-new" type="button" class="secondary">סבב חדש</button>
+      </div>
+      <p id="match-status" class="match-status" role="status"></p>
+      <div id="match-board" class="match-board"></div>
+    </section>
+
+    <section id="panel-test" class="tab-panel" role="tabpanel" aria-labelledby="tab-test" hidden>
+      <p class="muted">מבחן אמריקאי שנוצר מהכרטיסיות: מה המנגנון, האינדיקציות ותופעות הלוואי של כל תרופה, ולהפך, איזו תרופה מתאימה לתיאור. בוחרים משפחות ומספר שאלות. כמו בכל בוחן באתר, שאלה שטעיתם בה חוזרת עד שתענו עליה נכון פעמיים ברצף, וההתקדמות נשמרת.</p>
+      <ul class="quiz-list tool-list">
+        <li><a id="test-all" class="quiz-card mix-card" href="quiz.html"><h3 class="card-title">מבחן על כל התרופות</h3><p class="muted">כל המשפחות, או רק חלק מהן.</p></a></li>
+        <li><a id="test-exam" class="quiz-card tool-card" href="quiz.html"><h3 class="card-title">רק מה שהופיע במבחנים</h3><p class="muted">התרופות שסומנו ★ בכרטיסיות.</p></a></li>
+        <li><a id="test-print" class="quiz-card tool-card" href="print.html"><h3 class="card-title">מבחן להדפסה</h3><p class="muted">שאלות מהכרטיסיות עם מפתח תשובות. אפשר לשמור כ‑PDF.</p></a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer page">
+    <nav>
+      <a href="accessibility.html">הצהרת נגישות</a>
+      <a href="privacy.html">מדיניות פרטיות</a>
+    </nav>
+    <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+  </footer>
+</body>
+</html>

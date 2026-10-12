@@ -1,0 +1,84 @@
+/* כרטיסיות תרופות (drugs.html): browse cards, the matching game. Tokens from style.css. */
+
+.visually-hidden { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.drug-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.2rem; margin-block: 1rem 0.5rem; }
+.drug-search { flex: 1 1 18rem; min-inline-size: 0; }
+.drug-search input,
+.drug-select select {
+  inline-size: 100%;
+  padding: 0.55rem 0.8rem;
+  font: inherit;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.drug-select { display: flex; align-items: center; gap: 0.5rem; flex: 1 1 14rem; min-inline-size: 0; }
+.drug-select span { flex: none; font-size: 0.9rem; color: var(--muted); }
+.drug-check { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; }
+.drug-fields { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; margin: 0; padding: 0; border: 0; font-size: 0.9rem; }
+.drug-fields legend { float: inline-start; margin-inline-end: 0.6rem; padding: 0; color: var(--muted); }
+.drug-fields label { display: inline-flex; align-items: center; gap: 0.3rem; }
+.drug-count { margin-block: 0.25rem 0.75rem; font-size: 0.875rem; }
+
+.drug-family { margin-block-end: 1.5rem; }
+.drug-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: 10px; }
+.drug-card { padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+.drug-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.6rem; }
+.drug-name { margin: 0; font-size: 1.0625rem; font-weight: 600; line-height: 1.35; overflow-wrap: anywhere; }
+.drug-badge { padding: 0 0.5rem; font-size: 0.75rem; font-weight: 600; color: var(--accent); background: var(--accent-soft); border-radius: 999px; }
+.drug-also { margin: 0.15rem 0 0; font-size: 0.8125rem; color: var(--muted); }
+.drug-rows { display: grid; grid-template-columns: auto 1fr; gap: 0.3rem 0.75rem; margin: 0.6rem 0 0; font-size: 0.9rem; }
+.drug-rows[hidden] { display: none; }
+.drug-rows dt { color: var(--muted); font-size: 0.8125rem; padding-block-start: 0.1rem; }
+.drug-rows dd { margin: 0; overflow-wrap: anywhere; }
+.drug-rows dd.is-empty { color: var(--muted); }
+.drug-reveal { margin-block-start: 0.6rem; padding-block: 0.3rem; font-size: 0.875rem; }
+
+/* ---------- matching game ---------- */
+
+.match-status { min-block-size: 1.5em; margin-block: 0.75rem; font-weight: 500; }
+.match-board { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 12px; align-items: start; }
+.match-board > .primary { grid-column: 1 / -1; justify-self: start; }
+.match-col { display: grid; gap: 8px; }
+.match-head { margin: 0; font-size: 0.875rem; font-weight: 500; color: var(--muted); }
+.match-item {
+  inline-size: 100%;
+  padding: 0.6rem 0.8rem;
+  font: inherit;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  text-align: start;
+  color: var(--ink);
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.match-item.is-name { font-weight: 600; }
+.match-item:hover:not(:disabled) { border-color: var(--accent); }
+.match-item[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.match-item.is-done { border-color: var(--ok); background: var(--ok-soft); color: var(--ink); cursor: default; }
+.match-item.is-wrong { border-color: var(--bad); background: var(--bad-soft); }
+@media (prefers-reduced-motion: no-preference) {
+  .match-item.is-wrong { animation: match-shake 0.35s; }
+}
+@keyframes match-shake {
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+@media (max-width: 34rem) {
+  .match-board { grid-template-columns: minmax(0, 1fr); }
+}
+
+:root[data-contrast="high"] .drug-card,
+:root[data-contrast="high"] .match-item { border-color: var(--ink); }
+:root[data-contrast="high"] .match-item.is-done { outline: 2px solid var(--ok); }
+
+@media print {
+  .drug-controls, .tab-list, .drug-reveal, #panel-match, #panel-test { display: none !important; }
+  .drug-rows[hidden] { display: grid; }
+  .drug-card { break-inside: avoid; }
+}

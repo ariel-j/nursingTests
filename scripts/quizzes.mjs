@@ -11,6 +11,8 @@ export const MANIFEST_FILE = 'manifest.json';
 export const CATALOG_FILE = 'subjects.json';
 
 const isText = (v) => typeof v === 'string' && v.trim() !== '';
+/** A relative link to a page of this site ("drugs.html?subject=x"): no scheme, host or leading slash. */
+export const isSitePath = (v) => isText(v) && /^[a-z0-9][a-z0-9./_-]*\.html(?:\?[^\s#]*)?$/.test(v) && !v.includes('..');
 
 /** Problems with the catalog: [{ id, name, units?: [unit names] }] under "subjects". */
 export function validateCatalog(catalog) {
@@ -46,6 +48,11 @@ export function validateCatalog(catalog) {
       const ok = Array.isArray(s.upcoming) && s.upcoming.every((t) => t && isText(t.title)
         && (t.status === undefined || isText(t.status)));
       if (!ok) errors.push(`${where}: upcoming must be an array of { title, status? } with non-empty text`);
+    }
+    if (s.tools !== undefined) {
+      const ok = Array.isArray(s.tools) && s.tools.every((t) => t && isText(t.title) && isSitePath(t.href)
+        && (t.description === undefined || isText(t.description)));
+      if (!ok) errors.push(`${where}: tools must be an array of { title, href, description? }, href a relative site path`);
     }
   });
   return errors;
@@ -129,6 +136,7 @@ export function buildManifest(quizzes, catalog) {
         })),
         quizzes: own.filter((q) => q.unit === undefined).map(entry).sort(byTitle),
         upcoming: (s.upcoming ?? []).map((t) => ({ title: t.title, status: t.status ?? 'בקרוב' })),
+        tools: (s.tools ?? []).map((t) => ({ title: t.title, href: t.href, description: t.description ?? '' })),
       };
     }),
   };

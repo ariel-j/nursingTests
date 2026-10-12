@@ -94,7 +94,8 @@
         }
       ],
       "quizzes": [],
-      "upcoming": []
+      "upcoming": [],
+      "tools": []
     },
     {
       "id": "pharmacology",
@@ -346,10 +347,12 @@
         }
       ],
       "quizzes": [],
-      "upcoming": [
+      "upcoming": [],
+      "tools": [
         {
           "title": "כרטיסיות תרופות",
-          "status": "בתהליך"
+          "href": "drugs.html?subject=pharmacology",
+          "description": "כל התרופות בכרטיסייה אחת: עיון וחיפוש, משחק התאמה ומבחן שנוצר מהכרטיסיות."
         }
       ]
     }

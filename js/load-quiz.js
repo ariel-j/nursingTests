@@ -1,8 +1,10 @@
 // Loads the quiz a page was opened for: ?id=<quiz> is one quiz; ?subject=<id> (or the subject's
-// name, from older links) merges all of that subject's quizzes for mixed practice.
+// name, from older links) merges all of that subject's quizzes for mixed practice; ?drugs=<id>
+// builds a quiz from the subject's drug cards (data/<id>/drugs.json), &exam=1 from exam drugs only.
 // Shared by quiz.js and print.js.
 import { buildMixedQuiz, isValidQuizId, validateQuiz } from './core.js';
 import { findSubject, loadManifest, subjectPaths, subjectQuizzes } from './catalog.js';
+import { buildDrugQuiz, drugDeckUrl, validateDrugDeck } from './drugs-core.js';
 
 /** An error whose message is ready to show the user. */
 export class LoadError extends Error {}
@@ -23,7 +25,26 @@ async function fetchQuiz(id) {
   return data;
 }
 
+async function loadDrugQuiz(subjectId, examOnly) {
+  const entry = findSubject(await loadManifest(), subjectId);
+  if (!entry) throw new LoadError('המקצוע לא נמצא.');
+  const deck = await fetchJson(drugDeckUrl(entry.id));
+  const errors = validateDrugDeck(deck);
+  if (errors.length > 0) {
+    console.error('Invalid drug cards:', errors);
+    throw new LoadError('קובץ כרטיסיות התרופות פגום. פרטים בקונסול.');
+  }
+  return buildDrugQuiz(deck, {
+    id: `drugs-${entry.id}${examOnly ? '-exam' : ''}`,
+    subject: entry.name,
+    unit: 'כרטיסיות תרופות',
+    examOnly,
+  });
+}
+
 async function loadQuiz(params) {
+  const drugs = params.get('drugs');
+  if (drugs !== null) return loadDrugQuiz(drugs, params.get('exam') === '1');
   const subject = params.get('subject');
   if (subject === null) {
     const id = params.get('id');

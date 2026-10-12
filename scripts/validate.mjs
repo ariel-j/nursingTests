@@ -1,9 +1,10 @@
 // Validates the catalog and every quiz, checks that the manifest is up to date, and checks the
-// summaries and the site pages.
+// summaries, the site pages and the drug cards.
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { MANIFEST_FILE, QUIZ_DIR, buildManifest, loadAll, serializeManifest } from './quizzes.mjs';
 import { checkMedia, mediaTotal } from './media.mjs';
+import { checkDrugs } from './drugs.mjs';
 import { checkRootPages, checkSummaries } from './summaries.mjs';
 import { SUMMARIES } from '../js/summary-list.js';
 
@@ -24,7 +25,11 @@ if (failures === 0) {
 }
 
 const subjectIds = catalog ? catalog.subjects.map((s) => s.id) : [];
-const pageErrors = [...await checkSummaries(subjectIds), ...await checkRootPages()];
+const pageErrors = [
+  ...await checkSummaries(subjectIds),
+  ...await checkRootPages(),
+  ...(catalog ? await checkDrugs(catalog) : []),
+];
 for (const e of pageErrors) console.error(e);
 failures += pageErrors.length;
 
