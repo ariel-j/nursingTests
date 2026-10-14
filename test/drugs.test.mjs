@@ -11,6 +11,7 @@ import {
   dayKey,
   drugId,
   filterDrugs,
+  flashcardSheets,
   gradeReview,
   overlaps,
   reviewStats,
@@ -275,4 +276,20 @@ test('sanitizeReview keeps only well-formed entries', () => {
     badDay: { box: 1, due: 'tomorrow', last: '2025-12-30' },
     notObj: 3,
   }), { ok: { box: 2, due: '2026-01-01', last: '2025-12-30' } });
+});
+
+test('flashcardSheets: 8 slots per sheet, back rows mirrored, last sheet padded', () => {
+  const items = Array.from({ length: 10 }, (_, i) => i);
+  const sheets = flashcardSheets(items);
+  assert.equal(sheets.length, 2);
+  assert.deepEqual(sheets[0].front, [0, 1, 2, 3, 4, 5, 6, 7]);
+  assert.deepEqual(sheets[0].back, [1, 0, 3, 2, 5, 4, 7, 6]);
+  assert.deepEqual(sheets[1].front, [8, 9, null, null, null, null, null, null]);
+  assert.deepEqual(sheets[1].back, [9, 8, null, null, null, null, null, null]);
+});
+
+test('flashcardSheets: an odd slot count per row still lines up, empty input gives no sheets', () => {
+  const [sheet] = flashcardSheets(['a', 'b', 'c', 'd', 'e'], { cols: 3, rows: 2 });
+  assert.deepEqual(sheet.back, ['c', 'b', 'a', null, 'e', 'd']);
+  assert.deepEqual(flashcardSheets([]), []);
 });

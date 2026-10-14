@@ -238,6 +238,25 @@ export function filterDrugs(drugs, { query = '', family = null, examOnly = false
   });
 }
 
+// ---------- printable flashcards ----------
+
+/**
+ * Cut-out cards for double-sided printing: sheets of `rows` × `cols` slots, each a front page and a
+ * back page. The back mirrors every row, so when the sheet is flipped on its long edge each back lands
+ * behind its own front. Slots past the last item are null (they keep the back page aligned).
+ */
+export function flashcardSheets(items, { cols = 2, rows = 4 } = {}) {
+  const perSheet = cols * rows;
+  const sheets = [];
+  for (let start = 0; start < items.length; start += perSheet) {
+    const front = Array.from({ length: perSheet }, (_, i) => items[start + i] ?? null);
+    const back = [];
+    for (let r = 0; r < rows; r += 1) back.push(...front.slice(r * cols, (r + 1) * cols).reverse());
+    sheets.push({ front, back });
+  }
+  return sheets;
+}
+
 // ---------- matching game ----------
 
 export const MATCH_SIZE = 5;
