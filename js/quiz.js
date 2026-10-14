@@ -209,6 +209,9 @@ function renderQuestion() {
     li.append(b);
     return li;
   }));
+  // The button that led here (start / next) is now hidden; move focus to the new question so
+  // keyboard and screen-reader users land on it instead of the top of the page.
+  ui.question.focus({ preventScroll: true });
 }
 
 function showFeedback(result, chosenIndex) {

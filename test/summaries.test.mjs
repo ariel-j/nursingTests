@@ -4,7 +4,7 @@ import { checkSummaries, pageErrors } from '../scripts/summaries.mjs';
 
 const page = (body) => `<!doctype html><html><head>
 <script type="module" src="../js/a11y.js"></script></head><body>${body}
-<footer><a href="../accessibility.html">א</a><a href="../privacy.html">פ</a></footer></body></html>`;
+<footer><a href="../accessibility.html">א</a><a href="../privacy.html">פ</a><p>תוכן לימודי, אינו מהווה ייעוץ רפואי.</p></footer></body></html>`;
 const summary = (id) => page(`<button data-print>הדפסה</button><article class="summary" data-system="${id}">תוכן</article>`);
 
 test('pageErrors accepts a well-formed summary page', () => {
@@ -21,12 +21,17 @@ test('pageErrors rejects external resources, inline styles and handlers', () => 
   assert.deepEqual(pageErrors(page('<p>see example.com</p>'), { id: 'x' }), []);
 });
 
-test('pageErrors requires the toolbar, footer links, article and print button', () => {
+test('pageErrors requires the toolbar, footer links and disclaimer, article and print button', () => {
   const bare = '<html><body><article class="summary" data-system="other"></article></body></html>';
   const errors = pageErrors(bare, { id: 'heart', isSummary: true });
-  for (const re of [/a11y/, /accessibility/, /privacy/, /data-system="heart"/, /print/]) {
+  for (const re of [/a11y/, /accessibility/, /privacy/, /medical/, /data-system="heart"/, /print/]) {
     assert.ok(errors.some((e) => re.test(e)), `expected an error matching ${re}`);
   }
+});
+
+test('pageErrors rejects mentions of exam recollections', () => {
+  const errors = pageErrors(summary('heart').replace('תוכן', 'מתוך שחזורי מבחן'), { id: 'heart', isSummary: true });
+  assert.ok(errors.some((e) => /recollections/.test(e)));
 });
 
 test('the committed summaries pass every check', async () => {

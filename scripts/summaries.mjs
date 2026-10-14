@@ -9,6 +9,8 @@ export const SUMMARY_DIR = fileURLToPath(new URL('../summaries/', import.meta.ur
 export const SUMMARY_CSS = fileURLToPath(new URL('../css/summary.css', import.meta.url));
 // Pages in summaries/ that are not summaries themselves.
 const SUPPORT_PAGES = new Set(['index.html', 'all.html']);
+// Every page's footer carries this line (the summaries and quizzes are study aids only).
+export const MEDICAL_DISCLAIMER = 'אינו מהווה ייעוץ רפואי';
 
 /** Problems with one page's HTML. `isSummary` adds the checks for a summary's content page. */
 export function pageErrors(html, { id, isSummary }) {
@@ -21,6 +23,9 @@ export function pageErrors(html, { id, isSummary }) {
   for (const page of ['../accessibility.html', '../privacy.html']) {
     if (!html.includes(`href="${page}"`)) errors.push(`footer is missing the link to ${page}`);
   }
+  if (!html.includes(MEDICAL_DISCLAIMER)) errors.push('footer is missing the "not medical advice" line');
+  // Summaries are the owner's own words: they don't cite exam recollections (שחזורי מבחן).
+  if (html.includes('שחזור')) errors.push('mentions exam recollections (שחזור); say "הופיע בעבר" instead');
   if (isSummary) {
     const articles = html.match(/<article class="summary" data-system="[^"]*">/g) ?? [];
     if (articles.length !== 1 || articles[0] !== `<article class="summary" data-system="${id}">`) {
