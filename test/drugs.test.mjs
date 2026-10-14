@@ -15,6 +15,7 @@ import {
   gradeReview,
   overlaps,
   reviewStats,
+  sanitizeFamilies,
   sanitizeReview,
   seededRng,
   stemWords,
@@ -138,6 +139,19 @@ test('filterDrugs by words in any field, family (with alsoIn) and exam', () => {
   assert.deepEqual(names(filterDrugs(deck.drugs, { query: 'alpha' })), ['Alpha']);
   assert.deepEqual(names(filterDrugs(deck.drugs, { family: 'משפחה א' })), ['Alpha', 'Beta', 'Gamma', 'Delta']);
   assert.deepEqual(names(filterDrugs(deck.drugs, { examOnly: true })), ['Alpha', 'Zeta']);
+});
+
+test('filterDrugs by a list of families (with alsoIn); empty list = none, null = all', () => {
+  const names = (list) => list.map((d) => d.name);
+  const [first, second] = deck.families;
+  const one = filterDrugs(deck.drugs, { family: first });
+  assert.deepEqual(filterDrugs(deck.drugs, { families: [first] }), one);
+  const both = names(filterDrugs(deck.drugs, { families: [first, second] }));
+  const either = new Set([...names(one), ...names(filterDrugs(deck.drugs, { family: second }))]);
+  assert.deepEqual(both, deck.drugs.map((d) => d.name).filter((n) => either.has(n)));
+  assert.deepEqual(filterDrugs(deck.drugs, { families: [] }), []);
+  assert.equal(filterDrugs(deck.drugs, { families: null }).length, deck.drugs.length);
+  assert.ok(filterDrugs(deck.drugs, { families: [first], examOnly: true }).every((d) => d.exam));
 });
 
 test('buildMatchRound picks distinct, matchable pairs and favours weighted drugs', () => {
@@ -266,6 +280,15 @@ test('daily review: due first, then new; grading moves boxes; nothing twice a da
   assert.deepEqual(dailySet(deck.drugs, {}, today), dailySet(deck.drugs, {}, today));
   const stats = reviewStats(deck.drugs, { ...review, [drugId(c)]: { box: 4, due: '2026-04-01', last: today } }, today);
   assert.deepEqual(stats, { fresh: 3, learning: 2, mastered: 1, due: 1 });
+});
+
+test('sanitizeFamilies keeps chosen families still in the deck, else all', () => {
+  const families = ['א', 'ב', 'ג'];
+  assert.deepEqual(sanitizeFamilies(null, families), families);
+  assert.deepEqual(sanitizeFamilies('א', families), families);
+  assert.deepEqual(sanitizeFamilies(['ג', 'א', 'gone'], families), ['א', 'ג']);
+  assert.deepEqual(sanitizeFamilies([], families), []);
+  assert.deepEqual(sanitizeFamilies(['gone'], families), families);
 });
 
 test('sanitizeReview keeps only well-formed entries', () => {

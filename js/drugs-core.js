@@ -226,11 +226,16 @@ export function buildDrugQuiz(deck, { id, subject, unit, examOnly = false } = {}
 
 // ---------- browse ----------
 
-/** Drugs matching every word of `query` (in any field), in `family` (null = all), exam-only if asked. */
-export function filterDrugs(drugs, { query = '', family = null, examOnly = false } = {}) {
+/**
+ * Drugs matching every word of `query` (in any field), in `family` (null = all) and in one of
+ * `families` (null = all), exam-only if asked. A drug belongs to its family and to its `alsoIn`.
+ */
+export function filterDrugs(drugs, { query = '', family = null, families = null, examOnly = false } = {}) {
   const words = normalize(query).split(' ').filter(Boolean);
+  const inFamily = (d, f) => d.family === f || d.alsoIn.includes(f);
   return drugs.filter((d) => {
-    if (family !== null && d.family !== family && !d.alsoIn.includes(family)) return false;
+    if (family !== null && !inFamily(d, family)) return false;
+    if (families !== null && !families.some((f) => inFamily(d, f))) return false;
     if (examOnly && !d.exam) return false;
     if (words.length === 0) return true;
     const hay = normalize([d.name, d.family, ...DRUG_FIELDS.map(({ key }) => d[key])].join(' '));
@@ -463,6 +468,16 @@ export function dailySet(drugs, review, today, { size = DAILY_SIZE, weights = {}
   const fresh = shuffle(drugs.filter((d) => !review[drugId(d)]), seededRng(today))
     .sort((a, b) => (weights[drugId(b)] ?? 1) - (weights[drugId(a)] ?? 1));
   return [...due, ...fresh].slice(0, size);
+}
+
+/**
+ * The daily review's chosen families from storage: those still in the deck, in deck order.
+ * Anything malformed, or a list none of whose families exist any more, means all of them.
+ */
+export function sanitizeFamilies(raw, families) {
+  if (!Array.isArray(raw)) return [...families];
+  const chosen = families.filter((f) => raw.includes(f));
+  return chosen.length === 0 && raw.length > 0 ? [...families] : chosen;
 }
 
 /** The review state after grading one drug today. */

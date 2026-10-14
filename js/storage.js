@@ -11,6 +11,8 @@ export const keys = {
   drugMatch: (subjectId) => `drug-match:${subjectId}`,
   // Daily review (Leitner boxes) of a subject's drug cards: { [drugId]: { box, due, last } }.
   drugReview: (subjectId) => `drug-review:${subjectId}`,
+  // Families chosen for the daily review of a subject's drug cards: [family], missing = all.
+  drugReviewFamilies: (subjectId) => `drug-review-families:${subjectId}`,
   // Personal bests of the drug-card games: { stems, odd, blitz: { score, stars, plays }, match: { "<family>|<field>": ms } }.
   drugGames: (subjectId) => `drug-games:${subjectId}`,
 };

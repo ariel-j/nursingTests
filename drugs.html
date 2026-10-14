@@ -59,6 +59,17 @@
         <label class="drug-check"><input id="review-exam" type="checkbox"> רק מה שהופיע במבחנים</label>
         <button id="review-reset" type="button" class="link-button">איפוס ההתקדמות</button>
       </div>
+      <details id="review-topics" class="review-topics">
+        <summary>נושאים לחזרה · <span id="review-topics-count"></span></summary>
+        <fieldset class="review-topics-body">
+          <legend class="visually-hidden">משפחות התרופות שייכללו בחזרה</legend>
+          <div class="actions">
+            <button id="review-topics-all" type="button" class="link-button">בחירת הכול</button>
+            <button id="review-topics-none" type="button" class="link-button">ניקוי</button>
+          </div>
+          <div id="review-topics-list" class="review-topics-list"></div>
+        </fieldset>
+      </details>
       <p id="review-stats" class="meta"></p>
       <div id="review-area" class="review-area"></div>
     </section>
