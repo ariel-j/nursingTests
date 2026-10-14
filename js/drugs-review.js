@@ -1,19 +1,20 @@
 // חזרה יומית on the drug-cards page: Leitner spaced repetition (logic in drugs-core.js). Each round
 // shows up to 10 drugs, due ones first: think of the details, reveal, then say whether you knew them.
-import { dailySet, dayKey, drugId, filterDrugs, gradeReview, reviewStats, sanitizeReview } from './drugs-core.js';
+// It covers the chosen topics (drugs-topics.js); progress is per drug, whatever is chosen.
+import { dailySet, dayKey, drugId, gradeReview, reviewStats, sanitizeReview } from './drugs-core.js';
 import { button, drugRows, el } from './drugs-ui.js';
 import { keys, load, save } from './storage.js';
 
 const $ = (id) => document.getElementById(id);
 
-export function initReview(deck, subjectId) {
+export function initReview(topics, subjectId) {
   const key = keys.drugReview(subjectId);
   const weightsKey = keys.drugMatch(subjectId);
   const area = $('review-area');
   const statsLine = $('review-stats');
   const exam = $('review-exam');
 
-  const pool = () => filterDrugs(deck.drugs, { examOnly: exam.checked });
+  const pool = () => topics.drugs({ examOnly: exam.checked });
   const today = () => dayKey(new Date());
   const review = () => sanitizeReview(load(key, {}));
 
@@ -34,7 +35,9 @@ export function initReview(deck, subjectId) {
     const set = dailySet(pool(), review(), today(), { weights: load(weightsKey, {}) });
     const nodes = [];
     if (message) nodes.push(el('p', 'review-done', message));
-    if (set.length === 0) {
+    if (topics.chosen().length === 0) {
+      nodes.push(el('p', 'muted', 'בחרו לפחות נושא אחד ב"נושאים".'));
+    } else if (set.length === 0) {
       nodes.push(el('p', 'muted', 'אין כרגע תרופות לחזרה. חזרו מחר.'));
     } else {
       const due = reviewStats(pool(), review(), today()).due;
@@ -89,6 +92,9 @@ export function initReview(deck, subjectId) {
     };
     next();
   }
+
+  topics.mount($('review-topics'));
+  topics.onChange(() => renderStart());
 
   exam.addEventListener('change', () => renderStart());
   $('review-reset').addEventListener('click', () => {

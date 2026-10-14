@@ -160,11 +160,12 @@ const reverseClue = (drug) => (isText(drug.indications)
  * The multiple-choice quiz of a drug deck, in the quiz engine's format. Per drug: its mechanism,
  * indications and side effects (when known), and the reverse, "which drug is this?". Topic = family.
  * A question is left out when there are not enough non-overlapping wrong answers.
- * `examOnly` keeps the drugs marked as having appeared in exams.
+ * `examOnly` keeps the drugs marked as having appeared in exams, `families` (null = all) the drugs
+ * in those families; wrong answers still come from the whole deck.
  */
-export function buildDrugQuiz(deck, { id, subject, unit, examOnly = false } = {}) {
+export function buildDrugQuiz(deck, { id, subject, unit, examOnly = false, families = null } = {}) {
   if (!isValidQuizId(id)) throw new Error(`invalid quiz id: ${id}`);
-  const drugs = examOnly ? deck.drugs.filter((d) => d.exam) : deck.drugs;
+  const drugs = filterDrugs(deck.drugs, { families, examOnly });
   const questions = [];
   for (const drug of drugs) {
     const others = deck.drugs.filter((d) => d !== drug);
@@ -226,11 +227,16 @@ export function buildDrugQuiz(deck, { id, subject, unit, examOnly = false } = {}
 
 // ---------- browse ----------
 
-/** Drugs matching every word of `query` (in any field), in `family` (null = all), exam-only if asked. */
-export function filterDrugs(drugs, { query = '', family = null, examOnly = false } = {}) {
+/**
+ * Drugs matching every word of `query` (in any field), in `family` (null = all) and in one of
+ * `families` (null = all), exam-only if asked. A drug belongs to its family and to its `alsoIn`.
+ */
+export function filterDrugs(drugs, { query = '', family = null, families = null, examOnly = false } = {}) {
   const words = normalize(query).split(' ').filter(Boolean);
+  const inFamily = (d, f) => d.family === f || d.alsoIn.includes(f);
   return drugs.filter((d) => {
-    if (family !== null && d.family !== family && !d.alsoIn.includes(family)) return false;
+    if (family !== null && !inFamily(d, family)) return false;
+    if (families !== null && !families.some((f) => inFamily(d, f))) return false;
     if (examOnly && !d.exam) return false;
     if (words.length === 0) return true;
     const hay = normalize([d.name, d.family, ...DRUG_FIELDS.map(({ key }) => d[key])].join(' '));
@@ -367,16 +373,17 @@ export function validateStems(data, deck) {
 
 /**
  * One suffix question over `words` (from stemWords). Forward: a name, pick its class. Reverse
- * (`reverse: true`): a class, pick the name that belongs to it. Options come from different suffixes.
+ * (`reverse: true`): a class, pick the name that belongs to it. Options come from different suffixes;
+ * the wrong names from `others` (default `words`), so the asked words can be a topic's subset.
  * Returns { prompt, options: [text], correct, word, stem }.
  */
-export function buildStemQuestion(stems, words, { reverse = false } = {}, rng = Math.random) {
+export function buildStemQuestion(stems, words, { reverse = false, others = words } = {}, rng = Math.random) {
   const target = words[Math.floor(rng() * words.length)];
   const otherStems = shuffle(stems.map((_, i) => i).filter((i) => i !== target.stem), rng).slice(0, OPTION_COUNT - 1);
   let options;
   if (reverse) {
     const wrong = otherStems
-      .map((i) => shuffle(words.filter((w) => w.stem === i), rng)[0])
+      .map((i) => shuffle(others.filter((w) => w.stem === i), rng)[0])
       .filter(Boolean)
       .map((w) => w.word);
     options = [target.word, ...wrong];
@@ -397,10 +404,10 @@ export function buildStemQuestion(stems, words, { reverse = false } = {}, rng = 
 
 /**
  * Three drugs from one family and one from another: which one doesn't belong? The odd drug is not
- * also listed in the trio's family (alsoIn), and no two names overlap. Families come from `drugs`
- * (already filtered by the page). Returns { drugs: [4 in shuffled order], odd (index), family } or null.
+ * also listed in the trio's family (alsoIn), and no two names overlap. The trio comes from `drugs`
+ * (already filtered by the page), the odd one from `others` (default `drugs`). Returns { drugs: [4 in shuffled order], odd (index), family } or null.
  */
-export function buildOddOneOut(drugs, rng = Math.random) {
+export function buildOddOneOut(drugs, rng = Math.random, others = drugs) {
   const byFamily = new Map();
   for (const d of drugs) byFamily.set(d.family, [...(byFamily.get(d.family) ?? []), d]);
   const families = shuffle([...byFamily.keys()].filter((f) => byFamily.get(f).length >= 3), rng);
@@ -411,7 +418,7 @@ export function buildOddOneOut(drugs, rng = Math.random) {
       if (!trio.some((t) => overlaps(t.name, d.name))) trio.push(d);
     }
     if (trio.length < 3) continue;
-    const odd = shuffle(drugs.filter((d) => d.family !== family && !d.alsoIn.includes(family)
+    const odd = shuffle(others.filter((d) => d.family !== family && !d.alsoIn.includes(family)
       && !trio.some((t) => t.alsoIn.includes(d.family) || overlaps(t.name, d.name))), rng)[0];
     if (!odd) continue;
     const four = shuffle([...trio, odd], rng);
@@ -463,6 +470,16 @@ export function dailySet(drugs, review, today, { size = DAILY_SIZE, weights = {}
   const fresh = shuffle(drugs.filter((d) => !review[drugId(d)]), seededRng(today))
     .sort((a, b) => (weights[drugId(b)] ?? 1) - (weights[drugId(a)] ?? 1));
   return [...due, ...fresh].slice(0, size);
+}
+
+/**
+ * The daily review's chosen families from storage: those still in the deck, in deck order.
+ * Anything malformed, or a list none of whose families exist any more, means all of them.
+ */
+export function sanitizeFamilies(raw, families) {
+  if (!Array.isArray(raw)) return [...families];
+  const chosen = families.filter((f) => raw.includes(f));
+  return chosen.length === 0 && raw.length > 0 ? [...families] : chosen;
 }
 
 /** The review state after grading one drug today. */
