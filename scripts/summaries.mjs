@@ -9,6 +9,8 @@ export const SUMMARY_DIR = fileURLToPath(new URL('../summaries/', import.meta.ur
 export const SUMMARY_CSS = fileURLToPath(new URL('../css/summary.css', import.meta.url));
 // Pages in summaries/ that are not summaries themselves.
 const SUPPORT_PAGES = new Set(['index.html', 'all.html']);
+// Every page's footer carries this line (the summaries and quizzes are study aids only).
+export const MEDICAL_DISCLAIMER = 'אינו מהווה ייעוץ רפואי';
 
 // Site pages outside summaries/, checked with the same rules (paths relative to the root).
 export const ROOT_DIR = fileURLToPath(new URL('../', import.meta.url));
@@ -20,7 +22,11 @@ export const ROOT_PAGES = ['index.html', 'quiz.html', 'print.html', 'media.html'
  */
 export function pageErrors(html, { id, isSummary, root = '../' }) {
   const errors = [];
-  if (/\b(?:src|href)\s*=\s*["']?(?:https?:)?\/\//i.test(html) || /url\(\s*["']?(?:https?:)?\/\//i.test(html)) {
+  // A plain <a href> to another site is a link, not a load; <link href>, src and url() are loads.
+  const external = /\bsrc\s*=\s*["']?(?:https?:)?\/\//i.test(html)
+    || /<link\b[^>]*\bhref\s*=\s*["']?(?:https?:)?\/\//i.test(html)
+    || /url\(\s*["']?(?:https?:)?\/\//i.test(html);
+  if (external) {
     errors.push('loads an external resource (fonts and assets must be self-hosted)');
   }
   if (/<[^>]+\s(?:on[a-z]+|style)\s*=/i.test(html)) errors.push('inline style or event handler attribute');
@@ -29,6 +35,7 @@ export function pageErrors(html, { id, isSummary, root = '../' }) {
   for (const page of [`${root}accessibility.html`, `${root}privacy.html`]) {
     if (!html.includes(`href="${page}"`)) errors.push(`footer is missing the link to ${page}`);
   }
+  if (!html.includes(MEDICAL_DISCLAIMER)) errors.push('footer is missing the "not medical advice" line');
   if (isSummary) {
     const articles = html.match(/<article class="summary" data-system="[^"]*">/g) ?? [];
     if (articles.length !== 1 || articles[0] !== `<article class="summary" data-system="${id}">`) {
@@ -49,6 +56,14 @@ export function pageErrors(html, { id, isSummary, root = '../' }) {
     }
   }
   return errors;
+}
+
+/**
+ * How many times a text mentions exam recollections (שחזור, שחזורים...). Published content
+ * says "הופיע בעבר" instead; validate lists the remaining mentions as warnings.
+ */
+export function recollectionMentions(text) {
+  return (text.match(/שחזור/g) ?? []).length;
 }
 
 /** Problems with the root pages (home, quiz, print, statement pages). */

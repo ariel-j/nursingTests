@@ -267,7 +267,7 @@ kbd {
 .resume { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
 .resume p { margin: 0; }
 
-.topics { border: none; padding: 0; margin: 0 0 18px; }
+.topics { border: none; padding: 0; margin: 0 0 18px; min-inline-size: 0; }
 .topics legend { font-weight: 600; padding: 0; margin-block-end: 0.4rem; }
 .topic-actions { display: flex; gap: 0.5rem; margin-block-end: 0.75rem; }
 .topic-list {
@@ -275,6 +275,7 @@ kbd {
   padding: 0;
   margin: 0;
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr));
   gap: 8px;
 }
 .topic-option {
@@ -406,8 +407,8 @@ kbd {
 .option.is-wrong { border-color: var(--bad); background: var(--bad-soft); }
 .option.is-wrong .letter { border-color: var(--bad); background: var(--bad); color: var(--surface); }
 /* Mark state with a symbol too, not only color. */
-.option.is-correct::after { content: "✓"; color: var(--ok); font-weight: 600; }
-.option.is-wrong::after { content: "✗"; color: var(--bad); font-weight: 600; }
+.option.is-correct::after { content: "✓"; content: "✓" / "תשובה נכונה"; color: var(--ok); font-weight: 600; }
+.option.is-wrong::after { content: "✗"; content: "✗" / "התשובה שבחרת, שגויה"; color: var(--bad); font-weight: 600; }
 
 .feedback {
   margin-block-start: 16px;
