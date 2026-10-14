@@ -11,8 +11,6 @@
 .summary .face-front { border-color: rgba(167, 139, 250, 0.45); color: #c4b5fd; }
 
 /* Long drug lists in a card's tag and heading wrap instead of pushing the card wider than a phone. */
-.summary .pcard-head { flex-wrap: wrap; }
-.summary .pcard-head .tag { white-space: normal; }
 
 /* Wider table: the first column should not take a third of it. */
 .summary .rtable.cols4 td:first-child { inline-size: 20%; font-weight: 600; }

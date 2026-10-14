@@ -3,7 +3,7 @@
    summary-widgets.css (search, lab panels, flashcards). Hidden on paper (.no-print), absent from all.html. */
 
 .summary .lab-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 1.1rem; align-items: start; }
-@media (max-width: 860px) { .summary .lab-grid { grid-template-columns: 1fr; } }
+@media (max-width: 860px) { .summary .lab-grid { grid-template-columns: minmax(0, 1fr); } }
 
 .summary .stage { padding: 0.9rem; background: #0b1220; border: 1px solid var(--lab-line); border-radius: 12px; color: var(--lab-muted); font-size: 0.8rem; }
 .summary .stage-top, .summary .stage-axis { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.4rem 1rem; }
@@ -35,7 +35,7 @@
 /* TI calculator */
 .summary .ti-total { text-align: start; }
 .summary .ti-number { font-size: 2rem; }
-.summary .ti-sliders { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; }
+.summary .ti-sliders { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr)); gap: 1rem; }
 .summary .ti-alert { display: flex; align-items: flex-start; gap: 0.9rem; margin-block: 1rem; padding: 0.9rem 1rem; border: 1px solid; border-radius: 12px; transition: background-color 0.2s, border-color 0.2s; }
 .summary .ti-alert-icon { font-size: 1.5rem; line-height: 1.2; }
 .summary .ti-alert h4 { font-size: 1.02rem; }
@@ -45,7 +45,7 @@
 .summary .ti-alert[data-level="narrow"] { color: #ffe4e6; background: rgba(244, 63, 94, 0.18); border-color: rgba(251, 113, 133, 0.6); }
 .summary .ti-alert h4 { color: inherit; }
 
-.summary .pk-key { display: grid; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: 0.5rem; margin: 0.7rem 0 0; text-align: center; }
+.summary .pk-key { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(8.5rem, 100%), 1fr)); gap: 0.5rem; margin: 0.7rem 0 0; text-align: center; }
 .summary .pk-key > div { padding: 0.45rem; background: var(--lab-panel); border: 1px solid var(--lab-line); border-radius: 8px; }
 .summary .pk-key dt { font-weight: 700; }
 .summary .pk-key dd { margin: 0; font-size: 0.75rem; color: var(--lab-muted); }

@@ -36,6 +36,9 @@ jobs:
         id: media
         continue-on-error: true
         run: node scripts/media-manifest.mjs
+      # Drafts ("_" files and folders in media/) stay in the repo but are not published.
+      - name: Leave out media drafts
+        run: find media -name '_*' -prune -exec rm -rf {} +
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

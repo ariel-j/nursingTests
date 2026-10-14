@@ -135,7 +135,7 @@ function renderStart(){
   const saved=load();
   const canResume=saved&&!saved.done&&saved.queue&&saved.queue.length;
   const counts={};QS.forEach(q=>counts[q.t]=(counts[q.t]||0)+1);
-  app.innerHTML=`<header>${'<div class="hstats"><h1>המערכת האנדוקרינית</h1><p>200 שאלות לפי ההרצאה והשחזורים. שאלה שטעית בה או דילגת עליה חוזרת בהמשך, עד שתענה עליה נכון.</p></div>'}</header>
+  app.innerHTML=`<header>${'<div class="hstats"><h1>המערכת האנדוקרינית</h1><p>200 שאלות לפי ההרצאה. שאלה שטעית בה או דילגת עליה חוזרת בהמשך, עד שתענה עליה נכון.</p></div>'}</header>
   ${canResume?`<div class="card" style="margin-bottom:14px"><h2>יש התקדמות שמורה</h2>
    <p class="muted">נשלטו ${saved.mastered.length} מתוך ${saved.ids.length}, ${saved.queue.length} עדיין בתור.</p>
    <div class="row"><button class="btn" id="resume">להמשיך מאיפה שעצרתי</button></div></div>`:""}

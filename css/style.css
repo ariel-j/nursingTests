@@ -114,7 +114,6 @@ kbd {
   border-radius: 4px;
   font: 500 0.75em/1.5 var(--sans);
   text-align: center;
-  opacity: 0.75;
 }
 
 .card {
@@ -323,6 +322,7 @@ kbd {
 
 .tab-list {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.25rem;
   margin-block: 1.5rem 0;
   border-block-end: 1px solid var(--line);
@@ -516,7 +516,7 @@ kbd {
 
 .print-settings {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
   gap: 1rem 1.5rem;
   padding-block: 1rem;
   border-block: 1px solid var(--line);
@@ -664,7 +664,7 @@ kbd {
 
 /* ---------- content pages (accessibility, privacy) ---------- */
 
-.prose { max-inline-size: 42rem; }
+.prose { max-inline-size: 42rem; overflow-wrap: anywhere; }
 .prose h1 { margin-block: 0.75rem 1rem; }
 .prose h2 { font-size: 1.2rem; margin-block: 1.75rem 0.5rem; }
 .prose p { margin-block: 0 1rem; }
@@ -923,7 +923,7 @@ kbd {
 }
 .media-video figcaption { margin-block-start: 0.5rem; }
 /* Two per row on a phone, more on wider screens: the video stays the main thing. */
-.media-list { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+.media-list { grid-template-columns: repeat(auto-fill, minmax(min(140px, 100%), 1fr)); }
 .media-card { padding: 12px; block-size: 100%; }
 .media-card .card-title { font-size: 0.9375rem; }
 .media-card .meta { font-size: 0.8125rem; }

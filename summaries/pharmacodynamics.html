@@ -33,7 +33,7 @@
     </svg>
     <div class="legend">
       <span><span class="arrowmark">←</span> <b>גורם ← תוצאה</b> (קוראים מימין לשמאל)</span>
-      <span><span class="exam exam-legend">נשאל בשחזורים</span> נקודות זהב שחזרו שוב ושוב בבחינות</span>
+      <span><span class="exam exam-legend">הופיע בעבר</span> נקודות זהב שחזרו שוב ושוב בבחינות</span>
     </div>
   </header>
 
@@ -53,16 +53,16 @@
       <a href="#pd-simulator" class="toc-lab"><span aria-hidden="true">📊</span> סימולטור עקומות</a>
       <a href="#pd-sec-4">העברת אותות</a>
       <a href="#pd-sec-5">TI ואינדקס</a>
-      <a href="#pd-practice" class="toc-exam"><span aria-hidden="true">⭐</span> שחזורים</a>
+      <a href="#pd-practice" class="toc-exam"><span aria-hidden="true">⭐</span> נקודות שהופיעו בעבר</a>
     </nav>
     <div class="search-row">
       <label class="search-label" for="pd-search">חיפוש בסיכום</label>
-      <input type="search" id="pd-search" class="search-input" placeholder="חיפוש מיידי בכל המושגים, ההגדרות, מנגנוני הפעולה ושאלות השחזור..." autocomplete="off">
+      <input type="search" id="pd-search" class="search-input" placeholder="חיפוש מיידי בכל המושגים, ההגדרות, מנגנוני הפעולה ושאלות שהופיעו בעבר..." autocomplete="off">
       <p id="pd-search-count" class="search-count" role="status">מציג את כל הנושאים</p>
     </div>
     <div class="pills" role="group" aria-label="סינון לפי נושא">
       <button type="button" class="pill" data-filter="all" aria-pressed="true">הכל (8 פרקים)</button>
-      <button type="button" class="pill" data-filter="exam" aria-pressed="false"><span aria-hidden="true">⭐</span> שחזורי בחינות בלבד</button>
+      <button type="button" class="pill" data-filter="exam" aria-pressed="false"><span aria-hidden="true">⭐</span> רק מה שהופיע בעבר</button>
       <button type="button" class="pill" data-filter="curves" aria-pressed="false"><span aria-hidden="true">📊</span> עקומות ומדדים (<span class="en">Emax, EC50, TI</span>)</button>
       <button type="button" class="pill" data-filter="receptors" aria-pressed="false"><span aria-hidden="true">⚡</span> העברת אותות ו-<span class="en">GPCR</span></button>
       <button type="button" class="pill" data-filter="combos" aria-pressed="false"><span aria-hidden="true">💊</span> שילובי תרופות וסבילות</button>
@@ -250,7 +250,7 @@
       <div class="rel-effect">קישור קוולנטי או לאתר אלוסטרי; <b>לא ניתן לגבור עליו</b> בעודף אגוניסט (<span class="en">Emax</span> מדוכא).</div>
     </div>
     <div class="rel sc is-exam">
-      <div class="rel-cause">אנטגוניסט פיזיולוגי (<span class="en">Physiological</span>) <span class="exam">נשאל בשחזורים</span></div>
+      <div class="rel-cause">אנטגוניסט פיזיולוגי (<span class="en">Physiological</span>) <span class="exam">הופיע בעבר</span></div>
       <span class="rel-arrow" aria-hidden="true">←</span>
       <div class="rel-effect">מפיק אפקט מנוגד דרך <b>רצפטור או מסלול אחר לחלוטין</b>, ללא חסימה או תחרות על אותו רצפטור! (למשל היסטמין מול אדרנלין).</div>
     </div>
@@ -282,7 +282,7 @@
         <p class="flush">הריכוז שנותן בדיוק מחצית (50%) מ-<span class="en">Emax</span> — מדד הפוטנטיות (<span class="en">potency</span>).</p>
       </div>
       <div class="pcard sc is-exam" data-tone="amber">
-        <div class="pcard-head"><h3>פוטנטיות (<span class="en">Potency</span>)</h3><span class="exam">נשאל בשחזורים</span></div>
+        <div class="pcard-head"><h3>פוטנטיות (<span class="en">Potency</span>)</h3><span class="exam">הופיע בעבר</span></div>
         <p class="flush">כמה תרופה צריך.<br><b><span class="en">EC50↓</span> ← פוטנטיות↑</b><br>(מינון נמוך יותר נדרש כדי להשיג את אותו האפקט. 20 מ"ג פוטנטי יותר מ-30 מ"ג!).</p>
       </div>
       <div class="pcard sc">
@@ -367,7 +367,7 @@
     <p class="sec-note">הכל נמדד מול שני ספים: <span class="en">MEC</span> (יעיל מינימלי) ו-<span class="en">MTC</span> (רעיל מינימלי).</p>
 
     <div class="call sc is-exam">
-      <h4>אינדקס טיפולי (<span class="en">Therapeutic Index</span>) <span class="exam">נשאל בשחזורים ×2</span></h4>
+      <h4>אינדקס טיפולי (<span class="en">Therapeutic Index</span>) <span class="exam">הופיע בעבר ×2</span></h4>
       <p>נוסחה: <b class="en">TI = TD50 / ED50</b>. זכרו: ה-<span class="en">TI</span> הוא מדד של <b>בטיחות בלבד</b>, לא של פוטנטיות או אפקטיביות!</p>
       <p class="flush"><span class="en">ED50</span> = מינון יעיל ב-50% מהאוכלוסייה (ככל שנמוך יותר, התרופה פוטנטית יותר). <span class="en">TD50</span> = מינון רעיל ב-50% מהאוכלוסייה (ככל שרחוק יותר מה-<span class="en">ED50</span>, מרווח הבטיחות גדל).</p>
     </div>
@@ -433,7 +433,7 @@
         <p class="flush">טווח הריכוזים בין <span class="en">MEC</span> ל-<span class="en">MTC</span>. מתחת ל-<span class="en">MEC</span> אין אפקט טיפולי; מעל <span class="en">MTC</span> מופיעה רעילות.</p>
       </div>
       <div class="pcard sc is-exam" data-tone="amber">
-        <div class="pcard-head"><h3>חלון טיפולי צר (<span class="en">Narrow TI</span>)</h3><span class="exam">נשאל בשחזורים</span></div>
+        <div class="pcard-head"><h3>חלון טיפולי צר (<span class="en">Narrow TI</span>)</h3><span class="exam">הופיע בעבר</span></div>
         <p class="flush"><span class="en">MEC</span> ו-<span class="en">MTC</span> קרובים מאוד זה לזה ← <b>חובה לנטר רמת תרופה בדם (<span class="en">TDM</span>)</b> למניעת הרעלה! (דוגמאות: ליתיום, דיגוקסין, תאופילין, וורפרין).</p>
       </div>
       <div class="pcard sc">
@@ -450,12 +450,12 @@
 
     <div class="cards c2">
       <div class="pcard sc is-exam">
-        <div class="pcard-head"><h3>חשיפה ממושכת לאגוניסט</h3><span class="exam">נשאל בשחזורים</span></div>
+        <div class="pcard-head"><h3>חשיפה ממושכת לאגוניסט</h3><span class="exam">הופיע בעבר</span></div>
         <p class="chain">חשיפה ממושכת לאגוניסט ← <b class="en">Down-regulation</b> ← הפנמת וירידת רצפטורים ← <span class="en">desensitization</span> וסבילות (<span class="en">tolerance</span>)</p>
         <p class="flush"><b>התוצאה:</b> ירידה בתגובה הביולוגית ← צורך בהעלאת המינון כדי לקבל את אותו האפקט.</p>
       </div>
       <div class="pcard sc is-exam">
-        <div class="pcard-head"><h3>חשיפה ממושכת לאנטגוניסט</h3><span class="exam">נשאל בשחזורים</span></div>
+        <div class="pcard-head"><h3>חשיפה ממושכת לאנטגוניסט</h3><span class="exam">הופיע בעבר</span></div>
         <p class="chain">חשיפה ממושכת לאנטגוניסט ← <b class="en">Up-regulation</b> ← ביטוי יתר של רצפטורים בממברנה ← רגישות יתר ותקופה עמידה</p>
         <p class="flush"><b>הסכנה:</b> בהפסקה פתאומית של אנטגוניסט (כמו חוסמי בטא) עלול להתרחש <span class="en">Rebound effect</span> עקב רגישות-יתר חריפה.</p>
       </div>
@@ -513,10 +513,10 @@
     </div>
   </section>
 
-  <!-- 8 נקודות שחזורים -->
+  <!-- 8 נקודות שהופיעו בעבר -->
   <section id="pd-sec-8" class="topic-section" data-category="exam">
-    <h2>8 · נקודות שחזרו בשחזורים — לא לפספס!</h2>
-    <p class="sec-note">13 נקודות זהב שלוקטו ישירות ממבחני גמר ושחזורים של השנים האחרונות.</p>
+    <h2>8 · נקודות שהופיעו בעבר — לא לפספס!</h2>
+    <p class="sec-note">13 נקודות זהב שהופיעו בעבר.</p>
 
     <div class="cards c2 points">
       <div class="pcard point sc is-exam" data-tone="amber"><span class="exam">נשאל ×2</span><p class="flush">האינדקס התרפויטי (<b class="en">TI = TD50/ED50</b>) הוא מדד ל<b>בטיחות התרופה</b> — לא לפוטנטיות ולא לאפקטיביות.</p></div>
@@ -538,7 +538,7 @@
   <!-- כרטיסיות תרגול (אינטראקטיבי) -->
   <section id="pd-practice" class="lab deck no-print" data-interactive aria-labelledby="pd-deck-title">
     <p class="lab-kicker lab-kicker-hot"><span aria-hidden="true">⭐</span> מצב תרגול אישי לבחינה</p>
-    <h2 id="pd-deck-title">כרטיסיות שחזורים לבדיקה עצמית (<span class="en">Flashcards</span>)</h2>
+    <h2 id="pd-deck-title">כרטיסיות חזרה לבדיקה עצמית (<span class="en">Flashcards</span>)</h2>
     <p class="sec-note">לחצו על הכרטיסייה כדי לגלות את התשובה והסבירו לעצמכם לפני שתהפכו.</p>
     <p class="flash-progress"><span>התקדמות:</span> <strong id="flash-progress" role="status">0 מתוך 10 נלמדו בהצלחה</strong></p>
 
