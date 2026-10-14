@@ -1,0 +1,49 @@
+# Publishes the site to GitHub Pages on every push to main. Before publishing it builds
+# media/manifest.json from the media/ folder (Pages can't list a folder, and the list is not
+# committed), so an upload through the GitHub web UI is all it takes to add a video.
+# Needs Settings → Pages → Source: "GitHub Actions".
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # Files that break a rule are left out of the list; the site still deploys, and the last step
+      # fails the run so GitHub emails the owner.
+      - name: Build media/manifest.json
+        id: media
+        continue-on-error: true
+        run: node scripts/media-manifest.mjs
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Fail on rejected media files
+        if: steps.media.outcome == 'failure'
+        run: |
+          echo "::error::Some files in media/ were left out, see the 'Build media/manifest.json' step."
+          exit 1

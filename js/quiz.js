@@ -1,24 +1,28 @@
 import {
   MASTERY_STREAK,
+  addAttempt,
+  analyzeHistory,
   answer,
+  buildAttempt,
   createSession,
   currentQuestion,
   isComplete,
   isSessionCompatible,
   isolateNumberRanges as fmt,
-  isValidQuizId,
   listTopics,
+  newAttemptId,
   presentOptions,
   progressInfo,
   questionById,
   questionIdsForTopics,
   recordResult,
+  sanitizeHistory,
+  sampleQuestionIds,
   skip,
   summarize,
-  validateQuiz,
 } from './core.js';
-import { ecgPath } from './ecg.js';
-import { keys, load, remove, save } from './storage.js';
+import { loadQuizFromUrl, quizPlace, subjectHomeHref } from './load-quiz.js';
+import { keys, load, prefs, remove, save } from './storage.js';
 
 const $ = (id) => document.getElementById(id);
 const ui = {
@@ -35,12 +39,25 @@ const ui = {
   newSession: $('new-session'),
   allTopics: $('all-topics'),
   noTopics: $('no-topics'),
+  count: $('count'),
+  countHint: $('count-hint'),
   topicList: $('topic-list'),
   startButton: $('start-button'),
   best: $('best'),
+  stats: $('stats'),
+  statsSummary: $('stats-summary'),
+  statsList: $('stats-list'),
+  practiceWeak: $('practice-weak'),
+  practiceQuestions: $('practice-questions'),
+  clearStats: $('clear-stats'),
+  printLink: $('print-link'),
+  homeLinks: [$('home-link'), $('done-home-link')],
   // play
   play: $('play'),
-  trace: $('trace'),
+  ring: $('ring'),
+  ringFill: $('ring-fill'),
+  ringMastered: $('ring-mastered'),
+  ringTotal: $('ring-total'),
   progressText: $('progress-text'),
   topic: $('topic'),
   retryLabel: $('retry-label'),
@@ -48,6 +65,8 @@ const ui = {
   options: $('options'),
   skip: $('skip'),
   feedback: $('feedback'),
+  countdown: $('countdown'),
+  autoToggle: $('auto-advance'),
   verdict: $('verdict'),
   explanation: $('explanation'),
   note: $('note'),
@@ -66,7 +85,17 @@ const ui = {
   noRetried: $('no-retried'),
 };
 
+const LEVEL_LABELS = { unknown: 'אין עדיין מספיק נתונים', weak: 'דורש חיזוק', fair: 'בינוני', solid: 'שולט' };
+const TREND_LABELS = { up: '↑ משתפר', down: '↓ יורד', flat: '→ יציב' };
+
 const MODE_LABELS = { full: 'כל הבוחן', topics: 'נושאים נבחרים', retry: 'שאלות שחזרו' };
+const LETTERS = ['א', 'ב', 'ג', 'ד'];
+// After a correct answer, move on by itself unless the user asked for less motion.
+// The pause scales with the text the learner has to read (explanation plus note).
+const AUTO_ADVANCE_MIN_MS = 2500;
+const AUTO_ADVANCE_MAX_MS = 8000;
+const AUTO_ADVANCE_BASE_MS = 1500;
+const AUTO_ADVANCE_PER_CHAR_MS = 45;
 
 let quiz = null;
 let state = null;
@@ -74,6 +103,8 @@ let state = null;
 let phase = 'start';
 let optionButtons = [];
 let lastSummary = null;
+let analysis = null;
+let autoAdvance = null;
 
 function el(tag, className, text) {
   const node = document.createElement(tag);
@@ -82,8 +113,17 @@ function el(tag, className, text) {
   return node;
 }
 
+function cancelAutoAdvance() {
+  clearTimeout(autoAdvance);
+  ui.countdown.hidden = true;
+}
+
 function show(section) {
+  cancelAutoAdvance();
   for (const s of [ui.start, ui.play, ui.done]) s.hidden = s !== section;
+  // The ring and session stats belong to a running (or just finished) session.
+  ui.ring.hidden = section === ui.start;
+  ui.progressText.hidden = section === ui.start;
   ui.status.hidden = true;
   ui.toStart.hidden = section === ui.start;
   window.scrollTo({ top: 0 });
@@ -93,6 +133,8 @@ function showStatus(text) {
   ui.status.textContent = text;
   ui.status.hidden = false;
   for (const s of [ui.start, ui.play, ui.done]) s.hidden = true;
+  ui.ring.hidden = true;
+  ui.progressText.hidden = true;
 }
 
 function persist() {
@@ -105,25 +147,132 @@ function loadSavedSession() {
   return saved && isSessionCompatible(saved, quiz) && !isComplete(saved) ? saved : null;
 }
 
+
+// ---------- statistics ----------
+
+function loadHistory() {
+  return sanitizeHistory(load(keys.history(quiz.id)));
+}
+
+function recordAttempt() {
+  const now = new Date();
+  const attempt = buildAttempt(state, quiz, { id: newAttemptId(now), date: now.toISOString() });
+  // Statistics are best effort: if storage is full or blocked the quiz itself still works.
+  save(keys.history(quiz.id), addAttempt(loadHistory(), attempt));
+}
+
+function renderStatRow(t) {
+  const li = el('li', `stat-row level-${t.level}`);
+  const bar = el('span', 'bar');
+  bar.setAttribute('aria-hidden', 'true');
+  const fill = el('i');
+  fill.style.inlineSize = `${t.score === null ? 0 : Math.round(t.score * 100)}%`;
+  bar.append(fill);
+
+  const parts = [LEVEL_LABELS[t.level]];
+  if (t.level !== 'unknown') parts.push(`${Math.round(t.score * 100)}%`);
+  if (t.trend) parts.push(TREND_LABELS[t.trend]);
+  const text = el('span', 'stat-text', parts.join(' · '));
+  if (t.recovered) text.append(el('span', 'recovered', '✓ הייתה חלשה והתחזקה'));
+  li.append(el('span', null, t.topic), bar, text);
+  return li;
+}
+
+function renderStats() {
+  analysis = analyzeHistory(loadHistory(), quiz);
+  ui.stats.hidden = analysis.attempts === 0;
+  if (analysis.attempts === 0) return;
+
+  const weak = analysis.topics.filter((t) => t.level === 'weak');
+  ui.statsSummary.textContent = `${analysis.attempts} סבבים נשמרו · `
+    + (weak.length === 0 ? 'אין כרגע נושאים שדורשים חיזוק.' : `${weak.length} נושאים דורשים חיזוק.`);
+  // Weak topics first (stable sort keeps the quiz order within each group).
+  const ordered = [...analysis.topics].sort((a, b) => (b.level === 'weak') - (a.level === 'weak'));
+  ui.statsList.replaceChildren(...ordered.map(renderStatRow));
+
+  const weakIds = questionIdsForTopics(quiz, weak.map((t) => t.topic));
+  ui.practiceWeak.hidden = weakIds.length === 0;
+  ui.practiceWeak.textContent = `תרגל את הנושאים החלשים · ${weakIds.length} שאלות`;
+  ui.practiceQuestions.hidden = analysis.weakQuestions.length === 0;
+  ui.practiceQuestions.textContent = `תרגל ${analysis.weakQuestions.length} שאלות שחוזרות לטעות`;
+}
+
+function practiceWeakTopics() {
+  const weak = analysis.topics.filter((t) => t.level === 'weak').map((t) => t.topic);
+  const ids = questionIdsForTopics(quiz, weak);
+  if (ids.length > 0) begin(ids, 'topics');
+}
+
+function practiceWeakQuestions() {
+  if (analysis.weakQuestions.length > 0) begin(analysis.weakQuestions.map((q) => q.id), 'retry');
+}
+
+function clearStats() {
+  if (!window.confirm('הסטטיסטיקה של הבוחן הזה תימחק. להמשיך?')) return;
+  remove(keys.history(quiz.id));
+  renderStart();
+  ui.startButton.focus({ preventScroll: true });
+}
+
 // ---------- start screen ----------
+
+// A mixed practice is chosen by unit ("group"); a single quiz by topic.
+const selectionField = () => (quiz.mixed ? 'group' : 'topic');
 
 function topicCheckboxes() {
   return [...ui.topicList.querySelectorAll('input[type="checkbox"]')];
 }
 
+function selectedTopics() {
+  return topicCheckboxes().filter((c) => c.checked).map((c) => c.value);
+}
+
+// null until the learner types a number: then the count follows "everything chosen".
+let wantedCount = null;
+
+function availableCount() {
+  return questionIdsForTopics(quiz, selectedTopics(), selectionField()).length;
+}
+
+function chosenCount() {
+  const max = availableCount();
+  return wantedCount === null ? max : Math.min(wantedCount, max);
+}
+
+/** A fresh sample of the chosen size: proportional per topic, so every chosen unit is covered. */
 function selectedQuestionIds() {
-  const topics = topicCheckboxes().filter((c) => c.checked).map((c) => c.value);
-  return questionIdsForTopics(quiz, topics);
+  const topics = selectedTopics();
+  const max = availableCount();
+  if (wantedCount === null || wantedCount >= max) return questionIdsForTopics(quiz, topics, selectionField());
+  return sampleQuestionIds(quiz, { topics, field: selectionField(), count: wantedCount });
 }
 
 function updateStartButton() {
-  const count = selectedQuestionIds().length;
+  const max = availableCount();
+  const count = chosenCount();
+  ui.count.max = String(Math.max(1, max));
+  ui.count.disabled = max === 0;
+  if (document.activeElement !== ui.count) ui.count.value = max === 0 ? '' : String(count);
+  ui.countHint.textContent = max === 0 ? '' : `מתוך ${max} זמינות`;
   ui.startButton.disabled = count === 0;
   ui.startButton.textContent = count === 0 ? 'בחרו לפחות נושא אחד' : `התחל · ${count} שאלות`;
 }
 
+/** Takes the typed number; an empty or invalid field means "all chosen questions". */
+function readCount() {
+  const n = Number.parseInt(ui.count.value, 10);
+  wantedCount = Number.isInteger(n) && n >= 1 ? n : null;
+  updateStartButton();
+}
+
+/** When the field is left, show the number that will really be used. */
+function settleCount() {
+  readCount();
+  if (availableCount() > 0) ui.count.value = String(chosenCount());
+}
+
 function renderTopics() {
-  ui.topicList.replaceChildren(...listTopics(quiz).map(({ topic, count }) => {
+  ui.topicList.replaceChildren(...listTopics(quiz, selectionField()).map(({ topic, count }) => {
     const li = el('li');
     const label = el('label', 'topic-option');
     const box = el('input');
@@ -141,6 +290,7 @@ function renderTopics() {
 function renderStart() {
   phase = 'start';
   show(ui.start);
+  renderStats();
 
   const saved = loadSavedSession();
   ui.resumeBox.hidden = !saved;
@@ -173,13 +323,40 @@ function onStartSubmit(event) {
 
 // ---------- play ----------
 
+function stat(label, value) {
+  const span = el('span', null, `${label}: `);
+  span.append(el('strong', null, value));
+  return span;
+}
+
 function renderProgress() {
   const { mastered, total, queueSize } = progressInfo(state);
-  ui.trace.setAttribute('d', ecgPath(total === 0 ? 0 : mastered / total));
+  const firstTries = Object.values(state.progress).map((p) => p.firstTry).filter((t) => t !== null);
+  const firstOk = firstTries.filter((t) => t === 'correct').length;
+
+  const fraction = total === 0 ? 0 : mastered / total;
+  ui.ringFill.setAttribute('stroke-dashoffset', String(100 * (1 - fraction)));
+  ui.ringFill.classList.toggle('is-empty', mastered === 0);
+  ui.ringMastered.textContent = String(mastered);
+  ui.ringTotal.textContent = `מתוך ${total}`;
+  ui.ring.setAttribute('aria-label', `נשלטו ${mastered} מתוך ${total}`);
+
   ui.progressText.replaceChildren(
-    el('span', null, `נשלטו ${mastered} מתוך ${total}`),
-    el('span', null, `בתור: ${queueSize}`),
+    stat('בתור', String(queueSize)),
+    ' ',
+    stat('נכון בניסיון ראשון', `${firstOk}/${firstTries.length}`),
   );
+}
+
+// The learner's explicit choice wins; until they make one, stop-motion / reduced motion means off.
+function autoAdvanceOn() {
+  const chosen = load(prefs.autoAdvance);
+  return typeof chosen === 'boolean' ? chosen : !prefersLessMotion();
+}
+
+function prefersLessMotion() {
+  return document.documentElement.dataset.motion === 'off'
+    || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 function renderQuestion() {
@@ -188,19 +365,20 @@ function renderQuestion() {
   const question = currentQuestion(state, quiz);
   ui.feedback.hidden = true;
   ui.skip.disabled = false;
+  ui.next.disabled = true;
   renderProgress();
 
   ui.topic.textContent = question.topic;
   const { attempts } = state.progress[question.id];
   ui.retryLabel.hidden = attempts === 0;
-  ui.retryLabel.textContent = `חוזרת · ניסיון ${attempts + 1}`;
+  ui.retryLabel.textContent = `שאלה חוזרת · ניסיון ${attempts + 1}`;
   ui.question.textContent = fmt(question.question);
 
   optionButtons = presentOptions(question).map((opt, i) => {
     const button = el('button', 'option');
     button.type = 'button';
     button.dataset.index = String(opt.index);
-    button.append(el('kbd', null, String(i + 1)), el('span', null, fmt(opt.text)));
+    button.append(el('span', 'letter', LETTERS[i]), el('span', 'option-text', fmt(opt.text)));
     button.addEventListener('click', () => choose(opt.index));
     return button;
   });
@@ -209,8 +387,7 @@ function renderQuestion() {
     li.append(b);
     return li;
   }));
-  // The button that led here (start / next) is now hidden; move focus to the new question so
-  // keyboard and screen-reader users land on it instead of the top of the page.
+  // The previous focus (an option or "next") is now disabled or gone; start the new question there.
   ui.question.focus({ preventScroll: true });
 }
 
@@ -226,6 +403,7 @@ function showFeedback(result, chosenIndex) {
     else button.classList.add('is-dim');
   }
   ui.skip.disabled = true;
+  ui.next.disabled = false;
 
   if (chosenIndex === null) ui.verdict.textContent = 'דילגת. התשובה הנכונה מסומנת.';
   else ui.verdict.textContent = correct ? 'נכון!' : 'לא נכון.';
@@ -249,15 +427,34 @@ function showFeedback(result, chosenIndex) {
   ui.feedback.hidden = false;
   renderProgress();
   ui.next.focus({ preventScroll: true });
+  if (correct) startAutoAdvance();
+}
+
+// Auto-advance only follows a correct answer, and only while the learner has it switched on.
+function startAutoAdvance() {
+  cancelAutoAdvance();
+  if (phase !== 'feedback' || !ui.feedback.classList.contains('good') || !autoAdvanceOn()) return;
+  const chars = ui.explanation.textContent.length + (ui.note.hidden ? 0 : ui.note.textContent.length);
+  const delay = Math.min(AUTO_ADVANCE_MAX_MS, Math.max(AUTO_ADVANCE_MIN_MS, AUTO_ADVANCE_BASE_MS + chars * AUTO_ADVANCE_PER_CHAR_MS));
+  autoAdvance = setTimeout(next, delay);
+  // Visual countdown; restart the animation by toggling hidden.
+  ui.countdown.hidden = true;
+  ui.countdown.style.setProperty('--countdown', `${delay}ms`);
+  void ui.countdown.offsetWidth;
+  ui.countdown.hidden = false;
 }
 
 function apply(result, chosenIndex) {
   state = result.state;
   persist();
-  // Best score only means something for a run over the whole quiz.
-  if (isComplete(state) && state.mode === 'full') {
-    const summary = summarize(state, quiz);
-    save(keys.results(quiz.id), recordResult(load(keys.results(quiz.id)), summary, new Date().toISOString()));
+  if (isComplete(state)) {
+    // Best score only means something for a run over the whole of one quiz.
+    if (state.mode === 'full' && !quiz.mixed) {
+      const summary = summarize(state, quiz);
+      save(keys.results(quiz.id), recordResult(load(keys.results(quiz.id)), summary, new Date().toISOString()));
+    }
+    // Every finished run feeds the weak-area statistics, whatever its mode.
+    recordAttempt();
   }
   showFeedback(result, chosenIndex);
 }
@@ -273,6 +470,7 @@ function skipQuestion() {
 }
 
 function next() {
+  cancelAutoAdvance();
   if (phase !== 'feedback') return;
   if (isComplete(state)) renderDone();
   else renderQuestion();
@@ -310,10 +508,11 @@ function renderDone() {
   ui.weakTopics.replaceChildren(...summary.weakTopics.map((t) => {
     const li = el('li');
     const bar = el('span', 'bar');
+    bar.setAttribute('aria-hidden', 'true');
     const fill = el('i');
     fill.style.inlineSize = `${Math.round(t.rate * 100)}%`;
     bar.append(fill);
-    li.append(el('span', null, t.topic), bar, el('span', 'count', `${t.missed}/${t.total}`));
+    li.append(el('span', null, t.topic), el('span', 'count', `${t.missed} מתוך ${t.total} חזרו`), bar);
     return li;
   }));
   ui.noWeak.hidden = summary.weakTopics.length > 0;
@@ -325,7 +524,6 @@ function renderDone() {
   ui.noRetried.hidden = summary.retried.length > 0;
 
   ui.retryMissed.hidden = summary.retried.length === 0;
-  ui.retryMissed.textContent = `תרגל רק את ${summary.retried.length} השאלות שחזרו`;
   (ui.retryMissed.hidden ? ui.newPractice : ui.retryMissed).focus({ preventScroll: true });
 }
 
@@ -346,48 +544,38 @@ function onKeyDown(event) {
       event.preventDefault();
       button.click();
     }
+  } else if ((phase === 'question' || phase === 'feedback') && event.code === 'KeyA') {
+    event.preventDefault();
+    ui.autoToggle.click();
   } else if (phase === 'question' && event.code === 'KeyS') {
     event.preventDefault();
     skipQuestion();
   } else if (phase === 'feedback' && (event.key === 'Enter' || event.key === ' ')) {
     // A focused button already handles Enter/Space natively; avoid a double advance.
-    if (event.target instanceof HTMLButtonElement || event.target instanceof HTMLAnchorElement) return;
+    if (event.target instanceof HTMLButtonElement || event.target instanceof HTMLAnchorElement || event.target instanceof HTMLInputElement) return;
     event.preventDefault();
     next();
   }
 }
 
 async function main() {
-  const id = new URLSearchParams(location.search).get('id');
-  if (!isValidQuizId(id)) {
-    showStatus('לא נבחר בוחן.');
-    return;
-  }
-
   try {
-    const res = await fetch(`quizzes/${id}.json`, { cache: 'no-cache' });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    quiz = await res.json();
+    quiz = await loadQuizFromUrl();
   } catch (err) {
-    console.error(err);
-    showStatus(location.protocol === 'file:'
-      ? 'יש להריץ דרך שרת (npm run serve), הדפדפן חוסם טעינה מקובץ מקומי.'
-      : 'לא הצלחנו לטעון את הבוחן.');
-    return;
-  }
-
-  const errors = validateQuiz(quiz);
-  if (errors.length > 0) {
-    console.error('Invalid quiz file:', errors);
-    showStatus('קובץ הבוחן פגום. פרטים בקונסול.');
+    showStatus(err.message);
     return;
   }
 
   // Kicker shows the subject and, when present, the unit: "אנטומיה ופיזיולוגיה · הלב".
-  const place = quiz.unit ? `${quiz.subject} · ${quiz.unit}` : quiz.subject;
+  const place = quizPlace(quiz);
   document.title = `${quiz.title} · ${place}`;
   ui.subject.textContent = place;
   ui.title.textContent = quiz.title;
+  // Same ?id= or ?subject= as this page, so mixed practice prints mixed too.
+  ui.printLink.href = `print.html${location.search}`;
+  subjectHomeHref(quiz).then((href) => {
+    for (const link of ui.homeLinks) link.href = href;
+  });
   ui.description.textContent = quiz.description ?? '';
   ui.description.hidden = !quiz.description;
 
@@ -402,12 +590,25 @@ async function main() {
     for (const c of topicCheckboxes()) c.checked = true;
     updateStartButton();
   });
+  ui.count.addEventListener('input', readCount);
+  ui.count.addEventListener('change', settleCount);
   ui.noTopics.addEventListener('click', () => {
     for (const c of topicCheckboxes()) c.checked = false;
     updateStartButton();
   });
+  ui.practiceWeak.addEventListener('click', practiceWeakTopics);
+  ui.practiceQuestions.addEventListener('click', practiceWeakQuestions);
+  ui.clearStats.addEventListener('click', clearStats);
+  ui.autoToggle.checked = autoAdvanceOn();
+  ui.autoToggle.addEventListener('change', () => {
+    save(prefs.autoAdvance, ui.autoToggle.checked);
+    if (ui.autoToggle.checked) startAutoAdvance();
+    else cancelAutoAdvance();
+  });
   ui.skip.addEventListener('click', skipQuestion);
   ui.next.addEventListener('click', next);
+  // Touching the explanation means the learner is still reading: stop the automatic advance.
+  ui.feedback.addEventListener('pointerdown', cancelAutoAdvance);
   ui.retryMissed.addEventListener('click', retryMissed);
   ui.newPractice.addEventListener('click', renderStart);
   document.addEventListener('keydown', onKeyDown);

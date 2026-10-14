@@ -1,0 +1,18 @@
+/* Page-specific look of the NSAIDs summary. Loaded only by summaries/nsaids.html, after summary.css and
+   summary-widgets.css (search, lab and light panels, flashcards, explorer, self-test mode and "chapter
+   done" tracker). Hidden on paper (.no-print), absent from all.html. */
+
+/* Same dark lab panels as the shared ones, in this page's indigo. */
+.summary .lab, .summary .flash-stage { --lab-teal: #a5b4fc; }
+.summary .lab .en { color: #c7d2fe; }
+.summary .lab-kicker { color: #e0e7ff; background: rgba(99, 102, 241, 0.2); }
+.summary .deck { background: linear-gradient(135deg, #0f172a, #1e1b4b); border-color: #3730a3; }
+.summary .face-back { background: #1e1b4b; }
+.summary .face-front { border-color: rgba(165, 180, 252, 0.45); color: #c7d2fe; }
+
+/* Long drug lists in a card's tag and heading wrap instead of pushing the card wider than a phone. */
+.summary .pcard-head { flex-wrap: wrap; }
+.summary .pcard-head .tag { white-space: normal; }
+
+/* Wider table: the first column should not take a third of it. */
+.summary .rtable.cols4 td:first-child { inline-size: 20%; font-weight: 600; }
