@@ -183,6 +183,7 @@
   --pair-4: #8E2C6E; --pair-4-soft: #F4E0EE;
   --pair-5: #4E6B12; --pair-5-soft: #E7F0D3;
   --gold: #B7791F;
+  --gold-ink: #8A5A10;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -192,6 +193,7 @@
     --pair-4: #E59ACB; --pair-4-soft: #3B2234;
     --pair-5: #B5D67A; --pair-5-soft: #27311A;
     --gold: #F2C14E;
+    --gold-ink: #F2C14E;
   }
 }
 :root[data-theme="dark"] {
@@ -201,12 +203,13 @@
   --pair-4: #E59ACB; --pair-4-soft: #3B2234;
   --pair-5: #B5D67A; --pair-5-soft: #27311A;
   --gold: #F2C14E;
+  --gold-ink: #F2C14E;
 }
 
 .game-hud { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; margin-block: 0.75rem; }
 .game-hud-stats { display: flex; gap: 0.75rem; align-items: center; }
 .game-score { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--accent); }
-.game-streak { font-weight: 600; color: var(--gold); min-inline-size: 4.5rem; }
+.game-streak { font-weight: 600; color: var(--gold-ink); min-inline-size: 4.5rem; }
 .game-dots { display: flex; gap: 6px; }
 .game-dot { inline-size: 12px; block-size: 12px; border-radius: 50%; background: var(--line); }
 .game-dot.is-ok { background: var(--ok); }
@@ -296,5 +299,6 @@
   .match-item.is-done { animation: game-pop 0.3s ease-out; }
 }
 
+:root[data-contrast="high"] { --gold-ink: #000; }
 :root[data-contrast="high"] .game-card { border: 2px solid var(--ink); box-shadow: none; }
 :root[data-contrast="high"] .stem-mark { text-decoration: underline; }
