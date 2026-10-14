@@ -165,15 +165,19 @@
 .stems-table dt { font-weight: 600; direction: ltr; text-align: end; }
 .stems-table dd { margin: 0; overflow-wrap: anywhere; }
 
+/* ---------- topics (daily review and games) ---------- */
+
+.topics { margin-block: 0 0.75rem; padding: 0.5rem 0.9rem; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.topics summary { cursor: pointer; font-weight: 600; padding-block: 0.2rem; }
+.topics-body { margin: 0; padding: 0; border: 0; }
+.topics-actions { display: flex; gap: 1rem; margin-block: 0.5rem; }
+.topics-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: 0.35rem 1rem; }
+.topics-list .drug-check { align-items: start; }
+.topics-list input { margin-block-start: 0.25rem; }
+.games-topics .topics { margin-block-start: 1rem; }
+
 /* ---------- daily review ---------- */
 
-.review-topics { margin-block: 0 0.75rem; padding: 0.5rem 0.9rem; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
-.review-topics summary { cursor: pointer; font-weight: 600; padding-block: 0.2rem; }
-.review-topics-body { margin: 0; padding: 0; border: 0; }
-.review-topics-body .actions { display: flex; gap: 1rem; margin-block: 0.5rem; }
-.review-topics-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: 0.35rem 1rem; }
-.review-topics-list .drug-check { align-items: start; }
-.review-topics-list input { margin-block-start: 0.25rem; }
 .review-area { margin-block-start: 0.75rem; }
 .review-card { max-inline-size: 36rem; }
 .review-progress { margin: 0 0 0.25rem; font-size: 0.8125rem; color: var(--muted); }

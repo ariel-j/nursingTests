@@ -1,7 +1,8 @@
 // The question games on the drug-cards page, on the shared shell (drugs-shell.js): סיומות (what a
 // drug name's suffix says), איזו לא שייכת (three drugs from one family, one from another) and בליץ
-// (60 seconds of questions mixed from both and from the drug quiz). Logic in drugs-core.js.
-import { buildDrugQuiz, buildOddOneOut, buildStemQuestion, filterDrugs, stemWords } from './drugs-core.js';
+// (60 seconds of questions mixed from both and from the drug quiz). All ask about the chosen topics
+// (drugs-topics.js); personal bests count only with every topic chosen. Logic in drugs-core.js.
+import { buildDrugQuiz, buildOddOneOut, buildStemQuestion, stemWords } from './drugs-core.js';
 import { splitBySuffix } from './drug-games-core.js';
 import { createGame } from './drugs-shell.js';
 import { el } from './drugs-ui.js';
@@ -22,12 +23,22 @@ function highlighted(word, pattern) {
   return span;
 }
 
-/** Suffix questions for the shell, forward (name → class) or reverse (class → name). */
-function stemQuestions(stems, deck) {
-  const words = stemWords(stems, deck);
-  const stemOf = new Map(words.map((w) => [w.word, w.stem]));
+/**
+ * Suffix questions for the shell, forward (name → class) or reverse (class → name), about the names
+ * of the chosen topics; null when none of them has a known suffix.
+ */
+function stemQuestions(stems, deck, topics) {
+  const all = stemWords(stems, deck);
+  const stemOf = new Map(all.map((w) => [w.word, w.stem]));
+  let cache = null; // { chosen, words } of the last topic choice
+  const chosenWords = () => {
+    if (cache?.chosen !== topics.chosen()) cache = { chosen: topics.chosen(), words: stemWords(stems, { drugs: topics.drugs() }) };
+    return cache.words;
+  };
   return (reverse) => {
-    const q = buildStemQuestion(stems, words, { reverse });
+    const words = chosenWords();
+    if (words.length === 0) return null;
+    const q = buildStemQuestion(stems, words, { reverse, others: all });
     const stem = stems[q.stem];
     const prompt = el('span', reverse ? 'game-prompt-text' : 'stem-word', q.prompt);
     if (!reverse) prompt.setAttribute('dir', 'ltr');
@@ -49,7 +60,7 @@ function stemQuestions(stems, deck) {
         });
       },
       explain() {
-        const others = words.filter((w) => w.stem === q.stem && w.word !== q.word).map((w) => w.word);
+        const others = all.filter((w) => w.stem === q.stem && w.word !== q.word).map((w) => w.word);
         return [
           el('p', null, `${q.word}: הסיומת ${ltr(stem.stem)} = ${stem.class}.`),
           others.length > 0 ? el('p', 'muted', `עוד בקבוצה: ${others.join(', ')}`) : null,
@@ -59,9 +70,12 @@ function stemQuestions(stems, deck) {
   };
 }
 
-/** An odd-one-out question for the shell, or null when the pool is too small. */
-function oddQuestion(pool) {
-  const round = buildOddOneOut(pool);
+/**
+ * An odd-one-out question for the shell: the trio from `pool`, the odd one from `pool` when it can
+ * be (two or more topics), else from `outside`; null when the pool has no family of three.
+ */
+function oddQuestion(pool, outside) {
+  const round = buildOddOneOut(pool) ?? buildOddOneOut(pool, Math.random, outside);
   if (!round) return null;
   const odd = round.drugs[round.odd];
   return {
@@ -92,8 +106,20 @@ function quizQuestion(questions) {
   };
 }
 
-export function initStems(stems, deck, bestKey) {
-  const ask = stemQuestions(stems, deck);
+/** The drug quiz of the chosen topics, rebuilt only when the choice changes. */
+function topicQuiz(deck, topics) {
+  let cache = null;
+  return () => {
+    if (cache?.chosen !== topics.chosen()) {
+      const quiz = buildDrugQuiz(deck, { id: 'drugs-blitz', subject: '', families: topics.chosen() });
+      cache = { chosen: topics.chosen(), questions: quiz.questions };
+    }
+    return cache.questions;
+  };
+}
+
+export function initStems(stems, deck, topics, bestKey) {
+  const ask = stemQuestions(stems, deck, topics);
   const reverse = () => document.querySelector('input[name="stems-mode"]:checked').value === 'reverse';
 
   // Reference list: every suffix, its class and the deck's names that carry it.
@@ -107,39 +133,47 @@ export function initStems(stems, deck, bestKey) {
   });
   $('stems-list').append(table);
 
-  const start = createGame($('stems-area'), { gameId: 'stems', bestKey, next: () => ask(reverse()) });
+  const start = createGame($('stems-area'), {
+    gameId: 'stems',
+    bestKey,
+    countsBest: topics.all,
+    next: () => ask(reverse()),
+  });
   for (const r of document.querySelectorAll('input[name="stems-mode"]')) r.addEventListener('change', start);
   return start;
 }
 
-export function initOdd(deck, bestKey) {
+export function initOdd(deck, topics, bestKey) {
   const exam = $('odd-exam');
-  const pool = () => filterDrugs(deck.drugs, { examOnly: exam.checked });
   const start = createGame($('odd-area'), {
     gameId: 'odd',
     bestKey,
-    // The exam-only pool always has enough families; fall back to the whole deck just in case.
-    next: () => oddQuestion(pool()) ?? oddQuestion(deck.drugs),
+    countsBest: topics.all,
+    // Exam-only can leave no family of three; then the chosen topics without it.
+    next: () => oddQuestion(topics.drugs({ examOnly: exam.checked }), deck.drugs)
+      ?? oddQuestion(topics.drugs(), deck.drugs),
   });
   exam.addEventListener('change', start);
   return start;
 }
 
-export function initBlitz(stems, deck, bestKey) {
-  const ask = stems ? stemQuestions(stems, deck) : null;
-  let questions = null; // the drug quiz, built on the first blitz
+export function initBlitz(stems, deck, topics, bestKey) {
+  const ask = stems ? stemQuestions(stems, deck, topics) : null;
+  const questions = topicQuiz(deck, topics);
+  const fromQuiz = () => (questions().length > 0 ? quizQuestion(questions()) : null);
   const kinds = [
     ...(ask ? [() => ask(false), () => ask(true)] : []),
-    () => oddQuestion(deck.drugs),
-    () => quizQuestion(questions ??= buildDrugQuiz(deck, { id: 'drugs-blitz', subject: '' }).questions),
-    () => quizQuestion(questions ??= buildDrugQuiz(deck, { id: 'drugs-blitz', subject: '' }).questions),
+    () => oddQuestion(topics.drugs(), deck.drugs),
+    fromQuiz,
+    fromQuiz,
   ];
   return createGame($('blitz-area'), {
     gameId: 'blitz',
     title: 'בליץ: 60 שניות',
     mode: 'blitz',
     bestKey,
+    countsBest: topics.all,
     intro: 'כמה שיותר תשובות נכונות בדקה אחת: סיומות, איזו לא שייכת, מנגנונים ואינדיקציות. כל תשובה נכונה ברצף שווה יותר נקודות. מקשים 1–4 עונים.',
-    next: () => kinds[Math.floor(Math.random() * kinds.length)]() ?? quizQuestion(questions ??= buildDrugQuiz(deck, { id: 'drugs-blitz', subject: '' }).questions),
+    next: () => kinds[Math.floor(Math.random() * kinds.length)]() ?? fromQuiz(),
   });
 }

@@ -59,22 +59,13 @@
         <label class="drug-check"><input id="review-exam" type="checkbox"> רק מה שהופיע במבחנים</label>
         <button id="review-reset" type="button" class="link-button">איפוס ההתקדמות</button>
       </div>
-      <details id="review-topics" class="review-topics">
-        <summary>נושאים לחזרה · <span id="review-topics-count"></span></summary>
-        <fieldset class="review-topics-body">
-          <legend class="visually-hidden">משפחות התרופות שייכללו בחזרה</legend>
-          <div class="actions">
-            <button id="review-topics-all" type="button" class="link-button">בחירת הכול</button>
-            <button id="review-topics-none" type="button" class="link-button">ניקוי</button>
-          </div>
-          <div id="review-topics-list" class="review-topics-list"></div>
-        </fieldset>
-      </details>
+      <div id="review-topics"></div>
       <p id="review-stats" class="meta"></p>
       <div id="review-area" class="review-area"></div>
     </section>
 
     <section id="panel-games" class="tab-panel" role="tabpanel" aria-labelledby="tab-games" hidden>
+      <div id="games-topics" class="games-topics"></div>
       <fieldset class="game-picker">
         <legend class="visually-hidden">בחירת משחק</legend>
         <label><input type="radio" name="game" value="match"> התאמה</label>
@@ -84,12 +75,8 @@
       </fieldset>
 
       <div id="game-match" hidden>
-      <p class="muted">בכל סבב כמה תרופות ממשפחה אחת. בחרו שם תרופה ואז את התיאור שלה (או להפך). תרופות שטעיתם בהן יחזרו בתדירות גבוהה יותר.</p>
+      <p class="muted">בכל סבב כמה תרופות מהנושאים שבחרתם. בחרו שם תרופה ואז את התיאור שלה (או להפך). תרופות שטעיתם בהן יחזרו בתדירות גבוהה יותר.</p>
       <div class="drug-controls">
-        <label class="drug-select">
-          <span>משפחה</span>
-          <select id="match-family"></select>
-        </label>
         <fieldset class="drug-fields">
           <legend>להתאים לפי</legend>
           <label><input type="radio" name="match-field" value="mechanism" checked> מנגנון</label>

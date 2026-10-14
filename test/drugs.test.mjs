@@ -132,6 +132,18 @@ test('buildDrugQuiz examOnly keeps the exam drugs, with wrong answers from the w
   assert.equal(quiz.questions.length, 8);
 });
 
+test('buildDrugQuiz families keeps those families (with alsoIn), wrong answers from the whole deck', () => {
+  const quiz = buildDrugQuiz(deck, { id: 'drugs-x', subject: 'x', families: ['משפחה ב'] });
+  assert.deepEqual(validateQuiz(quiz), []);
+  const ids = new Set(deck.drugs.slice(3).map(drugId));
+  assert.ok(quiz.questions.every((q) => ids.has(q.id.split('-')[0])));
+  const names = deck.drugs.slice(0, 3).map((d) => d.name);
+  assert.ok(quiz.questions.some((q) => q.options.some((o) => names.includes(o.text))));
+  const a = buildDrugQuiz(deck, { id: 'drugs-x', subject: 'x', families: ['משפחה א'] });
+  assert.ok(a.questions.some((q) => q.id.startsWith(`${drugId(deck.drugs[3])}-`)));
+  assert.equal(buildDrugQuiz(deck, { id: 'drugs-x', subject: 'x', families: [] }).questions.length, 0);
+});
+
 test('filterDrugs by words in any field, family (with alsoIn) and exam', () => {
   const names = (list) => list.map((d) => d.name);
   assert.equal(filterDrugs(deck.drugs).length, 6);
@@ -245,6 +257,17 @@ test('buildStemQuestion: forward asks the class, reverse asks the name, one righ
   }
 });
 
+test('buildStemQuestion asks only `words`, with wrong names from `others`', () => {
+  const all = stemWords(stems, nameDeck);
+  const some = all.filter((w) => w.stem === 0);
+  for (let i = 0; i < 10; i++) {
+    const r = buildStemQuestion(stems, some, { reverse: true, others: all }, seededRng(`s${i}`));
+    assert.equal(r.stem, 0);
+    assert.equal(r.options.length, 4);
+    assert.ok(r.options.every((o) => all.some((w) => w.word === o)));
+  }
+});
+
 test('buildOddOneOut: three from one family, one from another, never an alsoIn of it', () => {
   for (let i = 0; i < 20; i++) {
     const round = buildOddOneOut(deck.drugs, seededRng(`o${i}`));
@@ -255,6 +278,16 @@ test('buildOddOneOut: three from one family, one from another, never an alsoIn o
     assert.equal(round.drugs.filter((d) => d.family === round.family).length, 3);
   }
   assert.equal(buildOddOneOut(deck.drugs.slice(0, 2)), null);
+});
+
+test('buildOddOneOut: the trio from the chosen drugs, the odd one from `others`', () => {
+  const chosen = filterDrugs(deck.drugs, { family: 'משפחה א' }); // Delta is here through alsoIn
+  assert.equal(buildOddOneOut(chosen), null);
+  for (let i = 0; i < 10; i++) {
+    const round = buildOddOneOut(chosen, seededRng(`c${i}`), deck.drugs);
+    assert.equal(round.family, 'משפחה א');
+    assert.ok(['Epsilon', 'Zeta'].includes(round.drugs[round.odd].name));
+  }
 });
 
 test('daily review: due first, then new; grading moves boxes; nothing twice a day', () => {
