@@ -19,6 +19,7 @@ import { button, buzz, drugRows, el, familyOptions, fmt, starsEl } from './drugs
 import { formatTime, recordBestTime, starsFor } from './drug-games-core.js';
 import { initReview } from './drugs-review.js';
 import { initBlitz, initOdd, initStems } from './drugs-games.js';
+import { createTopics } from './drugs-topics.js';
 import { keys, load, save } from './storage.js';
 
 const $ = (id) => document.getElementById(id);
@@ -56,9 +57,10 @@ function initTabs(onShow) {
 }
 
 /** The game picker inside the games tab; each game starts the first time it is shown. */
-function initGames(starters) {
+function initGames(starters, topics) {
   const radios = [...document.querySelectorAll('input[name="game"]')];
   const started = new Set();
+  const current = () => radios.find((r) => r.checked).value;
   const show = (name) => {
     for (const g of GAMES) $(`game-${g}`).hidden = g !== name;
     history.replaceState(null, '', `#${name}`);
@@ -71,7 +73,12 @@ function initGames(starters) {
   const fromHash = location.hash.slice(1);
   const first = GAMES.includes(fromHash) ? fromHash : 'match';
   radios.find((r) => r.value === first).checked = true;
-  return () => show(radios.find((r) => r.checked).value);
+  // New topics: the game on screen restarts now, the others when next shown.
+  topics.onChange(() => {
+    started.clear();
+    if (!$('panel-games').hidden) show(current());
+  });
+  return () => show(current());
 }
 
 // ---------- browse ----------
@@ -210,13 +217,11 @@ function initPrint(currentItems) {
 
 // ---------- matching game ----------
 
-function initMatch(deck, subjectId, bestKey) {
-  const family = $('match-family');
+function initMatch(topics, subjectId, bestKey) {
   const exam = $('match-exam');
   const board = $('match-board');
   const status = $('match-status');
   const weightsKey = keys.drugMatch(subjectId);
-  familyOptions(family, deck.families, deck.drugs);
 
   let round = null;
   let selected = null; // { side: 'name' | 'text', id, button }
@@ -244,10 +249,11 @@ function initMatch(deck, subjectId, bestKey) {
     save(weightsKey, updateMatchWeights(load(weightsKey, {}), results));
     const clean = round.pairs.length - Object.keys(missed).length;
     const stars = starsFor(clean, round.pairs.length);
-    // Best time per family and field, only for rounds without a mistake.
+    // Best time per field, for all topics or for one family, only for rounds without a mistake.
     const bests = load(bestKey, {}) ?? {};
-    const timeKey = `${family.value || 'all'}|${field()}`;
-    const { times, isNew } = clean === round.pairs.length
+    const chosen = topics.chosen();
+    const timeKey = topics.all() ? `all|${field()}` : chosen.length === 1 ? `${chosen[0]}|${field()}` : null;
+    const { times, isNew } = timeKey && clean === round.pairs.length
       ? recordBestTime(bests.match, timeKey, ms)
       : { times: bests.match ?? {}, isNew: false };
     save(bestKey, { ...bests, match: times });
@@ -258,7 +264,8 @@ function initMatch(deck, subjectId, bestKey) {
     if (isNew) end.append(el('p', 'game-new-best', 'שיא זמן חדש!'));
     const stats = el('p', 'meta game-end-stats');
     stats.append(el('span', null, `${clean} מתוך ${round.pairs.length} בלי טעות`), el('span', null, `ניסיונות שגויים ${wrongTries}`));
-    if (Number.isFinite(times[timeKey])) stats.append(el('span', null, `הזמן הכי טוב ${formatTime(times[timeKey])}`));
+    if (!timeKey) stats.append(el('span', null, 'שיא זמן נקבע לכל הנושאים או לנושא אחד'));
+    else if (Number.isFinite(times[timeKey])) stats.append(el('span', null, `הזמן הכי טוב ${formatTime(times[timeKey])}`));
     const again = button('primary', 'סבב נוסף', newRound);
     end.append(stats, again);
     board.append(end);
@@ -324,7 +331,7 @@ function initMatch(deck, subjectId, bestKey) {
   }
 
   function newRound() {
-    const pool = filterDrugs(deck.drugs, { family: family.value || null, examOnly: exam.checked });
+    const pool = topics.drugs({ examOnly: exam.checked });
     round = buildMatchRound(pool, { field: field(), weights: load(weightsKey, {}) });
     selected = null;
     missed = {};
@@ -340,7 +347,7 @@ function initMatch(deck, subjectId, bestKey) {
     }, 500);
     pairsLeft.textContent = `0 מתוך ${round.pairs.length} זוגות`;
     if (round.pairs.length < 2) {
-      status.textContent = 'אין מספיק תרופות לבחירה הזו. נסו משפחה אחרת או שדה אחר.';
+      status.textContent = 'אין מספיק תרופות לבחירה הזו. בחרו עוד נושאים או שדה אחר.';
       board.replaceChildren();
       return;
     }
@@ -358,7 +365,7 @@ function initMatch(deck, subjectId, bestKey) {
   }
 
   $('match-new').addEventListener('click', newRound);
-  for (const control of [family, exam, ...document.querySelectorAll('input[name="match-field"]')]) {
+  for (const control of [exam, ...document.querySelectorAll('input[name="match-field"]')]) {
     control.addEventListener('change', newRound);
   }
   return newRound;
@@ -412,14 +419,17 @@ async function main() {
   }
 
   initBrowse(deck);
-  const startReview = initReview(deck, subject.id);
+  // One choice of topics for the daily review and the games, with a picker in each tab.
+  const topics = createTopics(deck, subject.id);
+  topics.mount($('games-topics'));
+  const startReview = initReview(topics, subject.id);
   const bestKey = keys.drugGames(subject.id);
   const showGame = initGames({
-    match: initMatch(deck, subject.id, bestKey),
-    stems: stems ? initStems(stems, deck, bestKey) : null,
-    odd: initOdd(deck, bestKey),
-    blitz: initBlitz(stems, deck, bestKey),
-  });
+    match: initMatch(topics, subject.id, bestKey),
+    stems: stems ? initStems(stems, deck, topics, bestKey) : null,
+    odd: initOdd(deck, topics, bestKey),
+    blitz: initBlitz(stems, deck, topics, bestKey),
+  }, topics);
   let reviewStarted = false;
   initTabs((name) => {
     if (name === 'review' && !reviewStarted) {

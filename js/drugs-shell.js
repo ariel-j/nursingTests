@@ -16,10 +16,13 @@ const BLITZ_PAUSE_BAD = 1600;
  * { kicker?, prompt: string | Node, options: [string], correct, reveal?(buttons, chosen),
  *   explain?(): [Node | string] }.
  * `mode` is 'round' (ROUND_SIZE questions, then the end screen) or 'blitz' (as many as fit in
- * BLITZ_SECONDS, after a start screen). Bests are saved under `bestKey` → `gameId`.
+ * BLITZ_SECONDS, after a start screen). `next()` returning null (nothing to ask about the chosen
+ * topics) ends the game with a notice instead. Bests are saved under `bestKey` → `gameId`, only while
+ * `countsBest()` (false = only some topics are chosen, so the score is not comparable).
  * Returns start(), which (re)starts the game.
  */
-export function createGame(root, { gameId, title, mode = 'round', next, bestKey, intro }) {
+export function createGame(root, { gameId, title, mode = 'round', next, bestKey, intro, countsBest = () => true }) {
+  const EMPTY = 'אין מספיק תרופות בנושאים שבחרתם. בחרו עוד נושאים.';
   let state = newRoundState();
   let question = null;
   let answered = false;
@@ -83,6 +86,15 @@ export function createGame(root, { gameId, title, mode = 'round', next, bestKey,
     clearTimeout(advance);
     question = next();
     answered = false;
+    if (!question) {
+      clearInterval(clock);
+      clock = null;
+      const card = el('div', 'game-card');
+      card.setAttribute('role', 'status');
+      card.append(el('p', null, EMPTY));
+      stage.replaceChildren(card);
+      return;
+    }
     renderHud();
     const card = el('div', 'game-card');
     if (question.kicker) card.append(el('p', 'game-kicker', question.kicker));
@@ -146,8 +158,11 @@ export function createGame(root, { gameId, title, mode = 'round', next, bestKey,
     const total = mode === 'blitz' ? state.answered : ROUND_SIZE;
     const stars = starsFor(state.right, Math.max(total, mode === 'blitz' ? 10 : total));
     const bests = load(bestKey, {}) ?? {};
-    const { best, isNew } = recordBest(bests[gameId], { score: state.score, stars });
-    save(bestKey, { ...bests, [gameId]: best });
+    const counts = countsBest();
+    const { best, isNew } = counts
+      ? recordBest(bests[gameId], { score: state.score, stars })
+      : { best: Number.isInteger(bests[gameId]?.score) ? bests[gameId] : null, isNew: false };
+    if (counts) save(bestKey, { ...bests, [gameId]: best });
 
     const end = el('div', 'game-card game-end');
     end.append(
@@ -160,8 +175,9 @@ export function createGame(root, { gameId, title, mode = 'round', next, bestKey,
     stats.append(
       el('span', null, `נכון ${state.right} מתוך ${state.answered}`),
       el('span', null, `רצף הכי ארוך ${state.bestStreak}`),
-      el('span', null, `השיא שלך ${best.score}`),
     );
+    if (best) stats.append(el('span', null, `השיא שלך ${best.score}`));
+    if (!counts) stats.append(el('span', null, 'שיא נקבע רק כשכל הנושאים נבחרו'));
     const again = button('primary', 'שחק שוב', start);
     end.append(stats, again);
     end.setAttribute('role', 'status');
@@ -198,6 +214,7 @@ export function createGame(root, { gameId, title, mode = 'round', next, bestKey,
     const card = el('div', 'game-card game-intro');
     card.append(el('p', 'game-kicker', title), el('p', null, intro));
     if (best?.score > 0) card.append(el('p', 'meta', `השיא שלך: ${best.score} נקודות`));
+    if (!countsBest()) card.append(el('p', 'meta', 'נבחרו רק חלק מהנושאים, ולכן הסבב לא ייספר לשיא.'));
     const go = button('primary game-start', 'התחל', begin);
     card.append(go);
     stage.replaceChildren(card);
