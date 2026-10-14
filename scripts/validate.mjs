@@ -38,14 +38,17 @@ for (const w of media.warnings) console.warn(`warning: ${w}`);
 for (const e of media.errors) console.error(e);
 failures += media.errors.length;
 
-// Published text says "הופיע בעבר", not "שחזור"; list what is left (a warning, not a failure).
+// Published text says "הופיע בעבר", never "שחזור" (exam recollections).
 const ROOT = path.resolve(QUIZ_DIR, '..');
 for (const dir of ['.', 'summaries', 'js', 'quizzes', 'data']) {
   const files = await readdir(path.join(ROOT, dir), { recursive: dir !== '.' }).catch(() => []);
   for (const file of files) {
     if (!/\.(?:html|js|json)$/.test(file) || file.endsWith(MANIFEST_FILE)) continue;
     const n = recollectionMentions(await readFile(path.join(ROOT, dir, file), 'utf8'));
-    if (n > 0) console.warn(`warning: ${path.join(dir, file)}: mentions exam recollections (שחזור) ${n}×`);
+    if (n > 0) {
+      console.error(`${path.join(dir, file)}: mentions exam recollections (שחזור) ${n}×; write "הופיע בעבר"`);
+      failures += 1;
+    }
   }
 }
 

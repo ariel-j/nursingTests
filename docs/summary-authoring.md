@@ -42,7 +42,7 @@ STRUCTURE (in this order)
     </svg>
     <div class="legend">
       <span><span class="arrowmark">←</span> <b>גורם ← תוצאה</b> (קוראים מימין לשמאל)</span>
-      <span><span class="exam exam-legend">נשאל בשחזורים</span> נקודה שחזרה במבחנים</span>
+      <span><span class="exam exam-legend">הופיע בעבר</span> נקודה שהופיעה בעבר — כדאי לשים לב</span>
     </div>
   </header>
 
@@ -69,7 +69,7 @@ STRUCTURE (in this order)
     … .rel rows …
   </section>
   <section>
-    <h2>N · נקודות שחזרו בשחזורים — לא לפספס</h2>   <!-- or "נקודות חשובות למבחן" if there are no exam recalls -->
+    <h2>N · נקודות שהופיעו בעבר — לא לפספס</h2>   <!-- or "נקודות חשובות למבחן" if there are no exam recalls. Never write "שחזור"; npm run validate rejects it -->
     <div class="flags"><ul><li>…</li> … 8–15 one-line facts …</ul></div>
   </section>
 

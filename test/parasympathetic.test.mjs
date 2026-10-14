@@ -76,9 +76,9 @@ test('there are 13 unique recall flashcards, each with a question and an answer'
   for (const c of FLASHCARDS) assert.ok(c.q.trim() && c.a.trim());
 });
 
-test('the page has one "שחזור N" point per flashcard, and every ps- anchor it links to exists', async () => {
+test('the page has one "נקודה N" point per flashcard, and every ps- anchor it links to exists', async () => {
   const html = await readFile(new URL('../summaries/parasympathetic.html', import.meta.url), 'utf8');
-  for (let n = 1; n <= FLASHCARDS.length; n++) assert.ok(html.includes(`<span class="exam">שחזור ${n}</span>`), `missing point ${n}`);
+  for (let n = 1; n <= FLASHCARDS.length; n++) assert.ok(html.includes(`<span class="exam">נקודה ${n}</span>`), `missing point ${n}`);
   for (const [, id] of html.matchAll(/href="#(ps-[a-z0-9-]+)"/g)) assert.ok(html.includes(`id="${id}"`), `no #${id}`);
   assert.match(html, /id="flash-progress"[^>]*>0 מתוך 13/);
 });

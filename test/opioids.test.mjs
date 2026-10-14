@@ -61,7 +61,7 @@ test('there are 10 unique recall flashcards, each with a question, an answer and
   assert.equal(new Set(FLASHCARDS.map((c) => c.q)).size, FLASHCARDS.length);
   for (const c of FLASHCARDS) {
     assert.ok(c.q.trim() && c.a.trim());
-    assert.match(c.repeats, /^נשאל בשחזורים( ×\d)?$/);
+    assert.match(c.repeats, /^הופיע בעבר( ×\d)?$/);
     assert.ok(!/[<>]/.test(c.q + c.a), 'flashcards are plain text');
   }
 });

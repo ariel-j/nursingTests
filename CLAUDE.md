@@ -8,6 +8,7 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 * Must work as static files on GitHub Pages (relative paths only). `.nojekyll` keeps Pages from running Jekyll.
 * No external requests: fonts are self-hosted in `fonts/` (Hebrew + Latin subsets via `unicode-range`).
 * Repo is public: never commit course materials, only quiz JSON and the owner's own short summaries (the owner decides what content is published; summaries name no lecturers). Test fixtures use placeholder text only.
+* Published text never cites exam recollections: points that came up in past exams are marked "הופיע בעבר", never "שחזור" / "שחזורים", and no specific exam is named. `npm run validate` fails on it. Every page footer says the content is a study aid, not medical advice.
 * All user-facing text in Hebrew; use CSS logical properties (inline/block, start/end) for RTL.
 * Render content with textContent (and the DOM/SVG APIs), never innerHTML.
 * Ships an accessibility toolbar and a הצהרת נגישות / מדיניות פרטיות page; keep the site keyboard- and screen-reader-friendly, and update the statement's date when accessibility changes.
