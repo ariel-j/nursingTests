@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, readFile, writeFile, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { MAX_BYTES, buildMedia, checkMedia, displayName } from '../scripts/media.mjs';
+import { MAX_BYTES, buildMedia, checkMedia, displayName, isDraft } from '../scripts/media.mjs';
 import { mediaCount } from '../js/catalog.js';
 import { loadCatalog } from '../scripts/quizzes.mjs';
 
@@ -66,6 +66,22 @@ test('buildMedia rejects course files, unplayable video, big files, bad places a
     assert.ok(errors.some((e) => re.test(e)), `expected an error matching ${re}`);
   }
   assert.deepEqual(manifest.subjects, {});
+});
+
+test('buildMedia leaves drafts (a "_" file or folder) out, without a captions warning', () => {
+  const { manifest, errors, warnings } = buildMedia([
+    f('pharmacology/_טיוטה.mp4'),
+    f('pharmacology/_טיוטה.vtt'),
+    f('pharmacology/_בעבודה/סרטון.mp4'),
+    f('pharmacology/מוכן.pdf'),
+  ], ids);
+  assert.deepEqual(errors, []);
+  assert.deepEqual(warnings, []);
+  assert.deepEqual(manifest.subjects.pharmacology.groups.flatMap((g) => g.items.map((i) => i.title)), ['מוכן']);
+  // The repo is public, so a draft course file is still rejected.
+  assert.ok(buildMedia([f('pharmacology/_שקפים.pptx')], ids).errors.some((e) => /course files/.test(e)));
+  assert.equal(isDraft('pharmacology/01 - נושא/_סרטון.mp4'), true);
+  assert.equal(isDraft('pharmacology/01 - נושא/סרטון_1.mp4'), false);
 });
 
 test('buildMedia ignores notes, dotfiles and the manifest itself', () => {

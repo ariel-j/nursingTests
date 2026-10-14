@@ -32,6 +32,12 @@ export function displayName(name, { isFile = true } = {}) {
   return base.replace(/^\d+\s*[-_.)]?\s*/, '').trim() || base.trim();
 }
 
+/**
+ * Drafts: a file or folder whose name starts with "_" stays in the repo but is not listed or
+ * deployed (e.g. a video waiting for its captions). Rename it without the "_" to publish it.
+ */
+export const isDraft = (rel) => rel.split('/').some((part) => part.startsWith('_'));
+
 /** Files that are not media: notes, the manifest itself, dotfiles (.gitkeep, .DS_Store). */
 function ignored(rel) {
   const base = rel.split('/').pop();
@@ -69,6 +75,8 @@ export function buildMedia(files, subjectIds) {
       errors.push(`${where}: course files (.${ext}) are not published, the repo is public`);
       continue;
     }
+    // Checked after course files: a draft is still in the public repo.
+    if (isDraft(rel)) continue;
     if (CONVERT_VIDEO.has(ext)) {
       errors.push(`${where}: browsers can't all play .${ext}, convert it to .mp4 (H.264)`);
       continue;
@@ -101,7 +109,7 @@ export function buildMedia(files, subjectIds) {
   }
 
   for (const vtt of captions) {
-    if (!usedCaptions.has(vtt) && !ignored(vtt)) {
+    if (!usedCaptions.has(vtt) && !ignored(vtt) && !isDraft(vtt)) {
       errors.push(`media/${vtt}: captions without a video of the same name (.mp4 or .webm)`);
     }
   }
