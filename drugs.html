@@ -20,6 +20,7 @@
       <h1>כרטיסיות תרופות</h1>
       <p class="lede">כל התרופות במקום אחד: עיון וחיפוש, חזרה יומית שמחזירה כל תרופה בדיוק כשצריך, משחקים לשינון, ומבחן אמריקאי שנוצר מהכרטיסיות.</p>
       <p id="deck-stats" class="meta"></p>
+      <p id="print-scope" class="meta print-only"></p>
     </header>
     <p id="status" class="status" role="status">טוען…</p>
 
@@ -42,6 +43,11 @@
         </label>
         <label class="drug-check"><input id="browse-exam" type="checkbox"> רק מה שהופיע במבחנים</label>
         <label class="drug-check"><input id="browse-hide" type="checkbox"> מצב שינון: הסתרת הפרטים</label>
+      </div>
+      <div class="drug-print">
+        <button id="print-sheet" type="button" class="secondary">הדפסת דף לימוד</button>
+        <button id="print-cards" type="button" class="secondary">הדפסת כרטיסיות לגזירה</button>
+        <p class="muted">מודפס מה שמוצג כאן לפי הסינון, עם כל הפרטים. כרטיסיות: 8 בעמוד, להדפסה דו‑צדדית (היפוך לאורך הצד הארוך), כך שהפרטים נופלים מאחורי שם התרופה. אפשר גם לשמור כ‑PDF.</p>
       </div>
       <p id="browse-count" class="muted drug-count" role="status"></p>
       <div id="browse-list"></div>
@@ -120,6 +126,8 @@
         <li><a id="test-print" class="quiz-card tool-card" href="print.html"><h3 class="card-title">מבחן להדפסה</h3><p class="muted">שאלות מהכרטיסיות עם מפתח תשובות. אפשר לשמור כ‑PDF.</p></a></li>
       </ul>
     </section>
+
+    <div id="flashcards" class="flashcards"></div>
   </main>
 
   <footer class="site-footer page">

@@ -9,6 +9,7 @@ import {
   drugDeckUrl,
   drugId,
   filterDrugs,
+  flashcardSheets,
   stemsUrl,
   updateMatchWeights,
   validateDrugDeck,
@@ -115,13 +116,18 @@ function initBrowse(deck) {
   familyOptions(family, deck.families, deck.drugs);
 
   let timer = null;
+  let shown = []; // { drug, family } in screen order, for the printable flashcards
   const render = () => {
     const chosen = family.value || null;
     const found = filterDrugs(deck.drugs, { query: query.value, family: chosen, examOnly: exam.checked });
     $('browse-count').textContent = `${found.length} מתוך ${deck.drugs.length} תרופות`;
+    $('print-sheet').disabled = $('print-cards').disabled = found.length === 0;
+    $('print-scope').textContent = printScope(found.length, chosen, exam.checked, query.value.trim());
+    shown = [];
     const sections = (chosen ? [chosen] : deck.families).map((f) => {
       const items = found.filter((d) => d.family === f || (chosen && d.alsoIn.includes(f)));
       if (items.length === 0) return null;
+      shown.push(...items.map((drug) => ({ drug, family: f })));
       const section = el('section', 'drug-family');
       const grid = el('div', 'drug-grid');
       grid.append(...items.map((d) => drugCard(d, hide.checked)));
@@ -137,6 +143,69 @@ function initBrowse(deck) {
   });
   for (const control of [family, exam, hide]) control.addEventListener('change', render);
   render();
+  initPrint(() => {
+    clearTimeout(timer); // a search still waiting to render
+    render();
+    return shown;
+  });
+}
+
+/** The line on the printout saying what was printed. */
+function printScope(count, family, examOnly, query) {
+  const parts = [`${count} תרופות`];
+  parts.push(family ? `משפחה: ${family}` : 'כל המשפחות');
+  if (examOnly) parts.push('רק מה שהופיע במבחנים (★)');
+  if (query) parts.push(`חיפוש: ${query}`);
+  return parts.join(' · ');
+}
+
+// ---------- printing ----------
+
+/** A cut-out card's front (name, family) or back (details); null leaves the slot empty. */
+function flashcard(item, side) {
+  const card = el('div', `flashcard is-${side}`);
+  if (!item) return card;
+  const { drug, family } = item;
+  if (side === 'front') {
+    card.append(el('p', 'flashcard-name', drug.name), el('p', 'flashcard-family', family));
+    if (drug.exam) card.append(el('p', 'flashcard-exam', '★ הופיע במבחנים'));
+    return card;
+  }
+  card.append(el('p', 'flashcard-title', drug.name), drugRows(drug));
+  // Long details get smaller type so they fit the card.
+  const length = DRUG_FIELDS.reduce((sum, { key }) => sum + (drug[key] ?? '').length, 0);
+  if (length > 260) card.classList.add('is-long');
+  return card;
+}
+
+/**
+ * The two print buttons. The study sheet is the page's own print style (also what Ctrl+P gives);
+ * the flashcards are built on demand into #flashcards. `data-print` on <html> picks the layout.
+ */
+function initPrint(currentItems) {
+  const root = document.documentElement;
+  const sheets = $('flashcards');
+  let fromButton = false;
+  const print = (mode) => {
+    const items = currentItems();
+    if (mode === 'cards') {
+      sheets.replaceChildren(...flashcardSheets(items).flatMap(({ front, back }) => ['front', 'back'].map((side) => {
+        const page = el('div', `flashcard-page is-${side}`);
+        page.append(...(side === 'front' ? front : back).map((item) => flashcard(item, side)));
+        return page;
+      })));
+    }
+    root.dataset.print = mode;
+    fromButton = true;
+    window.print();
+  };
+  // Printing from the browser's menu always gives the study sheet.
+  window.addEventListener('beforeprint', () => {
+    if (!fromButton) root.dataset.print = 'sheet';
+    fromButton = false;
+  });
+  $('print-sheet').addEventListener('click', () => print('sheet'));
+  $('print-cards').addEventListener('click', () => print('cards'));
 }
 
 // ---------- matching game ----------

@@ -76,10 +76,69 @@
 :root[data-contrast="high"] .match-item { border-color: var(--ink); }
 :root[data-contrast="high"] .match-item.is-done { outline: 2px solid var(--ok); }
 
+/* ---------- printing: study sheet (default) and cut-out flashcards ---------- */
+
+.drug-print { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-block: 0.25rem 0.5rem; }
+.drug-print button { padding-block: 0.35rem; font-size: 0.9rem; }
+.drug-print p { flex: 1 1 100%; margin: 0; font-size: 0.8125rem; }
+.print-only, .flashcards { display: none; }
+
+@page cards { margin: 10mm 12mm; }
+
 @media print {
-  .drug-controls, .tab-list, .drug-reveal, #panel-review, #panel-games, #panel-test { display: none !important; }
-  .drug-rows[hidden] { display: grid; }
-  .drug-card { break-inside: avoid; }
+  /* Light ink on white whatever the theme (beats the dark-theme token rules). */
+  html:root:not(#_) {
+    --surface: #fff; --ink: #000; --muted: #555; --line: #bbb; --bg: #fff;
+    --accent: #7a2d5c; --accent-soft: #f4e3ee;
+  }
+  .top-nav, .lede, #deck-stats, #status, .tab-list, .drug-controls, .drug-print, .drug-count,
+  .drug-reveal, #panel-review, #panel-games, #panel-test { display: none !important; }
+  /* The cards print from any tab, and with their details even in "מצב שינון". */
+  #panel-browse[hidden] { display: block !important; }
+  .drug-rows[hidden] { display: grid !important; }
+  .print-only { display: block; }
+
+  .drugs-page .site-header { margin-block-end: 4mm; }
+  .drugs-page h1 { margin-block: 0 1mm; font-size: 16pt; }
+  #print-scope { margin: 0; font-size: 9pt; }
+  .drug-family { margin-block-end: 3mm; }
+  .drug-family .group-title { margin-block: 3mm 1.5mm; font-size: 11pt; break-after: avoid; }
+  .drug-grid { grid-template-columns: 1fr 1fr; gap: 2mm; }
+  .drug-card { padding: 2mm 3mm; border-radius: 2mm; break-inside: avoid; font-size: 8.5pt; line-height: 1.35; }
+  .drug-name { font-size: 10pt; }
+  .drug-badge { font-size: 7.5pt; }
+  .drug-also { font-size: 7.5pt; }
+  .drug-rows { margin-block-start: 1mm; gap: 0.4mm 2.5mm; font-size: inherit; }
+  .drug-rows dt { font-size: 7.5pt; padding: 0; }
+
+  /* Flashcards: only the card pages print. */
+  :root[data-print="cards"] .drugs-page > :not(.flashcards) { display: none !important; }
+  :root[data-print="cards"] .flashcards { display: block; }
+  .flashcard-page {
+    page: cards;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(4, 68mm);
+    break-after: page;
+  }
+  .flashcard-page:last-child { break-after: auto; }
+  .flashcard {
+    display: flex;
+    flex-direction: column;
+    padding: 4mm 5mm;
+    overflow: hidden;
+    border: 0.3mm dashed #999; /* cut lines */
+    margin: -0.15mm; /* neighbours share one line */
+  }
+  .flashcard:empty { border-color: transparent; }
+  .flashcard.is-front { justify-content: center; align-items: center; text-align: center; gap: 2mm; }
+  .flashcard p { margin: 0; }
+  .flashcard-name { font-size: 17pt; font-weight: 700; line-height: 1.2; overflow-wrap: anywhere; }
+  .flashcard-family { font-size: 9pt; color: #555; }
+  .flashcard-exam { font-size: 8.5pt; font-weight: 600; }
+  .flashcard-title { font-size: 10.5pt; font-weight: 700; padding-block-end: 1mm; border-block-end: 0.2mm solid #ccc; }
+  .flashcard .drug-rows { font-size: 10pt; line-height: 1.35; }
+  .flashcard.is-long .drug-rows { font-size: 8.5pt; line-height: 1.3; }
 }
 
 /* ---------- games picker, suffixes, odd one out ---------- */
