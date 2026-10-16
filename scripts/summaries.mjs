@@ -33,6 +33,7 @@ export function pageErrors(html, { id, isSummary, root = '../' }) {
   if (!html.includes(`src="${root}js/a11y.js"`)) errors.push(`missing the accessibility toolbar (${root}js/a11y.js)`);
   if (!html.includes(`src="${root}js/nav.js"`)) errors.push(`missing the side menu (${root}js/nav.js)`);
   for (const page of [`${root}accessibility.html`, `${root}privacy.html`]) {
+  if (!html.includes(`src="${root}js/analytics.js"`)) errors.push(`missing the visit counter (${root}js/analytics.js)`);
     if (!html.includes(`href="${page}"`)) errors.push(`footer is missing the link to ${page}`);
   }
   if (!html.includes(MEDICAL_DISCLAIMER)) errors.push('footer is missing the "not medical advice" line');

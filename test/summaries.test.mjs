@@ -5,7 +5,8 @@ import { loadCatalog } from '../scripts/quizzes.mjs';
 
 const page = (body) => `<!doctype html><html><head>
 <script type="module" src="../js/nav.js"></script>
-<script type="module" src="../js/a11y.js"></script></head><body>${body}
+<script type="module" src="../js/a11y.js"></script>
+<script type="module" src="../js/analytics.js"></script></head><body>${body}
 <footer><a href="../accessibility.html">א</a><a href="../privacy.html">פ</a><p>תוכן לימודי, אינו מהווה ייעוץ רפואי.</p></footer></body></html>`;
 const summary = (id) => page(`<button data-print>הדפסה</button><article class="summary" data-system="${id}"><section class="intro">מבוא</section><section class="glossary" id="g">מילון</section><section><h2>1 · יסודות</h2></section></article>`);
 
@@ -33,10 +34,10 @@ test('pageErrors rejects external resources, inline styles and handlers', () => 
   assert.deepEqual(pageErrors(page('<p>see example.com</p>'), { id: 'x' }), []);
 });
 
-test('pageErrors requires the toolbar, footer links and disclaimer, article and print button', () => {
+test('pageErrors requires the toolbar, counter, footer links and disclaimer, article and print button', () => {
   const bare = '<html><body><article class="summary" data-system="other"></article></body></html>';
   const errors = pageErrors(bare, { id: 'heart', isSummary: true });
-  for (const re of [/a11y/, /nav\.js/, /accessibility/, /privacy/, /medical/, /data-system="heart"/, /print/]) {
+  for (const re of [/a11y/, /analytics/, /nav\.js/, /accessibility/, /privacy/, /medical/, /data-system="heart"/, /print/]) {
     assert.ok(errors.some((e) => re.test(e)), `expected an error matching ${re}`);
   }
 });
@@ -47,7 +48,7 @@ test('recollectionMentions counts every form of שחזור', () => {
 });
 
 test('pageErrors checks root pages against root-relative paths', () => {
-  const root = '<script type="module" src="js/nav.js"></script><script type="module" src="js/a11y.js"></script>'
+  const root = '<script type="module" src="js/nav.js"></script><script type="module" src="js/a11y.js"></script><script type="module" src="js/analytics.js"></script>'
     + '<a href="accessibility.html">א</a><a href="privacy.html">פ</a><p>אינו מהווה ייעוץ רפואי</p>';
   assert.deepEqual(pageErrors(root, { id: 'index.html', root: '' }), []);
   assert.ok(pageErrors(root.replace('js/nav.js', 'js/other.js'), { id: 'index.html', root: '' }).some((e) => /side menu/.test(e)));

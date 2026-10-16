@@ -21,6 +21,7 @@ import {
   skip,
   summarize,
 } from './core.js';
+import { trackEvent } from './analytics.js';
 import { loadQuizFromUrl, quizPlace, subjectHomeHref } from './load-quiz.js';
 import { keys, load, prefs, remove, save } from './storage.js';
 
@@ -311,6 +312,7 @@ function begin(questionIds, mode) {
   if (loadSavedSession() && !window.confirm('התרגול הפתוח יימחק. להתחיל תרגול חדש?')) return;
   state = createSession(quiz, Math.random, { questionIds, mode });
   persist();
+  trackEvent(`quiz-start/${quiz.id}/${mode}`, quiz.title);
   renderQuestion();
 }
 
@@ -448,6 +450,7 @@ function apply(result, chosenIndex) {
   state = result.state;
   persist();
   if (isComplete(state)) {
+    trackEvent(`quiz-done/${quiz.id}/${state.mode}`, quiz.title);
     // Best score only means something for a run over the whole of one quiz.
     if (state.mode === 'full' && !quiz.mixed) {
       const summary = summarize(state, quiz);
