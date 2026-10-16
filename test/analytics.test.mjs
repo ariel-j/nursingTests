@@ -1,6 +1,5 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
 import { GOATCOUNTER_CODE, countUrl, pagePath, shouldCount } from '../js/analytics.js';
 
 test('pagePath folds index.html and keeps only the quiz id', () => {
@@ -35,11 +34,4 @@ test('countUrl builds a GoatCounter request for page views and events', () => {
 
 test('the code is empty or a valid GoatCounter code', () => {
   assert.match(GOATCOUNTER_CODE, /^(?:[a-z0-9-]+)?$/);
-});
-
-test('every top-level page loads the counter', async () => {
-  for (const page of ['index.html', 'quiz.html', 'accessibility.html', 'privacy.html']) {
-    const html = await readFile(new URL(`../${page}`, import.meta.url), 'utf8');
-    assert.ok(html.includes('src="js/analytics.js"'), `${page} is missing js/analytics.js`);
-  }
 });

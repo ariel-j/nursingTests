@@ -6,6 +6,20 @@ const PREFIX = 'anatomy-quizzes:v1:';
 export const keys = {
   session: (quizId) => `session:${quizId}`,
   results: (quizId) => `results:${quizId}`,
+  history: (quizId) => `history:${quizId}`,
+  // Matching-game weights of a subject's drug cards: { [drugId]: weight }, missed drugs weigh more.
+  drugMatch: (subjectId) => `drug-match:${subjectId}`,
+  // Daily review (Leitner boxes) of a subject's drug cards: { [drugId]: { box, due, last } }.
+  drugReview: (subjectId) => `drug-review:${subjectId}`,
+  // Families chosen on a subject's drug-cards page, for the daily review and the games: [family], missing = all.
+  drugTopics: (subjectId) => `drug-topics:${subjectId}`,
+  // Personal bests of the drug-card games: { stems, odd, blitz: { score, stars, plays }, match: { "<family>|<field>": ms } }.
+  drugGames: (subjectId) => `drug-games:${subjectId}`,
+};
+
+// Global (not per quiz) preferences.
+export const prefs = {
+  autoAdvance: 'pref:auto-advance',
 };
 
 export function load(key, fallback = null) {
@@ -32,4 +46,18 @@ export function remove(key) {
   } catch {
     // nothing to clean up if storage is unavailable
   }
+}
+
+/** Keys (without the prefix) that start with `start`, e.g. every `history:` entry. */
+export function listKeys(start) {
+  const found = [];
+  try {
+    for (let i = 0; i < window.localStorage.length; i++) {
+      const key = window.localStorage.key(i);
+      if (key !== null && key.startsWith(PREFIX + start)) found.push(key.slice(PREFIX.length));
+    }
+  } catch {
+    // unavailable storage simply has no keys
+  }
+  return found;
 }

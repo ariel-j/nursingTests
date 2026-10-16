@@ -12,6 +12,8 @@ import {
   isComplete,
   isSessionCompatible,
   isolateNumberRanges,
+  buildMixedQuiz,
+  mixedQuizId,
   listTopics,
   questionIdsForTopics,
   sessionQuestions,
@@ -390,4 +392,54 @@ test('option notes are optional', () => {
   const quiz = clone(fixture);
   delete quiz.questions[0].options[0].note;
   assert.deepEqual(validateQuiz(quiz), []);
+});
+
+// ---------- mixed practice ----------
+
+function unitQuiz(id, unit, title = 'מבחן 1') {
+  return { ...clone(fixture), id, unit, title };
+}
+
+test('buildMixedQuiz merges quizzes with unique ids, groups and prefixed topics', () => {
+  const a = unitQuiz('unit-a-1', 'יחידה א');
+  const b = unitQuiz('unit-a-2', 'יחידה א', 'מבחן 2');
+  const c = { ...clone(fixture), id: 'no-unit', title: 'בוחן בלי יחידה' };
+  const mix = buildMixedQuiz(fixture.subject, [a, b, c]);
+
+  assert.equal(mix.questions.length, 3 * fixture.questions.length);
+  assert.equal(new Set(mix.questions.map((q) => q.id)).size, mix.questions.length);
+  assert.equal(mix.questions[0].id, `unit-a-1/${fixture.questions[0].id}`);
+  assert.equal(mix.questions[0].topic, `יחידה א · ${fixture.questions[0].topic}`);
+  assert.equal(mix.questions.at(-1).group, 'בוחן בלי יחידה');
+  // Groups keep catalog order; a unit with two quizzes is one group.
+  assert.deepEqual(listTopics(mix, 'group'), [
+    { topic: 'יחידה א', count: 2 * fixture.questions.length },
+    { topic: 'בוחן בלי יחידה', count: fixture.questions.length },
+  ]);
+  // Source quizzes are untouched.
+  assert.deepEqual(a, unitQuiz('unit-a-1', 'יחידה א'));
+});
+
+test('a mixed quiz plays like any quiz and can be limited to chosen groups', () => {
+  const mix = buildMixedQuiz(fixture.subject, [unitQuiz('u-1', 'א'), unitQuiz('u-2', 'ב')]);
+  const ids = questionIdsForTopics(mix, ['ב'], 'group');
+  assert.equal(ids.length, fixture.questions.length);
+  assert.ok(ids.every((id) => id.startsWith('u-2/')));
+
+  const rng = seeded(3);
+  let state = createSession(mix, rng, { questionIds: ids, mode: 'topics' });
+  assert.ok(isSessionCompatible(JSON.parse(JSON.stringify(state)), mix));
+  while (!isComplete(state)) {
+    state = answer(state, mix, currentQuestion(state, mix).correct, rng).state;
+  }
+  const summary = summarize(state, mix);
+  assert.equal(summary.firstTryPercent, 100);
+  assert.equal(summary.total, fixture.questions.length);
+});
+
+test('mixedQuizId is stable, storage-safe and differs per subject', () => {
+  const id = mixedQuizId('אנטומיה ופיזיולוגיה');
+  assert.equal(id, mixedQuizId('אנטומיה ופיזיולוגיה'));
+  assert.match(id, /^mix-[a-z0-9]+$/);
+  assert.notEqual(id, mixedQuizId('פרמקולוגיה'));
 });
