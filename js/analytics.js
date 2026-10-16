@@ -8,7 +8,7 @@
 // any page with #no-count (undo with #count).
 import { load, remove, save } from './storage.js';
 
-export const GOATCOUNTER_CODE = '';
+export const GOATCOUNTER_CODE = 'ari';
 export const LIVE_HOST_SUFFIX = '.github.io';
 const OPT_OUT_KEY = 'no-count';
 
