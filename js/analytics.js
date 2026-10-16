@@ -1,7 +1,7 @@
 // Visit counter: sends one page view per page load, and quiz events, to GoatCounter
 // (no cookies, no IP stored, open source). This is the only request the site makes to another
 // server; privacy.html describes exactly what is sent. No third-party script is loaded: the
-// request is built here and sent as a beacon.
+// request is built here and sent as an image GET (sendBeacon's POST did not register hits).
 //
 // Nothing is sent while GOATCOUNTER_CODE is empty, off the live site (localhost, file://),
 // under Do Not Track / Global Privacy Control, or from a browser that opted out by visiting
@@ -56,8 +56,8 @@ function enabled() {
 
 function send(url) {
   try {
-    if (navigator.sendBeacon?.(url)) return;
-    new Image().src = url;
+    // rnd keeps the browser from answering a repeat visit from its image cache.
+    new Image().src = `${url}&rnd=${Math.random().toString(36).slice(2)}`;
   } catch {
     // counting must never break the page
   }
