@@ -18,6 +18,7 @@ export function pageErrors(html, { id, isSummary }) {
   }
   if (/<[^>]+\s(?:on[a-z]+|style)\s*=/i.test(html)) errors.push('inline style or event handler attribute');
   if (!html.includes('src="../js/a11y.js"')) errors.push('missing the accessibility toolbar (../js/a11y.js)');
+  if (!html.includes('src="../js/analytics.js"')) errors.push('missing the visit counter (../js/analytics.js)');
   for (const page of ['../accessibility.html', '../privacy.html']) {
     if (!html.includes(`href="${page}"`)) errors.push(`footer is missing the link to ${page}`);
   }

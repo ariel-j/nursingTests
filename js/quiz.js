@@ -17,6 +17,7 @@ import {
   summarize,
   validateQuiz,
 } from './core.js';
+import { trackEvent } from './analytics.js';
 import { ecgPath } from './ecg.js';
 import { keys, load, remove, save } from './storage.js';
 
@@ -161,6 +162,7 @@ function begin(questionIds, mode) {
   if (loadSavedSession() && !window.confirm('התרגול הפתוח יימחק. להתחיל תרגול חדש?')) return;
   state = createSession(quiz, Math.random, { questionIds, mode });
   persist();
+  trackEvent(`quiz-start/${quiz.id}/${mode}`, quiz.title);
   renderQuestion();
 }
 
@@ -251,6 +253,7 @@ function showFeedback(result, chosenIndex) {
 function apply(result, chosenIndex) {
   state = result.state;
   persist();
+  if (isComplete(state)) trackEvent(`quiz-done/${quiz.id}/${state.mode}`, quiz.title);
   // Best score only means something for a run over the whole quiz.
   if (isComplete(state) && state.mode === 'full') {
     const summary = summarize(state, quiz);
