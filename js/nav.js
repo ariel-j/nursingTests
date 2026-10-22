@@ -101,7 +101,8 @@ function build() {
   const fill = (manifest, media) => nav.replaceChildren(
     el('ul', { class: 'drawer-list' },
       el('li', {}, link('./', 'דף הבית · כל המקצועות')),
-      el('li', {}, link('summaries/', 'כל הסיכומים'))),
+      el('li', {}, link('summaries/', 'כל הסיכומים')),
+      el('li', {}, link('quiz.html?starred', '★ שאלות מסומנות'))),
     ...subjectsSection(manifest, media),
     el('ul', { class: 'drawer-list drawer-foot' },
       el('li', {}, link('accessibility.html', 'הצהרת נגישות')),

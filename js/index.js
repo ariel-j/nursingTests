@@ -1,8 +1,8 @@
 // Home page. Without ?subject= it lists the subjects to choose from; with ?subject=<id> it shows
 // that subject: mixed practice, the printable exam, its summaries and videos, then its quizzes by unit.
-import { isValidQuizId, mixedQuizId, progressInfo } from './core.js';
+import { STARRED_QUIZ_ID, isValidQuizId, mixedQuizId, progressInfo } from './core.js';
 import { findSubject, loadManifest, loadMedia, mediaCount, subjectPaths, subjectQuizzes, subjectStats, unitAnchor } from './catalog.js';
-import { keys, load } from './storage.js';
+import { keys, load, loadStars } from './storage.js';
 import { summariesFor } from './summary-list.js';
 
 const SITE_TITLE = 'תרגול למבחנים בסיעוד';
@@ -13,6 +13,8 @@ const ui = {
   lede: $('lede'),
   status: $('status'),
   content: $('content'),
+  starredWrap: $('starred-wrap'),
+  starredLink: $('starred-link'),
 };
 
 const num = (n) => n.toLocaleString('he-IL');
@@ -91,6 +93,8 @@ function renderQuiz(entry) {
   if (results && Number.isFinite(results.bestPercent)) {
     meta.append(el('span', null, `שיא: ${results.bestPercent}%`));
   }
+  const stars = loadStars(entry.id).length;
+  if (stars > 0) meta.append(el('span', null, `★ ${stars} מסומנות`));
   return card(
     `quiz.html?id=${encodeURIComponent(entry.id)}`,
     '',
@@ -225,6 +229,13 @@ async function main() {
     ui.status.textContent = 'עדיין אין מקצועות.';
     return;
   }
+  // Stored counts, so an id dropped from its quiz still counts until that quiz is opened.
+  const stars = subjects.flatMap(subjectQuizzes).reduce((n, q) => n + loadStars(q.id).length, 0);
+  if (stars > 0 || savedSession(STARRED_QUIZ_ID)) {
+    ui.starredLink.textContent = stars > 0 ? `★ שאלות מסומנות (${stars})` : '★ שאלות מסומנות';
+    ui.starredWrap.hidden = false;
+  }
+
   const key = new URLSearchParams(location.search).get('subject');
   const subject = findSubject(manifest, key);
   if (key !== null && !subject) {

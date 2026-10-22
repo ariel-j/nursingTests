@@ -23,6 +23,10 @@ No build step and no runtime dependencies. Node is only needed for the tests and
 - Progress shows mastered/total and the queue size. The end screen shows the first-try score,
   the questions that came back, and weak topics.
 - The end screen can start a session with only the questions that came back.
+- Any question can be **starred** (☆ next to the topic, `F`, or on the end screen's list).
+  A quiz's start screen can practise or browse its starred questions, and the home page links to
+  `quiz.html?starred`, which gathers starred questions from every quiz: tick which quizzes and
+  which questions to practise. Stars only change when you change them.
 - An unfinished session is saved in `localStorage` and resumes after a refresh.
   The quiz list shows which quizzes are in progress and your best first-try score
   (best score counts only runs over the whole quiz).
@@ -38,7 +42,12 @@ No build step and no runtime dependencies. Node is only needed for the tests and
   (default 100, sampled in proportion to each topic's size) and an order (mixed, or grouped by topic).
   Options are shuffled once and lettered א–ד. The answer key, optionally with explanations, starts on
   a new page. Printing uses the browser's print dialog, so "Save as PDF" gives a file.
-- Keyboard: `1`–`4` choose, `S` skips, `Enter` continues. These use key codes, so they also work with a Hebrew layout.
+- **Starred questions:** star any question (☆ next to the topic, `F`, or on the end screen's list).
+  A quiz's start screen can practise or browse its starred questions, and `quiz.html?starred`
+  (linked from the home page and the menu) gathers starred questions from every quiz: tick which
+  quizzes and which questions to practise. Stars change only when you change them, and they stay in
+  the browser they were set in.
+- Keyboard: `1`–`4` choose, `S` skips, `F` stars, `Enter` continues. These use key codes, so they also work with a Hebrew layout.
 
 ## Adding a quiz
 

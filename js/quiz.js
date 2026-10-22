@@ -19,11 +19,14 @@ import {
   sanitizeHistory,
   sampleQuestionIds,
   skip,
+  starTarget,
+  starredIds,
   summarize,
+  toggleStar,
 } from './core.js';
 import { trackEvent } from './analytics.js';
 import { loadQuizFromUrl, quizPlace, subjectHomeHref } from './load-quiz.js';
-import { keys, load, prefs, remove, save } from './storage.js';
+import { keys, load, loadStars, prefs, remove, save } from './storage.js';
 
 const $ = (id) => document.getElementById(id);
 const ui = {
@@ -37,7 +40,13 @@ const ui = {
   resumeBox: $('resume-box'),
   resumeText: $('resume-text'),
   resume: $('resume'),
+  starredBox: $('starred-box'),
+  practiceStarred: $('practice-starred'),
+  starredList: $('starred-list'),
   newSession: $('new-session'),
+  topicsLegend: $('topics-legend'),
+  starredNote: $('starred-note'),
+  countSetting: $('count-setting'),
   allTopics: $('all-topics'),
   noTopics: $('no-topics'),
   count: $('count'),
@@ -62,6 +71,7 @@ const ui = {
   progressText: $('progress-text'),
   topic: $('topic'),
   retryLabel: $('retry-label'),
+  star: $('star'),
   question: $('question'),
   options: $('options'),
   skip: $('skip'),
@@ -89,7 +99,7 @@ const ui = {
 const LEVEL_LABELS = { unknown: 'אין עדיין מספיק נתונים', weak: 'דורש חיזוק', fair: 'בינוני', solid: 'שולט' };
 const TREND_LABELS = { up: '↑ משתפר', down: '↓ יורד', flat: '→ יציב' };
 
-const MODE_LABELS = { full: 'כל הבוחן', topics: 'נושאים נבחרים', retry: 'שאלות שחזרו' };
+const MODE_LABELS = { full: 'כל הבוחן', topics: 'נושאים נבחרים', retry: 'שאלות שחזרו', starred: 'שאלות מסומנות' };
 const LETTERS = ['א', 'ב', 'ג', 'ד'];
 // After a correct answer, move on by itself unless the user asked for less motion.
 // The pause scales with the text the learner has to read (explanation plus note).
@@ -100,6 +110,8 @@ const AUTO_ADVANCE_PER_CHAR_MS = 45;
 
 let quiz = null;
 let state = null;
+// The question on screen; after answering, `state` already points at the next one.
+let shownQuestion = null;
 // 'start' → choosing; 'question' → waiting for an answer; 'feedback' → showing the result; 'done' → end screen.
 let phase = 'start';
 let optionButtons = [];
@@ -156,6 +168,8 @@ function loadHistory() {
 }
 
 function recordAttempt() {
+  // The starred page's questions change with every star, so topic statistics would mislead there.
+  if (quiz.starred) return;
   const now = new Date();
   const attempt = buildAttempt(state, quiz, { id: newAttemptId(now), date: now.toISOString() });
   // Statistics are best effort: if storage is full or blocked the quiz itself still works.
@@ -180,6 +194,10 @@ function renderStatRow(t) {
 }
 
 function renderStats() {
+  if (quiz.starred) {
+    ui.stats.hidden = true;
+    return;
+  }
   analysis = analyzeHistory(loadHistory(), quiz);
   ui.stats.hidden = analysis.attempts === 0;
   if (analysis.attempts === 0) return;
@@ -215,6 +233,103 @@ function clearStats() {
   ui.startButton.focus({ preventScroll: true });
 }
 
+// ---------- stars ----------
+
+// Generated quizzes (drug cards) are not quiz files, so there is nothing to keep a star on.
+const canStar = () => !quiz.generated;
+
+/** "Is this question starred?" over the stars as stored now, reading each quiz's list once. */
+function starredNow() {
+  const stars = new Map();
+  return (question) => {
+    const { quizId, questionId } = starTarget(quiz, question.id);
+    if (!stars.has(quizId)) stars.set(quizId, new Set(loadStars(quizId)));
+    return stars.get(quizId).has(questionId);
+  };
+}
+
+const isStarred = (question) => starredNow()(question);
+
+/** Flips the question's star in storage and returns whether it is now starred. */
+function flipStar(question) {
+  const { quizId, questionId } = starTarget(quiz, question.id);
+  const next = toggleStar(loadStars(quizId), questionId);
+  if (next.length === 0) remove(keys.starred(quizId));
+  else save(keys.starred(quizId), next);
+  return next.includes(questionId);
+}
+
+// The accessible name stays fixed; aria-pressed carries the state.
+function paintStar(button, on) {
+  button.setAttribute('aria-pressed', String(on));
+  button.textContent = on ? '★' : '☆';
+  button.title = on ? 'הסר כוכב' : 'סמן בכוכב';
+}
+
+function starButton(question, onChange) {
+  const button = el('button', 'star-toggle');
+  button.type = 'button';
+  button.setAttribute('aria-label', 'סימון בכוכב');
+  paintStar(button, isStarred(question));
+  button.addEventListener('click', () => {
+    paintStar(button, flipStar(question));
+    onChange?.();
+  });
+  return button;
+}
+
+/**
+ * A starred question to browse: its text (with a checkbox when picking), its star, and the answer
+ * on demand. Unstarring keeps the row, with an empty star, so a slip is one click to undo.
+ */
+function starredItem(question, checkbox = null) {
+  const li = el('li', 'starred-item');
+  const head = el('div', 'starred-head');
+  const text = el('span', null, fmt(question.question));
+  if (checkbox) {
+    const label = el('label', 'topic-option');
+    label.append(checkbox, text);
+    head.append(label);
+  } else {
+    head.append(text);
+  }
+  head.append(starButton(question, quiz.starred ? null : updateStarredButton));
+
+  const details = el('details');
+  details.append(
+    el('summary', null, 'תשובה והסבר'),
+    el('p', 'answer', `תשובה נכונה: ${fmt(question.options[question.correct].text)}`),
+    el('p', 'muted', fmt(question.explanation)),
+  );
+  li.append(head, details);
+  return li;
+}
+
+/** This quiz's starred questions (a mixed practice reads each quiz's own stars). */
+function currentStarredIds() {
+  if (!quiz.mixed) return starredIds(loadStars(quiz.id), quiz);
+  return quiz.questions.filter(starredNow()).map((q) => q.id);
+}
+
+function updateStarredButton() {
+  const count = currentStarredIds().length;
+  ui.practiceStarred.disabled = count === 0;
+  ui.practiceStarred.textContent = count === 0 ? 'אין שאלות מסומנות' : `תרגל ${count} שאלות מסומנות`;
+}
+
+function renderStarredBox() {
+  const ids = quiz.starred || !canStar() ? [] : currentStarredIds();
+  ui.starredBox.hidden = ids.length === 0;
+  if (ids.length === 0) return;
+  ui.starredList.replaceChildren(...ids.map((id) => starredItem(questionById(quiz, id))));
+  updateStarredButton();
+}
+
+function practiceStarred() {
+  const ids = currentStarredIds();
+  if (ids.length > 0) begin(ids, 'starred');
+}
+
 // ---------- start screen ----------
 
 // A mixed practice is chosen by unit ("group"); a single quiz by topic.
@@ -232,6 +347,7 @@ function selectedTopics() {
 let wantedCount = null;
 
 function availableCount() {
+  if (quiz.starred) return ui.topicList.querySelectorAll('.q-check:checked').length;
   return questionIdsForTopics(quiz, selectedTopics(), selectionField()).length;
 }
 
@@ -242,6 +358,7 @@ function chosenCount() {
 
 /** A fresh sample of the chosen size: proportional per topic, so every chosen unit is covered. */
 function selectedQuestionIds() {
+  if (quiz.starred) return [...ui.topicList.querySelectorAll('.q-check:checked')].map((c) => c.value);
   const topics = selectedTopics();
   const max = availableCount();
   if (wantedCount === null || wantedCount >= max) return questionIdsForTopics(quiz, topics, selectionField());
@@ -256,7 +373,9 @@ function updateStartButton() {
   if (document.activeElement !== ui.count) ui.count.value = max === 0 ? '' : String(count);
   ui.countHint.textContent = max === 0 ? '' : `מתוך ${max} זמינות`;
   ui.startButton.disabled = count === 0;
-  ui.startButton.textContent = count === 0 ? 'בחרו לפחות נושא אחד' : `התחל · ${count} שאלות`;
+  ui.startButton.textContent = count === 0
+    ? `בחרו לפחות ${quiz.starred ? 'שאלה אחת' : 'נושא אחד'}`
+    : `התחל · ${count} שאלות`;
 }
 
 /** Takes the typed number; an empty or invalid field means "all chosen questions". */
@@ -288,10 +407,67 @@ function renderTopics() {
   updateStartButton();
 }
 
+/**
+ * The starred page's picker: a group per quiz with a checkbox for all of it, and a checkbox per
+ * starred question. Rebuilt on every visit to the start screen, since stars change while playing.
+ */
+function renderStarPicker() {
+  const groups = new Map();
+  const starred = starredNow();
+  for (const q of quiz.questions) {
+    if (!starred(q)) continue;
+    if (!groups.has(q.group)) groups.set(q.group, []);
+    groups.get(q.group).push(q);
+  }
+  ui.topicList.replaceChildren(...[...groups].map(([label, questions]) => {
+    const li = el('li', 'star-group');
+    const all = el('input');
+    all.type = 'checkbox';
+    all.checked = true;
+    const head = el('label', 'topic-option group-head');
+    head.append(all, el('b', null, label), el('span', 'count', String(questions.length)));
+
+    const boxes = questions.map((q) => {
+      const box = el('input', 'q-check');
+      box.type = 'checkbox';
+      box.value = q.id;
+      box.checked = true;
+      return box;
+    });
+    const sync = () => {
+      const n = boxes.filter((b) => b.checked).length;
+      all.checked = n === boxes.length;
+      all.indeterminate = n > 0 && n < boxes.length;
+      updateStartButton();
+    };
+    all.addEventListener('change', () => {
+      for (const b of boxes) b.checked = all.checked;
+      sync();
+    });
+    for (const b of boxes) b.addEventListener('change', sync);
+
+    const list = el('ul', 'starred-list');
+    list.append(...questions.map((q, i) => starredItem(q, boxes[i])));
+    li.append(head, list);
+    return li;
+  }));
+  updateStartButton();
+}
+
+function setAllCheckboxes(checked) {
+  for (const c of topicCheckboxes()) {
+    c.checked = checked;
+    c.indeterminate = false;
+  }
+  updateStartButton();
+}
+
 function renderStart() {
   phase = 'start';
   show(ui.start);
   renderStats();
+  if (quiz.starred) renderStarPicker();
+  renderStarredBox();
 
   const saved = loadSavedSession();
   ui.resumeBox.hidden = !saved;
@@ -320,7 +496,8 @@ function onStartSubmit(event) {
   event.preventDefault();
   const ids = selectedQuestionIds();
   if (ids.length === 0) return;
-  begin(ids, ids.length === quiz.questions.length ? 'full' : 'topics');
+  if (quiz.starred) begin(ids, 'starred');
+  else begin(ids, ids.length === quiz.questions.length ? 'full' : 'topics');
 }
 
 // ---------- play ----------
@@ -365,12 +542,15 @@ function renderQuestion() {
   phase = 'question';
   show(ui.play);
   const question = currentQuestion(state, quiz);
+  shownQuestion = question;
   ui.feedback.hidden = true;
   ui.skip.disabled = false;
   ui.next.disabled = true;
   renderProgress();
 
   ui.topic.textContent = question.topic;
+  ui.star.hidden = !canStar();
+  if (canStar()) paintStar(ui.star, isStarred(question));
   const { attempts } = state.progress[question.id];
   ui.retryLabel.hidden = attempts === 0;
   ui.retryLabel.textContent = `שאלה חוזרת · ניסיון ${attempts + 1}`;
@@ -472,6 +652,11 @@ function skipQuestion() {
   apply(skip(state, quiz), null);
 }
 
+function toggleShownStar() {
+  if ((phase !== 'question' && phase !== 'feedback') || !shownQuestion || !canStar()) return;
+  paintStar(ui.star, flipStar(shownQuestion));
+}
+
 function next() {
   cancelAutoAdvance();
   if (phase !== 'feedback') return;
@@ -495,7 +680,10 @@ function renderRetried(summary) {
       el('p', 'answer', `תשובה נכונה: ${fmt(q.options[q.correct].text)}`),
       el('p', 'muted', fmt(q.explanation)),
     );
-    return details;
+    if (!canStar()) return details;
+    const row = el('div', 'retried-row');
+    row.append(details, starButton(q));
+    return row;
   });
 }
 
@@ -553,6 +741,9 @@ function onKeyDown(event) {
   } else if (phase === 'question' && event.code === 'KeyS') {
     event.preventDefault();
     skipQuestion();
+  } else if ((phase === 'question' || phase === 'feedback') && event.code === 'KeyF' && canStar()) {
+    event.preventDefault();
+    toggleShownStar();
   } else if (phase === 'feedback' && (event.key === 'Enter' || event.key === ' ')) {
     // A focused button already handles Enter/Space natively; avoid a double advance.
     if (event.target instanceof HTMLButtonElement || event.target instanceof HTMLAnchorElement || event.target instanceof HTMLInputElement) return;
@@ -569,8 +760,13 @@ async function main() {
     return;
   }
 
+  if (quiz.starred && !quiz.questions.some(starredNow()) && !loadSavedSession()) {
+    showStatus('עוד לא סימנתם שאלות. אפשר לסמן שאלה בכוכב ☆ בזמן התרגול, ולחזור לכאן כדי לתרגל רק אותן.');
+    return;
+  }
+
   // Kicker shows the subject and, when present, the unit: "אנטומיה ופיזיולוגיה · הלב".
-  const place = quizPlace(quiz);
+  const place = quiz.starred ? 'מכל הבחנים' : quizPlace(quiz);
   document.title = `${quiz.title} · ${place}`;
   ui.subject.textContent = place;
   ui.title.textContent = quiz.title;
@@ -581,6 +777,14 @@ async function main() {
   });
   ui.description.textContent = quiz.description ?? '';
   ui.description.hidden = !quiz.description;
+  if (quiz.starred) {
+    // Questions are picked one by one here, so no topic count field and no printable exam.
+    ui.topicsLegend.textContent = 'שאלות לפי בוחן';
+    ui.topicList.classList.add('star-picker');
+    ui.countSetting.hidden = true;
+    ui.printLink.hidden = true;
+    ui.starredNote.hidden = false;
+  }
 
   ui.toStart.addEventListener('click', renderStart);
   ui.resume.addEventListener('click', () => {
@@ -589,16 +793,12 @@ async function main() {
     else renderStart();
   });
   ui.newSession.addEventListener('submit', onStartSubmit);
-  ui.allTopics.addEventListener('click', () => {
-    for (const c of topicCheckboxes()) c.checked = true;
-    updateStartButton();
-  });
+  ui.allTopics.addEventListener('click', () => setAllCheckboxes(true));
   ui.count.addEventListener('input', readCount);
   ui.count.addEventListener('change', settleCount);
-  ui.noTopics.addEventListener('click', () => {
-    for (const c of topicCheckboxes()) c.checked = false;
-    updateStartButton();
-  });
+  ui.noTopics.addEventListener('click', () => setAllCheckboxes(false));
+  ui.practiceStarred.addEventListener('click', practiceStarred);
+  ui.star.addEventListener('click', toggleShownStar);
   ui.practiceWeak.addEventListener('click', practiceWeakTopics);
   ui.practiceQuestions.addEventListener('click', practiceWeakQuestions);
   ui.clearStats.addEventListener('click', clearStats);
@@ -616,7 +816,7 @@ async function main() {
   ui.newPractice.addEventListener('click', renderStart);
   document.addEventListener('keydown', onKeyDown);
 
-  renderTopics();
+  if (!quiz.starred) renderTopics();
   renderStart();
 }
 

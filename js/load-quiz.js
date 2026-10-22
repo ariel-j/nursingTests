@@ -1,10 +1,12 @@
 // Loads the quiz a page was opened for: ?id=<quiz> is one quiz; ?subject=<id> (or the subject's
 // name, from older links) merges all of that subject's quizzes for mixed practice; ?drugs=<id>
-// builds a quiz from the subject's drug cards (data/<id>/drugs.json), &exam=1 from exam drugs only.
+// builds a quiz from the subject's drug cards (data/<id>/drugs.json), &exam=1 from exam drugs only;
+// ?starred merges every quiz that has starred questions.
 // Shared by quiz.js and print.js.
-import { buildMixedQuiz, isValidQuizId, validateQuiz } from './core.js';
+import { STARRED_QUIZ_ID, buildMixedQuiz, buildStarredQuiz, isValidQuizId, sessionQuizIds, validateQuiz } from './core.js';
 import { findSubject, loadManifest, subjectPaths, subjectQuizzes } from './catalog.js';
 import { buildDrugQuiz, drugDeckUrl, validateDrugDeck } from './drugs-core.js';
+import { keys, load, loadStars } from './storage.js';
 
 /** An error whose message is ready to show the user. */
 export class LoadError extends Error {}
@@ -34,15 +36,39 @@ async function loadDrugQuiz(subjectId, examOnly) {
     console.error('Invalid drug cards:', errors);
     throw new LoadError('קובץ כרטיסיות התרופות פגום. פרטים בקונסול.');
   }
-  return buildDrugQuiz(deck, {
+  const quiz = buildDrugQuiz(deck, {
     id: `drugs-${entry.id}${examOnly ? '-exam' : ''}`,
     subject: entry.name,
     unit: 'כרטיסיות תרופות',
     examOnly,
   });
+  // Generated from the deck, not a quiz file, so its questions cannot be starred.
+  return { ...quiz, generated: true };
+}
+
+/**
+ * Every quiz with starred questions, plus any a saved starred session still needs, merged in
+ * home-page order. A quiz that fails to load is left out rather than failing the page.
+ */
+async function loadStarredQuiz() {
+  const needed = new Set(sessionQuizIds(load(keys.session(STARRED_QUIZ_ID))));
+  const ids = (await loadManifest()).subjects
+    .flatMap(subjectQuizzes)
+    .map((q) => q.id)
+    .filter((id) => needed.has(id) || loadStars(id).length > 0);
+  const loaded = await Promise.allSettled(ids.map(fetchQuiz));
+  loaded.forEach((r, i) => {
+    if (r.status === 'rejected') console.error(`Could not load ${ids[i]}:`, r.reason);
+  });
+  return {
+    ...buildStarredQuiz(loaded.filter((r) => r.status === 'fulfilled').map((r) => r.value)),
+    title: 'שאלות מסומנות',
+    description: 'השאלות שסימנתם בכוכב. בחרו מאילו בחנים ואילו שאלות לתרגל.',
+  };
 }
 
 async function loadQuiz(params) {
+  if (params.has('starred')) return loadStarredQuiz();
   const drugs = params.get('drugs');
   if (drugs !== null) return loadDrugQuiz(drugs, params.get('exam') === '1');
   const subject = params.get('subject');

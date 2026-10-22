@@ -354,6 +354,44 @@ kbd {
 }
 .retry { color: var(--muted); font-size: 0.8125rem; }
 
+/* ---------- stars ---------- */
+
+.star-note { margin-block: 0.75rem 0; font-size: 0.875rem; }
+
+.meta-end { display: flex; align-items: center; gap: 0.6rem; }
+.star-toggle {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0 0.35rem;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  color: var(--muted);
+  flex: none;
+}
+.star-toggle:hover { border-color: var(--line); }
+.star-toggle[aria-pressed="true"] { color: var(--accent); }
+
+.starred-browse { margin-block-start: 0.75rem; }
+.starred-browse > summary { cursor: pointer; }
+.starred-list { list-style: none; padding: 0; margin: 0.4rem 0 0; }
+.starred-item { border-block-end: 1px solid var(--line); padding-block: 0.4rem; }
+.starred-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; }
+.starred-head .topic-option { align-items: flex-start; padding: 0; }
+.starred-head .topic-option input { margin-block-start: 0.3rem; }
+.starred-item details { margin-block-start: 0.2rem; font-size: 0.95rem; }
+.starred-item summary { cursor: pointer; color: var(--muted); }
+.starred-item details p { margin: 0.3rem 0 0; }
+.starred-item .answer { color: var(--ok); font-weight: 600; }
+
+/* The combined page's picker: one block per quiz instead of the topic grid. */
+.topic-list.star-picker { display: block; }
+.star-group { margin-block-end: 1rem; }
+.star-group .starred-list { padding-inline-start: 1.6rem; }
+
+.retried-row { display: flex; align-items: flex-start; gap: 0.5rem; border-block-end: 1px solid var(--line); }
+.retried-row .retried-item { flex: 1; border-block-end: none; }
+
 /* Quiz text is plain text; keep authored line breaks. */
 .question, .explanation, .note, .option-text { white-space: pre-line; }
 .question {

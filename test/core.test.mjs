@@ -3,9 +3,11 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   MASTERY_STREAK,
+  STARRED_QUIZ_ID,
   REQUEUE_MAX,
   REQUEUE_MIN,
   answer,
+  buildStarredQuiz,
   createSession,
   currentQuestion,
   hasPositionalReference,
@@ -15,15 +17,21 @@ import {
   buildMixedQuiz,
   mixedQuizId,
   listTopics,
+  questionById,
   questionIdsForTopics,
+  quizLabel,
   sessionQuestions,
+  sessionQuizIds,
   presentOptions,
   progressInfo,
   recordResult,
   requeue,
   shuffle,
   skip,
+  starTarget,
+  starredIds,
   summarize,
+  toggleStar,
   validateQuiz,
 } from '../js/core.js';
 
@@ -442,4 +450,63 @@ test('mixedQuizId is stable, storage-safe and differs per subject', () => {
   assert.equal(id, mixedQuizId('אנטומיה ופיזיולוגיה'));
   assert.match(id, /^mix-[a-z0-9]+$/);
   assert.notEqual(id, mixedQuizId('פרמקולוגיה'));
+});
+
+// ---------- stars ----------
+
+test('toggleStar adds and removes without mutating', () => {
+  const before = ['q1'];
+  assert.deepEqual(toggleStar(before, 'q2'), ['q1', 'q2']);
+  assert.deepEqual(toggleStar(before, 'q1'), []);
+  assert.deepEqual(before, ['q1']);
+  assert.deepEqual(toggleStar(null, 'q3'), ['q3']);
+});
+
+test('starredIds keeps known ids in authored order and drops stale ones', () => {
+  assert.deepEqual(starredIds(['q3', 'gone', 'q1'], fixture), ['q1', 'q3']);
+  assert.deepEqual(starredIds('garbage', fixture), []);
+});
+
+test('quizLabel prefers the unit over the subject', () => {
+  assert.equal(quizLabel({ subject: 'S', unit: 'U', title: 'T' }), 'U · T');
+  assert.equal(quizLabel({ subject: 'S', title: 'T' }), 'S · T');
+});
+
+test('starTarget points a merged question back to its own quiz', () => {
+  assert.deepEqual(starTarget(fixture, 'q2'), { quizId: fixture.id, questionId: 'q2' });
+  const mix = buildMixedQuiz(fixture.subject, [unitQuiz('u-1', 'א')]);
+  assert.deepEqual(starTarget(mix, 'u-1/q2'), { quizId: 'u-1', questionId: 'q2' });
+});
+
+test('buildStarredQuiz groups per quiz, even two quizzes of one unit', () => {
+  const a = unitQuiz('unit-a-1', 'יחידה א');
+  const b = unitQuiz('unit-a-2', 'יחידה א', 'מבחן 2');
+  const starred = buildStarredQuiz([a, b]);
+  assert.equal(starred.id, STARRED_QUIZ_ID);
+  assert.ok(starred.mixed);
+  assert.deepEqual(listTopics(starred, 'group').map((g) => g.topic), ['יחידה א · מבחן 1', 'יחידה א · מבחן 2']);
+  const q = questionById(starred, 'unit-a-2/q2');
+  assert.equal(q.question, fixture.questions[1].question);
+  assert.deepEqual(starTarget(starred, q.id), { quizId: 'unit-a-2', questionId: 'q2' });
+});
+
+test('a starred session plays through and lists the quizzes it needs', () => {
+  const starred = buildStarredQuiz([unitQuiz('u-1', 'א'), unitQuiz('u-2', 'ב')]);
+  const ids = ['u-1/q1', 'u-2/q2'];
+  let state = createSession(starred, seeded(1), { questionIds: ids, mode: 'starred' });
+  assert.ok(isSessionCompatible(JSON.parse(JSON.stringify(state)), starred));
+  assert.deepEqual(sessionQuizIds(state).sort(), ['u-1', 'u-2']);
+  while (!isComplete(state)) {
+    state = answer(state, starred, currentQuestion(state, starred).correct, seeded(2)).state;
+  }
+  assert.equal(summarize(state, starred).firstTryPercent, 100);
+
+  // Once one of its quizzes is not loaded, the saved session no longer matches.
+  state = createSession(starred, seeded(1), { questionIds: ids, mode: 'starred' });
+  assert.ok(!isSessionCompatible(state, buildStarredQuiz([unitQuiz('u-1', 'א')])));
+});
+
+test('sessionQuizIds ignores malformed state', () => {
+  assert.deepEqual(sessionQuizIds(null), []);
+  assert.deepEqual(sessionQuizIds({ progress: { 'BAD ID/q1': {} } }), []);
 });

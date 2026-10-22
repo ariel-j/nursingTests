@@ -9,8 +9,12 @@ export const REQUEUE_MAX = 5;
 // Consecutive correct answers needed to master a question that was missed or skipped.
 export const MASTERY_STREAK = 2;
 export const SESSION_VERSION = 1;
-// full: every question; topics: questions from chosen topics; retry: questions missed last time.
-export const SESSION_MODES = ['full', 'topics', 'retry'];
+// full: every question; topics: questions from chosen topics; retry: questions missed last time;
+// starred: questions the user starred.
+export const SESSION_MODES = ['full', 'topics', 'retry', 'starred'];
+// Id of the in-memory quiz that combines starred questions from several quizzes. Not a valid
+// quiz id, so it can never clash with a real quiz's storage keys.
+export const STARRED_QUIZ_ID = '*starred';
 
 const ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const QUIZ_KEYS = new Set(['id', 'subject', 'unit', 'title', 'description', 'questions']);
@@ -182,11 +186,14 @@ export function mixedQuizId(subject) {
  * (two units can both have a topic called "עקרונות כלליים").
  */
 export function buildMixedQuiz(subject, quizzes) {
-  const questions = quizzes.flatMap((quiz) => {
-    const group = quiz.unit ?? quiz.title;
+  return { id: mixedQuizId(subject), subject, mixed: true, questions: mergeQuestions(quizzes, (quiz) => quiz.unit ?? quiz.title) };
+}
+
+function mergeQuestions(quizzes, groupOf) {
+  return quizzes.flatMap((quiz) => {
+    const group = groupOf(quiz);
     return quiz.questions.map((q) => ({ ...q, id: `${quiz.id}/${q.id}`, topic: `${group} · ${q.topic}`, group }));
   });
-  return { id: mixedQuizId(subject), subject, mixed: true, questions };
 }
 
 /**
@@ -303,6 +310,51 @@ export function progressInfo(state) {
     total: all.length,
     queueSize: state.queue.length,
   };
+}
+
+// ---------- stars ----------
+
+/** Starred question ids with `id` added or removed. Returns a new array. */
+export function toggleStar(starred, id) {
+  const list = Array.isArray(starred) ? starred : [];
+  return list.includes(id) ? list.filter((s) => s !== id) : [...list, id];
+}
+
+/** The stored starred ids that still exist in the quiz, in authored order. */
+export function starredIds(starred, quiz) {
+  const wanted = new Set(Array.isArray(starred) ? starred : []);
+  return quiz.questions.filter((q) => wanted.has(q.id)).map((q) => q.id);
+}
+
+/**
+ * Where a question's star is stored: its own quiz and id. A merged quiz's question
+ * ("<quiz>/<q>") points back to the quiz it came from.
+ */
+export function starTarget(quiz, questionId) {
+  if (!quiz.mixed) return { quizId: quiz.id, questionId };
+  const slash = questionId.indexOf('/');
+  return { quizId: questionId.slice(0, slash), questionId: questionId.slice(slash + 1) };
+}
+
+/** "הלב · מבחן 1": the unit (or subject) and title, to tell quizzes apart in a mixed list. */
+export function quizLabel(quiz) {
+  return `${quiz.unit ?? quiz.subject} · ${quiz.title}`;
+}
+
+/**
+ * Every question of `quizzes` in one quiz, grouped per quiz (two quizzes of one unit stay apart),
+ * shaped like a mixed practice. The page offers only the starred ones; holding all of them keeps a
+ * saved session valid after a question in it is unstarred.
+ */
+export function buildStarredQuiz(quizzes) {
+  return { id: STARRED_QUIZ_ID, mixed: true, starred: true, questions: mergeQuestions(quizzes, quizLabel) };
+}
+
+/** Quiz ids a saved starred session refers to, so their files can be loaded to resume it. */
+export function sessionQuizIds(state) {
+  if (!isPlainObject(state) || !isPlainObject(state.progress)) return [];
+  const ids = Object.keys(state.progress).map((id) => id.split('/')[0]);
+  return [...new Set(ids)].filter(isValidQuizId);
 }
 
 // ---------- results ----------

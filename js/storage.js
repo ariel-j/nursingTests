@@ -7,6 +7,8 @@ export const keys = {
   session: (quizId) => `session:${quizId}`,
   results: (quizId) => `results:${quizId}`,
   history: (quizId) => `history:${quizId}`,
+  // Starred question ids of a quiz (its own ids, also when starred from a mixed practice): [id].
+  starred: (quizId) => `starred:${quizId}`,
   // Matching-game weights of a subject's drug cards: { [drugId]: weight }, missed drugs weigh more.
   drugMatch: (subjectId) => `drug-match:${subjectId}`,
   // Daily review (Leitner boxes) of a subject's drug cards: { [drugId]: { box, due, last } }.
@@ -60,4 +62,10 @@ export function listKeys(start) {
     // unavailable storage simply has no keys
   }
   return found;
+}
+
+/** A quiz's stored starred question ids (some may no longer exist in the quiz), or none. */
+export function loadStars(quizId) {
+  const list = load(keys.starred(quizId), []);
+  return Array.isArray(list) ? list : [];
 }
