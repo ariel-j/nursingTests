@@ -12,7 +12,7 @@ The exact JSON format and field rules are in [README.md](../README.md#quiz-forma
 
 ```text
 You are writing multiple-choice quiz files for a Hebrew nursing exam-prep site.
-SUBJECT: <subject name exactly as in the catalog, e.g. פרמקולוגיה>
+SUBJECT: <subject name exactly as in the catalog, e.g. פרמקולוגיה א'>
 UNIT:    <unit name exactly as in the catalog, e.g. תרופות לב וכלי דם; or "none" if the subject has no units>
 QUIZ:    <title, e.g. מבחן 1; and the quiz id, e.g. pharma-cardio-1>
 
@@ -113,7 +113,7 @@ SUBJECT NOTES
 - Clinical links are welcome when the material makes them (e.g. what happens in heart failure).
 ```
 
-### פרמקולוגיה
+### פרמקולוגיה א'
 
 ```text
 SUBJECT NOTES
