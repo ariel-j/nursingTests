@@ -152,8 +152,8 @@ site's style, then these steps:
 ## Videos and artifacts (סרטוני הסבר קצרים)
 
 `media.html?subject=<id>` shows a subject's short explainer videos and the owner's own artifacts (images,
-PDFs, HTML pages), one section per sub-subject. The files live in `media/<subject-id>/`, optionally one
-folder per sub-subject; names give the titles and order (`01 - …`). GitHub Pages can't list a folder,
+PDFs, HTML pages), with a button per sub-subject that opens its own page (`&topic=<name>`). The
+files live in `media/<subject-id>/`, optionally one folder per sub-subject; names give the titles and order (`01 - …`). GitHub Pages can't list a folder,
 so `media/manifest.json` lists them. It is not committed: the deploy workflow builds it every time it
 publishes the site, and `npm run manifest` builds it locally, so uploading through the GitHub web UI is enough. Captions:
 a `.vtt` next to the video, same name. `npm run validate` rejects course files (`.pptx`, `.docx`),

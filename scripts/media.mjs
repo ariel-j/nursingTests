@@ -26,10 +26,14 @@ const collator = new Intl.Collator('he', { numeric: true });
 const extOf = (name) => (name.includes('.') ? name.slice(name.lastIndexOf('.') + 1).toLowerCase() : '');
 const stem = (name) => (name.includes('.') ? name.slice(0, name.lastIndexOf('.')) : name);
 
-/** Display name of a file (no extension) or folder: no ordering prefix ("01 - ", "2_", "3.", "4)"). */
+/**
+ * Display name of a file (no extension) or folder: no ordering prefix ("01 - ", "2_", "3.", "4)"),
+ * and underscores read as spaces (downloaded files often come named "שם_הסרטון").
+ */
 export function displayName(name, { isFile = true } = {}) {
   const base = isFile ? stem(name) : name;
-  return base.replace(/^\d+\s*[-_.)]?\s*/, '').trim() || base.trim();
+  const words = (s) => s.replace(/_/g, ' ').replace(/\s+/g, ' ').trim();
+  return words(base.replace(/^\d+\s*[-_.)]?\s*/, '')) || words(base) || base.trim();
 }
 
 /**
@@ -119,6 +123,18 @@ export function buildMedia(files, subjectIds) {
   for (const id of subjectIds) {
     const groups = bySubject.get(id);
     if (!groups) continue;
+    // A sub-subject's name is its address on the media page (?topic=<name>), so it must be unique.
+    const seen = new Map();
+    for (const folder of groups.keys()) {
+      if (folder === '') continue;
+      const name = displayName(folder, { isFile: false });
+      if (seen.has(name)) {
+        errors.push(`media/${id}/${folder}: same topic name as "${seen.get(name)}" ("${name}"), rename one of them`);
+        groups.delete(folder);
+      } else {
+        seen.set(name, folder);
+      }
+    }
     subjects[id] = {
       groups: [...groups.entries()]
         .sort(([a], [b]) => (a === '' ? -1 : b === '' ? 1 : collator.compare(a, b)))

@@ -1,8 +1,10 @@
-// Videos and artifacts page (media.html). ?subject=<id> shows that subject's media/manifest.json
-// entries: one section per sub-subject folder, its videos first (native player, captions when a .vtt
-// was uploaded), then images, PDFs and HTML pages as cards. Without ?subject= it lists the subjects
-// that have media.
-import { findSubject, loadManifest, loadMedia, mediaCount, subjectPaths } from './catalog.js';
+// Videos and artifacts page (media.html), from media/manifest.json. Without ?subject= it lists the
+// subjects that have media. ?subject=<id> shows the subject's loose files and a card per sub-subject
+// (topic); ?subject=<id>&topic=<name> shows that topic alone: its videos first (native player,
+// captions when a .vtt was uploaded, a note when not), then images, PDFs and HTML pages as cards.
+import {
+  findMediaTopic, findSubject, loadManifest, loadMedia, mediaCount, mediaTopicPath, subjectPaths,
+} from './catalog.js';
 
 const $ = (id) => document.getElementById(id);
 const KIND_LABEL = { image: 'תמונה', pdf: 'PDF', html: 'עמוד אינטראקטיבי' };
@@ -44,6 +46,7 @@ function renderVideo(item, headingTag) {
   video.append(fallback);
   const caption = el('figcaption');
   caption.append(el(headingTag, 'card-title', item.title));
+  if (!item.captions) caption.append(el('p', 'meta', 'לסרטון הזה אין עדיין כתוביות'));
   figure.append(video, caption);
   return figure;
 }
@@ -67,19 +70,43 @@ function renderCard(item, headingTag) {
   return li;
 }
 
-function renderGroup(group, index) {
+/** A topic's (or the loose files') items, headed by `itemHeading`. */
+function renderItems(items, itemHeading) {
   const section = el('section', 'group media-group');
-  section.id = `part-${index + 1}`;
-  const itemHeading = group.name ? 'h3' : 'h2';
-  if (group.name) section.append(el('h2', 'group-title', group.name));
-  const videos = group.items.filter((i) => i.kind === 'video');
-  const others = group.items.filter((i) => i.kind !== 'video');
+  const videos = items.filter((i) => i.kind === 'video');
+  const others = items.filter((i) => i.kind !== 'video');
   section.append(...videos.map((v) => renderVideo(v, itemHeading)));
   if (others.length > 0) {
     const list = el('ul', 'quiz-list media-list');
     list.append(...others.map((i) => renderCard(i, itemHeading)));
     section.append(list);
   }
+  return section;
+}
+
+/** "2 סרטונים · חומר עזר אחד" */
+function countLabel(items) {
+  const videos = items.filter((i) => i.kind === 'video').length;
+  const others = items.length - videos;
+  const parts = [];
+  if (videos > 0) parts.push(videos === 1 ? 'סרטון אחד' : `${videos} סרטונים`);
+  if (others > 0) parts.push(others === 1 ? 'חומר עזר אחד' : `${others} חומרי עזר`);
+  return parts.join(' · ');
+}
+
+function renderTopicLinks(subjectId, topics) {
+  const section = el('section', 'group media-group');
+  section.append(el('h2', 'group-title', 'בחרו נושא'));
+  const list = el('ul', 'quiz-list');
+  list.append(...topics.map((t) => {
+    const link = el('a', 'quiz-card');
+    link.href = mediaTopicPath(subjectId, t.name);
+    link.append(el('h3', 'card-title', t.name), el('p', 'meta', countLabel(t.items)));
+    const li = el('li');
+    li.append(link);
+    return li;
+  }));
+  section.append(list);
   return section;
 }
 
@@ -119,17 +146,40 @@ async function main() {
     return;
   }
 
-  document.title = `סרטוני הסבר קצרים · ${subject.name}`;
+  const paths = subjectPaths(subject.id);
   $('subject').textContent = subject.name;
   $('subject').hidden = false;
-  $('back-link').href = subjectPaths(subject.id).home;
+  const topicName = new URLSearchParams(location.search).get('topic');
+  if (topicName !== null) {
+    $('back-link').href = paths.media;
+    $('back-link').textContent = '→ כל הנושאים';
+    const topic = findMediaTopic(data, subject.id, topicName);
+    if (!topic) {
+      status('הנושא הזה לא נמצא, אולי שמו השתנה. אפשר לבחור נושא מהרשימה.');
+      return;
+    }
+    document.title = `${topic.name} · סרטוני הסבר קצרים · ${subject.name}`;
+    $('subject').textContent = `${subject.name} · סרטוני הסבר קצרים`;
+    $('page-title').textContent = topic.name;
+    $('lede').hidden = true;
+    $('media-groups').replaceChildren(renderItems(topic.items, 'h2'));
+    return;
+  }
+
+  document.title = `סרטוני הסבר קצרים · ${subject.name}`;
+  $('back-link').href = paths.home;
   $('back-link').textContent = `→ ${subject.name}`;
   const groups = data.subjects?.[subject.id]?.groups ?? [];
   if (groups.length === 0) {
     status('עדיין אין סרטונים במקצוע הזה.');
     return;
   }
-  $('media-groups').replaceChildren(...groups.map(renderGroup));
+  const loose = groups.find((g) => g.name === '');
+  const topics = groups.filter((g) => g.name !== '');
+  $('media-groups').replaceChildren(
+    ...(loose ? [renderItems(loose.items, 'h2')] : []),
+    ...(topics.length > 0 ? [renderTopicLinks(subject.id, topics)] : []),
+  );
 }
 
 main();

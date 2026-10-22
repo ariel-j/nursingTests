@@ -1,7 +1,9 @@
 # media/: videos and artifacts
 
 Short explainer videos and your own artifacts, shown on `media.html?subject=<id>`
-(the "סרטוני הסבר קצרים" card on a subject's page, and in the side menu).
+(the "סרטוני הסבר קצרים" card on a subject's page, and in the side menu). That page has a button per
+sub-subject folder; each opens its own page, `media.html?subject=<id>&topic=<name>`, with that
+topic's videos only.
 
 ## Layout
 
@@ -17,11 +19,15 @@ media/
 ```
 
 - Titles come from the names: the extension and an ordering prefix (`01 - `, `2_`, `3.`) are dropped,
-  and the number sets the order. Files directly in `pharmacology/` show first, without a heading.
+  `_` reads as a space, and the number sets the order. Files directly in `pharmacology/` show on the
+  subject's page, above the topic buttons.
+- Every sub-subject folder needs its own name (`01 פרקינסון` and `פרקינסון` clash): the name is
+  the topic's address, so renaming a folder changes its link.
 - Supported: `mp4` / `webm` (H.264 mp4 plays everywhere), `png` `jpg` `webp` `gif` `svg`, `pdf`, `html`.
 - Up to 50MB per file. GitHub's web upload stops at 25MB anyway. For a few minutes of 720p that's plenty.
-- Captions: a `.vtt` file with the same name as the video. Videos without captions are listed as a
-  warning, and the accessibility statement says so.
+- Captions: a `.vtt` file with the same name as the video. A video without captions is still
+  published: validation warns, the page notes "לסרטון הזה אין עדיין כתוביות" under it, and the
+  accessibility statement says some videos lack captions.
 - Drafts: start a file or folder name with `_` (`_01 - הסבר.mp4`) and it stays here but is not listed
   or published, e.g. a video still waiting for its captions. Remove the `_` to publish it.
   The repo is public, so a draft is still visible on github.com.
