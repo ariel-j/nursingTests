@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  LINE_CHARS, MAX_SECONDS, buildVocabulary, isKnown, pendingVideos, reviewReport, reviewWords, splitLines, timestamp, toVtt, wordsToCues,
+  LINE_CHARS, MAX_SECONDS, buildVocabulary, isKnown, mergeWords, pendingVideos, reviewReport, reviewWords, splitLines, timestamp, toVtt, wordsToCues,
 } from '../scripts/captions.mjs';
 
 // Placeholder words, one per second, 0.5s long, with a leading space like faster-whisper's.
@@ -46,6 +46,17 @@ test('wordsToCues breaks at pauses, sentence ends, and the length and time limit
     assert.ok(c.end - c.start <= MAX_SECONDS);
   }
   assert.equal(cues.flatMap((c) => c.lines).join(' ').split(' ').length, 20);
+});
+
+test('mergeWords and wordsToCues glue a split word back together', () => {
+  const split = [
+    { start: 0, end: 0.2, word: ' מצב', probability: 0.9 },
+    { start: 0.2, end: 0.3, word: ' ה', probability: 0.9 },
+    { start: 0.3, end: 0.6, word: '-chill', probability: 0.9 },
+  ];
+  assert.deepEqual(mergeWords(split).map((w) => [w.word, w.start, w.end]), [[' מצב', 0, 0.2], [' ה-chill', 0.2, 0.6]]);
+  assert.deepEqual(wordsToCues(split).map((c) => c.lines), [['מצב ה-chill']]);
+  assert.equal(split[1].word, ' ה');
 });
 
 test('wordsToCues keeps a short cue up a second, without overlapping the next', () => {

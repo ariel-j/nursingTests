@@ -33,7 +33,22 @@ export function pendingVideos(paths) {
 }
 
 /**
- * Cues from transcribed words ({ start, end, word } in seconds, words may carry a leading space).
+ * Glues the pieces Whisper splits a word into back together: a piece with no leading space continues
+ * the word before it ("ג" + "'נרליים", "ה" + "-chill"). Keeps the first start and the last end.
+ */
+export function mergeWords(words) {
+  const out = [];
+  for (const w of words) {
+    const prev = out.at(-1);
+    if (prev && !/^\s/.test(w.word)) out[out.length - 1] = { ...prev, end: w.end, word: prev.word + w.word };
+    else out.push({ ...w });
+  }
+  return out;
+}
+
+/**
+ * Cues from transcribed words ({ start, end, word } in seconds, a word starts with a space unless it
+ * continues the one before).
  * A cue ends before a word that would push it past two lines or MAX_SECONDS, at a pause, or after a
  * sentence end once it is long enough. Returns { start, end, lines } with at most two lines.
  */
@@ -45,7 +60,7 @@ export function wordsToCues(words) {
     if (cur.length > 0 && text(cur)) cues.push({ start: cur[0].start, end: cur.at(-1).end, lines: splitLines(text(cur)) });
     cur = [];
   };
-  for (const w of words) {
+  for (const w of mergeWords(words)) {
     if (cur.length > 0) {
       const tooLong = text([...cur, w]).length > LINE_CHARS * 2;
       const tooSlow = w.end - cur[0].start > MAX_SECONDS;
@@ -107,8 +122,9 @@ export function isKnown(word, vocab) {
  * Words to check by ear as { time, word, context }: those that appear nowhere in the quizzes or
  * summaries. The model's own confidence is no guide, it is just as sure of "טעים" for "תאים".
  */
-export function reviewWords(words, vocab) {
+export function reviewWords(transcribed, vocab) {
   const out = [];
+  const words = mergeWords(transcribed);
   words.forEach((w, i) => {
     if (isKnown(w.word, vocab)) return;
     const context = words.slice(Math.max(0, i - 3), i + 4).map((x) => x.word.trim()).join(' ');
