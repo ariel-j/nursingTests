@@ -63,6 +63,9 @@ function renderSubject(subject) {
   for (const unit of subject.units) {
     section.append(renderGroup(unit.name, unit.quizzes, 'h3'));
   }
+  if (subject.quizzes.length === 0 && subject.units.length === 0) {
+    section.append(el('p', 'muted soon', 'בבנייה'));
+  }
   return section;
 }
 

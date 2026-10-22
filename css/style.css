@@ -198,6 +198,7 @@ kbd {
   color: var(--muted);
 }
 .soon { margin: 0; font-style: italic; }
+.header-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 
 .quiz-list {
   list-style: none;
@@ -408,6 +409,24 @@ kbd {
 .prose ul { margin-block: 0 1rem; padding-inline-start: 1.4rem; }
 .prose li { margin-block-end: 0.4rem; }
 .prose .top-nav { margin-block-end: 0.5rem; }
+.prose ol { margin-block: 0 1rem; padding-inline-start: 1.4rem; }
+
+/* ---------- self-study page ---------- */
+
+.doc-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.doc-file summary { cursor: pointer; font-weight: 600; }
+.doc-text {
+  max-block-size: 28rem;
+  overflow: auto;
+  padding: 1rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font: inherit;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  text-align: start;
+}
 
 /* ---------- footer ---------- */
 
