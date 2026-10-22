@@ -26,6 +26,7 @@ test('displayName drops the extension (files) and an ordering prefix', () => {
 test('buildMedia groups by sub-subject folder in numeric order, loose files first', () => {
   const { manifest, errors } = buildMedia([
     f('pharmacology/10 - נושא י/1 - סרטון.mp4'),
+    f('pharmacology/10 - נושא י/1 - סרטון.vtt'),
     f('pharmacology/2 - נושא ב/2 - תרשים.png'),
     f('pharmacology/2 - נושא ב/10 - דף.pdf'),
     f('pharmacology/כללי.html'),
@@ -42,9 +43,9 @@ test('buildMedia groups by sub-subject folder in numeric order, loose files firs
 
 test('buildMedia rejects two topic folders with the same name (it is the ?topic= address)', () => {
   const { manifest, errors } = buildMedia([
-    f('pharmacology/01 - פרקינסון/א.mp4'),
-    f('pharmacology/פרקינסון/ב.mp4'),
-    f('anatomy/פרקינסון/ג.mp4'),
+    f('pharmacology/01 - פרקינסון/א.pdf'),
+    f('pharmacology/פרקינסון/ב.pdf'),
+    f('anatomy/פרקינסון/ג.pdf'),
   ], ids);
   assert.equal(errors.length, 1);
   assert.match(errors[0], /media\/pharmacology\/פרקינסון: same topic name/);
@@ -52,18 +53,17 @@ test('buildMedia rejects two topic folders with the same name (it is the ?topic=
   assert.equal(mediaCount(manifest, 'anatomy'), 1);
 });
 
-test('buildMedia pairs captions with their video and warns about videos without them', () => {
+test('buildMedia pairs captions with their video and leaves out videos without them', () => {
   const { manifest, errors, warnings } = buildMedia([
     f('pharmacology/א/1 - סרטון.mp4'),
     f('pharmacology/א/1 - סרטון.vtt'),
     f('pharmacology/א/2 - בלי.webm'),
   ], ids);
-  assert.deepEqual(errors, []);
-  const [withCaptions, without] = manifest.subjects.pharmacology.groups[0].items;
-  assert.equal(withCaptions.captions, 'media/pharmacology/א/1 - סרטון.vtt');
-  assert.equal(without.captions, undefined);
-  assert.equal(warnings.length, 1);
-  assert.match(warnings[0], /בלי\.webm: no captions/);
+  const items = manifest.subjects.pharmacology.groups[0].items;
+  assert.deepEqual(items.map((i) => i.captions), ['media/pharmacology/א/1 - סרטון.vtt']);
+  assert.deepEqual(warnings, []);
+  assert.equal(errors.length, 1);
+  assert.match(errors[0], /בלי\.webm: no captions/);
 });
 
 test('buildMedia rejects course files, unplayable video, big files, bad places and stray captions', () => {
@@ -83,7 +83,7 @@ test('buildMedia rejects course files, unplayable video, big files, bad places a
   assert.deepEqual(manifest.subjects, {});
 });
 
-test('buildMedia leaves drafts (a "_" file or folder) out, without a captions warning', () => {
+test('buildMedia leaves drafts (a "_" file or folder) out, without a captions error', () => {
   const { manifest, errors, warnings } = buildMedia([
     f('pharmacology/_טיוטה.mp4'),
     f('pharmacology/_טיוטה.vtt'),
@@ -112,6 +112,7 @@ test('checkMedia writes the manifest and flags HTML that loads from a CDN', asyn
   try {
     await mkdir(path.join(dir, 'pharmacology', '1 - נושא'), { recursive: true });
     await writeFile(path.join(dir, 'pharmacology', '1 - נושא', 'סרטון.mp4'), 'placeholder');
+    await writeFile(path.join(dir, 'pharmacology', '1 - נושא', 'סרטון.vtt'), 'WEBVTT\n');
     await writeFile(path.join(dir, 'pharmacology', 'עמוד.html'), '<script src="https://cdn.example/x.js"></script>');
     const written = await checkMedia(ids, { write: true, dir });
     assert.deepEqual(written.errors, []);

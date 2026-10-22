@@ -51,7 +51,7 @@ function ignored(rel) {
 /**
  * The manifest from a file list. `files` are { path, size } with paths relative to media/ and '/'
  * separators; `subjectIds` are the catalog's ids. Returns { manifest, errors, warnings }: files with
- * errors are left out of the manifest, warnings (a video with no captions) are not.
+ * errors (a video with no captions among them) are left out of the manifest, warnings are not.
  */
 export function buildMedia(files, subjectIds) {
   const errors = [];
@@ -102,7 +102,10 @@ export function buildMedia(files, subjectIds) {
         item.captions = `media/${vtt}`;
         usedCaptions.add(vtt);
       } else {
-        warnings.push(`${where}: no captions (add ${parts.at(-1).replace(/\.[^.]+$/, '')}.vtt next to it)`);
+        // The deploy workflow captions new videos first (scripts/captions.mjs), so this is a video
+        // whose transcription failed, or one added locally without running it.
+        errors.push(`${where}: no captions (add ${parts.at(-1).replace(/\.[^.]+$/, '')}.vtt next to it, or let the deploy workflow make it)`);
+        continue;
       }
     }
     const group = parts.length === 3 ? parts[1] : '';

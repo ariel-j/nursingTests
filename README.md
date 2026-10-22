@@ -156,9 +156,20 @@ PDFs, HTML pages), with a button per sub-subject that opens its own page (`&topi
 files live in `media/<subject-id>/`, optionally one folder per sub-subject; names give the titles and order (`01 - …`). GitHub Pages can't list a folder,
 so `media/manifest.json` lists them. It is not committed: the deploy workflow builds it every time it
 publishes the site, and `npm run manifest` builds it locally, so uploading through the GitHub web UI is enough. Captions:
-a `.vtt` next to the video, same name. `npm run validate` rejects course files (`.pptx`, `.docx`),
-unplayable video (`.mov`), unsupported types and files over 50MB, and warns about videos without
-captions and HTML pages that load from a CDN. How to upload: [media/README.md](media/README.md).
+a `.vtt` next to the video, same name. The deploy workflow makes them for any video that has none
+(below). `npm run validate` rejects course files (`.pptx`, `.docx`), unplayable video (`.mov`),
+videos without captions, unsupported types and files over 50MB, and warns about HTML pages that load
+from a CDN.
+
+Automatic captions: before building the media list, the deploy workflow transcribes each video
+without a `.vtt` with ivrit.ai's Hebrew Whisper model (`scripts/transcribe.py`, faster-whisper on the
+CPU, about half the video's length), turns the words into cues of up to two 42-character lines
+(`scripts/captions.mjs`, tested), commits the `.vtt` files to `main` and opens an issue listing the
+words that appear in no quiz or summary, where most mishearings are. The model's own confidence is no
+guide to its mistakes. A `terms.md` in `media/<subject-id>/` (and in a topic folder) primes the model
+with that subject's terms. To run it locally: `pip install -r scripts/requirements-captions.txt`,
+then `python scripts/transcribe.py <dir> <video under media/>...` and
+`node scripts/captions.mjs build <dir>`. How to upload: [media/README.md](media/README.md).
 
 A summary can also carry interactive widgets (search, simulators, flashcards), as `pharmacodynamics.html` does:
 mark each widget `data-interactive` (and `no-print`), keep its script and styles in their own files

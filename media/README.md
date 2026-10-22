@@ -25,11 +25,14 @@ media/
   the topic's address, so renaming a folder changes its link.
 - Supported: `mp4` / `webm` (H.264 mp4 plays everywhere), `png` `jpg` `webp` `gif` `svg`, `pdf`, `html`.
 - Up to 50MB per file. GitHub's web upload stops at 25MB anyway. For a few minutes of 720p that's plenty.
-- Captions: a `.vtt` file with the same name as the video. A video without captions is still
-  published: validation warns, the page notes "לסרטון הזה אין עדיין כתוביות" under it, and the
-  accessibility statement says some videos lack captions.
+- Captions: a `.vtt` file with the same name as the video. You don't have to make it: when you upload
+  a video without one, the "Deploy site" action transcribes it (about half the video's length),
+  commits the `.vtt` and opens an issue "בדיקת כתוביות אוטומטיות" with the words worth checking by
+  ear. Fix a word by editing the `.vtt` on github.com. A video without captions is not published.
+- `terms.md` in a subject or topic folder: terms that help the transcription spell drug names and
+  jargon right. Not published.
 - Drafts: start a file or folder name with `_` (`_01 - הסבר.mp4`) and it stays here but is not listed
-  or published, e.g. a video still waiting for its captions. Remove the `_` to publish it.
+  or published, e.g. a video you are still working on. Remove the `_` to publish it.
   The repo is public, so a draft is still visible on github.com.
 - HTML pages open in a new tab. If one loads scripts from the internet (a CDN), validation warns.
 - **The repo is public.** Only your own material: no pptx, lecture recordings, slides or textbook scans.
