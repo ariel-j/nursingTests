@@ -447,6 +447,10 @@ kbd {
 /* Mark state with a symbol too, not only color. */
 .option.is-correct::after { content: "✓"; content: "✓" / "תשובה נכונה"; color: var(--ok); font-weight: 600; }
 .option.is-wrong::after { content: "✗"; content: "✗" / "התשובה שבחרת, שגויה"; color: var(--bad); font-weight: 600; }
+/* Exam style: picked, not yet confirmed. aria-pressed carries the state; the dot shows it without color. */
+.option.is-selected { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: var(--accent-soft); }
+.option.is-selected .letter { border-color: var(--accent); background: var(--accent); color: var(--surface); }
+.option.is-selected::after { content: "●"; content: "●" / ""; color: var(--accent); }
 
 .feedback {
   margin-block-start: 16px;
@@ -510,6 +514,7 @@ kbd {
 .retried-item summary b { color: var(--bad); font-weight: 600; }
 .retried-item p { margin: 0.4rem 0 0; font-size: 0.875rem; }
 .retried-item .answer { color: var(--ok); font-weight: 500; }
+.retried-item .your-answer { color: var(--bad); font-weight: 500; }
 
 @media (max-width: 480px) {
   h1 { font-size: 1.25rem; }
@@ -574,6 +579,9 @@ kbd {
 .count-row input:hover { border-color: var(--accent); }
 .count-row .muted { font-size: 0.875rem; }
 .count-setting { margin-block-end: 18px; }
+.styles { margin-block-end: 18px; }
+.styles .radio { align-items: flex-start; }
+.styles .radio input { margin-block-start: 0.2rem; }
 .radio { display: flex; align-items: center; gap: 0.5rem; padding-block: 0.15rem; cursor: pointer; }
 .radio input { inline-size: 18px; block-size: 18px; accent-color: var(--accent); margin: 0; flex: none; }
 .print-summary { margin: 1rem 0 0; font-weight: 600; }

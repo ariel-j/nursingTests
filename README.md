@@ -10,8 +10,16 @@ No build step and no runtime dependencies. Node is only needed for the tests and
 - The home page lists the subjects (מקצועות). A subject's page (`./?subject=<id>`) has its mixed practice,
   printable exam, summaries and videos, then its quizzes grouped by unit. A side menu (the "תפריט" button on
   every page) lists every subject with its units and those same parts.
-- Each quiz opens on a start screen where you resume an unfinished session, or start a new one over
-  all topics or only the ones you tick.
+- Each quiz opens on a start screen where you resume an unfinished session, or start a new one: pick the
+  style, the topics (units, in mixed practice) and how many questions.
+- Two styles. **תרגול** (practice) is everything below. **מבחן** (exam) shows each question once with no
+  feedback: pick an option and confirm it (`Enter`); a skip counts as wrong. The end screen gives the score
+  and reviews each mistake with your answer, its note, the right answer and the explanation.
+- Fewer questions than the chosen topics hold are sampled in proportion to topic size. Within a topic the
+  questions served least often come first, then those served longest ago, so consecutive sessions repeat
+  as little as possible (`served:<quizId>` in `localStorage`, per quiz file, shared with mixed practice).
+- A unit with two or more quizzes gets a **מבחן סיכום אישי** card: the subject's mixed practice opened
+  with only that unit chosen (`quiz.html?subject=<id>&group=<unit>`), e.g. for the unit מבחנים מסכמים.
 - Questions are shown in random order. The 4 options are reshuffled every time a question is shown.
 - A **wrong** or **skipped** question goes back into the queue and comes back 2–5 questions later,
   never immediately next. The one exception is when it is the only question left.

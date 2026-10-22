@@ -7,6 +7,8 @@ export const keys = {
   session: (quizId) => `session:${quizId}`,
   results: (quizId) => `results:${quizId}`,
   history: (quizId) => `history:${quizId}`,
+  // Which questions sampled sessions served, per quiz file (own ids): { seen: { [id]: { times, last } } }.
+  served: (quizId) => `served:${quizId}`,
   // Starred question ids of a quiz (its own ids, also when starred from a mixed practice): [id].
   starred: (quizId) => `starred:${quizId}`,
   // Matching-game weights of a subject's drug cards: { [drugId]: weight }, missed drugs weigh more.

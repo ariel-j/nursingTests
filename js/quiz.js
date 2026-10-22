@@ -16,8 +16,10 @@ import {
   questionById,
   questionIdsForTopics,
   recordResult,
+  recordServed,
   sanitizeHistory,
   sampleQuestionIds,
+  sessionStyle,
   skip,
   starTarget,
   starredIds,
@@ -75,6 +77,7 @@ const ui = {
   question: $('question'),
   options: $('options'),
   skip: $('skip'),
+  confirm: $('confirm'),
   feedback: $('feedback'),
   countdown: $('countdown'),
   autoToggle: $('auto-advance'),
@@ -85,6 +88,7 @@ const ui = {
   next: $('next'),
   // done
   done: $('done'),
+  scoreLabel: $('score-label'),
   scorePercent: $('score-percent'),
   score: $('score'),
   retryMissed: $('retry-missed'),
@@ -100,6 +104,7 @@ const LEVEL_LABELS = { unknown: 'אין עדיין מספיק נתונים', wea
 const TREND_LABELS = { up: '↑ משתפר', down: '↓ יורד', flat: '→ יציב' };
 
 const MODE_LABELS = { full: 'כל הבוחן', topics: 'נושאים נבחרים', retry: 'שאלות שחזרו', starred: 'שאלות מסומנות' };
+const STYLE_LABELS = { practice: 'תרגול', exam: 'מבחן' };
 const LETTERS = ['א', 'ב', 'ג', 'ד'];
 // After a correct answer, move on by itself unless the user asked for less motion.
 // The pause scales with the text the learner has to read (explanation plus note).
@@ -115,6 +120,8 @@ let shownQuestion = null;
 // 'start' → choosing; 'question' → waiting for an answer; 'feedback' → showing the result; 'done' → end screen.
 let phase = 'start';
 let optionButtons = [];
+// Exam style: the option picked but not yet confirmed (authored index), or null.
+let selected = null;
 let lastSummary = null;
 let analysis = null;
 let autoAdvance = null;
@@ -149,6 +156,8 @@ function showStatus(text) {
   ui.ring.hidden = true;
   ui.progressText.hidden = true;
 }
+
+const isExam = () => sessionStyle(state) === 'exam';
 
 function persist() {
   if (isComplete(state)) remove(keys.session(quiz.id));
@@ -231,6 +240,33 @@ function clearStats() {
   remove(keys.history(quiz.id));
   renderStart();
   ui.startButton.focus({ preventScroll: true });
+}
+
+// ---------- rotation ----------
+
+// Kept per quiz file with its own question ids (starTarget maps a mixed id back), so a quiz and the
+// mixed practice that includes it rotate through the same questions.
+
+function loadServed() {
+  const files = new Map();
+  const seen = {};
+  for (const q of quiz.questions) {
+    const { quizId, questionId } = starTarget(quiz, q.id);
+    if (!files.has(quizId)) files.set(quizId, load(keys.served(quizId))?.seen ?? {});
+    const entry = files.get(quizId)[questionId];
+    if (entry) seen[q.id] = entry;
+  }
+  return { seen };
+}
+
+function saveServed(ids) {
+  const now = Date.now();
+  const byFile = new Map();
+  for (const id of ids) {
+    const { quizId, questionId } = starTarget(quiz, id);
+    byFile.set(quizId, [...(byFile.get(quizId) ?? []), questionId]);
+  }
+  for (const [quizId, own] of byFile) save(keys.served(quizId), recordServed(load(keys.served(quizId)), own, now));
 }
 
 // ---------- stars ----------
@@ -356,13 +392,23 @@ function chosenCount() {
   return wantedCount === null ? max : Math.min(wantedCount, max);
 }
 
-/** A fresh sample of the chosen size: proportional per topic, so every chosen unit is covered. */
+/**
+ * A fresh sample of the chosen size: proportional per topic, so every chosen unit is covered, and
+ * least-served first, so consecutive samples differ. `sampled` says whether it is a sample.
+ */
 function selectedQuestionIds() {
-  if (quiz.starred) return [...ui.topicList.querySelectorAll('.q-check:checked')].map((c) => c.value);
+  if (quiz.starred) return { ids: [...ui.topicList.querySelectorAll('.q-check:checked')].map((c) => c.value), sampled: false };
   const topics = selectedTopics();
   const max = availableCount();
-  if (wantedCount === null || wantedCount >= max) return questionIdsForTopics(quiz, topics, selectionField());
-  return sampleQuestionIds(quiz, { topics, field: selectionField(), count: wantedCount });
+  if (wantedCount === null || wantedCount >= max) {
+    return { ids: questionIdsForTopics(quiz, topics, selectionField()), sampled: false };
+  }
+  const ids = sampleQuestionIds(quiz, { topics, field: selectionField(), count: wantedCount, served: loadServed() });
+  return { ids, sampled: true };
+}
+
+function chosenStyle() {
+  return ui.newSession.querySelector('input[name="style"]:checked')?.value ?? 'practice';
 }
 
 function updateStartButton() {
@@ -375,7 +421,7 @@ function updateStartButton() {
   ui.startButton.disabled = count === 0;
   ui.startButton.textContent = count === 0
     ? `בחרו לפחות ${quiz.starred ? 'שאלה אחת' : 'נושא אחד'}`
-    : `התחל · ${count} שאלות`;
+    : `התחל ${STYLE_LABELS[chosenStyle()]} · ${count} שאלות`;
 }
 
 /** Takes the typed number; an empty or invalid field means "all chosen questions". */
@@ -391,14 +437,23 @@ function settleCount() {
   if (availableCount() > 0) ui.count.value = String(chosenCount());
 }
 
+/** The unit a link asked a mixed practice to start with (&group=<unit>), if it has one. */
+function preselectedGroup() {
+  const wanted = new URLSearchParams(location.search).get('group');
+  if (!quiz.mixed || quiz.starred || wanted === null) return null;
+  return quiz.questions.some((q) => q.group === wanted) ? wanted : null;
+}
+
 function renderTopics() {
-  ui.topicList.replaceChildren(...listTopics(quiz, selectionField()).map(({ topic, count }) => {
+  const groups = listTopics(quiz, selectionField());
+  const only = preselectedGroup();
+  ui.topicList.replaceChildren(...groups.map(({ topic, count }) => {
     const li = el('li');
     const label = el('label', 'topic-option');
     const box = el('input');
     box.type = 'checkbox';
     box.value = topic;
-    box.checked = true;
+    box.checked = only === null || topic === only;
     box.addEventListener('change', updateStartButton);
     label.append(box, el('span', null, topic), el('span', 'count', String(count)));
     li.append(label);
@@ -472,8 +527,11 @@ function renderStart() {
   const saved = loadSavedSession();
   ui.resumeBox.hidden = !saved;
   if (saved) {
-    const { mastered, total } = progressInfo(saved);
-    ui.resumeText.textContent = `יש תרגול פתוח (${MODE_LABELS[saved.mode]}): נשלטו ${mastered} מתוך ${total}.`;
+    const { mastered, answered, total } = progressInfo(saved);
+    const label = `${STYLE_LABELS[sessionStyle(saved)]} · ${MODE_LABELS[saved.mode]}`;
+    ui.resumeText.textContent = sessionStyle(saved) === 'exam'
+      ? `יש סבב פתוח (${label}): נענו ${answered} מתוך ${total}.`
+      : `יש סבב פתוח (${label}): נשלטו ${mastered} מתוך ${total}.`;
   }
 
   const results = load(keys.results(quiz.id));
@@ -484,9 +542,11 @@ function renderStart() {
   (saved ? ui.resume : ui.startButton).focus({ preventScroll: true });
 }
 
-function begin(questionIds, mode) {
-  if (loadSavedSession() && !window.confirm('התרגול הפתוח יימחק. להתחיל תרגול חדש?')) return;
-  state = createSession(quiz, Math.random, { questionIds, mode });
+/** Starts a new session; `sampled` records its questions for the rotation. */
+function begin(questionIds, mode, style = 'practice', sampled = false) {
+  if (loadSavedSession() && !window.confirm('הסבב הפתוח יימחק. להתחיל סבב חדש?')) return;
+  state = createSession(quiz, Math.random, { questionIds, mode, style });
+  if (sampled) saveServed(questionIds);
   persist();
   trackEvent(`quiz-start/${quiz.id}/${mode}`, quiz.title);
   renderQuestion();
@@ -494,10 +554,11 @@ function begin(questionIds, mode) {
 
 function onStartSubmit(event) {
   event.preventDefault();
-  const ids = selectedQuestionIds();
+  const { ids, sampled } = selectedQuestionIds();
   if (ids.length === 0) return;
-  if (quiz.starred) begin(ids, 'starred');
-  else begin(ids, ids.length === quiz.questions.length ? 'full' : 'topics');
+  const style = chosenStyle();
+  if (quiz.starred) begin(ids, 'starred', style);
+  else begin(ids, ids.length === quiz.questions.length ? 'full' : 'topics', style, sampled);
 }
 
 // ---------- play ----------
@@ -509,7 +570,18 @@ function stat(label, value) {
 }
 
 function renderProgress() {
-  const { mastered, total, queueSize } = progressInfo(state);
+  const { mastered, answered, total, queueSize } = progressInfo(state);
+  if (isExam()) {
+    // No first-try count here: it would give the answers away before the end.
+    const fraction = total === 0 ? 0 : answered / total;
+    ui.ringFill.setAttribute('stroke-dashoffset', String(100 * (1 - fraction)));
+    ui.ringFill.classList.toggle('is-empty', answered === 0);
+    ui.ringMastered.textContent = String(answered);
+    ui.ringTotal.textContent = `מתוך ${total}`;
+    ui.ring.setAttribute('aria-label', `נענו ${answered} מתוך ${total}`);
+    ui.progressText.replaceChildren(stat('שאלה', `${Math.min(answered + 1, total)} מתוך ${total}`));
+    return;
+  }
   const firstTries = Object.values(state.progress).map((p) => p.firstTry).filter((t) => t !== null);
   const firstOk = firstTries.filter((t) => t === 'correct').length;
 
@@ -543,16 +615,23 @@ function renderQuestion() {
   show(ui.play);
   const question = currentQuestion(state, quiz);
   shownQuestion = question;
+  const exam = isExam();
   ui.feedback.hidden = true;
   ui.skip.disabled = false;
   ui.next.disabled = true;
+  // An exam has no feedback to move on from: confirm the pick instead.
+  ui.next.hidden = exam;
+  ui.autoToggle.closest('label').hidden = exam;
+  ui.confirm.hidden = !exam;
+  ui.confirm.disabled = true;
+  selected = null;
   renderProgress();
 
   ui.topic.textContent = question.topic;
   ui.star.hidden = !canStar();
   if (canStar()) paintStar(ui.star, isStarred(question));
   const { attempts } = state.progress[question.id];
-  ui.retryLabel.hidden = attempts === 0;
+  ui.retryLabel.hidden = exam || attempts === 0;
   ui.retryLabel.textContent = `שאלה חוזרת · ניסיון ${attempts + 1}`;
   ui.question.textContent = fmt(question.question);
 
@@ -560,6 +639,7 @@ function renderQuestion() {
     const button = el('button', 'option');
     button.type = 'button';
     button.dataset.index = String(opt.index);
+    if (exam) button.setAttribute('aria-pressed', 'false');
     button.append(el('span', 'letter', LETTERS[i]), el('span', 'option-text', fmt(opt.text)));
     button.addEventListener('click', () => choose(opt.index));
     return button;
@@ -639,12 +719,34 @@ function apply(result, chosenIndex) {
     // Every finished run feeds the weak-area statistics, whatever its mode.
     recordAttempt();
   }
-  showFeedback(result, chosenIndex);
+  if (!isExam()) {
+    showFeedback(result, chosenIndex);
+  } else if (isComplete(state)) {
+    renderDone();
+  } else {
+    // An exam shows nothing until the end: straight on to the next question.
+    renderQuestion();
+  }
 }
 
 function choose(optionIndex) {
   if (phase !== 'question') return;
-  apply(answer(state, quiz, optionIndex), optionIndex);
+  if (!isExam()) {
+    apply(answer(state, quiz, optionIndex), optionIndex);
+    return;
+  }
+  selected = optionIndex;
+  for (const button of optionButtons) {
+    const on = Number(button.dataset.index) === optionIndex;
+    button.classList.toggle('is-selected', on);
+    button.setAttribute('aria-pressed', String(on));
+  }
+  ui.confirm.disabled = false;
+}
+
+function confirmChoice() {
+  if (phase !== 'question' || !isExam() || selected === null) return;
+  apply(answer(state, quiz, selected), selected);
 }
 
 function skipQuestion() {
@@ -666,17 +768,21 @@ function next() {
 
 // ---------- end screen ----------
 
-function renderRetried(summary) {
+function renderRetried(summary, exam) {
   return summary.retried.map((r) => {
     const q = questionById(quiz, r.id);
     const details = el('details', 'retried-item');
     const head = el('summary');
-    head.append(
-      el('b', null, r.misses === 1 ? 'טעות אחת' : `${r.misses} טעויות`),
-      document.createTextNode(` · ${fmt(q.question)}`),
-    );
+    let label = r.misses === 1 ? 'טעות אחת' : `${r.misses} טעויות`;
+    if (exam) label = r.choice === null ? 'דילוג' : 'טעות';
+    head.append(el('b', null, label), document.createTextNode(` · ${fmt(q.question)}`));
+    details.append(head);
+    if (exam && r.choice !== null) {
+      details.append(el('p', 'your-answer', `התשובה שלך: ${fmt(q.options[r.choice].text)}`));
+      const note = q.options[r.choice].note ?? '';
+      if (note.trim() !== '') details.append(el('p', 'note', fmt(note)));
+    }
     details.append(
-      head,
       el('p', 'answer', `תשובה נכונה: ${fmt(q.options[q.correct].text)}`),
       el('p', 'muted', fmt(q.explanation)),
     );
@@ -690,11 +796,15 @@ function renderRetried(summary) {
 function renderDone() {
   phase = 'done';
   show(ui.done);
+  const exam = isExam();
   const summary = summarize(state, quiz);
   lastSummary = summary;
 
+  ui.scoreLabel.textContent = exam ? 'ציון במבחן' : 'ציון בניסיון ראשון';
   ui.scorePercent.textContent = `${summary.firstTryPercent}%`;
-  ui.score.textContent = `${summary.firstTryCorrect} מתוך ${summary.total} שאלות נענו נכון בפעם הראשונה.`;
+  ui.score.textContent = exam
+    ? `${summary.firstTryCorrect} מתוך ${summary.total} תשובות נכונות.`
+    : `${summary.firstTryCorrect} מתוך ${summary.total} שאלות נענו נכון בפעם הראשונה.`;
 
   ui.weakTopics.replaceChildren(...summary.weakTopics.map((t) => {
     const li = el('li');
@@ -708,10 +818,10 @@ function renderDone() {
   }));
   ui.noWeak.hidden = summary.weakTopics.length > 0;
 
-  ui.retriedTitle.textContent = summary.retried.length > 0
-    ? `שאלות שחזרו (${summary.retried.length})`
-    : 'שאלות שחזרו';
-  ui.retried.replaceChildren(...renderRetried(summary));
+  const heading = exam ? 'שאלות שטעית בהן' : 'שאלות שחזרו';
+  ui.retriedTitle.textContent = summary.retried.length > 0 ? `${heading} (${summary.retried.length})` : heading;
+  ui.retried.replaceChildren(...renderRetried(summary, exam));
+  ui.noRetried.textContent = exam ? 'כל התשובות נכונות!' : 'כל השאלות נענו נכון בפעם הראשונה.';
   ui.noRetried.hidden = summary.retried.length > 0;
 
   ui.retryMissed.hidden = summary.retried.length === 0;
@@ -720,6 +830,7 @@ function renderDone() {
 
 function retryMissed() {
   if (!lastSummary || lastSummary.retried.length === 0) return;
+  // Going over mistakes is practice, whatever the style of the run that produced them.
   begin(lastSummary.retried.map((r) => r.id), 'retry');
 }
 
@@ -735,7 +846,15 @@ function onKeyDown(event) {
       event.preventDefault();
       button.click();
     }
-  } else if ((phase === 'question' || phase === 'feedback') && event.code === 'KeyA') {
+  } else if (phase === 'question' && event.key === 'Enter' && isExam()) {
+    // A focused button handles Enter itself (an option picks, confirm confirms); confirm from
+    // anywhere else, or from the option that is already picked.
+    const target = event.target;
+    if (target instanceof HTMLButtonElement && !target.classList.contains('is-selected')) return;
+    if (target instanceof HTMLInputElement || target instanceof HTMLAnchorElement) return;
+    event.preventDefault();
+    confirmChoice();
+  } else if ((phase === 'question' || phase === 'feedback') && event.code === 'KeyA' && !isExam()) {
     event.preventDefault();
     ui.autoToggle.click();
   } else if (phase === 'question' && event.code === 'KeyS') {
@@ -766,10 +885,13 @@ async function main() {
   }
 
   // Kicker shows the subject and, when present, the unit: "אנטומיה ופיזיולוגיה · הלב".
-  const place = quiz.starred ? 'מכל הבחנים' : quizPlace(quiz);
-  document.title = `${quiz.title} · ${place}`;
+  // Opened from a unit's "מבחן סיכום אישי" card (&group=<unit>): name it after that unit.
+  const group = preselectedGroup();
+  const place = quiz.starred ? 'מכל הבחנים' : `${quizPlace(quiz)}${group ? ` · ${group}` : ''}`;
+  const title = group ? 'מבחן סיכום אישי' : quiz.title;
+  document.title = `${title} · ${place}`;
   ui.subject.textContent = place;
-  ui.title.textContent = quiz.title;
+  ui.title.textContent = title;
   // Same ?id= or ?subject= as this page, so mixed practice prints mixed too.
   ui.printLink.href = `print.html${location.search}`;
   subjectHomeHref(quiz).then((href) => {
@@ -809,6 +931,10 @@ async function main() {
     else cancelAutoAdvance();
   });
   ui.skip.addEventListener('click', skipQuestion);
+  ui.confirm.addEventListener('click', confirmChoice);
+  ui.newSession.addEventListener('change', (event) => {
+    if (event.target.name === 'style') updateStartButton();
+  });
   ui.next.addEventListener('click', next);
   // Touching the explanation means the learner is still reading: stop the automatic advance.
   ui.feedback.addEventListener('pointerdown', cancelAutoAdvance);
