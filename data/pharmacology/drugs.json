@@ -1,0 +1,3570 @@
+{
+ "families": [
+  "מערכת אוטונומית — כולינרגית",
+  "מערכת אוטונומית — אדרנרגית",
+  "קרדיווסקולרי",
+  "משתנים ואלקטרוליטים",
+  "קרישת דם",
+  "היפרליפידמיה",
+  "אופיואידים ומשככי כאב",
+  "NSAIDs, גאוט ומיגרנה",
+  "הרדמה",
+  "חרדה ושינה",
+  "דיכאון ובי-פולר",
+  "פסיכוזה",
+  "אפילפסיה",
+  "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)",
+  "מערכת הנשימה (אסתמה/COPD)",
+  "אנטיהיסטמינים",
+  "מערכת העיכול",
+  "אנדוקרינית והורמונים",
+  "סוכרת",
+  "אנטיביוטיקה ואנטי-זיהומיות",
+  "כימותרפיה",
+  "דיכוי חיסוני"
+ ],
+ "drugs": [
+  {
+   "name": "Atropine",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "מוסקריני (M)",
+   "mechanism": "אנטגוניסט מוסקריני",
+   "indications": "ברדיקרדיה, סם-נגד לאגוניסטים כולינרגיים ולהרעלת פטריות, הפחתת הפרשות לפני הרדמה, מידריאזיס, נוגד התכווצויות ב-GI, הגברת קצב לב במבחן מאמץ",
+   "sideEffects": "טכיקרדיה, יובש פה, עצירות, אצירת שתן, מידריאזיס/ראיה מטושטשת, חום (מסוכן בילדים/קשישים), בלבול/הזיות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Benztropine / Trihexyphenidyl",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "מוסקריני (M)",
+   "mechanism": "אנטגוניסט מוסקריני מרכזי",
+   "indications": "פרקינסון (טיפול משולב), פרקינסון מתרופות",
+   "sideEffects": "ת\"ל מוסקריניות, שינויי מצב-רוח, בלבול",
+   "alsoIn": [
+    "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)"
+   ],
+   "exam": false
+  },
+  {
+   "name": "Bethanechol",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "מוסקריני (M)",
+   "mechanism": "אגוניסט מוסקריני ישיר",
+   "indications": "אצירת שתן לא-חסימתית (יזום מתן שתן), אטוניה של מעי/שלפוחית",
+   "sideEffects": "ברדיקרדיה, ירידת ל\"ד, ברונכוספזם, בחילות/הקאות/שלשול, הזעה/הסמקה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Carbachol",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "N+M",
+   "mechanism": "אגוניסט כולינרגי ישיר (ניקוטיני+מוסקריני)",
+   "indications": "גלאוקומה (נדיר)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Cisatracurium / Pancuronium / Rocuronium / Vecuronium / Mivacurium",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "ניקוטיני NM",
+   "mechanism": "חוסמים תחרותיים לא-מדפולריזים (curare-like)",
+   "indications": "הרפיית שרירי שלד לאינטובציה/ניתוח/שוק חשמלי/אורתופדיה",
+   "sideEffects": "שיתוק שרירי נשימה (אפניאה); Pancuronium — חוסם גם M → טכיקרדיה/יל\"ד. הפיך ע\"י מעכבי AChE (Neostigmine)",
+   "alsoIn": [
+    "הרדמה"
+   ],
+   "exam": false
+  },
+  {
+   "name": "Donepezil / Rivastigmine / Galantamine",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "AChE",
+   "mechanism": "מעכב AChE → שיפור העברה כולינרגית",
+   "indications": "מחלת אלצהיימר",
+   "sideEffects": "שיפור קל בקצב אובדן קוגניטיבי",
+   "alsoIn": [
+    "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)"
+   ],
+   "exam": false
+  },
+  {
+   "name": "Edrophonium",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "AChE",
+   "mechanism": "מעכב AChE קצר-טווח (הפיך, 10–20 דק')",
+   "indications": "אבחון Myasthenia Gravis",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Ipratropium",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "מוסקריני (M)",
+   "mechanism": "אנטגוניסט מוסקריני קצר-טווח (SAMA)",
+   "indications": "COPD, ברונכוספזם (גם באסטמה חמורה)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Isoflurophate / Echothiophate / Parathion / Malathion / Soman",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "AChE",
+   "mechanism": "אורגנופוספטים, מעכבי AChE בלתי-הפיכים (ארוכי-טווח, רעילים, גז עצבים)",
+   "indications": "Echothiophate — גלאוקומה (נדיר, עלול לגרום קטרקט)",
+   "sideEffects": "הרעלה כולינרגית",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Muscarine",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "מוסקריני",
+   "mechanism": "אגוניסט מוסקריני (רעלן פטריות, לא קליני)",
+   "indications": "",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Neostigmine",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "AChE",
+   "mechanism": "מעכב AChE בינוני-טווח",
+   "indications": "Myasthenia Gravis (טיפול), אטוניה של מעי/שלפוחית, היפוך חסם נוירו-שרירי",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Nicotine",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "ניקוטיני (N)",
+   "mechanism": "אגוניסט ניקוטיני; חוסם גנגליוני במינון גבוה",
+   "indications": "הפסקת עישון",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Physostigmine",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "AChE",
+   "mechanism": "מעכב AChE בינוני-טווח (קרבמט)",
+   "indications": "סם-נגד לאנטגוניסטים מוסקריניים (אטרופין), עובר BBB",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Pilocarpine",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "מוסקריני (M)",
+   "mechanism": "אגוניסט מוסקריני ישיר",
+   "indications": "גלאוקומה (זווית פתוחה, הגברת ניקוז), השראת מיוזיס, קסרוסטומיה (יובש פה, PO)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Pralidoxime",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "",
+   "mechanism": "סם-נגד לאורגנופוספטים (מחדש AChE), + Atropine",
+   "indications": "הרעלת אורגנופוספטים",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Pyridostigmine",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "AChE",
+   "mechanism": "מעכב AChE בינוני-טווח",
+   "indications": "Myasthenia Gravis (טיפול)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Scopolamine",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "מוסקריני (M)",
+   "mechanism": "אנטגוניסט מוסקריני",
+   "indications": "מחלת ים, בחילות/הקאות לאחר ניתוח",
+   "sideEffects": "אסור בגלאוקומה (התווית נגד)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Succinylcholine",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "ניקוטיני NM",
+   "mechanism": "חוסם לא-תחרותי מדפולריז (אגוניסט פוטנטי עמיד ל-AChE)",
+   "indications": "הרפיית שרירים לאינטובציה",
+   "sideEffects": "פסיקולציות→שיתוק רפה, היפרתרמיה מליגנית (מסכנת חיים), היפרקלמיה, ברדיקרדיה, עליית הפרשות. לא הפיך ע\"י מעכבי AChE",
+   "alsoIn": [
+    "הרדמה"
+   ],
+   "exam": false
+  },
+  {
+   "name": "Tiotropium / Aclidinium / Glycopyrrolate",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "מוסקריני (M)",
+   "mechanism": "אנטגוניסט מוסקריני ארוך-טווח (LAMA)",
+   "indications": "COPD",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Tropicamide / Cyclopentolate",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "מוסקריני (M)",
+   "mechanism": "אנטגוניסט מוסקריני",
+   "indications": "מידריאזיס + ציקלופלגיה (טופיקלי בעין)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Tubocurarine",
+   "family": "מערכת אוטונומית — כולינרגית",
+   "receptor": "ניקוטיני NM",
+   "mechanism": "חוסם נוירו-שרירי תחרותי (curare המקורי)",
+   "indications": "הרפיית שרירים",
+   "sideEffects": "שיתוק",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Amphetamine",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "",
+   "mechanism": "↑שחרור NAdr, ממריץ CNS",
+   "indications": "נרקולפסיה, מדכא תיאבון, ADHD",
+   "sideEffects": "יתר-ל\"ד, טכיקרדיה, פסיכוזה חריפה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Atenolol / Metoprolol / Bisoprolol / Esmolol / Acebutolol / Betaxolol / Nebivolol",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "β1 (קרדיו-סלקטיבי)",
+   "mechanism": "אנטגוניסט β1",
+   "indications": "יתר-ל\"ד, הפרעות קצב, אנגינה",
+   "sideEffects": "ברדיקרדיה, תת-ל\"ד, עייפות/אינסומניה/חלומות רעים, הפרעת זקפה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Atomoxetine",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "NET",
+   "mechanism": "NRI — מעכב החזרת NAdr בלבד, לא ממכר",
+   "indications": "ADHD",
+   "sideEffects": "אסור בגלאוקומה סגורה כרונית",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Clonidine",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "α2",
+   "mechanism": "אגוניסט α2 מרכזי → ↓NAdr",
+   "indications": "יתר-ל\"ד, גמילה מאופיואידים",
+   "sideEffects": "תת-ל\"ד, יתר-ל\"ד rebound, עצירות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Cocaine",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "",
+   "mechanism": "↑שחרור NAdr, ממריץ CNS, מאלחש מקומי",
+   "indications": "מאלחש מקומי",
+   "sideEffects": "תלות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Dexmethylphenidate / Serdexmethylphenidate",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "NET/DAT",
+   "mechanism": "מעכב החזרת NAdr+דופמין",
+   "indications": "ADHD",
+   "sideEffects": "התוויות נגד במחלות לב, התמכרות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Dobutamine",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "β1",
+   "mechanism": "אגוניסט β1 (α1 בריכוז גבוה)",
+   "indications": "שוק קרדיוגני/ספטי, אי-ספיקת לב חריפה",
+   "sideEffects": "הפרעות קצב",
+   "alsoIn": [
+    "קרדיווסקולרי"
+   ],
+   "exam": true
+  },
+  {
+   "name": "Dopamine",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "D1, α1, β1",
+   "mechanism": "אגוניסט (D1 הרחבת כ\"ד כלייתי; α1 כיווץ; β1 ↑קצב/כוח)",
+   "indications": "מצבי שוק (קרדיוגני/ספטי)",
+   "sideEffects": "הפרעות קצב",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Epinephrine",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "α+β",
+   "mechanism": "אגוניסט α+β לא-סלקטיבי",
+   "indications": "חירום: אסתמה, אנפילקסיס, דום לב; תוספת למאלחש מקומי",
+   "sideEffects": "יתר-ל\"ד, טכיקרדיה, הפרעות קצב, חרדה/רעד/כאב-ראש",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Fenoldopam",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "D1",
+   "mechanism": "אגוניסט D1 (הרחבת כ\"ד מהירה)",
+   "indications": "יתר-ל\"ד חמור (IV)",
+   "sideEffects": "כאב-ראש, סחרחורת, בחילה, טכיקרדיה רפלקסיבית",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Isoproterenol",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "β1+β2",
+   "mechanism": "אגוניסט β לא-סלקטיבי",
+   "indications": "",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Labetalol / Carvedilol",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "α+β",
+   "mechanism": "אנטגוניסט α+β משולב",
+   "indications": "יתר-ל\"ד בהריון, אנגינה יציבה",
+   "sideEffects": "ברונכוקונסטריקציה, עייפות, תת-ל\"ד אורתוסטטי",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Lisdexamfetamine",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "",
+   "mechanism": "↑שחרור ומונע החזרת דופמין+NAdr",
+   "indications": "ADHD",
+   "sideEffects": "GI, טכיקרדיה, יתר-ל\"ד, ירידה במשקל",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Lofexidine",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "α2 אדרנרגי",
+   "mechanism": "אגוניסט α2",
+   "indications": "סיוע בגמילה מאופיואידים (מפחית תסמיני גמילה)",
+   "sideEffects": "",
+   "alsoIn": [
+    "אופיואידים ומשככי כאב"
+   ],
+   "exam": false
+  },
+  {
+   "name": "Methyldopa",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "α2",
+   "mechanism": "אגוניסט α2 מרכזי",
+   "indications": "יתר-ל\"ד (כולל הריון)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Methylphenidate",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "NET/DAT",
+   "mechanism": "מעכב החזרת NAdr+דופמין",
+   "indications": "ADHD, נרקולפסיה",
+   "sideEffects": "כאבי בטן/בחילה, אנורקסיה, אינסומניה, עצבנות, חום; אסור בגלאוקומה; מעכב מטבוליזם phenytoin/warfarin/TCA",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Midodrine",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "α1",
+   "mechanism": "אגוניסט α1",
+   "indications": "תת-ל\"ד אורתוסטטי",
+   "sideEffects": "יתר-ל\"ד בשכיבה (supine)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Mirabegron / Vibegron",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "β3",
+   "mechanism": "אגוניסט β3",
+   "indications": "שלפוחית רגיזה",
+   "sideEffects": "יתר-ל\"ד",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Norepinephrine",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "בעיקר α",
+   "mechanism": "אגוניסט (בעיקר α)",
+   "indications": "שוק (ספטי)",
+   "sideEffects": "extravasation→איסכמיה/נמק (טיפול: הפסקת עירוי + phentolamine ת\"ע)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Oxymetazoline",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "α1+α2",
+   "mechanism": "אגוניסט α לא-סלקטיבי",
+   "indications": "גודש אף, טיפות עיניים",
+   "sideEffects": "עצבנות, כאבי ראש",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Phenoxybenzamine",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "α לא-סלקטיבי (בלתי-הפיך)",
+   "mechanism": "אנטגוניסט α + מעכב uptake",
+   "indications": "Pheochromocytoma",
+   "sideEffects": "תת-ל\"ד אורתוסטטי, טכיקרדיה רפלקסיבית, גודש אף, אימפוטנציה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Phentolamine",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "α לא-סלקטיבי",
+   "mechanism": "אנטגוניסט α לא-סלקטיבי",
+   "indications": "Pheochromocytoma, NE extravasation, Tyramine+MAOI",
+   "sideEffects": "תת-ל\"ד אורתוסטטי, טכיקרדיה רפלקסיבית",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Phenylephrine",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "α1",
+   "mechanism": "אגוניסט α1 ישיר (כיווץ ש\"ח)",
+   "indications": "גודש אף, השראת מידריאזיס, תת-ל\"ד",
+   "sideEffects": "יתר-ל\"ד, ברדיקרדיה רפלקסיבית",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Pindolol",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "β (אגוניסט חלקי/ISA)",
+   "mechanism": "אנטגוניסט β עם פעילות אגוניסטית חלקית",
+   "indications": "יתר-ל\"ד עם ברדיקרדיה",
+   "sideEffects": "פחות השפעות מטבוליות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Prazosin / Terazosin / Doxazosin",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "α1",
+   "mechanism": "אנטגוניסט α1 סלקטיבי",
+   "indications": "יתר-ל\"ד, השתנה ב-BPH",
+   "sideEffects": "תת-ל\"ד אורתוסטטי (first-dose), גודש אף, אימפוטנציה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Propranolol / Nadolol / Timolol",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "β אדרנרגי",
+   "mechanism": "אנטגוניסט β לא-סלקטיבי",
+   "indications": "יתר-ל\"ד, הפרעות קצב, MI/אנגינה, היפרתירואידיזם, גלאוקומה, מיגרנה",
+   "sideEffects": "ברונכוקונסטריקציה, קור בפריפריה, היפוגליקמיה, היפרליפידמיה",
+   "alsoIn": [
+    "חרדה ושינה"
+   ],
+   "exam": false
+  },
+  {
+   "name": "Pseudoephedrine",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "",
+   "mechanism": "↑NAdr + אגוניסט חלש, ממריץ CNS",
+   "indications": "גודש אף",
+   "sideEffects": "טכיקרדיה, הפרעות קצב",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Tetrahydrozoline / Naphazoline",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "α1",
+   "mechanism": "אגוניסט α1",
+   "indications": "גודש אף, טיפות עיניים",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Tyramine",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "",
+   "mechanism": "↑שחרור NAdr",
+   "indications": "— (גבינה; עם MAO-I → משבר יתר-ל\"ד)",
+   "sideEffects": "יתר-ל\"ד, טכיקרדיה, הפרעות קצב",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Viloxazine",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "NET",
+   "mechanism": "מעכב החזרת NAdr",
+   "indications": "ADHD",
+   "sideEffects": "ניטור מחשבות אובדניות ומאניה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Yohimbine",
+   "family": "מערכת אוטונומית — אדרנרגית",
+   "receptor": "α2",
+   "mechanism": "אנטגוניסט α2",
+   "indications": "אין שימוש קליני (אפרודיזיאק)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Acetazolamide",
+   "family": "קרדיווסקולרי",
+   "receptor": "Carbonic anhydrase",
+   "mechanism": "מעכב קרבוניק אנהידראז (משתן)",
+   "indications": "גלאוקומה, מחלת הרים (לא לאי-ספיקת לב)",
+   "sideEffects": "חמצת מטבולית, אבנים בכליה; אסור בכבד",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Adenosine",
+   "family": "קרדיווסקולרי",
+   "receptor": "רצפטור אדנוזין (AV)",
+   "mechanism": "חוסם הולכה ב-AV",
+   "indications": "הפרעות קצב (SVT, IV, t½ 6–10 שנ')",
+   "sideEffects": "לחץ בחזה, סומק, תחושת חום",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Aliskiren (Rasilez)",
+   "family": "קרדיווסקולרי",
+   "receptor": "רנין",
+   "mechanism": "מעכב רנין",
+   "indications": "יתר-ל\"ד עמיד",
+   "sideEffects": "שיעול, אנגיואדמה (פחות מ-ACE), שלשול, היפרליפידמיה, עוויתות; אסור בהריון, לא לשלב עם ACE/ARB",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Amiodarone",
+   "family": "קרדיווסקולרי",
+   "receptor": "תעלות K (+ רב-ערוצי)",
+   "mechanism": "אנטי-אריתמי (class III)",
+   "indications": "הפרעות קצב",
+   "sideEffects": "רעילות ריאה/תריס/כבד",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Captopril / Enalapril (מעכבי ACE)",
+   "family": "קרדיווסקולרי",
+   "receptor": "ACE",
+   "mechanism": "מעכב אנזים הממיר אנגיוטנסין",
+   "indications": "יתר-ל\"ד, אי-ספיקת לב",
+   "sideEffects": "שיעול, אנגיואדמה, היפרקלמיה",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Digoxin",
+   "family": "קרדיווסקולרי",
+   "receptor": "Na/K-ATPase",
+   "mechanism": "אינוטרופ חיובי (מעכב משאבת Na/K → ↑Ca תוך-תאי)",
+   "indications": "אי-ספיקת לב כרונית יציבה (קו ראשון), פרפור עליות",
+   "sideEffects": "חלון תרפויטי צר, רעילות; בטוח בשילוב מקרולידים? (לא)",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Diltiazem (CCB non-DHP)",
+   "family": "קרדיווסקולרי",
+   "receptor": "תעלות Ca",
+   "mechanism": "חוסם תעלות Ca בלב",
+   "indications": "אי-ספיקת לב, אנגינה, הפרעות קצב (class IV)",
+   "sideEffects": "כמו verapamil",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Eplerenone (Inspra)",
+   "family": "קרדיווסקולרי",
+   "receptor": "רצפטור אלדוסטרון",
+   "mechanism": "חוסך אשלגן (אנטגוניסט אלדוסטרון)",
+   "indications": "אי-ספיקת לב כרונית",
+   "sideEffects": "היפרקלמיה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Hydralazine (Hydrapres)",
+   "family": "קרדיווסקולרי",
+   "receptor": "",
+   "mechanism": "מרחיב כלי דם ישיר (מנגנון לא ידוע)",
+   "indications": "יתר-ל\"ד חריף/הריוני, אי-ספיקת לב",
+   "sideEffects": "רפלקס טכיקרדיה, אגירת מים/מלח, כאב-ראש, תסמונת דמוית-לופוס",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Ivabradine",
+   "family": "קרדיווסקולרי",
+   "receptor": "תעלות If ב-SA",
+   "mechanism": "מעכב תעלות Na/K תלויות היפרפולריזציה → מאט קצב",
+   "indications": "אי-ספיקת לב (EF נמוך, דופק >70)",
+   "sideEffects": "הפרעות ראיה, ברדיקרדיה, פרפור עליות, כאב-ראש; אסור בהריון",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Losartan (ARB)",
+   "family": "קרדיווסקולרי",
+   "receptor": "רצפטור אנגיוטנסין II (AT1)",
+   "mechanism": "חוסם רצפטור אנגיוטנסין",
+   "indications": "יתר-ל\"ד, אי-ספיקת לב",
+   "sideEffects": "היפרקלמיה",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Magnesium",
+   "family": "קרדיווסקולרי",
+   "receptor": "",
+   "mechanism": "מתחרה בסידן",
+   "indications": "Torsades de Pointes (TdP), הרחבת סמפונות, עיכוב צירים",
+   "sideEffects": "↓ל\"ד, דיכוי הולכה, סומק/הזעה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Milrinone (מעכב PDE)",
+   "family": "קרדיווסקולרי",
+   "receptor": "PDE-3",
+   "mechanism": "מעכב PDE → מאריך אפקט קטכולאמינים (אינוטרופ חיובי + וזודילטציה)",
+   "indications": "אי-ספיקת לב חריפה",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Minoxidil",
+   "family": "קרדיווסקולרי",
+   "receptor": "תעלות K (פותח)",
+   "mechanism": "מרחיב כלי דם",
+   "indications": "יתר-ל\"ד עמיד, התקרחות",
+   "sideEffects": "שיעור-יתר",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Nesiritide",
+   "family": "קרדיווסקולרי",
+   "receptor": "רצפטור BNP",
+   "mechanism": "אנלוג BNP → הפרשת נוזלים",
+   "indications": "אי-ספיקת לב חריפה (IV, קצר-טווח)",
+   "sideEffects": "תת-ל\"ד, סחרחורת, ↓תפקוד כליה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Nifedipine (CCB דיהידרופירידין)",
+   "family": "קרדיווסקולרי",
+   "receptor": "תעלות Ca",
+   "mechanism": "חוסם תעלות Ca בפריפריה",
+   "indications": "יתר-ל\"ד, אנגינה (לא לאי-ספיקת לב — רפלקס טכיקרדיה)",
+   "sideEffects": "בצקת ברגליים, כאב-ראש, הסמקה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Nitroglycerin (ניטרטים)",
+   "family": "קרדיווסקולרי",
+   "receptor": "NO → cGMP",
+   "mechanism": "מרחיב כלי דם (הרחבת כלים כליליים)",
+   "indications": "אנגינה (הקלה מיידית — תת-לשוני ספריי)",
+   "sideEffects": "כאב-ראש, תת-ל\"ד",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Sacubitril (+ Valsartan, ARNI)",
+   "family": "קרדיווסקולרי",
+   "receptor": "נפריליזין + רצפטור אנגיוטנסין",
+   "mechanism": "מעכב נפריליזין + ARB",
+   "indications": "אי-ספיקת לב / יתר-ל\"ד עמיד",
+   "sideEffects": "תת-ל\"ד, היפרקלמיה, אנגיואדמה (צריך הפרדה מ-ACE)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Verapamil / Amlodipine (חוסמי תעלות סידן)",
+   "family": "קרדיווסקולרי",
+   "receptor": "תעלות Ca (L-type)",
+   "mechanism": "חוסם תעלות Ca",
+   "indications": "יתר-ל\"ד, אנגינה, הפרעות קצב (verapamil); Amlodipine — יתר-ל\"ד",
+   "sideEffects": "Verapamil אסור/לא מתאים לאי-ספיקת לב; בצקת פריפרית",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Amiloride",
+   "family": "משתנים ואלקטרוליטים",
+   "receptor": "תעלת Na (ENaC)",
+   "mechanism": "חוסך אשלגן",
+   "indications": "בצקת (בטוח בגאוט ללא החמרה)",
+   "sideEffects": "היפרקלמיה",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Chlorothiazide / Hydrochlorothiazide / Indapamide (תיאזידים)",
+   "family": "משתנים ואלקטרוליטים",
+   "receptor": "Na-Cl (טובולי דיסטלי)",
+   "mechanism": "משתן תיאזידי",
+   "indications": "יתר-ל\"ד, בצקת",
+   "sideEffects": "היפוקלמיה, ↑חומצה אורית (זהירות בגאוט)",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Furosemide (loop diuretic)",
+   "family": "משתנים ואלקטרוליטים",
+   "receptor": "Na-K-2Cl (לולאת הנלה)",
+   "mechanism": "משתן לולאה",
+   "indications": "בצקת, אי-ספיקת לב, יתר-ל\"ד",
+   "sideEffects": "לא ליטול עם משככי כאב ללא מרשם; לא דיאטה עתירת מלח; למדוד ל\"ד בבוקר; היפוקלמיה",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Mannitol / Urea",
+   "family": "משתנים ואלקטרוליטים",
+   "receptor": "",
+   "mechanism": "משתן אוסמוטי",
+   "indications": "שמירה על תפקוד כליה בעקה, בצקת מוחית",
+   "sideEffects": "עודף נוזלים חוץ-תאיים, היפו/היפרנתרמיה",
+   "alsoIn": [
+    "קרדיווסקולרי"
+   ],
+   "exam": true
+  },
+  {
+   "name": "Spironolactone (potassium-sparing)",
+   "family": "משתנים ואלקטרוליטים",
+   "receptor": "רצפטור אלדוסטרון",
+   "mechanism": "אנטגוניסט אלדוסטרון (חוסך אשלגן)",
+   "indications": "בצקת, אי-ספיקת לב, היפראלדוסטרוניזם",
+   "sideEffects": "היפרקלמיה, גינקומסטיה",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Abciximab",
+   "family": "קרישת דם",
+   "receptor": "GP IIb/IIIa",
+   "mechanism": "נוגדן ל-GP IIb/IIIa",
+   "indications": "לפני צנתור (עם אספירין+הפרין)",
+   "sideEffects": "דימום, תרומבוציטופניה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Alteplase / Tenecteplase",
+   "family": "קרישת דם",
+   "receptor": "פלסמינוגן",
+   "mechanism": "משפעל פלסמינוגן → פלסמין → פירוק פיברין",
+   "indications": "MI, PE, שבץ איסכמי",
+   "sideEffects": "דימום; אסור בהריון/שבץ בעבר/גידול מוחי/חבלת ראש/גרורות; חשש אנגיואדמה (עם מעכבי ACE)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Aminocaproic acid / Tranexamic acid",
+   "family": "קרישת דם",
+   "receptor": "פלסמינוגן",
+   "mechanism": "מעכב פלסמינוגן (אנטי-פיברינוליטי)",
+   "indications": "טיפול בדימום",
+   "sideEffects": "תרומבוזה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Argatroban",
+   "family": "קרישת דם",
+   "receptor": "תרומבין",
+   "mechanism": "מעכב תרומבין ישיר (סינתטי, מיידי)",
+   "indications": "חולי HIT, בצנתור",
+   "sideEffects": "דימום, בעיות לב, זיהומים/ספסיס; ניטור aPTT/Hb",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Bivalirudin / Desirudin (מ-Hirudin)",
+   "family": "קרישת דם",
+   "receptor": "תרומבין",
+   "mechanism": "מעכבי תרומבין ישירים (DTI)",
+   "indications": "HIT, אנגינה בצנתור",
+   "sideEffects": "דימום, ברדיקרדיה, שינויי ל\"ד, כאב-ראש; אין אנטי-דוט",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Cangrelor",
+   "family": "קרישת דם",
+   "receptor": "רצפטור ADP",
+   "mechanism": "אנטגוניסט ADP (IV)",
+   "indications": "מניעת אירועים",
+   "sideEffects": "דימום",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Caplacizumab",
+   "family": "קרישת דם",
+   "receptor": "vWF",
+   "mechanism": "אנטי-vWF",
+   "indications": "TTP",
+   "sideEffects": "דימום",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Cilostazol",
+   "family": "קרישת דם",
+   "receptor": "PDE-III",
+   "mechanism": "מעכב PDE → ↑cAMP",
+   "indications": "חסימת עורקים ברגליים (צליעה לסירוגין)",
+   "sideEffects": "עיכול, כאבי ראש; אסור באי-ספיקת לב",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Clopidogrel",
+   "family": "קרישת דם",
+   "receptor": "רצפטור ADP (P2Y12)",
+   "mechanism": "אנטגוניסט ADP (פרו-תרופה, מופעל ע\"י CYP2C19)",
+   "indications": "תפורת הבחירה; מניעת אירועים",
+   "sideEffects": "דימום (אין סם-נגד), תת-ל\"ד, כאב-ראש, בלבול, ברונכוספזם, אלרגיות; אסור יחד עם Omeprazole (מעכב CYP2C19)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Dabigatran",
+   "family": "קרישת דם",
+   "receptor": "תרומבין",
+   "mechanism": "מעכב תרומבין ישיר (פרו-תרופה)",
+   "indications": "מניעת אירועים טרומבואמבוליים",
+   "sideEffects": "GI (אזופגיטיס/דימום); אסור במסתם תותב; זהירות בכליה/קשישים; סם-נגד: Idarucizumab",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Dipyridamole",
+   "family": "קרישת דם",
+   "receptor": "PDE-III",
+   "mechanism": "מעכב PDE → ↑cAMP → ↓צימות + וזודילטציה",
+   "indications": "שתל מסתם תותב, מניעת שבץ (בשילוב אספירין)",
+   "sideEffects": "כאב-ראש, אורתוסטזיס; אסור באנגינה לא-יציבה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Enoxaparin / Dalteparin (LMWH)",
+   "family": "קרישת דם",
+   "receptor": "אנטיתרומבין III / פקטור Xa",
+   "mechanism": "מעכב בעיקר פקטור Xa",
+   "indications": "תרופת הבחירה בהריון (לא חוצה שליה)",
+   "sideEffects": "פחות ניטור; בדיקת anti-Xa בהריון/השמנה/כליה; הפחתת מינון בכליה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Factor VIII (רקומביננטי) / פקטורי קרישה מרוכזים",
+   "family": "קרישת דם",
+   "receptor": "",
+   "mechanism": "תחליף פקטור קרישה",
+   "indications": "המופיליה, חוסר פקטורים",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Fondaparinux",
+   "family": "קרישת דם",
+   "receptor": "פקטור Xa (דרך AT-III)",
+   "mechanism": "מעכב פקטור Xa",
+   "indications": "מניעה/טיפול ב-PE/DVT",
+   "sideEffects": "חשש קל ל-HIT; אין סם-נגד; אסור באי-ספיקת כליה חמורה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Heparin",
+   "family": "קרישת דם",
+   "receptor": "אנטיתרומבין III",
+   "mechanism": "מפעיל AT-III → מעכב פקטור Xa/תרומבין",
+   "indications": "DVT/PE, אחרי ניתוח/MI",
+   "sideEffects": "דימום, HIT (תרומבוציטופניה), אלרגיות; ניטור aPTT (×1.5–2.5); סם-נגד: Protamine; אסור בניתוח מוח/עין/ש\"ד",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Prasugrel / Ticagrelor",
+   "family": "קרישת דם",
+   "receptor": "רצפטור ADP",
+   "mechanism": "אנטגוניסט ADP",
+   "indications": "מניעת אירועים טרומבוטיים",
+   "sideEffects": "דימום",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Rivaroxaban / Apixaban / Betrixaban / Edoxaban",
+   "family": "קרישת דם",
+   "receptor": "פקטור Xa",
+   "mechanism": "מעכבי פקטור Xa ישירים (חדשים)",
+   "indications": "טיפול/מניעת אירועים טרומבואמבוליים",
+   "sideEffects": "דימום; אינטראקציות pGP (clarithromycin/verapamil/amiodarone) + CYP (ל-Riva/Apix); סם-נגד: Andexanet alfa (andexxa)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Ticlopidine",
+   "family": "קרישת דם",
+   "receptor": "רצפטור ADP",
+   "mechanism": "אנטגוניסט ADP (קו אחרון)",
+   "indications": "למי שאינו מגיב לאחרות",
+   "sideEffects": "אגרנולוציטוזיס, אנמיה אפלסטית (מסכן חיים)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Tirofiban (non-peptide) / Eptifibatide (peptide)",
+   "family": "קרישת דם",
+   "receptor": "GP IIb/IIIa",
+   "mechanism": "אנטגוניסט GP IIb/IIIa",
+   "indications": "",
+   "sideEffects": "דימום, תרומבוציטופניה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Warfarin (קומרין)",
+   "family": "קרישת דם",
+   "receptor": "ויטמין K (VKOR)",
+   "mechanism": "מעכב ייצור פקטורים תלויי ויטמין K (2,7,9,10)",
+   "indications": "טיפול/מניעת אוטמים, חוסר protein S/C",
+   "sideEffects": "דימום (סם-נגד: ויטמין K / פלזמה), טרטוגני, נמק עור; הרבה אינטראקציות (CYP, אלבומין); ניטור INR (2–3.5)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Bempedoic acid",
+   "family": "היפרליפידמיה",
+   "receptor": "ATP-citrate lyase (מעלה ה-HMG-CoA)",
+   "mechanism": "מעכב ייצור כולסטרול בכבד",
+   "indications": "חולי CV המטופלים בסטטינים",
+   "sideEffects": "נסבל היטב; הפרעות קצב, גאוט, זיהומי נשימה, כאבי שרירים, קרע בגיד",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Bile acid binding resins (Cholestyramine, Colestipol, Colesevelam)",
+   "family": "היפרליפידמיה",
+   "receptor": "חומצות מרה במעי",
+   "mechanism": "חוסם ספיגת חומצות מרה → ↑ייצור מרה → ↓כולסטרול תוך-תאי → ↑LDL-R",
+   "indications": "מחלות גנטיות, כשא\"א סטטינים",
+   "sideEffects": "עצירות/גזים/בחילה (פחות ב-colesevelam), תת-ספיגת ויטמינים מסיסי שומן (A,D,E,K), ↑TG; חוסם ספיגת תרופות (digoxin/warfarin/thiazides/tetracyclines/thyroxine/aspirin/folate — מרווח 2–6ש')",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Ezetimibe",
+   "family": "היפרליפידמיה",
+   "receptor": "NPC1L1 (סופג כולסטרול במעי)",
+   "mechanism": "מעכב ספיגת כולסטרול ומרה במעי (חוסם מסלול אקסוגני) → ↓LDL 23%",
+   "indications": "בשילוב סטטינים",
+   "sideEffects": "ת\"ל נדירות; אסור באי-ספיקת כבד, לא לשלב עם פיברטים",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Fibrates (Gemfibrozil, Fenofibrate)",
+   "family": "היפרליפידמיה",
+   "receptor": "PPAR (רצפטור גרעיני)",
+   "mechanism": "ליגנד PPAR → ↑LPL → ליפוליזה → ↓TG, ↓VLDL/LDL, ↑HDL",
+   "indications": "הורדת TG",
+   "sideEffects": "עיכול, מיוזיטיס/רבדומיוליזיס (עם סטטינים — gemfibrozil), אבני מרה, ↓ספירות דם, ↑אפקט warfarin; אסור עם simvastatin/מחלת כבד-כליה-מרה חמורה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Inclisiran",
+   "family": "היפרליפידמיה",
+   "receptor": "PCSK9 (siRNA)",
+   "mechanism": "siRNA נגד PCSK9",
+   "indications": "היפרכולסטרולמיה משפחתית/ASCVD בנוסף לסטטינים",
+   "sideEffects": "הזרקה SC פעמיים בשנה; UTI, כאבי שרירים, שלשול, ברונכיטיס, קוצר נשימה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Lomitapide",
+   "family": "היפרליפידמיה",
+   "receptor": "MTP",
+   "mechanism": "מעכב MTP → ↓הפרשת VLDL/TG מהכבד → ↓LDL 50%",
+   "indications": "היפרכולסטרולמיה משפחתית שאינה מגיבה לסטטינים",
+   "sideEffects": "פגיעה בכבד (ניטור חובה), כאב חזה, חולשה, GI, זיהומים, אינטראקציות CYP רבות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Niacin (nicotinic acid, vitamin B3)",
+   "family": "היפרליפידמיה",
+   "receptor": "",
+   "mechanism": "מעכב ליפוליזה ברקמת שומן, מעכב סינתזת TG/VLDL → ↓LDL, ↓TG, ↑HDL (היעיל ביותר ל-HDL)",
+   "indications": "היפרכולסטרולמיה משפחתית/חמורה, כשא\"א סטטינים",
+   "sideEffects": "הסמקה/תחושת חום/וזודילטציה (למנוע ע\"י aspirin/ibuprofen), ↑uric acid, היפרגליקמיה, כאבי בטן, פגיעה בכבד; אסור במחלת כבד/כיב קיבה",
+   "alsoIn": [
+    "קרישת דם"
+   ],
+   "exam": false
+  },
+  {
+   "name": "Omega-3 fatty acids (EPA, DHA / Icosapent ethyl)",
+   "family": "היפרליפידמיה",
+   "receptor": "",
+   "mechanism": "מעכב סינתזת TG/VLDL בכבד → ↓TG ~30%",
+   "indications": "TG גבוה (>500) בשילוב",
+   "sideEffects": "GI (כאב/בחילה/שלשול), ↑סיכון לדימום עם נוגדי קרישה/טסיות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "PCSK9 inhibitors (Evolocumab, Alirocumab)",
+   "family": "היפרליפידמיה",
+   "receptor": "PCSK9",
+   "mechanism": "נוגדן ל-PCSK9 → מונע פירוק LDL-R → ↑LDL-R → ↓LDL (50–70%)",
+   "indications": "היפרכולסטרולמיה משפחתית, ASCVD בסיכון גבוה, אי-סבילות לסטטינים",
+   "sideEffects": "הזרקה SC כל 2–4 שב'; אלרגיה, תסמיני שפעת, זיהומי נשימה, כאבי שרירים",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Statins (Simvastatin ועוד)",
+   "family": "היפרליפידמיה",
+   "receptor": "HMG-CoA reductase",
+   "mechanism": "מעכב תחרותי של HMG-CoA reductase → ↓ייצור כולסטרול בכבד, ↑ביטוי LDL-R (↓LDL, ↓TG, ↑HDL); ייצוב פלאקים, שיפור אנדותל, אנטי-דלקתי",
+   "indications": "מניעת ASCVD, היפרכולסטרולמיה",
+   "sideEffects": "אי-ספיקת כבד (ניטור אנזימים), מיופתיה/רבדומיוליזיס (ניטור CK), אסור בהריון/הנקה/מחלת כבד; אינטראקציות CYP450/warfarin",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Buprenorphine",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "μ (אגוניסט חלקי), κ/δ (אנטגוניסט חלש)",
+   "mechanism": "אגוניסט חלקי",
+   "indications": "התמכרות לאופיואידים, כאב קל-חמור",
+   "sideEffects": "פחות דיכוי נשימתי/תלות; זהירות באנגינה/מחלה כלילית (מעלה ל\"ד)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Codeine",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "μ",
+   "mechanism": "אגוניסט μ חלש (פרו-תרופה, CYP2D6)",
+   "indications": "כאב קל, נוגד שיעול",
+   "sideEffects": "עצירות, פחות תלות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Dextromethorphan + Bupropion",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "NMDA + sigma-1 / CYP2D6",
+   "mechanism": "אנטגוניסט NMDA + אגוניסט sigma-1 (Bupropion מעכב פירוקו)",
+   "indications": "דיכאון במבוגרים (onset מהיר ~שבוע)",
+   "sideEffects": "סחרחורת, כאב-ראש, שלשול, הפרעות שינה, יובש בפה, תפקוד מיני; אסור בגלאוקומה/אפילפסיה/הפרעות אכילה/כליה-כבד",
+   "alsoIn": [
+    "דיכאון ובי-פולר"
+   ],
+   "exam": false
+  },
+  {
+   "name": "Dipyrone (Optalgin)",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "",
+   "mechanism": "מנגנון לא ידוע",
+   "indications": "שיכוך כאב בינוני-חזק, הורדת חום",
+   "sideEffects": "פריחה, ירידת ל\"ד, סיכון נדיר לאגרנולוציטוזיס; זהירות בכבד/כליה; ליטול עם משקה שאינו אלכוהול",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Dronabinol / Nabilone",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "CB1/CB2 (קנבינואידי)",
+   "mechanism": "אגוניסט קנבינואידי",
+   "indications": "מניעת בחילות/הקאות, גירוי תיאבון",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Heroin",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "μ",
+   "mechanism": "אגוניסט μ",
+   "indications": "",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Meperidine (Pethidine)",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "μ",
+   "mechanism": "אגוניסט μ, פעילות NRI/SNRI",
+   "indications": "כאב קל-חמור, מיילדות (שימוש קצר-טווח בלבד)",
+   "sideEffects": "אנטיכולינרגי (דליריום), רעילות; אסור בקשישים/כליה/כבד/נשימה, MAOI, SSRI (סינדרום סרוטונין)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Methadone",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "μ",
+   "mechanism": "אגוניסט μ, t½ ארוך מאוד (12ש'–שבוע)",
+   "indications": "כאב כרוני, גמילה/תחזוקה למכורים",
+   "sideEffects": "כמו מורפין, ניטור ECG, פחות אופוריה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Methylnaltrexone / Naloxegol / Naldemedine",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "μ פריפרי",
+   "mechanism": "אנטגוניסט μ פריפרי",
+   "indications": "עצירות עמידה מאופיואידים (OIC)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Morphine",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "μ (אופיואידי)",
+   "mechanism": "אגוניסט μ",
+   "indications": "כאב חריף/כרוני, בצקת ריאות חריפה (אי-ספיקת לב שמאלית), כאב סרטן/לידה/פנטום, עזר להרדמה",
+   "sideEffects": "דיכוי נשימתי, סדציה, עצירות, בחילות/הקאות, מיוזיס, גרד (שחרור היסטמין), תת-ל\"ד/ברדיקרדיה, תלות/סבילות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Naloxone",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "μ (אנטגוניסט)",
+   "mechanism": "אנטגוניסט — היפוך מהיר",
+   "indications": "מנת-יתר אופיואידים (IV), דיכוי נשימתי",
+   "sideEffects": "גמילה חריפה במכורים",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Naltrexone",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "μ (אנטגוניסט)",
+   "mechanism": "אנטגוניסט (PO ארוך)",
+   "indications": "התמכרות (אלכוהול/אופיואידים)",
+   "sideEffects": "גמילה במכורים, ללא תלות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Oliceridine",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "μ",
+   "mechanism": "אגוניסט μ חדש (IV)",
+   "indications": "כאב חמור מאוד כשאין חלופה",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Oxycodone / Oxymorphone / Hydromorphone / Hydrocodone",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "μ",
+   "mechanism": "אגוניסט μ",
+   "indications": "כאב חריף/כרוני",
+   "sideEffects": "כמו מורפין",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Pentazocine",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "μ/κ",
+   "mechanism": "אגוניסט-אנטגוניסט מעורב",
+   "indications": "כאב בינוני (מינון נמוך)",
+   "sideEffects": "פחות אופוריה/דיכוי נשימתי; זהירות באנגינה/מחלה כלילית (מעלה ל\"ד)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Pregabalin (Lyrica)",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "תעלות Ca + אנלוג GABA",
+   "mechanism": "אנלוג GABA + חסימת תעלות Ca",
+   "indications": "כאב נוירופתי, פיברומיאלגיה, GAD, פרכוסים",
+   "sideEffects": "↑משקל, ישנוניות, סחרחורת, בצקת, דיפלופיה, אטקסיה; פינוי כלייתי",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Senna",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "",
+   "mechanism": "משלשל ממריץ",
+   "indications": "OIC (עצירות מאופיואידים)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Sufentanil / Alfentanil / Remifentanil",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "μ",
+   "mechanism": "אגוניסט μ",
+   "indications": "כאב כרוני חמור/חריף",
+   "sideEffects": "כמו מורפין",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Tramadol",
+   "family": "אופיואידים ומשככי כאב",
+   "receptor": "μ (חלש) + מעכב ספיגת 5-HT/NAdr",
+   "mechanism": "אופיואיד חלש + מנגנון מונואמינרגי",
+   "indications": "כאב בינוני",
+   "sideEffects": "סינדרום סרוטונין",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "(ביולוגיים) מעכבי TNF / IL-1 / IL-6 (moAB), מעכבי T/B, מעכבי Kinase (JAK)",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "ציטוקינים/קינאזות",
+   "mechanism": "נוגדנים חד-שבטיים/מעכבי קינאז",
+   "indications": "RA, קרוהן, קוליטיס, פסוריאזיס",
+   "sideEffects": "↑סיכון לזיהומים (דיכוי חיסוני)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Allopurinol / Febuxostat",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "Xanthine oxidase",
+   "mechanism": "מעכב ייצור חומצה אורית",
+   "indications": "מניעת גאוט",
+   "sideEffects": "החמרה ראשונית של התקפים בתחילת טיפול; זהירות בחולי כליה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Alprostadil (PGE1)",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "רצפטור PG",
+   "mechanism": "אגוניסט PGE1",
+   "indications": "שמירה על ductus arteriosus פתוח, טיפול באימפוטנציה",
+   "sideEffects": "סחרחורת, עילפון, פריאפיזם",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Aspirin (acetylsalicylic acid)",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "COX1+COX2 (בלתי-הפיך)",
+   "mechanism": "מעכב COX → ↓TXA2 → ↓צימות טסיות (לכל חיי הטסית 7–10 ימים)",
+   "indications": "כאב, חום, דלקת (מינון גבוה), מניעת MI (מינון נמוך, אנטי-טסיתי), מחלות מעי דלקתיות; טופיקלי ליבלות/אקנה",
+   "sideEffects": "דימום, אלרגיה (15%, עד אנפילקסיס), תסמונת Reye (ילדים+זיהום ויראלי), טיניטוס/כאב-ראש, סליציליזם; אסור בגאוט; רעיל במינון גבוה",
+   "alsoIn": [
+    "קרישת דם"
+   ],
+   "exam": false
+  },
+  {
+   "name": "Butalbital",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "GABA (ברביטורט)",
+   "mechanism": "ברביטורט (בשילוב ל-NSAID+קפאין)",
+   "indications": "כאבי ראש",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Celecoxib",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "COX2",
+   "mechanism": "מעכב COX2 סלקטיבי",
+   "indications": "דלקת מפרקים",
+   "sideEffects": "פחות דימום/כיבים GI, אך ↑סיכון קרדיווסקולרי (MI/שבץ, ↓פרוסטציקלין); אינו נוגד-טסיות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Colchicine",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "",
+   "mechanism": "מעכב גרנולוציטים ומיטוזה (אימונומודולציה)",
+   "indications": "התקף גאוט",
+   "sideEffects": "ת\"ל קשות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Diclofenac",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "COX1+COX2",
+   "mechanism": "מעכב COX הפיך",
+   "indications": "כאב, דלקת",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Epoprostenol / Iloprost / Treprostinil (PGI2)",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "רצפטור PGI2",
+   "mechanism": "אנלוג פרוסטציקלין",
+   "indications": "יתר-ל\"ד ריאתי",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Erenumab / Fremanezumab / Galcanezumab / Eptinezumab",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "CGRP/רצפטור CGRP",
+   "mechanism": "נוגדנים חד-שבטיים ל-CGRP",
+   "indications": "מניעת מיגרנה",
+   "sideEffects": "עצירות, התכווצויות שרירים, תגובה מקומית; זהירות ב-CV/ילדים/קשישים",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Hydroxychloroquine",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "",
+   "mechanism": "מנגנון אנטי-אוטואימוני לא ידוע",
+   "indications": "RA, מלריה",
+   "sideEffects": "בעיות עיניים, GIT, CNS; השפעה אחרי 6 שב'–6 חודשים",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Ibuprofen",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "COX1+COX2",
+   "mechanism": "מעכב COX הפיך",
+   "indications": "כאב, חום, דלקת",
+   "sideEffects": "דימום GI, קרדיווסקולרי",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Indomethacin",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "COX1+COX2",
+   "mechanism": "מעכב COX",
+   "indications": "התקף גאוט חריף, דלקת/כאב",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Lasmiditan",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "5-HT (סרוטונרגי)",
+   "mechanism": "אגוניסט סרוטונרגי",
+   "indications": "התקף מיגרנה חריף",
+   "sideEffects": "סינדרום סרוטונין, אסור בנהיגה; לחולים שאינם יכולים ליטול טריפטנים",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Latanoprost / Travoprost / Bimatoprost / Tafluprost (PGF2α)",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "רצפטור PGF2α",
+   "mechanism": "אנלוג PGF2α",
+   "indications": "גלאוקומה, מיעוט ריסים",
+   "sideEffects": "פיגמנטציה בעין, ראיה מטושטשת",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Leflunomide",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "",
+   "mechanism": "אימונומודולטור — פוגע בלימפוציטים אוטואימוניים",
+   "indications": "RA",
+   "sideEffects": "כאבי ראש, שלשול, בחילה, אובדן משקל, אלרגיה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Lubiprostone",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "תעלת כלוריד/PG",
+   "mechanism": "↑הפרשות במעי",
+   "indications": "עצירות (בעיקר OIC)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Methotrexate",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "דיהידרופולט רדוקטאז",
+   "mechanism": "אנלוג חומצה פולית → פוגע בסינתזת DNA, מדכא חיסון/דלקת",
+   "indications": "RA",
+   "sideEffects": "פצעים במוקוזה, בחילה, פנציטופניה, שחמת; תחילת השפעה 3–6 שבועות; Leucovorin מפחית ת\"ל",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Misoprostol (PGE1)",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "רצפטור PG (PGE1)",
+   "mechanism": "אנלוג PGE1 (מגן על המוקוזה)",
+   "indications": "מניעת כיבים במטופלי NSAID, השראת לידה",
+   "sideEffects": "שלשול; אסור בהריון",
+   "alsoIn": [
+    "מערכת העיכול"
+   ],
+   "exam": false
+  },
+  {
+   "name": "Nabumetone / Etodolac",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "COX2>COX1",
+   "mechanism": "מעכב COX (נוטה ל-COX2)",
+   "indications": "דלקת, כאב",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Naproxen",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "COX1+COX2",
+   "mechanism": "מעכב COX הפיך",
+   "indications": "כאב, חום, דלקת",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Paracetamol (Acetaminophen)",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "COX מרכזי",
+   "mechanism": "מעכב COX ב-CNS (פחות פעיל בפריפריה), ללא השפעה על דלקת/טסיות",
+   "indications": "חום, כאב; בטוח בילדים עם זיהום ויראלי ובהריון",
+   "sideEffects": "אין ת\"ל משמעותיות במינון רגיל; אי-ספיקת כבד במנת-יתר (סם-נגד: Acetylcysteine)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Pegloticase",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "",
+   "mechanism": "אנזים מפרק חומצה אורית (IV כל שבועיים)",
+   "indications": "גאוט (קו אחרון)",
+   "sideEffects": "סיכון לאנפילקסיס (לתת אנטיהיסטמינים+סטרואידים קודם)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Probenecid",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "",
+   "mechanism": "↑הפרשת חומצה אורית בכליה (מונע ספיגה חוזרת)",
+   "indications": "גאוט",
+   "sideEffects": "זהירות בחולי כליה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Rimegepant / Atogepant",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "רצפטור CGRP",
+   "mechanism": "אנטגוניסט CGRP (PO)",
+   "indications": "טיפול/מניעת מיגרנה",
+   "sideEffects": "בחילה, יובש בפה, ישנוניות; אינטראקציות (pGP/CYP/BCRP)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Rofecoxib (Vioxx)",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "COX2",
+   "mechanism": "מעכב COX2 סלקטיבי — הוסר מהשוק (2004) עקב סיכון קרדיווסקולרי",
+   "indications": "דלקת/כאב (היסטורי)",
+   "sideEffects": "↑סיכון MI/שבץ — הסיבה להסרתו מהשוק",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Triptans (Sumatriptan ועוד)",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "5-HT (סרוטונרגי)",
+   "mechanism": "אגוניסט סרוטונרגי (באינהלציה)",
+   "indications": "מיגרנה",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Zafirlukast / Montelukast",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "רצפטור לויקוטריאנים",
+   "mechanism": "אנטגוניסט תחרותי לרצפטור LT",
+   "indications": "מניעת ברונכוקונסטריקציה, בצקת, אלרגיה",
+   "sideEffects": "Zafirlukast — אינטראקציות (Phenytoin/Warfarin/Lovastatin)",
+   "alsoIn": [
+    "מערכת הנשימה (אסתמה/COPD)"
+   ],
+   "exam": false
+  },
+  {
+   "name": "Zileuton",
+   "family": "NSAIDs, גאוט ומיגרנה",
+   "receptor": "5-LOX",
+   "mechanism": "מעכב 5-LOX",
+   "indications": "מניעת אסתמה קלה-בינונית",
+   "sideEffects": "רעילות כבד (ניטור); אינטראקציות עם Theophylline/Warfarin",
+   "alsoIn": [
+    "מערכת הנשימה (אסתמה/COPD)"
+   ],
+   "exam": false
+  },
+  {
+   "name": "Dantrolene",
+   "family": "הרדמה",
+   "receptor": "רצפטור ריאנודין (RyR)",
+   "mechanism": "חוסם יציאת Ca ממאגרים תוך-תאיים בשריר",
+   "indications": "היפרתרמיה ממאירה (MH)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Desflurane",
+   "family": "הרדמה",
+   "receptor": "",
+   "mechanism": "מדכא CNS נדיף",
+   "indications": "פרוצדורות קצרות (אינדוקציה מהירה)",
+   "sideEffects": "מגרה דרכי נשימה, יקר, דורש ציוד מיוחד; פחות רעיל",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Dexmedetomidine",
+   "family": "הרדמה",
+   "receptor": "α2 אדרנרגי",
+   "mechanism": "אגוניסט α2 (מרגיע, משכך, סימפטוליטי, אנקסיוליטי)",
+   "indications": "סדציה בניתוחים/טיפול נמרץ, סדציה פרוצדורלית ללא הנשמה",
+   "sideEffects": "ללא דיכוי נשימתי",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Etomidate",
+   "family": "הרדמה",
+   "receptor": "GABA",
+   "mechanism": "מדכא קצר-טווח",
+   "indications": "אינדוקציה (בעיקר בחולי לב/בעיות קרדיווסקולריות)",
+   "sideEffects": "ללא שיכוך כאב, ללא השפעה קרדיווסקולרית; ↓קורטיזול/אלדוסטרון (מסוכן לטווח ארוך), תנועות בלתי-רצוניות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Halothane",
+   "family": "הרדמה",
+   "receptor": "GABA/NMDA/glycine (לא-ספציפי)",
+   "mechanism": "מדכא CNS נדיף",
+   "indications": "הרדמה (הוחלף)",
+   "sideEffects": "חום/אנורקסיה/הקאה/הפטיטיס, ברדיקרדיה והפרעות קצב, ↓ל\"ד, היפרתרמיה ממאירה (MH); אנלגזיה נמוכה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Isoflurane",
+   "family": "הרדמה",
+   "receptor": "",
+   "mechanism": "מדכא CNS נדיף",
+   "indications": "הרדמה (פרוצדורות ארוכות, זול)",
+   "sideEffects": "↓ל\"ד (ניתן לכווץ ב-phenylephrine), מגרה דרכי נשימה (pungent) — לא מתאים לאינדוקציה; ללא רעילות כבד/כליה או הפרעות קצב",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Ketamine",
+   "family": "הרדמה",
+   "receptor": "NMDA",
+   "mechanism": "אנטגוניסט NMDA (הרדמה דיסוציאטיבית)",
+   "indications": "פרוצדורות קצרות בילדים/קשישים, היפווולמי/אסתמטי/שבץ",
+   "sideEffects": "↑זרימה סימפטטית → ↑ל\"ד וקצב לב, מרחיב סמפונות, הזיות, שכחה/חוסר כאב",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Local anesthetics (אמידים: Lidocaine/Bupivacaine; אסתרים: Procaine/Benzocaine)",
+   "family": "הרדמה",
+   "receptor": "תעלות Na",
+   "mechanism": "חוסם תעלות Na בעצב",
+   "indications": "הרדמה מקומית (משולב עם epinephrine לווזוקונסטריקציה)",
+   "sideEffects": "רעילות סיסטמית (CNS/CV) באספירציה כושלת, אלרגיה (שכיחה יותר באסתרים), אלרגיה צולבת בתוך כל קבוצה",
+   "alsoIn": [
+    "קרדיווסקולרי"
+   ],
+   "exam": true
+  },
+  {
+   "name": "Methohexital",
+   "family": "הרדמה",
+   "receptor": "GABA",
+   "mechanism": "ברביטורט",
+   "indications": "לפני טיפול בשוק חשמלי / ניתוחים קצרים",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Nitrous oxide",
+   "family": "הרדמה",
+   "receptor": "",
+   "mechanism": "מדכא חלש, משכך כאב פוטנטי",
+   "indications": "טיפולי שיניים (בשילוב)",
+   "sideEffects": "הבטוח ביותר; לא מדכא נשימה (עם O2 מספק)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Opioids (Fentanyl, Sufentanil, Remifentanil, Morphine)",
+   "family": "הרדמה",
+   "receptor": "μ",
+   "mechanism": "משכך כאב",
+   "indications": "בשילוב להרדמה (IV/IT/epidural)",
+   "sideEffects": "תת-ל\"ד, דיכוי נשימתי, נוקשות שרירים, בחילות/הקאות",
+   "alsoIn": [
+    "אופיואידים ומשככי כאב"
+   ],
+   "exam": false
+  },
+  {
+   "name": "Propofol",
+   "family": "הרדמה",
+   "receptor": "GABA (לא ידוע מדויק)",
+   "mechanism": "מדכא/מרגיע (החליף Thiopental)",
+   "indications": "אינדוקציה (30–40 שנ')/אחזקה/סדציה",
+   "sideEffects": "ללא שיכוך כאב; קפיצות שרירים, שיהוק, ↓ל\"ד; אנטי-אמטי חלש; אמולסיה (נראה כחלב)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Sevoflurane",
+   "family": "הרדמה",
+   "receptor": "",
+   "mechanism": "מדכא CNS נדיף",
+   "indications": "אינדוקציה בילדים (לא מגרה)",
+   "sideEffects": "אינדוקציה והתאוששות מהירות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Sugammadex",
+   "family": "הרדמה",
+   "receptor": "",
+   "mechanism": "מנטרל Rocuronium/Vecuronium",
+   "indications": "היפוך חסם נוירו-שרירי בסוף ניתוח",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "אמידים: Lidocaine / Bupivacaine / Mepivacaine / Ropivacaine",
+   "family": "הרדמה",
+   "receptor": "תעלות Na",
+   "mechanism": "חוסם תעלות Na (פירוק איטי בכבד, onset מהיר)",
+   "indications": "הרדמה מקומית (עם אדרנלין)",
+   "sideEffects": "אלרגיה נדירה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "אסתרים: Procaine / Tetracaine / Chloroprocaine / Benzocaine",
+   "family": "הרדמה",
+   "receptor": "תעלות Na",
+   "mechanism": "חוסם תעלות Na (פירוק מהיר בפלזמה, onset איטי)",
+   "indications": "הרדמה מקומית",
+   "sideEffects": "אלרגיה צולבת בקבוצה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Alprazolam",
+   "family": "חרדה ושינה",
+   "receptor": "GABA-A",
+   "mechanism": "אגוניסט (בינוני-טווח)",
+   "indications": "חרדה",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Buspirone",
+   "family": "חרדה ושינה",
+   "receptor": "5-HT (סרוטונרגי)",
+   "mechanism": "אגוניסט 5-HT (onset איטי)",
+   "indications": "חרדה כללית כרונית (GAD)",
+   "sideEffects": "אינו ממכר, פחות ת\"ל; בחילה, סחרחורת, אי-שקט, כאב-ראש",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Diazepam",
+   "family": "חרדה ושינה",
+   "receptor": "GABA-A",
+   "mechanism": "אגוניסט (↑GABA, ארוך-טווח)",
+   "indications": "חרדה, גמילה מאלכוהול, התקפי עוויתות, ספסטיות שרירים",
+   "sideEffects": "תלות/סבילות, סינדרום גמילה, דיכוי CNS, ישנוניות/בלבול, אטקסיה, שכחה; סם-נגד: Flumazenil",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Diphenhydramine / Hydroxyzine / Doxylamine",
+   "family": "חרדה ושינה",
+   "receptor": "H1",
+   "mechanism": "אנטגוניסט H1",
+   "indications": "היפנוטי",
+   "sideEffects": "אנטיכולינרגי, ללא תלות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Doxepin / Trazodone / Mirtazapine",
+   "family": "חרדה ושינה",
+   "receptor": "",
+   "mechanism": "נוגדי דיכאון לשינה",
+   "indications": "נדודי שינה (פחות יעיל)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Lorazepam / Clonazepam",
+   "family": "חרדה ושינה",
+   "receptor": "GABA-A",
+   "mechanism": "אגוניסט (ארוך-טווח)",
+   "indications": "חרדה, התקפי עוויתות, גמילה מאלכוהול",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Midazolam",
+   "family": "חרדה ושינה",
+   "receptor": "GABA-A",
+   "mechanism": "אגוניסט (קצר)",
+   "indications": "הרגעה ושכחה לפני פרוצדורות",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Oxazepam",
+   "family": "חרדה ושינה",
+   "receptor": "GABA-A",
+   "mechanism": "בנזודיאזפין קצר-טווח",
+   "indications": "חרדה",
+   "sideEffects": "פוטנציאל התמכרות נמוך יחסית",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Phenobarbital",
+   "family": "חרדה ושינה",
+   "receptor": "GABA / NMDA",
+   "mechanism": "מגביר היפרפולריזציה דרך GABA, חוסם NMDA (ארוך-טווח)",
+   "indications": "אנטי-קונבולסנט (אפילפסיה, קו אחרון), חרדה/היצדס (בעבר)",
+   "sideEffects": "מנת-יתר מסוכנת (דיכוי מרכז נשימה), תלות/סבילות קשות, סינדרום גמילה חמור (דום לב/מוות), דיכוי נשימתי וקרדיווסקולרי; משפעל CYP450",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Ramelteon / Tasimelteon",
+   "family": "חרדה ושינה",
+   "receptor": "רצפטור מלטונין (MT1/MT2)",
+   "mechanism": "אגוניסט מלטונין",
+   "indications": "נדודי שינה (טיפול כרוני)",
+   "sideEffects": "ללא סבילות/תלות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Suvorexant / Lemborexant",
+   "family": "חרדה ושינה",
+   "receptor": "רצפטור אורקסין",
+   "mechanism": "אנטגוניסט רצפטור אורקסין",
+   "indications": "נדודי שינה",
+   "sideEffects": "מחשבות אובדניות, סיוטים, שיתוק שינה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Temazepam / Triazolam / Estazolam",
+   "family": "חרדה ושינה",
+   "receptor": "GABA-A",
+   "mechanism": "אגוניסט (קצר/אולטרה-קצר)",
+   "indications": "הפרעות שינה",
+   "sideEffects": "בחילות/הקאות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Zolpidem / Eszopiclone / Zaleplon",
+   "family": "חרדה ושינה",
+   "receptor": "GABA-A",
+   "mechanism": "פועלות על רצפטור GABA (אינן BZ)",
+   "indications": "נדודי שינה",
+   "sideEffects": "לא ממכרות, מעט תלות; כאב-ראש, עיכול, סיוטים, זיכרון, סחרחורת, הליכה בשינה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Zopiclone",
+   "family": "חרדה ושינה",
+   "receptor": "GABA-A",
+   "mechanism": "Z-drug",
+   "indications": "נדודי שינה",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Brexanolone",
+   "family": "דיכאון ובי-פולר",
+   "receptor": "GABA",
+   "mechanism": "אגוניסט GABA (אנלוג allopregnanolone, IV)",
+   "indications": "דיכאון אחרי לידה",
+   "sideEffects": "סדציה, אובדן הכרה, היפוקסיה (ניטור, אשפוז)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Citalopram / Escitalopram",
+   "family": "דיכאון ובי-פולר",
+   "receptor": "SERT",
+   "mechanism": "SSRI",
+   "indications": "דיכאון וחרדה",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Esketamine",
+   "family": "דיכאון ובי-פולר",
+   "receptor": "NMDA",
+   "mechanism": "אנטגוניסט NMDA (תוך-אפי, IN)",
+   "indications": "דיכאון עמיד/חריף עם אובדנות (בשילוב PO)",
+   "sideEffects": "בחילה, הפרעות קוגניטיביות/תפיסתיות, סחרחורת, יתר-ל\"ד/טכיקרדיה, סדציה; onset מהיר",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Fluoxetine",
+   "family": "דיכאון ובי-פולר",
+   "receptor": "SERT (סרוטונין)",
+   "mechanism": "מעכב ספיגה חוזרת של סרוטונין (t½ ארוך ~50ש')",
+   "indications": "דיכאון, OCD, פאניקה, חרדה (GAD), PTSD, בולימיה, חרדה חברתית",
+   "sideEffects": "בחילות/הקאות/שלשול, חרדה, כאב-ראש, הזעה, הפרעות שינה, תפקוד מיני, שינויי משקל, היפונתרמיה, סינדרום סרוטונין (עם MAOI); אינטראקציות CYP",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Lithium",
+   "family": "דיכאון ובי-פולר",
+   "receptor": "",
+   "mechanism": "מנגנון לא ידוע",
+   "indications": "מאניה (יעיל ב-60–80%), בי-פולר",
+   "sideEffects": "חלון תרפויטי צר מאוד; כאב-ראש, יובש פה, צמא/רעב, פוליאוריה, עיכול (עם אוכל), סחרחורת, סדציה, רעד, בעיות עור; רעילות: אטקסיה/דיבור משובש/רעד/בלבול/עוויתות; ניטור תפקוד תריס",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "MAOI (Phenelzine, Tranylcypromine, Selegiline-transdermal)",
+   "family": "דיכאון ובי-פולר",
+   "receptor": "MAO-A/B",
+   "mechanism": "מעכב MAO (קו אחרון)",
+   "indications": "דיכאון שלא הגיב ל-TCA/SSRI",
+   "sideEffects": "משבר יתר-ל\"ד עם מזון עשיר בטיראמין (גבינות ישנות/בשר/יין אדום/דגים מעושנים), סינדרום סרוטונין; הרבה אינטראקציות; אסור עם נוגדי דיכאון אחרים (washout שבועיים)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Mirtazapine",
+   "family": "דיכאון ובי-פולר",
+   "receptor": "α2 (אנטגוניסט), H1",
+   "mechanism": "אנטגוניסט α2 פרה-סינפטי → ↑5-HT/NAdr, חוסם H1",
+   "indications": "דיכאון, שינה",
+   "sideEffects": "סדציה, ללא השפעה מינית",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Nefazodone / Trazodone",
+   "family": "דיכאון ובי-פולר",
+   "receptor": "SERT + חוסם רצפטורים",
+   "mechanism": "מעכב ספיגת 5-HT וחוסם רצפטורים",
+   "indications": "דיכאון, אינסומניה",
+   "sideEffects": "אורתוסטזיס, סחרחורת",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Paroxetine / Fluvoxamine",
+   "family": "דיכאון ובי-פולר",
+   "receptor": "SERT",
+   "mechanism": "SSRI",
+   "indications": "",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Reboxetine",
+   "family": "דיכאון ובי-פולר",
+   "receptor": "NET",
+   "mechanism": "מעכב ספיגה חוזרת של NAdr",
+   "indications": "דיכאון במבוגרים",
+   "sideEffects": "אורתוסטזיס, אובדנות (<25), כאבי ראש/בטן, אצירת שתן, בעיות ראיה, תפקוד מיני; זהירות בלב/אפילפסיה/גלאוקומה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Sertraline",
+   "family": "דיכאון ובי-פולר",
+   "receptor": "SERT",
+   "mechanism": "SSRI",
+   "indications": "",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "TCA (Amitriptyline, Imipramine, Desipramine, Clomipramine ועוד)",
+   "family": "דיכאון ובי-פולר",
+   "receptor": "SERT+NET + חוסם H1/M/α",
+   "mechanism": "מעכב ספיגה חוזרת של 5-HT/NAdr, חוסם רצפטורים נוספים",
+   "indications": "דיכאון (קו שלישי), חרדה, אינסומניה, מיגרנה, כאב",
+   "sideEffects": "החמרת גלאוקומה, אריתמיות מסוכנות, אורתוסטזיס, אנטיכולינרגי; חלון תרפויטי צר; הרבה אינטראקציות (MAOI, אגוניסטים אדרנרגיים, אלכוהול)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Venlafaxine / Duloxetine",
+   "family": "דיכאון ובי-פולר",
+   "receptor": "SERT + NET",
+   "mechanism": "מעכב ספיגה חוזרת של 5-HT+NAdr (קו שני)",
+   "indications": "דיכאון, כאב (נוירופתיה, פיברומיאלגיה, כאב גב)",
+   "sideEffects": "דומות ל-SSRI + סחרחורת, עצירות, ↑ל\"ד וקצב לב במינון גבוה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Vilazodone",
+   "family": "דיכאון ובי-פולר",
+   "receptor": "SERT + 5-HT1a",
+   "mechanism": "SSRI + אגוניסט 5-HT1a",
+   "indications": "דיכאון",
+   "sideEffects": "כמו SSRI",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Vortioxetine",
+   "family": "דיכאון ובי-פולר",
+   "receptor": "SERT + רצפטורים",
+   "mechanism": "SSRI + אגו/אנטגוניזם רצפטורים",
+   "indications": "דיכאון",
+   "sideEffects": "כמו SSRI",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Chlorpromazine / Fluphenazine",
+   "family": "פסיכוזה",
+   "receptor": "D2 (+α, H1, M)",
+   "mechanism": "אנטגוניסט דופמין (דור ראשון, פנותיאזינים)",
+   "indications": "סכיזופרניה, פסיכוזה",
+   "sideEffects": "EPS, היפרפרולקטינמיה, הארכת QT, סדציה, אנטיכולינרגי",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Clozapine",
+   "family": "פסיכוזה",
+   "receptor": "D2/D4, 5-HT",
+   "mechanism": "אנטגוניסט דופמין/סרוטונין (קו אחרון)",
+   "indications": "סכיזופרניה שלא הגיבה לדור 1/2",
+   "sideEffects": "דיכוי מח-עצם/אגרנולוציטוזיס (ניטור ספירות!), עוויתות, בעיות CV, ↑משקל, מטבולי",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Haloperidol",
+   "family": "פסיכוזה",
+   "receptor": "D2 (+α, H1, M)",
+   "mechanism": "אנטגוניסט דופמין",
+   "indications": "סכיזופרניה, תסמונת טורט, הקאות, הרגעה",
+   "sideEffects": "EPS (דיסטוניה/אקתיזיה/פרקינסוניזם/טרדיב דיסקינזיה), היפרפרולקטינמיה (גלקטוראה/אמנוריאה), הארכת QT, סינדרום ממאיר (NMS)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Olanzapine / Quetiapine / Aripiprazole / Ziprasidone",
+   "family": "פסיכוזה",
+   "receptor": "D2, 5-HT",
+   "mechanism": "אנטי-פסיכוטי דור 2 (קו ראשון)",
+   "indications": "סכיזופרניה, בי-פולר",
+   "sideEffects": "תסמונת מטבולית (↑משקל/סוכר/שומנים)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Pimavanserin",
+   "family": "פסיכוזה",
+   "receptor": "5-HT (סרוטונרגי בלבד)",
+   "mechanism": "אנטגוניסט סרוטונרגי בלבד (אנטי-פסיכוטי חדש)",
+   "indications": "פסיכוזה",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Pimozide",
+   "family": "פסיכוזה",
+   "receptor": "D2",
+   "mechanism": "אנטגוניסט דופמין",
+   "indications": "תסמונת טורט",
+   "sideEffects": "EPS, הארכת QT",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Risperidone",
+   "family": "פסיכוזה",
+   "receptor": "D2, 5-HT",
+   "mechanism": "אנטגוניסט דופמין/סרוטונין",
+   "indications": "סכיזופרניה, טורט, הפרעת התנהגות באוטיסטים, בי-פולר",
+   "sideEffects": "היפרגליקמיה/היפרליפידמיה/↑משקל, הארכת QT",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Thioridazine",
+   "family": "פסיכוזה",
+   "receptor": "D2 + מוסקריני חזק",
+   "mechanism": "אנטגוניסט דופמין (חוסם מוסקריני → פחות EPS)",
+   "indications": "סכיזופרניה",
+   "sideEffects": "אנטיכולינרגי, הארכת QT",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Barbiturates (Phenobarbital, Primidone)",
+   "family": "אפילפסיה",
+   "receptor": "GABA + תעלות Na",
+   "mechanism": "↑GABA, חוסם תעלות Na",
+   "indications": "status epilepticus, קו אחרון",
+   "sideEffects": "אפניאה/שיעול/ברונכוספזם (אסתמה); ללא שיכוך כאב",
+   "alsoIn": [
+    "הרדמה"
+   ],
+   "exam": false
+  },
+  {
+   "name": "Benzodiazepines (Clonazepam, Clobazam, Diazepam)",
+   "family": "אפילפסיה",
+   "receptor": "GABA-A",
+   "mechanism": "מרגיע (סדציה)",
+   "indications": "חירום, התקפים חמורים (myoclonic/atonic), status epilepticus",
+   "sideEffects": "אמנזיה אנטרוגרדית, סיכון לדיכוי נשימתי, כמעט ללא דיכוי קרדיווסקולרי",
+   "alsoIn": [
+    "הרדמה"
+   ],
+   "exam": false
+  },
+  {
+   "name": "Cannabis oil / Cannabidiol",
+   "family": "אפילפסיה",
+   "receptor": "",
+   "mechanism": "",
+   "indications": "אפילפסיה (עמידה)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Carbamazepine",
+   "family": "אפילפסיה",
+   "receptor": "תעלות Na",
+   "mechanism": "חוסם תעלות Na",
+   "indications": "Partial, tonic-clonic (אסור ב-absence), מייצב בי-פולר, נוירלגיה טריגמינלית",
+   "sideEffects": "היפונתרמיה, פריחה; משפעל מטבוליזם עצמו ושל Phenytoin/Valproate/Lamotrigine/Topiramate",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Cenobamate",
+   "family": "אפילפסיה",
+   "receptor": "",
+   "mechanism": "מנגנון לא ידוע, ↓פעילות GABA",
+   "indications": "אפילפסיה עמידה",
+   "sideEffects": "הרבה ת\"ל",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Ethosuximide",
+   "family": "אפילפסיה",
+   "receptor": "תעלות Ca",
+   "mechanism": "חוסם תעלות Ca (t½ ארוך)",
+   "indications": "Absence כללי בילדים",
+   "sideEffects": "בחילה, אנורקסיה, שינויי מצב-רוח; valproic מעכב מטבוליזם שלו",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Felbamate",
+   "family": "אפילפסיה",
+   "receptor": "תעלות Na/Ca + GABA + NMDA",
+   "mechanism": "חוסם תעלות Na/Ca, מגביר GABA, חוסם NMDA",
+   "indications": "אפילפסיה עמידה בלבד",
+   "sideEffects": "אי-ספיקת כבד, אנמיה אפלסטית",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Gabapentin",
+   "family": "אפילפסיה",
+   "receptor": "GABA (עקיף)",
+   "mechanism": "אנלוג GABA (לא ישירות על הרצפטור)",
+   "indications": "Partial בקשישים",
+   "sideEffects": "מעט ת\"ל ואינטראקציות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Lamotrigine",
+   "family": "אפילפסיה",
+   "receptor": "תעלות Na/Ca",
+   "mechanism": "חוסם תעלות Na/Ca",
+   "indications": "Partial, tonic-clonic, Atonic, Absence, מייצב בי-פולר",
+   "sideEffects": "פריחה מסכנת חיים (להתחיל נמוך), אינטראקציות CYP450; הפחתת מינון עם valproate",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Levetiracetam",
+   "family": "אפילפסיה",
+   "receptor": "חלבון שלפוחית סינפטית SV2A",
+   "mechanism": "נקשר ל-SV2A → מעכב העברה סינפטית",
+   "indications": "טיפול יחיד ב-focal, עזר בהתקף כללי",
+   "sideEffects": "שינויי מצב-רוח, הפרעות שינה, אטקסיה, דיכאון, סדציה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Phenytoin (PO) / Fosphenytoin (IM)",
+   "family": "אפילפסיה",
+   "receptor": "תעלות Na",
+   "mechanism": "חוסם תעלות Na",
+   "indications": "התקפים Partial ו-Tonic-clonic, status epilepticus",
+   "sideEffects": "היפרפלזיה של חניכיים, דיכוי CNS (ניסטגמוס/אטקסיה), פינוי מסדר אפס; טרטוגני ואסור בהנקה; משפיע על מטבוליזם של Valproate/Lamotrigine/Topiramate/Digoxin/סטרואידים/ויטמין K",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Tiagabine",
+   "family": "אפילפסיה",
+   "receptor": "GABA reuptake",
+   "mechanism": "מעכב reuptake של GABA",
+   "indications": "אפילפסיה",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Topiramate",
+   "family": "אפילפסיה",
+   "receptor": "תעלות Na/Ca + רצפטור גלוטמט (NMDA)",
+   "mechanism": "חוסם תעלות Na/Ca + חוסם NMDA",
+   "indications": "Partial, generalized ראשוני, מניעת מיגרנה",
+   "sideEffects": "ישנוניות, אובדן משקל, פרסתזיות, אבנים בכליה, גלאוקומה; מעכב CYP450",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Valproic acid / Valproate / Divalproex",
+   "family": "אפילפסיה",
+   "receptor": "GABA transaminase + תעלות Na/Ca",
+   "mechanism": "מעכב פירוק GABA, ↑ייצור GABA, חוסם תעלות Na/Ca",
+   "indications": "כמעט כל סוגי ההתקפים (כולל Absence), מייצב מצב-רוח בבי-פולר",
+   "sideEffects": "פנקריאטיטיס, אי-ספיקת כבד (ניטור), אסור מתחת לגיל שנתיים; טרטוגני (מומי צינור עצבי); הרבה אינטראקציות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Vigabatrin",
+   "family": "אפילפסיה",
+   "receptor": "GABA transaminase",
+   "mechanism": "מעכב בלתי-הפיך של GABA transaminase → ↑GABA",
+   "indications": "אפילפסיה עמידה",
+   "sideEffects": "בעיות ראיה, הרבה ת\"ל",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Aducanumab",
+   "family": "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)",
+   "receptor": "β-amyloid",
+   "mechanism": "נוגדן נגד β-עמילואיד",
+   "indications": "אלצהיימר (מוקדם)",
+   "sideEffects": "בצקת מוחית, דימום מוחי, כאב-ראש",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Amantadine",
+   "family": "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)",
+   "receptor": "",
+   "mechanism": "מעלה שחרור דופמין + ↓reuptake, חוסם מוסקריני, מעכב NMDA (אנטי-ויראלי לשפעת)",
+   "indications": "פרקינסון (פחות יעיל מ-L-Dopa)",
+   "sideEffects": "פחות ת\"ל (דומות ל-dopa), סבילות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Apomorphine",
+   "family": "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)",
+   "receptor": "דופמין",
+   "mechanism": "אגוניסט דופמין",
+   "indications": "פרקינסון (התקפי Off)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Bromocriptine / Cabergoline",
+   "family": "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)",
+   "receptor": "רצפטורי דופמין (כל D)",
+   "mechanism": "אגוניסט D2 → מחקה דופמין → ↓פרולקטין",
+   "indications": "פרקינסון (קו ראשון בצעירים; קו אחרון עם סיבוכים מוטוריים)",
+   "sideEffects": "בחילה, כאבי ראש, בעיות פסיכיאטריות",
+   "alsoIn": [
+    "אנדוקרינית והורמונים"
+   ],
+   "exam": false
+  },
+  {
+   "name": "Carbidopa",
+   "family": "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)",
+   "receptor": "DOPA decarboxylase (פריפרי)",
+   "mechanism": "מעכב פירוק L-Dopa בפריפריה (לא חוצה BBB)",
+   "indications": "תוספת ל-L-Dopa",
+   "sideEffects": "מפחית ת\"ל פריפריות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Edaravone",
+   "family": "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)",
+   "receptor": "",
+   "mechanism": "נוגד חמצון (סופח רדיקלים חופשיים)",
+   "indications": "ALS (מאט התקדמות)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Entacapone / Tolcapone / Opicapone",
+   "family": "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)",
+   "receptor": "COMT",
+   "mechanism": "מעכב COMT → מפחית פירוק L-Dopa, מפחית אפקט Off",
+   "indications": "תוספת ל-L-Dopa",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Istradefylline",
+   "family": "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)",
+   "receptor": "רצפטור אדנוזין A2A",
+   "mechanism": "חוסם רצפטור אדנוזין, מפחית אפקט Off",
+   "indications": "תוספת ל-L-Dopa",
+   "sideEffects": "בחילות, עצירות, הזיות, אימפולסיביות, אינסומניה, דיסקינזיה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Lecanemab",
+   "family": "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)",
+   "receptor": "β-amyloid",
+   "mechanism": "נוגדן נגד β-עמילואיד",
+   "indications": "אלצהיימר (מוקדם)",
+   "sideEffects": "בצקת/דימום מוחי, רפרוף עליות, שיעול/שלשול, ↓לימפוציטים; מסוכן עם נוגדי קרישה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Levodopa (L-Dopa)",
+   "family": "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)",
+   "receptor": "דופמינרגי",
+   "mechanism": "פרקורסור דופמין (חוצה BBB)",
+   "indications": "מחלת פרקינסון",
+   "sideEffects": "בחילה/הקאה/אריתמיה/תת-ל\"ד (פריפריות), דיסקינזיה, הזיות ראיה/שמיעה, אפקט On-Off, אובדן יעילות אחרי 3–5 שנים, מידריאזיס, אורתוסטזיס, קומבס חיובי, רוק/שתן חומים",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Memantine",
+   "family": "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)",
+   "receptor": "NMDA",
+   "mechanism": "אנטגוניסט NMDA",
+   "indications": "אלצהיימר",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Pramipexole",
+   "family": "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)",
+   "receptor": "D2, D3",
+   "mechanism": "אגוניסט דופמין",
+   "indications": "פרקינסון",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Riluzole",
+   "family": "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)",
+   "receptor": "NMDA / תעלות Na / גלוטמט",
+   "mechanism": "אנטגוניסט NMDA, מעכב שחרור גלוטמט, חוסם תעלות Na",
+   "indications": "ALS",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Ropinirole",
+   "family": "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)",
+   "receptor": "D2, D3",
+   "mechanism": "אגוניסט דופמין",
+   "indications": "פרקינסון",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Rotigotine",
+   "family": "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)",
+   "receptor": "דופמין",
+   "mechanism": "אגוניסט דופמין (מדבקה)",
+   "indications": "פרקינסון",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Selegiline (Deprenyl) / Rasagiline / Safinamide",
+   "family": "נוירודגנרטיביות (פרקינסון/אלצהיימר/ALS)",
+   "receptor": "MAO-B",
+   "mechanism": "מעכב MAO-B → ↓פירוק דופמין",
+   "indications": "פרקינסון (לבד או עם L-Dopa)",
+   "sideEffects": "אינסומניה (Selegiline → מטבוליט אמפטמין), בחילות/כאב-ראש/בלבול, אנורקסיה ויתר-ל\"ד במינון גבוה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Cromolyn",
+   "family": "מערכת הנשימה (אסתמה/COPD)",
+   "receptor": "",
+   "mechanism": "מונע שחרור היסטמין (מייצב תאי מאסט), אינו מרחיב סמפונות",
+   "indications": "מניעת אסתמה",
+   "sideEffects": "שיעול, הפרעות טעם",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Dupilumab",
+   "family": "מערכת הנשימה (אסתמה/COPD)",
+   "receptor": "IL-4/IL-13",
+   "mechanism": "נוגדן נגד IL-4/IL-13",
+   "indications": "אסתמה, אטופיק דרמטיטיס, נזלת כרונית עם פוליפים",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "ICS (Budesonide, Fluticasone, Beclomethasone)",
+   "family": "מערכת הנשימה (אסתמה/COPD)",
+   "receptor": "רצפטור גלוקוקורטיקואיד",
+   "mechanism": "אנטי-דלקתי → ↓דלקת/בצקת/שחרור לויקוטריאנים",
+   "indications": "קו ראשון באסתמה (שימוש יומי)",
+   "sideEffects": "קנדידיאזיס בחלל הפה (לשטוף פה), ת\"ל סיסטמיות מינימליות; במתן סיסטמי — תסמיני Cushing",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "LABA (Salmeterol, Formoterol)",
+   "family": "מערכת הנשימה (אסתמה/COPD)",
+   "receptor": "β2",
+   "mechanism": "אגוניסט β2 ארוך-טווח",
+   "indications": "אסתמה (בשילוב ICS)",
+   "sideEffects": "",
+   "alsoIn": [
+    "מערכת אוטונומית — אדרנרגית"
+   ],
+   "exam": false
+  },
+  {
+   "name": "LAMA (Tiotropium, Aclidinium, Glycopyrrolate)",
+   "family": "מערכת הנשימה (אסתמה/COPD)",
+   "receptor": "מוסקריני (M)",
+   "mechanism": "אנטגוניסט מוסקריני ארוך-טווח",
+   "indications": "COPD",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Mepolizumab / Benralizumab / Reslizumab",
+   "family": "מערכת הנשימה (אסתמה/COPD)",
+   "receptor": "IL-5",
+   "mechanism": "נוגדן נגד IL-5",
+   "indications": "אסתמה אאוזינופילית",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Omalizumab",
+   "family": "מערכת הנשימה (אסתמה/COPD)",
+   "receptor": "IgE",
+   "mechanism": "נוגדן נגד IgE → מונע שחרור היסטמין",
+   "indications": "אסתמה אלרגית (קו אחרון)",
+   "sideEffects": "כאבי מפרקים, חום, ↑סיכון לזיהומים",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Roflumilast",
+   "family": "מערכת הנשימה (אסתמה/COPD)",
+   "receptor": "PDE4",
+   "mechanism": "מעכב PDE4 (אנטי-דלקתי)",
+   "indications": "COPD",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "SABA (Albuterol/Salbutamol, Terbutaline)",
+   "family": "מערכת הנשימה (אסתמה/COPD)",
+   "receptor": "β2",
+   "mechanism": "אגוניסט β2 קצר-טווח",
+   "indications": "אסתמה (reliever)",
+   "sideEffects": "רעד (סבילות), אי-שקט, חרדה; PO — טכיקרדיה/אריתמיה/היפרגליקמיה/היפוקלמיה; אסור עם מעכבי MAO",
+   "alsoIn": [
+    "מערכת אוטונומית — אדרנרגית"
+   ],
+   "exam": false
+  },
+  {
+   "name": "SAMA (Ipratropium, Oxitropium)",
+   "family": "מערכת הנשימה (אסתמה/COPD)",
+   "receptor": "מוסקריני (M)",
+   "mechanism": "אנטגוניסט מוסקריני קצר-טווח",
+   "indications": "COPD, אסתמה חמורה",
+   "sideEffects": "טעם מר, יובש בפה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Theophylline",
+   "family": "מערכת הנשימה (אסתמה/COPD)",
+   "receptor": "PDE (לא ברור)",
+   "mechanism": "ברונכודילטור + אנטי-דלקתי",
+   "indications": "אסתמה/COPD (בשילוב LABA, נדיר)",
+   "sideEffects": "חלון תרפויטי צר, עוויתות/הפרעות קצב, אינטראקציות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "קורטיקוסטרואידים סיסטמיים (OCS)",
+   "family": "מערכת הנשימה (אסתמה/COPD)",
+   "receptor": "רצפטור גלוקוקורטיקואיד",
+   "mechanism": "אנטי-דלקתי",
+   "indications": "אסתמה קשה (IV/PO)",
+   "sideEffects": "ת\"ל קלאסיות של סטרואידים (אוסטאופורוזיס, קטרקט, סוכרת)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Meclizine",
+   "family": "אנטיהיסטמינים",
+   "receptor": "H1 (+M1)",
+   "mechanism": "אנטגוניסט H1 דור 1",
+   "indications": "בחילות/מחלת ים",
+   "sideEffects": "סדציה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "אנטיהיסטמינים H1 דור ראשון (Diphenhydramine, Chlorpheniramine, Promethazine, Hydroxyzine ועוד)",
+   "family": "אנטיהיסטמינים",
+   "receptor": "H1 (+M1)",
+   "mechanism": "אנטגוניסט H1 לא-סלקטיבי, חוצה BBB",
+   "indications": "אלרגיה/דלקת (מניעה), בחילות/מחלת ים (אנטי-אמטי), אינסומניה, סדציה טרום-ניתוח",
+   "sideEffects": "סדציה/ישנוניות, יובש פה, כאב-ראש, ראיה מטושטשת, רעד; רעילות CNS (הזיות/אטקסיה/עוויתות) בילדים; מסוכן עם מדכאי CNS (אלכוהול/MAOI); מפחית יעילות מעכבי AChE",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "אנטיהיסטמינים H1 דור שני (Loratadine, Cetirizine, Fexofenadine, Desloratadine ועוד)",
+   "family": "אנטיהיסטמינים",
+   "receptor": "H1",
+   "mechanism": "אנטגוניסט H1 סלקטיבי, פחות חוצה BBB (פולרי)",
+   "indications": "אלרגיה/דלקת (מניעה), מתן פעם ביום",
+   "sideEffects": "פחות סדציה; יקרים יותר",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "5-ASA (Mesalamine, Sulfasalazine)",
+   "family": "מערכת העיכול",
+   "receptor": "",
+   "mechanism": "מעכב ציטוקינים, מעכב ייצור LT/PG, סופח רדיקלים, מעכב T/לויקוציטים",
+   "indications": "קרוהן, קוליטיס",
+   "sideEffects": "כאב-ראש/בחילה/תשישות (תלוי מינון); אנמיה המוליטית, ↓ספירות, פגיעה בכבד/כליה/ריאה, הסמקה, בעיות עור; ליטול תוספת חומצה פולית",
+   "alsoIn": [
+    "NSAIDs, גאוט ומיגרנה"
+   ],
+   "exam": false
+  },
+  {
+   "name": "Amisulpride",
+   "family": "מערכת העיכול",
+   "receptor": "D (דופמין)",
+   "mechanism": "אנטגוניסט דופמין",
+   "indications": "בחילות/הקאות",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Antacids (נוגדי חומצה)",
+   "family": "מערכת העיכול",
+   "receptor": "",
+   "mechanism": "מלחים נוגדי חומצה → ↑pH קיבה",
+   "indications": "צרבת",
+   "sideEffects": "ליטול אחרי האוכל",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Bisacodyl",
+   "family": "מערכת העיכול",
+   "receptor": "",
+   "mechanism": "משלשל ממריץ (מגרה את המעי)",
+   "indications": "עצירות",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Bismuth subsalicylate",
+   "family": "מערכת העיכול",
+   "receptor": "",
+   "mechanism": "אנטי-בקטריאלי, מעכב פפסין, עוטף ומגן על הכיב",
+   "indications": "כיב",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Calcium carbonate (Tums) / Aluminum hydroxide",
+   "family": "מערכת העיכול",
+   "receptor": "",
+   "mechanism": "נוגד חומצה",
+   "indications": "צרבת/כיבים; Al(OH)3 גם נוגד שלשול",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Cimetidine",
+   "family": "מערכת העיכול",
+   "receptor": "H2",
+   "mechanism": "חוסם H2 בתאים פריאטליים → ↓הפרשת חומצה 90%",
+   "indications": "כיב, צרבת",
+   "sideEffects": "ת\"ל אנדוקריניות (הראשון, פחות בשימוש), ↓יעילות תרופות הנספגות בקיבה (ketoconazole)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Dicyclomine",
+   "family": "מערכת העיכול",
+   "receptor": "מוסקריני",
+   "mechanism": "מעכב ACh",
+   "indications": "צרבת/כיבים (כמעט לא בשימוש)",
+   "sideEffects": "אנטיכולינרגי",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Granisetron / Ondansetron",
+   "family": "מערכת העיכול",
+   "receptor": "5-HT3",
+   "mechanism": "אנטגוניסט 5-HT3",
+   "indications": "בחילות/הקאות (כמותרפיה)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Metoclopramide (Pramin)",
+   "family": "מערכת העיכול",
+   "receptor": "D2",
+   "mechanism": "אנטגוניסט דופמין + מעורר פריסטלטיקה",
+   "indications": "בחילות/הקאות",
+   "sideEffects": "אקסטרה-פירמידלי, ישנוניות, ↑פרולקטין",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Ondansetron (Zofran)",
+   "family": "מערכת העיכול",
+   "receptor": "5-HT3",
+   "mechanism": "אנטגוניסט 5-HT3",
+   "indications": "בחילות/הקאות (כמותרפיה/פוסט-ניתוח)",
+   "sideEffects": "כאב-ראש, עצירות/שלשול, טכיקרדיה (זהירות בלב)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Opioid-like (Loperamide, Diphenoxylate)",
+   "family": "מערכת העיכול",
+   "receptor": "μ (מעי)",
+   "mechanism": "מעכב שחרור ACh, מעכב פריסטלטיקה",
+   "indications": "שלשול",
+   "sideEffects": "לא בילדים; לא משכך כאב",
+   "alsoIn": [
+    "אופיואידים ומשככי כאב"
+   ],
+   "exam": false
+  },
+  {
+   "name": "PPIs (Omeprazole, Esomeprazole, Pantoprazole, Lansoprazole)",
+   "family": "מערכת העיכול",
+   "receptor": "H+/K+ ATPase",
+   "mechanism": "פרו-תרופה בציפוי אנטרי → מעכב בלתי-הפיך של משאבת הפרוטונים (~18ש') → ↓90% הפרשת חומצה",
+   "indications": "כיב, GERD (יעיל מ-H2)",
+   "sideEffects": "שלשול קלוסטרידיום, סיכון לשברים (שימוש ממושך), ↓ספיגת B12; מעכב CYP2C19 → אסור עם clopidogrel; ליטול 30–60 דק' לפני ארוחת בוקר",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Prucalopride",
+   "family": "מערכת העיכול",
+   "receptor": "5-HT4 (סרוטונרגי)",
+   "mechanism": "אגוניסט סרוטונרגי → מעורר פריסטלטיקה",
+   "indications": "עצירות (שימוש נדיר)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Ranitidine / Famotidine",
+   "family": "מערכת העיכול",
+   "receptor": "H2",
+   "mechanism": "חוסם H2 בתאים פריאטליים → ↓הפרשת חומצה",
+   "indications": "כיב, GERD, צרבת",
+   "sideEffects": "נסבלים היטב (פחות ת\"ל אנדוקריניות מ-Cimetidine)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Sucralfate",
+   "family": "מערכת העיכול",
+   "receptor": "",
+   "mechanism": "יוצר ג'ל מגן על המוקוזה",
+   "indications": "כיב",
+   "sideEffects": "מפריע לספיגת תרופות; אסור עם PPI/H2/נוגדי חומצה; כמה פעמים ביום",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Tenapanor",
+   "family": "מערכת העיכול",
+   "receptor": "NHE3 (מעכב ספיגת Na)",
+   "mechanism": "מעכב ספיגת Na → ↑מים למעי",
+   "indications": "עצירות (IBS-C)",
+   "sideEffects": "אסור בחסימת מעי; לפני ארוחת בוקר",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "אנטגוניסטים H1 / מוסקריניים",
+   "family": "מערכת העיכול",
+   "receptor": "H1 / M",
+   "mechanism": "חוסם רצפטור",
+   "indications": "בחילות/מחלת ים",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "אנטגוניסטים לדופמין (Metoclopramide, Domperidone)",
+   "family": "מערכת העיכול",
+   "receptor": "D (דופמין)",
+   "mechanism": "חוסם רצפטור דופמין",
+   "indications": "בחילות/הקאות",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "משלשלים אוסמוטיים (Lactulose, Lactitol, PEG)",
+   "family": "מערכת העיכול",
+   "receptor": "",
+   "mechanism": "מושכים מים למעי (אוסמוזה)",
+   "indications": "עצירות",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "סטרואידים / ביולוגיות (מעכבי TNF) / מדכאי חיסון",
+   "family": "מערכת העיכול",
+   "receptor": "",
+   "mechanism": "אנטי-דלקתי/אימונומודולטורי",
+   "indications": "IBD",
+   "sideEffects": "דיכוי חיסוני",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "ACTH",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור ACTH",
+   "mechanism": "הורמון אדרנוקורטיקוטרופי",
+   "indications": "אבחנת אי-ספיקת אדרנל, תסמונת West (אפילפסיה בילדים)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Clomiphene",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור אסטרוגן",
+   "mechanism": "SERM (אנטגוניסט/אגוניסט חלקי) → ↑FSH/LH → משרה ביוץ",
+   "indications": "טיפול בעקרות (השראת ביוץ)",
+   "sideEffects": "עלול לגרום לעקרות/הריון מרובה עוברים",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Combined OCP (Estrogen + Progestin)",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטורי אסטרוגן/פרוגסטרון",
+   "mechanism": "מונע ביוץ",
+   "indications": "מניעת הריון, HRT",
+   "sideEffects": "בחילות/רגישות בחזה, יל\"ד, קרישים/MI/שבץ (מעשנות >35), סרטן שד/רחם",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Cosyntropin",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור ACTH",
+   "mechanism": "אנלוג ACTH",
+   "indications": "אבחון אי-ספיקת אדרנל",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Danazol",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור אנדרוגן",
+   "mechanism": "אנדרוגן",
+   "indications": "אנדומטריוזיס, מחלת שד פיברוציסטית",
+   "sideEffects": "ת\"ל אנדרוגניות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Desmopressin",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "V2 (כליה)",
+   "mechanism": "אנלוג סינתטי סלקטיבי ל-V2 (t½ ארוך)",
+   "indications": "סוכרת תפלה (diabetes insipidus)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Estrogens (Estradiol / אסטרוגנים טבעיים וסינתטיים)",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור אסטרוגן (תוך-תאי)",
+   "mechanism": "אגוניסט רצפטור אסטרוגן",
+   "indications": "אמצעי מניעה, חוסר הורמונלי, HRT (גלי חום, יובש נרתיקי)",
+   "sideEffects": "↑סיכון לגידולי שד (אסטרוגנים סינתטיים חזקים)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Ethinylestradiol",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור אסטרוגן",
+   "mechanism": "אסטרוגן סינתטי",
+   "indications": "אמצעי מניעה, HRT",
+   "sideEffects": "קרישיות יתר (התווית נגד), ↑סיכון שד",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Fludrocortisone",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור מינרלוקורטיקואיד",
+   "mechanism": "מינרלוקורטיקואיד",
+   "indications": "אי-ספיקת אדרנל",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Growth Hormone (GH)",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור GH",
+   "mechanism": "הורמון גדילה",
+   "indications": "חוסר GH בילדים, תסמונת Prader-Willi, HIV/סרטן עם אובדן משקל",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "hCG / Follitropin alfa/beta",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטורי גונדוטרופין",
+   "mechanism": "גונדוטרופינים",
+   "indications": "בעיות פוריות",
+   "sideEffects": "גירוי יתר שחלתי, הריון מרובה עוברים",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Iodine (מינון גבוה PO)",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "",
+   "mechanism": "מעכב מהיר של שחרור הורמונים + ↓זרימת דם לבלוטה (זמני)",
+   "indications": "סערה תירואידית, הכנה לניתוח",
+   "sideEffects": "כאב בפה/גרון, נפיחות לשון, פריחות, שינויי טעם",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Levothyroxine (T4) / Thyroxine",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור תירואידי",
+   "mechanism": "תחליף הורמון תריס (t½ ארוך)",
+   "indications": "היפותירואידיזם",
+   "sideEffects": "מנת-יתר → תסמיני היפרתירואידיזם (עצבנות, רעד, טכיקרדיה, אי-סבילות לחום, ↓משקל); ליטול על קיבה ריקה, מושפע ממזון/סידן/נוגדי חומצה; אינטראקציות CYP (Rifampin/Phenobarbital מאיצים פינוי)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Liothyronine (T3)",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור תירואידי",
+   "mechanism": "תחליף T3",
+   "indications": "היפותירואידיזם",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Menotropin / Urofollitropin / Somatropin",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטורי גונדוטרופין / GH",
+   "mechanism": "גונדוטרופינים / הורמון גדילה",
+   "indications": "פוריות / חוסר GH",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Methimazole",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "Thyroid peroxidase",
+   "mechanism": "מעכב חמצון דוי וצימוד טירוזין (t½ ארוך)",
+   "indications": "היפרתירואידיזם (Graves)",
+   "sideEffects": "טרטוגני יותר מ-PTU",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Mifepristone",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור פרוגסטרון",
+   "mechanism": "אנטגוניסט פרוגסטרון (עם פרוסטגלנדין)",
+   "indications": "הפלה יזומה מוקדמת",
+   "sideEffects": "דימום רחמי, הפלה לא מלאה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Oxytocin (Pitocin)",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור אוקסיטוצין",
+   "mechanism": "הורמון — התכווצות רחם ושחרור חלב",
+   "indications": "השראת לידה",
+   "sideEffects": "יתר-ל\"ד, קרע ברחם, אגירת נוזלים, מוות עוברי",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Pegvisomant",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור GH",
+   "mechanism": "אנטגוניסט לרצפטור GH",
+   "indications": "אקרומגלי עמידה",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Prednisone / Hydrocortisone / Dexamethasone / Triamcinolone",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור גלוקוקורטיקואיד (תוך-תאי)",
+   "mechanism": "אנטי-דלקתי/מדכא חיסון",
+   "indications": "דלקת, מחלות אוטואימוניות, אסתמה, IBD",
+   "sideEffects": "תסמיני Cushing (דיכוי ציר HPA, ↑משקל, פירוק שריר, אקנה, עור דק, קטרקט, שיעור-יתר), היפרגליקמיה, אוסטאופורוזיס; הפסקה הדרגתית",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Progesterone / Progestins",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור פרוגסטרון",
+   "mechanism": "מעבה רירית רחם, מונע ביוץ",
+   "indications": "מניעת הריון, HRT, דימום רחמי/אנדומטריוזיס",
+   "sideEffects": "כאב-ראש, דיכאון, ↑משקל, ↓חשק; היפרקלמיה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "PTU (Propylthiouracil)",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "Thyroid peroxidase",
+   "mechanism": "מעכב חמצון דוי וצימוד טירוזין + חוסם המרת T4→T3 בפריפריה",
+   "indications": "היפרתירואידיזם (Graves), מועדף בטרימסטר ראשון",
+   "sideEffects": "הפטוטוקסיות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Radioactive iodine (I-131)",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "",
+   "mechanism": "הורס חלק/כל בלוטת התריס",
+   "indications": "היפרתירואידיזם עמיד, סערה תירואידית",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Raloxifene",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור אסטרוגן",
+   "mechanism": "SERM — אגוניסט/אנטגוניסט סלקטיבי לרצפטור אסטרוגן",
+   "indications": "מניעת אוסטאופורוזיס אחרי גיל המעבר, מניעת סרטן שד",
+   "sideEffects": "אירועים טרומבואמבוליים, גלי חום",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Somatostatin / Octreotide",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור סומטוסטטין",
+   "mechanism": "מדכא GH/TSH/אינסולין/גלוקגון/גסטרין",
+   "indications": "אקרומגלי, גידולים קרצינואידים, דליות מדממות ב-GI",
+   "sideEffects": "שלשול/כאבי בטן, סטאטוריאה, אבני מרה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Tamoxifen (SERM)",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור אסטרוגן",
+   "mechanism": "אנטגוניסט סלקטיבי ברקמת השד (SERM)",
+   "indications": "סרטן שד תלוי-אסטרוגן (טיפול ומניעת הישנות)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Testosterone / אנדרוגנים",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "רצפטור אנדרוגן",
+   "mechanism": "הורמון אנדרוגני",
+   "indications": "היפוגונדיזם, כחשון (סרטן/HIV)",
+   "sideEffects": "גבריות בנשים, פריאפיזם, ↑LDL/↓HDL, אגירת נוזלים; אסור בהריון",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Vasopressin (ADH)",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "V1 (כלי דם) + V2 (כליה)",
+   "mechanism": "אנטי-דיורטי + כיווץ כלי דם",
+   "indications": "חירום (דום לב, דימום בדליות וושט דרך V1)",
+   "sideEffects": "היפונתרמיה, עודף מים, כאבי בטן, ורטיגו",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Acarbose",
+   "family": "סוכרת",
+   "receptor": "α-glucosidase",
+   "mechanism": "מעכב פירוק סוכרים במעי → ↓PPG",
+   "indications": "סוכרת סוג 2",
+   "sideEffects": "גזים/שלשול, ↑אנזימי כבד; לא בכשל כליה/מחלת מעי",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "DPP-4 inhibitors / Gliptins (Sitagliptin, Vildagliptin, Saxagliptin)",
+   "family": "סוכרת",
+   "receptor": "DPP-4",
+   "mechanism": "מעכב DPP-4 → מאריך GLP-1",
+   "indications": "סוכרת סוג 2",
+   "sideEffects": "גודש אף, כאבי גרון/בטן",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "GLP-1 analogs (Exenatide, Liraglutide)",
+   "family": "סוכרת",
+   "receptor": "רצפטור GLP-1",
+   "mechanism": "אנלוג אינקרטין → ↑אינסולין, ↓גלוקגון, ↑שובע, ↓ריקון קיבה",
+   "indications": "סוכרת סוג 2",
+   "sideEffects": "בחילה קשה/כאבי בטן, דלקת לבלב; לא בכשל כלייתי",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Insulin (Regular, NPH, Lispro, Glargine, Aspart)",
+   "family": "סוכרת",
+   "receptor": "רצפטור אינסולין (RTK)",
+   "mechanism": "הורמון — ↑קליטת גלוקוז",
+   "indications": "סוכרת סוג 1 (Regular/NPH/Lispro/Glargine) וסוג 2",
+   "sideEffects": "היפוגליקמיה; ליפודיסטרופיה באתר הזרקה",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Meglitinides (Repaglinide, Nateglinide)",
+   "family": "סוכרת",
+   "receptor": "תעלת K בתאי β",
+   "mechanism": "↑הפרשת אינסולין (קצר, ל-PPG)",
+   "indications": "סוכרת סוג 2 (עם האוכל)",
+   "sideEffects": "היפוגליקמיה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Metformin (Biguanide)",
+   "family": "סוכרת",
+   "receptor": "",
+   "mechanism": "↓תנגודת פריפרית לאינסולין, ↓ייצור גלוקוז בכבד (יעיל בסוכרת 2)",
+   "indications": "סוכרת סוג 2 (קו ראשון)",
+   "sideEffects": "GI/טעם מתכתי, ↓B12/פולאט, חמצת לקטית (להפסיק לפני ניגוד/ניתוח); אסור בכשל כליה/לב/חמצת",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Pramlintide",
+   "family": "סוכרת",
+   "receptor": "רצפטור אמילין",
+   "mechanism": "אנלוג אמילין (דוחה ריקון קיבה, ↓גלוקגון, ↑שובע)",
+   "indications": "סוכרת 1+2 (עם אינסולין)",
+   "sideEffects": "בחילה, אנורקסיה, הקאות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "SGLT-2 inhibitors (Canagliflozin, Dapagliflozin, Ertugliflozin)",
+   "family": "סוכרת",
+   "receptor": "SGLT-2",
+   "mechanism": "מעכב ספיגת גלוקוז בכליה → פינוי בשתן",
+   "indications": "סוכרת סוג 2",
+   "sideEffects": "UTI/פטריות, תת-ל\"ד, שברים; לא בכשל כליה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Sulfonylureas (Glyburide/Glibenclamide, Glipizide, Glimepiride)",
+   "family": "סוכרת",
+   "receptor": "תעלת K-ATP (תא β)",
+   "mechanism": "↑הפרשת אינסולין",
+   "indications": "סוכרת סוג 2",
+   "sideEffects": "היפוגליקמיה; דור 1 טוקסי",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Thiazolidinediones (Pioglitazone, Rosiglitazone)",
+   "family": "סוכרת",
+   "receptor": "PPAR-γ",
+   "mechanism": "מגביר רגישות לאינסולין",
+   "indications": "סוכרת סוג 2",
+   "sideEffects": "↑משקל, בצקת, אנמיה, שברים, סיכון לבבי (Rosiglitazone); אסור בהריון",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Acyclovir",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "DNA polymerase ויראלי",
+   "mechanism": "מעכב פולימראז ויראלי",
+   "indications": "הרפס",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Amphotericin B",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "ארגוסטרול",
+   "mechanism": "נקשר לארגוסטרול → יוצר נקבים בקרום",
+   "indications": "זיהומים פטרייתיים מסכני חיים (טווח רחב)",
+   "sideEffects": "ת\"ל קשות (לא קלות!), נפרוטוקסיות",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Augmentin (Amoxicillin + Clavulanic acid)",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "דופן התא + β-lactamase",
+   "mechanism": "פניצילין + מעכב β-לקטמאז (הורג חיידק עמיד, ↓אלרגיה? — הוספת clavulanate מרחיבה כיסוי)",
+   "indications": "זיהומים עמידים לאמוקסיצילין",
+   "sideEffects": "אלרגיה, שלשול",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Azole antifungals (Ketoconazole, Fluconazole)",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "14-α-demethylase (ארגוסטרול)",
+   "mechanism": "מעכב סינתזת ארגוסטרול בקרום הפטרייה",
+   "indications": "זיהומים פטרייתיים; Ketoconazole — גם לטיפול ב-Cushing (מעכב קורטיזול)",
+   "sideEffects": "מעכב CYP450",
+   "alsoIn": [
+    "מערכת הנשימה (אסתמה/COPD)"
+   ],
+   "exam": true
+  },
+  {
+   "name": "Carbapenems",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "דופן התא",
+   "mechanism": "מעכב סינתזת דופן (כיסוי רחב מאוד)",
+   "indications": "זיהומים קשים/עמידים",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Cefazolin / Ceftriaxone (צפלוספורינים)",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "דופן התא (PBP)",
+   "mechanism": "מעכב סינתזת דופן (דומה למבנה/מנגנון לפניצילינים, כיסוי רחב)",
+   "indications": "זיהומים; Ceftriaxone — מנינגיטיס (תרופת בחירה)",
+   "sideEffects": "אלרגיה צולבת חלקית עם פניצילינים",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Chloramphenicol",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "ריבוזום 50S",
+   "mechanism": "מעכב סינתזת חלבון",
+   "indications": "זיהומים (נדיר)",
+   "sideEffects": "תסמונת \"התינוק האפור\" (gray baby syndrome), דיכוי מח-עצם; צריך ניטור",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Ciprofloxacin (פלואורוקינולונים)",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "DNA gyrase/topoisomerase",
+   "mechanism": "מעכב שכפול DNA",
+   "indications": "UTI, GI, ריאות א-טיפי, פרוסטטה, עצמות",
+   "sideEffects": "כאב-ראש/סחרחורת, פגיעה בגידים/שלד, הפרעות קצב, טרטוגני",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Cotrimoxazole (Trimethoprim + Sulfamethoxazole / סולפונאמידים)",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "חומצה פולית (שני שלבים)",
+   "mechanism": "מעכב סינתזת חומצה פולית (אפקט תוסף — addition)",
+   "indications": "זיהומים, PCP",
+   "sideEffects": "אלרגיה לסולפה",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Erythromycin / Azithromycin / Clarithromycin (מקרולידים)",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "ריבוזום 50S",
+   "mechanism": "מעכב סינתזת חלבון (בקטריוסטטי, טווח רחב)",
+   "indications": "זיהומים; חלופה לאלרגיים לפניצילין",
+   "sideEffects": "אינטראקציה עם digoxin (לא בטוח בשילוב), אין עמידות צולבת במשפחה",
+   "alsoIn": [
+    "מערכת הנשימה (אסתמה/COPD)"
+   ],
+   "exam": true
+  },
+  {
+   "name": "Gentamicin / Neomycin (אמינוגליקוזידים)",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "ריבוזום 30S",
+   "mechanism": "מעכב סינתזת חלבון (תלוי-ריכוז)",
+   "indications": "זיהומים גרם-שליליים קשים",
+   "sideEffects": "נפרוטוקסיות, אוטוטוקסיות (פגיעה בשמיעה), ניטור רמות בדם נדרש; לא רגישות לאור/דרמטיטיס (זה טטרציקלינים)",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Isoniazid (INH) / טיפול בשחפת",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "",
+   "mechanism": "מעכב סינתזת חומצת מיקוליק",
+   "indications": "שחפת (TB)",
+   "sideEffects": "משלבים כמה אנטיביוטיקות למניעת עמידות (חיידק מתרבה לאט)",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Lamivudine / Ribavirin",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "פולימראז ויראלי",
+   "mechanism": "מעכב שכפול ויראלי (anti-retroviral/anti-viral)",
+   "indications": "HIV / הפטיטיס ויראלי",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Metronidazole (Flagyl)",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "DNA",
+   "mechanism": "רדיקלים חופשיים קושרים DNA",
+   "indications": "אנאירוביים (הליקובקטר/קלוסטרידיום), טפילים, אבצס",
+   "sideEffects": "טעם מתכתי, נוירופתיה היקפית, דיכוי מח-עצם",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Oseltamivir",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "Neuraminidase",
+   "mechanism": "מעכב נוירמינידאז ויראלי",
+   "indications": "שפעת (יעיל יותר במניעה מבטיפול, PO)",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Protease inhibitors",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "פרוטאז ויראלי",
+   "mechanism": "מעכב פרוטאז",
+   "indications": "HIV",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Tetracyclines",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "ריבוזום 30S",
+   "mechanism": "מעכב סינתזת חלבון (בקטריוסטטי)",
+   "indications": "זיהומים",
+   "sideEffects": "אסור בילדים (פגיעה במפרקים/שיניים), רגישות לאור, דרמטיטיס; ליטול לפני שינה, לא עם חלב/נוגדי חומצה (קלציום חוסם ספיגה)",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Vancomycin",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "דופן התא",
+   "mechanism": "מעכב סינתזת דופן (גרם-חיובי בלבד)",
+   "indications": "כיסוי גרם-חיוביים בלבד, מנינגיטיס, זיהומים עמידים",
+   "sideEffects": "לא נספג טוב ב-PO, \"תסמונת האדם האדום\", נפרו/אוטוטוקסיות; ת\"ל לא רק קלות",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "פניצילינים: Penicillin G (IV) / Penicillin V (PO) / Cloxacillin / Ampicillin / Amoxicillin / Augmentin",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "דופן התא (PBP)",
+   "mechanism": "מעכב סינתזת דופן",
+   "indications": "זיהומים (לפי כיסוי)",
+   "sideEffects": "אלרגיה (מיידית/מואצת/מאוחרת), נפרוטוקסיות, שלשול; Cloxacillin נגד סטאפ, Ampicillin נגד ליסטריה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "צפלוספורינים: Cefazolin (דור 1) / Cefuroxime (דור 2) / Ceftriaxone (דור 3)",
+   "family": "אנטיביוטיקה ואנטי-זיהומיות",
+   "receptor": "דופן התא (PBP)",
+   "mechanism": "מעכב סינתזת דופן",
+   "indications": "זיהומים; Ceftriaxone — מנינגיטיס (בחירה), חוצה BBB",
+   "sideEffects": "אלרגיה צולבת עם פניצילין, נפרוטוקסיות, הפרעת כבד",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Alkylating agents",
+   "family": "כימותרפיה",
+   "receptor": "DNA",
+   "mechanism": "קושר DNA (לא תלוי מחזור תא)",
+   "indications": "סרטן",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Anthracyclines (Doxorubicin)",
+   "family": "כימותרפיה",
+   "receptor": "Topoisomerase II / DNA",
+   "mechanism": "מעכב טופואיזומראז II",
+   "indications": "סרטן",
+   "sideEffects": "קרדיוטוקסיות",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Antimetabolites (Methotrexate, 6-Mercaptopurine)",
+   "family": "כימותרפיה",
+   "receptor": "סינתזת DNA (שלב S)",
+   "mechanism": "אנלוג → מעכב סינתזת DNA (פועל ייחודית על תאים בשלב S)",
+   "indications": "סרטן",
+   "sideEffects": "דיכוי מח-עצם; Leucovorin מציל (ל-MTX)",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Bleomycin",
+   "family": "כימותרפיה",
+   "receptor": "DNA",
+   "mechanism": "גליקופפטיד — שברים דו-גדיליים ב-DNA",
+   "indications": "סרטן",
+   "sideEffects": "רעילות ריאה בלתי-הפיכה (\"Bleomycin lung\"), תגובות עוריות, חום",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Cisplatin / Carboplatin / Oxaliplatin",
+   "family": "כימותרפיה",
+   "receptor": "DNA (פלטינום)",
+   "mechanism": "פרו-תרופה קושרת DNA",
+   "indications": "סרטן (כבד/כליה/מעי/אשכים/שחלות)",
+   "sideEffects": "הקאות מרובות, נפרוטוקסיות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Cyclophosphamide",
+   "family": "כימותרפיה",
+   "receptor": "DNA (אלקילציה)",
+   "mechanism": "פרו-תרופה מאלקילציה (קושר DNA קוולנטית)",
+   "indications": "גידולים לימפתיים/מוצקים",
+   "sideEffects": "פיברוזיס בשלפוחית (שתייה מרובה+משתנים), ציטוטוקסי/מוטגני/קרצינוגני",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Doxorubicin / Doxil",
+   "family": "כימותרפיה",
+   "receptor": "Topoisomerase II / DNA",
+   "mechanism": "אנטיביוטיקה — רדיקלים חופשיים → שברי DNA",
+   "indications": "סרטן",
+   "sideEffects": "קרדיוטוקסיות בלתי-הפיכה, שתן/עירוי אדום (Doxil ללא נזק לבבי)",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Irinotecan / Topotecan",
+   "family": "כימותרפיה",
+   "receptor": "Topoisomerase I",
+   "mechanism": "מעכב טופואיזומראז I",
+   "indications": "סרטן",
+   "sideEffects": "דיכוי מח-עצם, שלשול חריף מסכן-חיים",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Nitrosoureas (Carmustine / Lomustine)",
+   "family": "כימותרפיה",
+   "receptor": "DNA (אלקילציה)",
+   "mechanism": "מאלקיל DNA, חוצה BBB (בשונה משאר מאלקילים)",
+   "indications": "גידולי מוח",
+   "sideEffects": "דיכוי מח-עצם מושהה",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "SERMs / הורמון תרפיה (Tamoxifen)",
+   "family": "כימותרפיה",
+   "receptor": "רצפטור אסטרוגן",
+   "mechanism": "אנטגוניסט ברקמת שד",
+   "indications": "סרטן שד תלוי-הורמונים",
+   "sideEffects": "",
+   "alsoIn": [],
+   "exam": true
+  },
+  {
+   "name": "Vinca alkaloids (Vincristine, Vinblastine)",
+   "family": "כימותרפיה",
+   "receptor": "מיקרוטובולים (כישור)",
+   "mechanism": "מעכב יצירת כישור המיטוזה",
+   "indications": "סרטן",
+   "sideEffects": "נוירוטוקסיות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Vincristine / Vinblastine",
+   "family": "כימותרפיה",
+   "receptor": "מיקרוטובולים",
+   "mechanism": "מעכב פולימריזציה של טובולין (כישור)",
+   "indications": "סרטן",
+   "sideEffects": "Vincristine — נוירופתיה היקפית/עצירות; Vinblastine — דיכוי מח-עצם; צלוליטיס באתר הזרקה",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Basiliximab",
+   "family": "דיכוי חיסוני",
+   "receptor": "IL-2R (רצפטור על תאי T)",
+   "mechanism": "נוגדן נגד IL-2R → מונע הפעלת לימפוציטי T",
+   "indications": "אינדוקציה (מניעת דחיית שתל)",
+   "sideEffects": "מעט ת\"ל נסבלות: הפרעות עיכול, יתר-ל\"ד, זיהומים, גידולים לימפתיים",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Cyclosporine",
+   "family": "דיכוי חיסוני",
+   "receptor": "Calcineurin",
+   "mechanism": "מעכב calcineurin → מעכב הפעלת תאי T → מונע ייצור IL-2",
+   "indications": "מניעת דחיית לב/כבד/כליה, טיפול ב-GVHD (עם tacrolimus)",
+   "sideEffects": "פגיעה בכליה (מינון נמוך משולב), זיהומים, כאב-ראש, יתר-ל\"ד, רעד, שיעור-יתר, היפרפלזיה בחניכיים; אינטראקציות CYP/PGP רבות",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "IVIG (אימונוגלובולין IV)",
+   "family": "דיכוי חיסוני",
+   "receptor": "",
+   "mechanism": "נוגדנים מתורמי פלזמה (אימונומודולטורי) → ↓פעילות תאי B, מונע קישור נוגדנים לשתל",
+   "indications": "מחלות אוטואימוניות, דיכוי חיסוני",
+   "sideEffects": "כאב-ראש/חום/צמרמורות/כאבי שרירים, יתר/תת-ל\"ד; נדיר ומסוכן: מנינגיטיס, כשל כלייתי, קרישיות יתר",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "Tacrolimus",
+   "family": "דיכוי חיסוני",
+   "receptor": "Calcineurin",
+   "mechanism": "מעכב calcineurin → מעכב הפעלת תאי T",
+   "indications": "מניעת דחיית שתל (עם cyclosporine/בפרוטוקול)",
+   "sideEffects": "כמו cyclosporine",
+   "alsoIn": [],
+   "exam": false
+  },
+  {
+   "name": "אנטי-אנדרוגנים (מעכבי 5α-reductase; אנטגוניסטי רצפטור כמו Flutamide)",
+   "family": "אנדוקרינית והורמונים",
+   "receptor": "5α-reductase / רצפטור אנדרוגן",
+   "mechanism": "מעכב סינתזת DHT / חוסם רצפטור",
+   "indications": "BPH, סרטן הערמונית",
+   "sideEffects": "",
+   "alsoIn": [
+    "אנדוקרינית והורמונים"
+   ],
+   "exam": true
+  }
+ ]
+}

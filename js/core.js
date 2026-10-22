@@ -152,16 +152,48 @@ function blankProgress() {
   return { attempts: 0, firstTry: null, misses: 0, streak: 0, mastered: false };
 }
 
-/** Topics in order of first appearance, with question counts. */
-export function listTopics(quiz) {
+/**
+ * Topics in order of first appearance, with question counts. `field` picks another grouping
+ * field, e.g. 'group' for the units of a mixed quiz.
+ */
+export function listTopics(quiz, field = 'topic') {
   const counts = new Map();
-  for (const q of quiz.questions) counts.set(q.topic, (counts.get(q.topic) ?? 0) + 1);
+  for (const q of quiz.questions) counts.set(q[field], (counts.get(q[field]) ?? 0) + 1);
   return [...counts].map(([topic, count]) => ({ topic, count }));
 }
 
-export function questionIdsForTopics(quiz, topics) {
+export function questionIdsForTopics(quiz, topics, field = 'topic') {
   const wanted = new Set(topics);
-  return quiz.questions.filter((q) => wanted.has(q.topic)).map((q) => q.id);
+  return quiz.questions.filter((q) => wanted.has(q[field])).map((q) => q.id);
+}
+
+// ---------- mixed practice (all quizzes of one subject) ----------
+
+/** Stable, storage-safe quiz id for a subject's mixed practice: "mix-" + a short hash of the name. */
+export function mixedQuizId(subject) {
+  let h = 0x811c9dc5; // FNV-1a, 32 bit
+  for (let i = 0; i < subject.length; i++) {
+    h ^= subject.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return `mix-${(h >>> 0).toString(36)}`;
+}
+
+/**
+ * Merges validated quizzes of one subject into a single practice quiz, in the given order.
+ * Each question gets `group` (its quiz's unit, or the quiz title when there is no unit); its id
+ * is prefixed with the quiz id (two quizzes can both have "q001") and its topic with the group
+ * (two units can both have a topic called "עקרונות כלליים").
+ */
+export function buildMixedQuiz(subject, quizzes) {
+  return { id: mixedQuizId(subject), subject, mixed: true, questions: mergeQuestions(quizzes, (quiz) => quiz.unit ?? quiz.title) };
+}
+
+function mergeQuestions(quizzes, groupOf) {
+  return quizzes.flatMap((quiz) => {
+    const group = groupOf(quiz);
+    return quiz.questions.map((q) => ({ ...q, id: `${quiz.id}/${q.id}`, topic: `${group} · ${q.topic}`, group }));
+  });
 }
 
 /**
@@ -280,13 +312,6 @@ export function progressInfo(state) {
   };
 }
 
-// ---------- manifest ----------
-
-/** Every quiz entry in the manifest, in display order (subject quizzes first, then each unit's). */
-export function manifestQuizzes(manifest) {
-  return (manifest?.subjects ?? []).flatMap((s) => [...(s.quizzes ?? []), ...(s.units ?? []).flatMap((u) => u.quizzes ?? [])]);
-}
-
 // ---------- stars ----------
 
 /** Starred question ids with `id` added or removed. Returns a new array. */
@@ -301,29 +326,32 @@ export function starredIds(starred, quiz) {
   return quiz.questions.filter((q) => wanted.has(q.id)).map((q) => q.id);
 }
 
+/**
+ * Where a question's star is stored: its own quiz and id. A merged quiz's question
+ * ("<quiz>/<q>") points back to the quiz it came from.
+ */
+export function starTarget(quiz, questionId) {
+  if (!quiz.mixed) return { quizId: quiz.id, questionId };
+  const slash = questionId.indexOf('/');
+  return { quizId: questionId.slice(0, slash), questionId: questionId.slice(slash + 1) };
+}
+
 /** "הלב · מבחן 1": the unit (or subject) and title, to tell quizzes apart in a mixed list. */
 export function quizLabel(quiz) {
   return `${quiz.unit ?? quiz.subject} · ${quiz.title}`;
 }
 
 /**
- * One in-memory quiz holding every question of `quizzes`, so the session engine can run over
- * questions from several quizzes. Ids become "<quizId>/<questionId>"; `source` points back to
- * the original question (where its star is stored).
+ * Every question of `quizzes` in one quiz, grouped per quiz (two quizzes of one unit stay apart),
+ * shaped like a mixed practice. The page offers only the starred ones; holding all of them keeps a
+ * saved session valid after a question in it is unstarred.
  */
-export function combineQuizzes(quizzes) {
-  return {
-    id: STARRED_QUIZ_ID,
-    questions: quizzes.flatMap((quiz) => quiz.questions.map((q) => ({
-      ...q,
-      id: `${quiz.id}/${q.id}`,
-      source: { quizId: quiz.id, questionId: q.id, label: quizLabel(quiz) },
-    }))),
-  };
+export function buildStarredQuiz(quizzes) {
+  return { id: STARRED_QUIZ_ID, mixed: true, starred: true, questions: mergeQuestions(quizzes, quizLabel) };
 }
 
-/** Quiz ids a saved combined session refers to, so their files can be loaded to resume it. */
-export function combinedSessionQuizIds(state) {
+/** Quiz ids a saved starred session refers to, so their files can be loaded to resume it. */
+export function sessionQuizIds(state) {
   if (!isPlainObject(state) || !isPlainObject(state.progress)) return [];
   const ids = Object.keys(state.progress).map((id) => id.split('/')[0]);
   return [...new Set(ids)].filter(isValidQuizId);
@@ -371,4 +399,310 @@ export function recordResult(history, summary, date) {
     bestPercent: Math.max(prev.bestPercent ?? 0, last.percent),
     last,
   };
+}
+
+// ---------- history and weak-area analysis ----------
+//
+// History is a set of finished attempts (any mode), kept per quiz. An attempt records, for each
+// question it covered, how many times that question was missed or skipped (0 = first-try correct).
+// Topics are looked up from the quiz at analysis time, so editing a quiz never corrupts history.
+// Attempts have unique ids, so merging two histories is a union by id: order-independent and
+// idempotent, which is what makes import (and any future sync) conflict-free.
+
+export const HISTORY_VERSION = 1;
+export const MAX_ATTEMPTS = 30; // oldest attempts beyond this are dropped, bounding storage size
+export const EXPORT_KIND = 'nursing-tests-stats';
+// Recency: an answer counts half as much for every HALF_LIFE later answers to the same question.
+export const HALF_LIFE = 2;
+export const WEAK_BELOW = 0.7;
+export const SOLID_AT = 0.85;
+// A topic gets a level only once this many of its questions (or all, if fewer) were answered.
+export const MIN_SEEN = 5;
+export const TREND_DELTA = 0.05;
+// "Recovered": weak at some point within this many attempts back, and not weak now.
+export const RECOVERY_WINDOW = 10;
+// A question is "struggling" when it was missed on first try STRUGGLE_FAILS+ times in its last STRUGGLE_WINDOW.
+export const STRUGGLE_WINDOW = 3;
+export const STRUGGLE_FAILS = 2;
+
+const MAX_ATTEMPT_QUESTIONS = 2000;
+const MAX_MISSES = 99;
+const MAX_EXPORT_QUIZZES = 500;
+const ATTEMPT_ID_PATTERN = /^[a-z0-9-]{1,40}$/;
+
+export function emptyHistory() {
+  return { version: HISTORY_VERSION, attempts: [] };
+}
+
+export function newAttemptId(now, rng = Math.random) {
+  const salt = Math.floor(rng() * 36 ** 6).toString(36).padStart(6, '0');
+  return `${now.getTime().toString(36)}-${salt}`;
+}
+
+/** The record of a finished session: misses per question it covered. */
+export function buildAttempt(state, quiz, { id, date }) {
+  const results = {};
+  for (const q of sessionQuestions(state, quiz)) results[q.id] = state.progress[q.id].misses;
+  return { id, date, mode: state.mode, results };
+}
+
+function sanitizeAttempt(raw) {
+  if (!isPlainObject(raw) || !isPlainObject(raw.results)) return null;
+  if (typeof raw.id !== 'string' || !ATTEMPT_ID_PATTERN.test(raw.id)) return null;
+  if (typeof raw.date !== 'string' || raw.date.length > 40 || !Number.isFinite(Date.parse(raw.date))) return null;
+  if (!SESSION_MODES.includes(raw.mode)) return null;
+
+  const entries = Object.entries(raw.results);
+  if (entries.length === 0 || entries.length > MAX_ATTEMPT_QUESTIONS) return null;
+  const valid = entries.every(([id, misses]) => (
+    id.length > 0 && id.length <= 64 && Number.isInteger(misses) && misses >= 0 && misses <= MAX_MISSES
+  ));
+  if (!valid) return null;
+  return { id: raw.id, date: raw.date, mode: raw.mode, results: Object.fromEntries(entries) };
+}
+
+function normalizeAttempts(attempts) {
+  const byId = new Map();
+  for (const a of attempts) if (!byId.has(a.id)) byId.set(a.id, a);
+  return [...byId.values()]
+    .sort((a, b) => Date.parse(a.date) - Date.parse(b.date) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+    .slice(-MAX_ATTEMPTS);
+}
+
+/** Anything read from storage or a file is untrusted: keep only well-formed attempts. */
+export function sanitizeHistory(raw) {
+  if (!isPlainObject(raw) || raw.version !== HISTORY_VERSION || !Array.isArray(raw.attempts)) return emptyHistory();
+  const attempts = raw.attempts.map(sanitizeAttempt).filter((a) => a !== null);
+  return { version: HISTORY_VERSION, attempts: normalizeAttempts(attempts) };
+}
+
+export function mergeHistories(a, b) {
+  const attempts = [...sanitizeHistory(a).attempts, ...sanitizeHistory(b).attempts];
+  return { version: HISTORY_VERSION, attempts: normalizeAttempts(attempts) };
+}
+
+export function addAttempt(history, attempt) {
+  const clean = sanitizeAttempt(attempt);
+  const base = sanitizeHistory(history);
+  return clean === null ? base : mergeHistories(base, { version: HISTORY_VERSION, attempts: [clean] });
+}
+
+/** The file written by "export": every quiz's history in one JSON document. */
+export function buildStatsExport(histories, now) {
+  return { kind: EXPORT_KIND, version: HISTORY_VERSION, exportedAt: now.toISOString(), quizzes: histories };
+}
+
+/** Parses an export file into `{ quizId: history }`, or null if it is not a stats export. */
+export function parseStatsExport(raw) {
+  if (!isPlainObject(raw) || raw.kind !== EXPORT_KIND || raw.version !== HISTORY_VERSION) return null;
+  if (!isPlainObject(raw.quizzes)) return null;
+  const quizzes = {};
+  for (const [id, history] of Object.entries(raw.quizzes).slice(0, MAX_EXPORT_QUIZZES)) {
+    if (!isValidQuizId(id)) continue;
+    const clean = sanitizeHistory(history);
+    if (clean.attempts.length > 0) quizzes[id] = clean;
+  }
+  return quizzes;
+}
+
+// First-try outcomes per question (1 = correct, 0 = not), oldest first. Questions that are no
+// longer in the quiz are ignored.
+function questionOutcomes(attempts, quiz) {
+  const known = new Set(quiz.questions.map((q) => q.id));
+  const outcomes = new Map();
+  for (const a of attempts) {
+    for (const [id, misses] of Object.entries(a.results)) {
+      if (!known.has(id)) continue;
+      if (!outcomes.has(id)) outcomes.set(id, []);
+      outcomes.get(id).push(misses === 0 ? 1 : 0);
+    }
+  }
+  return outcomes;
+}
+
+function recencyScore(outcomes) {
+  let sum = 0;
+  let weights = 0;
+  outcomes.forEach((value, i) => {
+    const weight = 0.5 ** ((outcomes.length - 1 - i) / HALF_LIFE);
+    sum += weight * value;
+    weights += weight;
+  });
+  return sum / weights;
+}
+
+function levelOf(score, seen, total) {
+  if (seen < Math.min(MIN_SEEN, total)) return 'unknown';
+  return score < WEAK_BELOW ? 'weak' : score >= SOLID_AT ? 'solid' : 'fair';
+}
+
+/**
+ * Per-topic standing after the given attempts. Each question counts once (its own recency-weighted
+ * score), so retrying a few hard questions doesn't drag a topic down by sheer repetition.
+ */
+function topicStanding(attempts, quiz) {
+  const outcomes = questionOutcomes(attempts, quiz);
+  const standing = new Map();
+  for (const { topic, count } of listTopics(quiz)) standing.set(topic, { total: count, seen: 0, sum: 0 });
+  for (const q of quiz.questions) {
+    const list = outcomes.get(q.id);
+    if (!list) continue;
+    const t = standing.get(q.topic);
+    t.seen += 1;
+    t.sum += recencyScore(list);
+  }
+  return new Map([...standing].map(([topic, { total, seen, sum }]) => {
+    const score = seen === 0 ? null : sum / seen;
+    return [topic, { total, seen, score, level: levelOf(score, seen, total) }];
+  }));
+}
+
+/**
+ * Where the learner stands per topic, from the stored history:
+ * level 'unknown' | 'weak' | 'fair' | 'solid', score 0..1, trend 'up' | 'down' | 'flat' | null
+ * (vs. just before the topic was last practised), and `recovered` (was weak recently, isn't now).
+ * Also lists individual questions that keep being missed.
+ */
+export function analyzeHistory(history, quiz) {
+  const attempts = sanitizeHistory(history).attempts;
+  const n = attempts.length;
+  const cache = new Map();
+  const standingAfter = (length) => {
+    if (!cache.has(length)) cache.set(length, topicStanding(attempts.slice(0, length), quiz));
+    return cache.get(length);
+  };
+
+  const topicOf = new Map(quiz.questions.map((q) => [q.id, q.topic]));
+  const lastTouched = new Map();
+  attempts.forEach((a, i) => {
+    for (const id of Object.keys(a.results)) {
+      if (topicOf.has(id)) lastTouched.set(topicOf.get(id), i);
+    }
+  });
+
+  const now = standingAfter(n);
+  const topics = listTopics(quiz).map(({ topic }) => {
+    const current = now.get(topic);
+
+    let trend = null;
+    const touched = lastTouched.get(topic);
+    if (touched !== undefined && current.level !== 'unknown') {
+      const before = standingAfter(touched).get(topic);
+      if (before.level !== 'unknown') {
+        const delta = current.score - before.score;
+        trend = delta > TREND_DELTA ? 'up' : delta < -TREND_DELTA ? 'down' : 'flat';
+      }
+    }
+
+    let recovered = false;
+    if (current.level === 'fair' || current.level === 'solid') {
+      for (let length = n - 1; length >= Math.max(1, n - RECOVERY_WINDOW); length--) {
+        if (standingAfter(length).get(topic).level === 'weak') {
+          recovered = true;
+          break;
+        }
+      }
+    }
+    return { topic, ...current, trend, recovered };
+  });
+
+  const outcomes = questionOutcomes(attempts, quiz);
+  const weakQuestions = quiz.questions
+    .flatMap((q) => {
+      const list = outcomes.get(q.id);
+      if (!list) return [];
+      const failures = list.slice(-STRUGGLE_WINDOW).filter((v) => v === 0).length;
+      return failures >= STRUGGLE_FAILS ? [{ id: q.id, topic: q.topic, failures, seen: list.length }] : [];
+    })
+    .sort((a, b) => b.failures - a.failures || b.seen - a.seen);
+
+  return { attempts: n, topics, weakQuestions };
+}
+
+// ---------- printable exam ----------
+
+export const OPTION_LETTERS = ['א', 'ב', 'ג', 'ד'];
+// mixed: one random order, like a real exam; by-topic: grouped by topic, in topic order.
+export const PRINT_ORDERS = ['mixed', 'by-topic'];
+export const PRINT_DEFAULT_COUNT = 100;
+
+/**
+ * Splits `count` across topics in proportion to their sizes (largest remainder), so a short exam
+ * still samples every topic fairly. `sizes` is [{ topic, count }]; returns a Map topic → n.
+ */
+export function allocateByTopic(sizes, count) {
+  const total = sizes.reduce((sum, s) => sum + s.count, 0);
+  const n = Math.min(Math.max(0, Math.floor(count)), total);
+  const shares = sizes.map((s, order) => {
+    const exact = total === 0 ? 0 : (s.count * n) / total;
+    return { topic: s.topic, order, take: Math.floor(exact), rest: exact - Math.floor(exact) };
+  });
+  let left = n - shares.reduce((sum, s) => sum + s.take, 0);
+  // Ties go to the topic that appears first, so the split is stable.
+  for (const s of [...shares].sort((a, b) => b.rest - a.rest || a.order - b.order)) {
+    if (left === 0) break;
+    s.take += 1;
+    left -= 1;
+  }
+  return new Map(shares.map((s) => [s.topic, s.take]));
+}
+
+/** The quiz's questions whose `field` value is in `topics` (null means all), in authored order. */
+function questionsOf(quiz, topics, field) {
+  const wanted = topics === null ? null : new Set(topics);
+  return quiz.questions.filter((q) => wanted === null || wanted.has(q[field]));
+}
+
+/**
+ * Samples `count` of `questions` (clamped to what there is), split across their topics in proportion
+ * to topic size, so every topic is represented. Grouped by topic, authored order inside each.
+ */
+function pickPerTopic(questions, count, rng) {
+  const sizes = listTopics({ questions });
+  const shares = allocateByTopic(sizes, count);
+  const picked = [];
+  for (const { topic } of sizes) {
+    const pool = questions.filter((q) => q.topic === topic);
+    const taken = new Set(shuffle(pool, rng).slice(0, shares.get(topic)).map((q) => q.id));
+    picked.push(...pool.filter((q) => taken.has(q.id)));
+  }
+  return picked;
+}
+
+/**
+ * Ids for a custom practice: `count` questions from the chosen topics (`field` values; null means
+ * all), sampled in proportion per topic. A count at or above the pool takes every question.
+ */
+export function sampleQuestionIds(quiz, { topics = null, field = 'topic', count = Infinity } = {}, rng = Math.random) {
+  return pickPerTopic(questionsOf(quiz, topics, field), count, rng).map((q) => q.id);
+}
+
+/**
+ * A fixed paper exam: `count` questions (clamped to what the chosen topics hold) sampled per topic,
+ * options shuffled once and lettered א–ד. by-topic keeps authored order within each topic.
+ * `topics` are values of `field` ('group' picks whole units of a mixed quiz); null means all.
+ */
+export function buildPrintExam(
+  quiz,
+  { topics = null, field = 'topic', count = PRINT_DEFAULT_COUNT, order = 'mixed' } = {},
+  rng = Math.random,
+) {
+  if (!PRINT_ORDERS.includes(order)) throw new Error(`unknown print order: ${order}`);
+  const picked = pickPerTopic(questionsOf(quiz, topics, field), count, rng);
+  const ordered = order === 'mixed' ? shuffle(picked, rng) : picked;
+
+  return ordered.map((q, i) => {
+    const options = presentOptions(q, rng);
+    const correctAt = options.findIndex((o) => o.correct);
+    return {
+      number: i + 1,
+      id: q.id,
+      topic: q.topic,
+      question: q.question,
+      options: options.map((o, j) => ({ letter: OPTION_LETTERS[j], text: o.text })),
+      correctLetter: OPTION_LETTERS[correctAt],
+      correctText: options[correctAt].text,
+      explanation: q.explanation,
+    };
+  });
 }

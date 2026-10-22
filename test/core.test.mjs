@@ -7,26 +7,28 @@ import {
   REQUEUE_MAX,
   REQUEUE_MIN,
   answer,
-  combineQuizzes,
-  combinedSessionQuizIds,
+  buildStarredQuiz,
   createSession,
   currentQuestion,
   hasPositionalReference,
   isComplete,
   isSessionCompatible,
   isolateNumberRanges,
+  buildMixedQuiz,
+  mixedQuizId,
   listTopics,
-  manifestQuizzes,
   questionById,
   questionIdsForTopics,
   quizLabel,
   sessionQuestions,
+  sessionQuizIds,
   presentOptions,
   progressInfo,
   recordResult,
   requeue,
   shuffle,
   skip,
+  starTarget,
   starredIds,
   summarize,
   toggleStar,
@@ -400,6 +402,56 @@ test('option notes are optional', () => {
   assert.deepEqual(validateQuiz(quiz), []);
 });
 
+// ---------- mixed practice ----------
+
+function unitQuiz(id, unit, title = 'מבחן 1') {
+  return { ...clone(fixture), id, unit, title };
+}
+
+test('buildMixedQuiz merges quizzes with unique ids, groups and prefixed topics', () => {
+  const a = unitQuiz('unit-a-1', 'יחידה א');
+  const b = unitQuiz('unit-a-2', 'יחידה א', 'מבחן 2');
+  const c = { ...clone(fixture), id: 'no-unit', title: 'בוחן בלי יחידה' };
+  const mix = buildMixedQuiz(fixture.subject, [a, b, c]);
+
+  assert.equal(mix.questions.length, 3 * fixture.questions.length);
+  assert.equal(new Set(mix.questions.map((q) => q.id)).size, mix.questions.length);
+  assert.equal(mix.questions[0].id, `unit-a-1/${fixture.questions[0].id}`);
+  assert.equal(mix.questions[0].topic, `יחידה א · ${fixture.questions[0].topic}`);
+  assert.equal(mix.questions.at(-1).group, 'בוחן בלי יחידה');
+  // Groups keep catalog order; a unit with two quizzes is one group.
+  assert.deepEqual(listTopics(mix, 'group'), [
+    { topic: 'יחידה א', count: 2 * fixture.questions.length },
+    { topic: 'בוחן בלי יחידה', count: fixture.questions.length },
+  ]);
+  // Source quizzes are untouched.
+  assert.deepEqual(a, unitQuiz('unit-a-1', 'יחידה א'));
+});
+
+test('a mixed quiz plays like any quiz and can be limited to chosen groups', () => {
+  const mix = buildMixedQuiz(fixture.subject, [unitQuiz('u-1', 'א'), unitQuiz('u-2', 'ב')]);
+  const ids = questionIdsForTopics(mix, ['ב'], 'group');
+  assert.equal(ids.length, fixture.questions.length);
+  assert.ok(ids.every((id) => id.startsWith('u-2/')));
+
+  const rng = seeded(3);
+  let state = createSession(mix, rng, { questionIds: ids, mode: 'topics' });
+  assert.ok(isSessionCompatible(JSON.parse(JSON.stringify(state)), mix));
+  while (!isComplete(state)) {
+    state = answer(state, mix, currentQuestion(state, mix).correct, rng).state;
+  }
+  const summary = summarize(state, mix);
+  assert.equal(summary.firstTryPercent, 100);
+  assert.equal(summary.total, fixture.questions.length);
+});
+
+test('mixedQuizId is stable, storage-safe and differs per subject', () => {
+  const id = mixedQuizId('אנטומיה ופיזיולוגיה');
+  assert.equal(id, mixedQuizId('אנטומיה ופיזיולוגיה'));
+  assert.match(id, /^mix-[a-z0-9]+$/);
+  assert.notEqual(id, mixedQuizId('פרמקולוגיה'));
+});
+
 // ---------- stars ----------
 
 test('toggleStar adds and removes without mutating', () => {
@@ -420,39 +472,41 @@ test('quizLabel prefers the unit over the subject', () => {
   assert.equal(quizLabel({ subject: 'S', title: 'T' }), 'S · T');
 });
 
-test('combineQuizzes namespaces ids and runs through the session engine', () => {
-  const other = { ...clone(fixture), id: 'other-quiz', title: 'אחר' };
-  const combined = combineQuizzes([fixture, other]);
-  assert.equal(combined.id, STARRED_QUIZ_ID);
-  assert.equal(combined.questions.length, fixture.questions.length * 2);
-  const q = questionById(combined, 'other-quiz/q2');
-  assert.deepEqual(q.source, { quizId: 'other-quiz', questionId: 'q2', label: quizLabel(other) });
+test('starTarget points a merged question back to its own quiz', () => {
+  assert.deepEqual(starTarget(fixture, 'q2'), { quizId: fixture.id, questionId: 'q2' });
+  const mix = buildMixedQuiz(fixture.subject, [unitQuiz('u-1', 'א')]);
+  assert.deepEqual(starTarget(mix, 'u-1/q2'), { quizId: 'u-1', questionId: 'q2' });
+});
+
+test('buildStarredQuiz groups per quiz, even two quizzes of one unit', () => {
+  const a = unitQuiz('unit-a-1', 'יחידה א');
+  const b = unitQuiz('unit-a-2', 'יחידה א', 'מבחן 2');
+  const starred = buildStarredQuiz([a, b]);
+  assert.equal(starred.id, STARRED_QUIZ_ID);
+  assert.ok(starred.mixed);
+  assert.deepEqual(listTopics(starred, 'group').map((g) => g.topic), ['יחידה א · מבחן 1', 'יחידה א · מבחן 2']);
+  const q = questionById(starred, 'unit-a-2/q2');
   assert.equal(q.question, fixture.questions[1].question);
+  assert.deepEqual(starTarget(starred, q.id), { quizId: 'unit-a-2', questionId: 'q2' });
+});
 
-  const ids = ['sample-quiz/q1', 'other-quiz/q2'];
-  let state = createSession(combined, seeded(1), { questionIds: ids, mode: 'starred' });
-  assert.ok(isSessionCompatible(state, combined));
-  assert.deepEqual(combinedSessionQuizIds(state).sort(), ['other-quiz', 'sample-quiz']);
+test('a starred session plays through and lists the quizzes it needs', () => {
+  const starred = buildStarredQuiz([unitQuiz('u-1', 'א'), unitQuiz('u-2', 'ב')]);
+  const ids = ['u-1/q1', 'u-2/q2'];
+  let state = createSession(starred, seeded(1), { questionIds: ids, mode: 'starred' });
+  assert.ok(isSessionCompatible(JSON.parse(JSON.stringify(state)), starred));
+  assert.deepEqual(sessionQuizIds(state).sort(), ['u-1', 'u-2']);
   while (!isComplete(state)) {
-    state = answer(state, combined, currentQuestion(state, combined).correct, seeded(2)).state;
+    state = answer(state, starred, currentQuestion(state, starred).correct, seeded(2)).state;
   }
-  assert.equal(summarize(state, combined).firstTryPercent, 100);
+  assert.equal(summarize(state, starred).firstTryPercent, 100);
 
-  // A combined session no longer matches once one of its quizzes is not loaded.
-  state = createSession(combined, seeded(1), { questionIds: ids, mode: 'starred' });
-  assert.ok(!isSessionCompatible(state, combineQuizzes([fixture])));
+  // Once one of its quizzes is not loaded, the saved session no longer matches.
+  state = createSession(starred, seeded(1), { questionIds: ids, mode: 'starred' });
+  assert.ok(!isSessionCompatible(state, buildStarredQuiz([unitQuiz('u-1', 'א')])));
 });
 
-test('combinedSessionQuizIds ignores malformed state', () => {
-  assert.deepEqual(combinedSessionQuizIds(null), []);
-  assert.deepEqual(combinedSessionQuizIds({ progress: { 'BAD ID/q1': {} } }), []);
-});
-
-test('manifestQuizzes flattens subjects and units in display order', () => {
-  const manifest = { subjects: [
-    { name: 'A', quizzes: [{ id: 'a-1' }], units: [{ name: 'U', quizzes: [{ id: 'u-1' }, { id: 'u-2' }] }] },
-    { name: 'B', quizzes: [], units: [{ name: 'V', quizzes: [] }] },
-  ] };
-  assert.deepEqual(manifestQuizzes(manifest).map((q) => q.id), ['a-1', 'u-1', 'u-2']);
-  assert.deepEqual(manifestQuizzes(null), []);
+test('sessionQuizIds ignores malformed state', () => {
+  assert.deepEqual(sessionQuizIds(null), []);
+  assert.deepEqual(sessionQuizIds({ progress: { 'BAD ID/q1': {} } }), []);
 });
