@@ -8,11 +8,14 @@ import {
   answer,
   buildAttempt,
   buildStatsExport,
+  mergeStars,
   createSession,
   emptyHistory,
   mergeHistories,
   newAttemptId,
+  parseStarsExport,
   parseStatsExport,
+  sanitizeStars,
   sanitizeHistory,
   skip,
 } from '../js/core.js';
@@ -103,6 +106,25 @@ test('stats export round-trips and rejects foreign files', () => {
   assert.deepEqual(parsed.demo, h);
   assert.equal(parseStatsExport({ kind: 'other', version: 1, quizzes: {} }), null);
   assert.equal(parseStatsExport(null), null);
+});
+
+test('stars ride along in the export and are sanitised on import', () => {
+  const stars = { demo: ['q1', 'q3'], 'Not Valid': ['q1'], empty: [] };
+  const file = JSON.parse(JSON.stringify(buildStatsExport({}, new Date('2026-02-01T00:00:00Z'), stars)));
+  assert.deepEqual(parseStatsExport(file), {});
+  assert.deepEqual(parseStarsExport(file), { demo: ['q1', 'q3'] });
+
+  // Files from before stars, foreign files and junk entries.
+  const old = { kind: file.kind, version: file.version, quizzes: {} };
+  assert.deepEqual(parseStarsExport(old), {});
+  assert.deepEqual(parseStarsExport({ ...file, kind: 'other' }), {});
+  assert.deepEqual(parseStarsExport({ ...file, stars: { demo: ['q1', 7, '', 'a/b', 'q1', 'q2'] } }), { demo: ['q1', 'q2'] });
+});
+
+test('mergeStars is a union that keeps the existing order', () => {
+  assert.deepEqual(mergeStars(['q2', 'q1'], ['q1', 'q3']), ['q2', 'q1', 'q3']);
+  assert.deepEqual(mergeStars(null, ['q1']), ['q1']);
+  assert.deepEqual(sanitizeStars('nope'), []);
 });
 
 test('no history: every topic is unknown', () => {

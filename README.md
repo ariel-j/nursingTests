@@ -45,8 +45,9 @@ No build step and no runtime dependencies. Node is only needed for the tests and
 - **Starred questions:** star any question (☆ next to the topic, `F`, or on the end screen's list).
   A quiz's start screen can practise or browse its starred questions, and `quiz.html?starred`
   (linked from the home page and the menu) gathers starred questions from every quiz: tick which
-  quizzes and which questions to practise. Stars change only when you change them, and they stay in
-  the browser they were set in.
+  quizzes and which questions to practise. Stars change only when you change them. They are part of
+  the statistics export file, and importing adds them (a star removed on one device is not removed
+  on the other).
 - Keyboard: `1`–`4` choose, `S` skips, `F` stars, `Enter` continues. These use key codes, so they also work with a Hebrew layout.
 
 ## Adding a quiz

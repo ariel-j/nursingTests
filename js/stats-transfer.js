@@ -1,10 +1,21 @@
-// Export / import of the learner's statistics as a JSON file, for backup and moving between devices.
+// Export / import of the learner's statistics and starred questions as a JSON file, for backup and
+// moving between devices.
 
-import { buildStatsExport, isValidQuizId, mergeHistories, parseStatsExport, sanitizeHistory } from './core.js';
+import {
+  buildStatsExport,
+  isValidQuizId,
+  mergeHistories,
+  mergeStars,
+  parseStarsExport,
+  parseStatsExport,
+  sanitizeHistory,
+  sanitizeStars,
+} from './core.js';
 import { keys, listKeys, load, save } from './storage.js';
 
 const MAX_FILE_BYTES = 5 * 1024 * 1024;
 const HISTORY_PREFIX = keys.history('');
+const STARRED_PREFIX = keys.starred('');
 
 const exportButton = document.getElementById('export-stats');
 const importButton = document.getElementById('import-button');
@@ -22,14 +33,28 @@ function allHistories() {
   return histories;
 }
 
+function allStars() {
+  const stars = {};
+  for (const key of listKeys(STARRED_PREFIX)) {
+    const quizId = key.slice(STARRED_PREFIX.length);
+    if (!isValidQuizId(quizId)) continue;
+    const list = sanitizeStars(load(key));
+    if (list.length > 0) stars[quizId] = list;
+  }
+  return stars;
+}
+
+const countStars = (stars) => Object.values(stars).reduce((n, list) => n + list.length, 0);
+
 function exportStats() {
   const histories = allHistories();
-  if (Object.keys(histories).length === 0) {
-    statusEl.textContent = 'אין עדיין סטטיסטיקה לייצוא. היא נשמרת בסיום כל תרגול.';
+  const stars = allStars();
+  if (Object.keys(histories).length === 0 && countStars(stars) === 0) {
+    statusEl.textContent = 'אין עדיין מה לייצא. הסטטיסטיקה נשמרת בסיום כל תרגול, ואפשר לסמן שאלות בכוכב.';
     return;
   }
   const now = new Date();
-  const blob = new Blob([JSON.stringify(buildStatsExport(histories, now), null, 1)], { type: 'application/json' });
+  const blob = new Blob([JSON.stringify(buildStatsExport(histories, now, stars), null, 1)], { type: 'application/json' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
   link.download = `nursing-tests-stats-${now.toISOString().slice(0, 10)}.json`;
@@ -37,7 +62,7 @@ function exportStats() {
   link.click();
   link.remove();
   URL.revokeObjectURL(link.href);
-  statusEl.textContent = `יוצאו נתונים של ${Object.keys(histories).length} בחנים.`;
+  statusEl.textContent = `יוצאו נתונים של ${Object.keys(histories).length} בחנים ו־${countStars(stars)} שאלות מסומנות.`;
 }
 
 async function importStats() {
@@ -50,8 +75,11 @@ async function importStats() {
   }
 
   let imported = null;
+  let stars = {};
   try {
-    imported = parseStatsExport(JSON.parse(await file.text()));
+    const raw = JSON.parse(await file.text());
+    imported = parseStatsExport(raw);
+    stars = parseStarsExport(raw);
   } catch {
     // falls through to the error message
   }
@@ -68,9 +96,17 @@ async function importStats() {
     added += merged.attempts.length - current.attempts.length;
     if (!save(keys.history(quizId), merged)) failed = true;
   }
+  // Stars are added to the ones already here, never removed.
+  let starsAdded = 0;
+  for (const [quizId, incoming] of Object.entries(stars)) {
+    const current = sanitizeStars(load(keys.starred(quizId)));
+    const merged = mergeStars(current, incoming);
+    starsAdded += merged.length - current.length;
+    if (merged.length > current.length && !save(keys.starred(quizId), merged)) failed = true;
+  }
   statusEl.textContent = failed
     ? 'לא הצלחנו לשמור את כל הנתונים (ייתכן שאחסון הדפדפן מלא או חסום).'
-    : `הייבוא הסתיים: נוספו ${added} סבבים ב־${Object.keys(imported).length} בחנים.`;
+    : `הייבוא הסתיים: נוספו ${added} סבבים ב־${Object.keys(imported).length} בחנים, ו־${starsAdded} שאלות מסומנות.`;
 }
 
 exportButton.addEventListener('click', exportStats);

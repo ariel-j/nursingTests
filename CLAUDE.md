@@ -17,7 +17,7 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 
 * `js/core.js`: pure logic (queue, scoring, stats, topics, quiz validation). No DOM, no storage; imported by Node tests and the scripts. Randomness is injected as an `rng` argument; state is plain JSON and never mutated.
 * `js/storage.js`: guarded localStorage wrapper (prefix `anatomy-quizzes:v1:`). Keys: `session:<id>` (in-progress state), `results:<id>` (attempts, best score), `visitor` (last day / week counted by analytics.js), `starred:<id>` (starred question ids of a quiz, original ids), `history:<id>` (finished attempts of any mode: misses per question, newest 30; analysed by `analyzeHistory` in core.js into per-topic weak/fair/solid, trend and "recovered"). Attempts have unique ids and histories merge by union on id, so import/sync is conflict-free.
-* `js/stats-transfer.js`: statistics export/import (JSON file) on the home page.
+* `js/stats-transfer.js`: statistics and stars export/import (JSON file) on the home page.
 * `js/catalog.js`: the manifest for the pages: `loadManifest()` (one cached fetch per page) and pure helpers (`findSubject` by id or, for old links, name; `subjectQuizzes`, `subjectStats`, `subjectPaths`). Tested in Node.
 * `js/index.js`: home page. No `?subject=` → subject cards; `?subject=<id>` → that subject: mixed practice, printable exam, summaries and videos cards, then quizzes by unit (sections `#unit-N`).
 * `js/nav.js`: top bar + side menu on every page: a modal `<dialog>` drawer listing each subject with its units, mixed practice, print and summaries; the current subject starts open. Links resolve from `import.meta.url`, so subfolder pages work. Deliberately a drawer at every width, not a persistent desktop sidebar: the quiz page stays a focus screen, and the subject page already lists every unit.
@@ -52,7 +52,7 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 * Correct answer auto-advances after a pause scaled to the explanation length (2.5-8s) with a thin countdown bar; touching the feedback panel cancels it. A "מעבר אוטומטי" checkbox (shortcut `A`) on every question switches it on/off and is remembered (`pref:auto-advance`); until the learner chooses, it is off when the toolbar's stop-motion is on or `prefers-reduced-motion: reduce`. Wrong/skipped always wait for הבאה.
 * Progress: a ring with mastered/total, plus queue size and first-try correct. End screen: first-try score, retried questions, weak topics.
 * Session modes: `full` (whole quiz), `topics` (chosen topics or units, optionally a sampled number of questions), `retry` (questions that came back last run), `starred` (starred questions). Only `full` runs of a single quiz update the best score.
-* Stars change only by the user, never automatically. They stay in this browser: the statistics export does not include them.
+* Stars change only by the user, never automatically. They travel in the statistics export (`stars: { quizId: [id] }`, optional so older files still import); import adds them (union, `mergeStars`), never removes.
 * Printable exam: questions sampled per topic in proportion (`allocateByTopic`), options shuffled once and lettered א–ד; default 100 questions.
 * In-progress sessions persist and resume after refresh; a saved session that no longer matches the quiz is discarded.
 

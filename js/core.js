@@ -487,9 +487,12 @@ export function addAttempt(history, attempt) {
   return clean === null ? base : mergeHistories(base, { version: HISTORY_VERSION, attempts: [clean] });
 }
 
-/** The file written by "export": every quiz's history in one JSON document. */
-export function buildStatsExport(histories, now) {
-  return { kind: EXPORT_KIND, version: HISTORY_VERSION, exportedAt: now.toISOString(), quizzes: histories };
+/**
+ * The file written by "export": every quiz's history in one JSON document, plus the starred
+ * questions per quiz. `stars` is optional, so files from before it still import.
+ */
+export function buildStatsExport(histories, now, stars = {}) {
+  return { kind: EXPORT_KIND, version: HISTORY_VERSION, exportedAt: now.toISOString(), quizzes: histories, stars };
 }
 
 /** Parses an export file into `{ quizId: history }`, or null if it is not a stats export. */
@@ -503,6 +506,34 @@ export function parseStatsExport(raw) {
     if (clean.attempts.length > 0) quizzes[id] = clean;
   }
   return quizzes;
+}
+
+const MAX_STARS_PER_QUIZ = 5000;
+const isQuestionId = (id) => typeof id === 'string' && id.length > 0 && id.length <= 80 && !id.includes('/');
+
+/** A stored or imported list of starred ids: unique question ids, first occurrence kept. */
+export function sanitizeStars(raw) {
+  return Array.isArray(raw) ? [...new Set(raw.filter(isQuestionId))].slice(0, MAX_STARS_PER_QUIZ) : [];
+}
+
+/**
+ * Union of two starred lists, `a`'s order first. Import only adds: a star removed on one device
+ * is not removed on the other, as with the history it never deletes.
+ */
+export function mergeStars(a, b) {
+  return sanitizeStars([...sanitizeStars(a), ...sanitizeStars(b)]);
+}
+
+/** The `{ quizId: [questionId] }` stars of an export file; none for a file from before stars. */
+export function parseStarsExport(raw) {
+  if (parseStatsExport(raw) === null || !isPlainObject(raw.stars)) return {};
+  const stars = {};
+  for (const [id, list] of Object.entries(raw.stars).slice(0, MAX_EXPORT_QUIZZES)) {
+    if (!isValidQuizId(id)) continue;
+    const clean = sanitizeStars(list);
+    if (clean.length > 0) stars[id] = clean;
+  }
+  return stars;
 }
 
 // First-try outcomes per question (1 = correct, 0 = not), oldest first. Questions that are no
