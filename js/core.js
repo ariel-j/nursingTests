@@ -12,6 +12,9 @@ export const SESSION_VERSION = 1;
 // full: every question; topics: questions from chosen topics; retry: questions missed last time;
 // starred: questions the user starred.
 export const SESSION_MODES = ['full', 'topics', 'retry', 'starred'];
+// practice: feedback after every answer, misses come back until mastered;
+// exam: one pass with no feedback, scored and reviewed at the end.
+export const SESSION_STYLES = ['practice', 'exam'];
 // Id of the in-memory quiz that combines starred questions from several quizzes. Not a valid
 // quiz id, so it can never clash with a real quiz's storage keys.
 export const STARRED_QUIZ_ID = '*starred';
@@ -200,8 +203,18 @@ function mergeQuestions(quizzes, groupOf) {
  * A fresh session with each chosen question queued once, in random order. Defaults to the whole
  * quiz. The state is plain JSON, so it can be saved as is.
  */
-export function createSession(quiz, rng = Math.random, { questionIds = null, mode = 'full' } = {}) {
+/** Sessions saved before styles existed are practice sessions. */
+export function sessionStyle(state) {
+  return state.style ?? 'practice';
+}
+
+export function createSession(
+  quiz,
+  rng = Math.random,
+  { questionIds = null, mode = 'full', style = 'practice' } = {},
+) {
   if (!SESSION_MODES.includes(mode)) throw new Error(`unknown session mode: ${mode}`);
+  if (!SESSION_STYLES.includes(style)) throw new Error(`unknown session style: ${style}`);
   const known = new Set(quiz.questions.map((q) => q.id));
   const ids = questionIds === null
     ? [...known]
@@ -210,13 +223,13 @@ export function createSession(quiz, rng = Math.random, { questionIds = null, mod
 
   const progress = {};
   for (const id of ids) progress[id] = blankProgress();
-  return { version: SESSION_VERSION, quizId: quiz.id, mode, queue: shuffle(ids, rng), progress };
+  return { version: SESSION_VERSION, quizId: quiz.id, mode, style, queue: shuffle(ids, rng), progress };
 }
 
 /** Whether a saved session still matches the quiz (the quiz file may have changed since). */
 export function isSessionCompatible(state, quiz) {
   if (!isPlainObject(state) || state.version !== SESSION_VERSION || state.quizId !== quiz.id) return false;
-  if (!SESSION_MODES.includes(state.mode)) return false;
+  if (!SESSION_MODES.includes(state.mode) || !SESSION_STYLES.includes(sessionStyle(state))) return false;
   if (!Array.isArray(state.queue) || !isPlainObject(state.progress)) return false;
 
   const known = new Set(quiz.questions.map((q) => q.id));
@@ -265,13 +278,23 @@ export function requeue(queue, id, rng = Math.random) {
   return [...queue.slice(0, index), id, ...queue.slice(index)];
 }
 
-function advance(state, outcome, rng) {
+function advance(state, outcome, rng, choice = null) {
   if (state.queue.length === 0) throw new Error('session is already complete');
   const next = structuredClone(state);
   const id = next.queue.shift();
   const p = next.progress[id];
 
   p.attempts += 1;
+  if (sessionStyle(state) === 'exam') {
+    // One pass: the question leaves the queue whatever the outcome ("mastered" here means done),
+    // and the choice is kept for the review on the end screen.
+    p.firstTry = outcome;
+    p.choice = choice;
+    if (outcome === 'correct') p.streak = 1;
+    else p.misses = 1;
+    p.mastered = true;
+    return { state: next, id, progress: p };
+  }
   if (p.firstTry === null) p.firstTry = outcome;
   if (outcome === 'correct') {
     p.streak += 1;
@@ -289,7 +312,7 @@ export function answer(state, quiz, optionIndex, rng = Math.random) {
   const question = currentQuestion(state, quiz);
   if (!question) throw new Error('session is already complete');
   const correct = optionIndex === question.correct;
-  const result = advance(state, correct ? 'correct' : 'wrong', rng);
+  const result = advance(state, correct ? 'correct' : 'wrong', rng, optionIndex);
   return { ...result, question, correct };
 }
 
@@ -307,6 +330,7 @@ export function progressInfo(state) {
   const all = Object.values(state.progress);
   return {
     mastered: all.filter((p) => p.mastered).length,
+    answered: all.filter((p) => p.attempts > 0).length,
     total: all.length,
     queueSize: state.queue.length,
   };
@@ -366,7 +390,13 @@ export function summarize(state, quiz) {
 
   const retried = questions
     .filter((q) => state.progress[q.id].misses > 0)
-    .map((q) => ({ id: q.id, topic: q.topic, question: q.question, misses: state.progress[q.id].misses }))
+    .map((q) => ({
+      id: q.id,
+      topic: q.topic,
+      question: q.question,
+      misses: state.progress[q.id].misses,
+      choice: state.progress[q.id].choice ?? null,
+    }))
     .sort((a, b) => b.misses - a.misses);
 
   const topics = new Map();
@@ -687,14 +717,20 @@ function questionsOf(quiz, topics, field) {
 /**
  * Samples `count` of `questions` (clamped to what there is), split across their topics in proportion
  * to topic size, so every topic is represented. Grouped by topic, authored order inside each.
+ * With a `served` history (recordServed), each topic takes the questions served least often first,
+ * then the ones served longest ago, so consecutive samples overlap as little as possible.
  */
-function pickPerTopic(questions, count, rng) {
+function pickPerTopic(questions, count, rng, served = null) {
+  const seen = isPlainObject(served) && isPlainObject(served.seen) ? served.seen : {};
+  const times = (q) => seen[q.id]?.times ?? 0;
+  const last = (q) => seen[q.id]?.last ?? 0;
   const sizes = listTopics({ questions });
   const shares = allocateByTopic(sizes, count);
   const picked = [];
   for (const { topic } of sizes) {
     const pool = questions.filter((q) => q.topic === topic);
-    const taken = new Set(shuffle(pool, rng).slice(0, shares.get(topic)).map((q) => q.id));
+    const ranked = shuffle(pool, rng).sort((a, b) => times(a) - times(b) || last(a) - last(b));
+    const taken = new Set(ranked.slice(0, shares.get(topic)).map((q) => q.id));
     picked.push(...pool.filter((q) => taken.has(q.id)));
   }
   return picked;
@@ -702,10 +738,26 @@ function pickPerTopic(questions, count, rng) {
 
 /**
  * Ids for a custom practice: `count` questions from the chosen topics (`field` values; null means
- * all), sampled in proportion per topic. A count at or above the pool takes every question.
+ * all), sampled in proportion per topic, least-served first when `served` is given. A count at or
+ * above the pool takes every question.
  */
-export function sampleQuestionIds(quiz, { topics = null, field = 'topic', count = Infinity } = {}, rng = Math.random) {
-  return pickPerTopic(questionsOf(quiz, topics, field), count, rng).map((q) => q.id);
+export function sampleQuestionIds(
+  quiz,
+  { topics = null, field = 'topic', count = Infinity, served = null } = {},
+  rng = Math.random,
+) {
+  return pickPerTopic(questionsOf(quiz, topics, field), count, rng, served).map((q) => q.id);
+}
+
+/**
+ * A quiz's history of sampled questions: { seen: { [id]: { times, last } } }, `last` being the
+ * time (ms) it was last served. Kept per quiz file (own ids), so a quiz and a mixed practice that
+ * includes it rotate through the same questions.
+ */
+export function recordServed(served, ids, time) {
+  const seen = { ...(isPlainObject(served) && isPlainObject(served.seen) ? served.seen : {}) };
+  for (const id of ids) seen[id] = { times: (seen[id]?.times ?? 0) + 1, last: time };
+  return { seen };
 }
 
 /**

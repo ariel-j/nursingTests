@@ -67,6 +67,17 @@
 
       <form id="new-session" class="card">
         <h2>תרגול חדש</h2>
+        <fieldset id="style-setting" class="setting styles">
+          <legend class="setting-label">אופן</legend>
+          <label class="radio">
+            <input type="radio" name="style" value="practice" checked>
+            <span><b>תרגול</b> · משוב אחרי כל שאלה, וטעויות חוזרות עד שליטה</span>
+          </label>
+          <label class="radio">
+            <input type="radio" name="style" value="exam">
+            <span><b>מבחן</b> · כל שאלה פעם אחת בלי משוב, ציון וסקירת טעויות בסוף</span>
+          </label>
+        </fieldset>
         <fieldset class="topics">
           <legend id="topics-legend">נושאים</legend>
           <div class="topic-actions">
@@ -97,9 +108,10 @@
       </a>
 
       <div class="card rules">
-        <p>שאלה אחת בכל פעם, והתשובות מתערבבות בכל הצגה. תשובה שגויה או דילוג מחזירים את השאלה לתור, והיא נחשבת נשלטת רק אחרי שתי תשובות נכונות ברצף.</p>
+        <p>שאלה אחת בכל פעם, והתשובות מתערבבות בכל הצגה. בתרגול, תשובה שגויה או דילוג מחזירים את השאלה לתור, והיא נחשבת נשלטת רק אחרי שתי תשובות נכונות ברצף. במבחן כל שאלה מוצגת פעם אחת, ודילוג נחשב כטעות.</p>
+        <p>כשבוחרים פחות שאלות מהקיים, כל נושא מקבל חלק לפי גודלו, ומגיעות קודם שאלות שעוד לא הוצגו בסבבים קודמים.</p>
         <p>ההתקדמות נשמרת בדפדפן, אפשר לסגור ולחזור.</p>
-        <p class="keys-hint">מקלדת: <kbd>1</kbd>–<kbd>4</kbd> לבחירת א–ד, <kbd>S</kbd> לדילוג, <kbd>F</kbd> לסימון בכוכב, <kbd>A</kbd> למעבר אוטומטי, <kbd>Enter</kbd> להמשך.</p>
+        <p class="keys-hint">מקלדת: <kbd>1</kbd>–<kbd>4</kbd> לבחירת א–ד, <kbd>S</kbd> לדילוג, <kbd>F</kbd> לסימון בכוכב, <kbd>A</kbd> למעבר אוטומטי, <kbd>Enter</kbd> להמשך (במבחן: לאישור התשובה).</p>
       </div>
       <p id="best" class="muted" hidden></p>
     </section>
@@ -125,6 +137,7 @@
         </div>
         <div class="actions play-actions">
           <button id="skip" class="secondary" type="button">דילוג <kbd>S</kbd></button>
+          <button id="confirm" class="primary" type="button" hidden disabled>אישור והמשך <kbd>Enter</kbd></button>
           <label class="auto-toggle"><input id="auto-advance" type="checkbox" aria-keyshortcuts="A"> מעבר אוטומטי <kbd>A</kbd></label>
           <button id="next" class="primary" type="button" aria-describedby="verdict" disabled>הבאה <kbd>Enter</kbd></button>
         </div>
@@ -135,6 +148,7 @@
     <section id="done" hidden>
       <div class="card">
         <h2>סיימת!</h2>
+        <p id="score-label" class="muted">ציון בניסיון ראשון</p>
         <p id="score-percent" class="score"></p>
         <p id="score" class="muted"></p>
 
@@ -146,7 +160,7 @@
 
         <div class="section">
           <h2 id="retried-title">שאלות שחזרו</h2>
-          <p id="no-retried" class="muted" hidden>כל השאלות נענו נכון בפעם הראשונה.</p>
+          <p id="no-retried" class="muted" hidden></p>
           <div id="retried"></div>
         </div>
 

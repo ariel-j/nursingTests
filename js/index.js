@@ -1,6 +1,6 @@
 // Home page. Without ?subject= it lists the subjects to choose from; with ?subject=<id> it shows
 // that subject: mixed practice, the printable exam, its summaries and videos, then its quizzes by unit.
-import { STARRED_QUIZ_ID, isValidQuizId, mixedQuizId, progressInfo } from './core.js';
+import { STARRED_QUIZ_ID, isValidQuizId, mixedQuizId, progressInfo, sessionStyle } from './core.js';
 import { findSubject, loadManifest, loadMedia, mediaCount, subjectPaths, subjectQuizzes, subjectStats, unitAnchor } from './catalog.js';
 import { keys, load, loadStars } from './storage.js';
 import { summariesFor } from './summary-list.js';
@@ -36,12 +36,15 @@ function savedSession(id) {
 function sessionProgress(id) {
   const session = savedSession(id);
   if (!session) return null;
-  const { mastered, total } = progressInfo(session);
-  const progress = el('div', 'card-progress', `בתהליך: נשלטו ${mastered} מתוך ${total}`);
+  const { mastered, answered, total } = progressInfo(session);
+  // An exam counts answered questions; practice counts mastered ones.
+  const exam = sessionStyle(session) === 'exam';
+  const done = exam ? answered : mastered;
+  const progress = el('div', 'card-progress', `בתהליך: ${exam ? 'נענו' : 'נשלטו'} ${done} מתוך ${total}`);
   const bar = el('span', 'bar is-progress');
   bar.setAttribute('aria-hidden', 'true');
   const fill = el('i');
-  fill.style.inlineSize = `${total === 0 ? 0 : Math.round((100 * mastered) / total)}%`;
+  fill.style.inlineSize = `${total === 0 ? 0 : Math.round((100 * done) / total)}%`;
   bar.append(fill);
   progress.append(bar);
   return progress;
@@ -147,16 +150,30 @@ function renderTools(subject, media) {
   return list;
 }
 
+/**
+ * "מבחן סיכום אישי" for a unit with two or more quizzes: the subject's mixed practice opened with
+ * only this unit chosen, so its quizzes are pooled and sampled per topic.
+ */
+function renderUnitMix(subject, unit, quizzes) {
+  const href = `${subjectPaths(subject.id).practice}&group=${encodeURIComponent(unit.name)}`;
+  const total = quizzes.reduce((n, q) => n + q.questionCount, 0);
+  return card(href, 'mix-card', 'מבחן סיכום אישי',
+    el('p', 'muted', 'שאלות מכל הבחנים ביחידה, בחלוקה לפי גודל הנושא. בוחרים מספר שאלות, תרגול או מבחן.'),
+    el('p', 'meta', `${quizzes.length} בחנים · ${num(total)} שאלות`));
+}
+
 /** A unit's quizzes under a heading, or a "coming soon" note when it has none. */
-function renderUnit(unit, index) {
+function renderUnit(subject, unit, index) {
   const group = el('section', 'group');
   group.id = unitAnchor(index);
   group.append(el('h2', 'group-title', unit.name));
-  if (unit.quizzes.length === 0) {
+  const quizzes = unit.quizzes.filter((q) => isValidQuizId(q.id));
+  if (quizzes.length === 0) {
     group.append(el('p', 'muted soon', 'בקרוב'));
   } else {
     const list = el('ul', 'quiz-list');
-    list.append(...unit.quizzes.filter((q) => isValidQuizId(q.id)).map(renderQuiz));
+    list.append(...quizzes.map(renderQuiz));
+    if (quizzes.length > 1) list.append(renderUnitMix(subject, unit, quizzes));
     group.append(list);
   }
   return group;
@@ -188,7 +205,7 @@ function renderQuizTabs(subject) {
     list.append(...own.map(renderQuiz));
     panel.append(list);
   }
-  panel.append(...subject.units.map(renderUnit));
+  panel.append(...subject.units.map((unit, i) => renderUnit(subject, unit, i)));
   return [tabList, panel];
 }
 
