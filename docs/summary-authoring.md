@@ -15,7 +15,7 @@ Fill in the `<…>` values and paste the subject's notes from [quiz-authoring.md
 
 ```text
 You are writing one short summary page for a Hebrew nursing exam-prep site.
-SUBJECT: <subject name, e.g. פרמקולוגיה>
+SUBJECT: <subject name, e.g. פרמקולוגיה א'>
 TOPIC:   <what this summary covers, e.g. תרופות לב וכלי דם>
 ID:      <lowercase English with hyphens, e.g. pharma-cardio>
 
