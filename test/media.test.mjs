@@ -16,6 +16,9 @@ test('displayName drops the extension (files) and an ordering prefix', () => {
   assert.equal(displayName('3. נושא ג', { isFile: false }), 'נושא ג');
   assert.equal(displayName('3. נושא ג.pdf'), 'נושא ג');
   assert.equal(displayName('נושא ד.png'), 'נושא ד');
+  // Underscores read as spaces (downloaded files), runs collapse.
+  assert.equal(displayName('נוירופיזיולוגיה_ופרקינסון.mp4'), 'נוירופיזיולוגיה ופרקינסון');
+  assert.equal(displayName('02_מסע_התרופה__מהי_פרמקוקינטיקה_.mp4'), 'מסע התרופה מהי פרמקוקינטיקה');
   // A name that is only a number stays a number.
   assert.equal(displayName('12.png'), '12');
 });
@@ -35,6 +38,18 @@ test('buildMedia groups by sub-subject folder in numeric order, loose files firs
   assert.equal(mediaCount(manifest, 'pharmacology'), 4);
   assert.equal(mediaCount(manifest, 'anatomy'), 0);
   assert.deepEqual(Object.keys(manifest.subjects), ['pharmacology']);
+});
+
+test('buildMedia rejects two topic folders with the same name (it is the ?topic= address)', () => {
+  const { manifest, errors } = buildMedia([
+    f('pharmacology/01 - פרקינסון/א.mp4'),
+    f('pharmacology/פרקינסון/ב.mp4'),
+    f('anatomy/פרקינסון/ג.mp4'),
+  ], ids);
+  assert.equal(errors.length, 1);
+  assert.match(errors[0], /media\/pharmacology\/פרקינסון: same topic name/);
+  assert.deepEqual(manifest.subjects.pharmacology.groups.map((g) => [g.name, g.items.length]), [['פרקינסון', 1]]);
+  assert.equal(mediaCount(manifest, 'anatomy'), 1);
 });
 
 test('buildMedia pairs captions with their video and warns about videos without them', () => {
