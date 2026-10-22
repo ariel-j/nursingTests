@@ -15,6 +15,7 @@ const ui = {
   content: $('content'),
   starredWrap: $('starred-wrap'),
   starredLink: $('starred-link'),
+  selfStudyWrap: $('self-study-wrap'),
 };
 
 const num = (n) => n.toLocaleString('he-IL');
@@ -212,6 +213,7 @@ function renderQuizTabs(subject) {
 function renderSubject(subject, media) {
   document.title = `${subject.name} · ${SITE_TITLE}`;
   ui.subjectNav.hidden = false;
+  ui.selfStudyWrap.hidden = true;
   ui.title.textContent = subject.name;
   const nodes = [];
   if (subjectStats(subject).quizCount === 0) {

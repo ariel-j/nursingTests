@@ -40,10 +40,11 @@ failures += media.errors.length;
 
 // Published text says "הופיע בעבר", never "שחזור" (exam recollections).
 const ROOT = path.resolve(QUIZ_DIR, '..');
-for (const dir of ['.', 'summaries', 'js', 'quizzes', 'data']) {
+for (const dir of ['.', 'summaries', 'js', 'quizzes', 'data', 'self-study']) {
   const files = await readdir(path.join(ROOT, dir), { recursive: dir !== '.' }).catch(() => []);
+  const published = dir === 'self-study' ? /\.(?:html|js|json|md)$/ : /\.(?:html|js|json)$/;
   for (const file of files) {
-    if (!/\.(?:html|js|json)$/.test(file) || file.endsWith(MANIFEST_FILE)) continue;
+    if (!published.test(file) || file.endsWith(MANIFEST_FILE)) continue;
     const n = recollectionMentions(await readFile(path.join(ROOT, dir, file), 'utf8'));
     if (n > 0) {
       console.error(`${path.join(dir, file)}: mentions exam recollections (שחזור) ${n}×; write "הופיע בעבר"`);

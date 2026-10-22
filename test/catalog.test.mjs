@@ -1,8 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  findMediaTopic,
   findSubject,
   isValidSubjectId,
+  mediaTopicPath,
   subjectOfQuiz,
   subjectPaths,
   subjectQuizzes,
@@ -64,6 +66,18 @@ test('subjectPaths and unitAnchor build the subject links', () => {
     media: 'media.html?subject=pharmacology',
   });
   assert.equal(unitAnchor(0), 'unit-1');
+});
+
+test('findMediaTopic finds a topic by name; mediaTopicPath links to it', () => {
+  const media = { subjects: { pharmacology: { groups: [
+    { name: '', items: [] },
+    { name: 'פרקינסון', items: [{ title: 'א' }] },
+  ] } } };
+  assert.equal(findMediaTopic(media, 'pharmacology', 'פרקינסון').items.length, 1);
+  for (const missing of ['', null, 'אחר']) assert.equal(findMediaTopic(media, 'pharmacology', missing), null);
+  assert.equal(findMediaTopic(media, 'anatomy', 'פרקינסון'), null);
+  assert.equal(mediaTopicPath('pharmacology', 'נושא א'),
+    'media.html?subject=pharmacology&topic=%D7%A0%D7%95%D7%A9%D7%90%20%D7%90');
 });
 
 test('isValidSubjectId accepts URL-safe slugs only', () => {
