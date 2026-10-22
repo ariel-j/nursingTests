@@ -3,9 +3,12 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   MASTERY_STREAK,
+  STARRED_QUIZ_ID,
   REQUEUE_MAX,
   REQUEUE_MIN,
   answer,
+  combineQuizzes,
+  combinedSessionQuizIds,
   createSession,
   currentQuestion,
   hasPositionalReference,
@@ -13,7 +16,10 @@ import {
   isSessionCompatible,
   isolateNumberRanges,
   listTopics,
+  manifestQuizzes,
+  questionById,
   questionIdsForTopics,
+  quizLabel,
   sessionQuestions,
   presentOptions,
   progressInfo,
@@ -21,7 +27,9 @@ import {
   requeue,
   shuffle,
   skip,
+  starredIds,
   summarize,
+  toggleStar,
   validateQuiz,
 } from '../js/core.js';
 
@@ -390,4 +398,61 @@ test('option notes are optional', () => {
   const quiz = clone(fixture);
   delete quiz.questions[0].options[0].note;
   assert.deepEqual(validateQuiz(quiz), []);
+});
+
+// ---------- stars ----------
+
+test('toggleStar adds and removes without mutating', () => {
+  const before = ['q1'];
+  assert.deepEqual(toggleStar(before, 'q2'), ['q1', 'q2']);
+  assert.deepEqual(toggleStar(before, 'q1'), []);
+  assert.deepEqual(before, ['q1']);
+  assert.deepEqual(toggleStar(null, 'q3'), ['q3']);
+});
+
+test('starredIds keeps known ids in authored order and drops stale ones', () => {
+  assert.deepEqual(starredIds(['q3', 'gone', 'q1'], fixture), ['q1', 'q3']);
+  assert.deepEqual(starredIds('garbage', fixture), []);
+});
+
+test('quizLabel prefers the unit over the subject', () => {
+  assert.equal(quizLabel({ subject: 'S', unit: 'U', title: 'T' }), 'U · T');
+  assert.equal(quizLabel({ subject: 'S', title: 'T' }), 'S · T');
+});
+
+test('combineQuizzes namespaces ids and runs through the session engine', () => {
+  const other = { ...clone(fixture), id: 'other-quiz', title: 'אחר' };
+  const combined = combineQuizzes([fixture, other]);
+  assert.equal(combined.id, STARRED_QUIZ_ID);
+  assert.equal(combined.questions.length, fixture.questions.length * 2);
+  const q = questionById(combined, 'other-quiz/q2');
+  assert.deepEqual(q.source, { quizId: 'other-quiz', questionId: 'q2', label: quizLabel(other) });
+  assert.equal(q.question, fixture.questions[1].question);
+
+  const ids = ['sample-quiz/q1', 'other-quiz/q2'];
+  let state = createSession(combined, seeded(1), { questionIds: ids, mode: 'starred' });
+  assert.ok(isSessionCompatible(state, combined));
+  assert.deepEqual(combinedSessionQuizIds(state).sort(), ['other-quiz', 'sample-quiz']);
+  while (!isComplete(state)) {
+    state = answer(state, combined, currentQuestion(state, combined).correct, seeded(2)).state;
+  }
+  assert.equal(summarize(state, combined).firstTryPercent, 100);
+
+  // A combined session no longer matches once one of its quizzes is not loaded.
+  state = createSession(combined, seeded(1), { questionIds: ids, mode: 'starred' });
+  assert.ok(!isSessionCompatible(state, combineQuizzes([fixture])));
+});
+
+test('combinedSessionQuizIds ignores malformed state', () => {
+  assert.deepEqual(combinedSessionQuizIds(null), []);
+  assert.deepEqual(combinedSessionQuizIds({ progress: { 'BAD ID/q1': {} } }), []);
+});
+
+test('manifestQuizzes flattens subjects and units in display order', () => {
+  const manifest = { subjects: [
+    { name: 'A', quizzes: [{ id: 'a-1' }], units: [{ name: 'U', quizzes: [{ id: 'u-1' }, { id: 'u-2' }] }] },
+    { name: 'B', quizzes: [], units: [{ name: 'V', quizzes: [] }] },
+  ] };
+  assert.deepEqual(manifestQuizzes(manifest).map((q) => q.id), ['a-1', 'u-1', 'u-2']);
+  assert.deepEqual(manifestQuizzes(null), []);
 });

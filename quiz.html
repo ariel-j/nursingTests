@@ -32,10 +32,19 @@
         <button id="resume" class="primary" type="button">המשך מאיפה שעצרת</button>
       </div>
 
+      <div id="starred-box" class="card" hidden>
+        <h2>שאלות מסומנות</h2>
+        <button id="practice-starred" class="primary" type="button"></button>
+        <details class="starred-browse">
+          <summary>הצג את השאלות המסומנות</summary>
+          <ul id="starred-list" class="starred-list"></ul>
+        </details>
+      </div>
+
       <form id="new-session" class="card">
         <h2>תרגול חדש</h2>
         <fieldset class="topics">
-          <legend>נושאים</legend>
+          <legend id="topics-legend">נושאים</legend>
           <div class="topic-actions">
             <button id="all-topics" class="chip" type="button">בחר הכל</button>
             <button id="no-topics" class="chip" type="button">נקה</button>
@@ -48,7 +57,7 @@
       <div class="card rules">
         <p>שאלה אחת בכל פעם, והתשובות מתערבבות בכל הצגה. תשובה שגויה או דילוג מחזירים את השאלה לתור, והיא נחשבת נשלטת רק אחרי שתי תשובות נכונות ברצף.</p>
         <p>ההתקדמות נשמרת בדפדפן, אפשר לסגור ולחזור.</p>
-        <p class="keys-hint">מקלדת: <kbd>1</kbd>–<kbd>4</kbd> לבחירה, <kbd>S</kbd> לדילוג, <kbd>Enter</kbd> להמשך.</p>
+        <p class="keys-hint">מקלדת: <kbd>1</kbd>–<kbd>4</kbd> לבחירה, <kbd>S</kbd> לדילוג, <kbd>F</kbd> לסימון בכוכב, <kbd>Enter</kbd> להמשך.</p>
       </div>
       <p id="best" class="muted" hidden></p>
     </section>
@@ -66,7 +75,10 @@
       <article class="card">
         <div class="question-meta">
           <span id="topic"></span>
-          <span id="retry-label" class="retry" hidden></span>
+          <span class="meta-end">
+            <span id="retry-label" class="retry" hidden></span>
+            <button id="star" class="star-toggle" type="button" aria-label="סימון בכוכב" aria-pressed="false">☆</button>
+          </span>
         </div>
         <h2 id="question" class="question"></h2>
         <ol id="options" class="options"></ol>

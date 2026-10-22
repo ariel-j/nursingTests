@@ -16,9 +16,9 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 
 * `js/core.js`: pure logic (queue, scoring, stats, topics, quiz validation). No DOM, no storage; imported by Node tests and the scripts. Randomness is injected as an `rng` argument; state is plain JSON and never mutated.
 * `js/ecg.js`: pure SVG path for the ECG progress strip.
-* `js/storage.js`: guarded localStorage wrapper (prefix `anatomy-quizzes:v1:`). Keys: `session:<id>` (in-progress state), `results:<id>` (attempts, best score).
+* `js/storage.js`: guarded localStorage wrapper (prefix `anatomy-quizzes:v1:`). Keys: `session:<id>` (in-progress state), `results:<id>` (attempts, best score), `starred:<id>` (starred question ids).
 * `js/index.js`: home page; renders the manifest tree of subjects → units → quizzes.
-* `js/quiz.js`: start screen (resume / choose topics) → play → end screen (retry missed).
+* `js/quiz.js`: start screen (resume / choose topics / starred) → play → end screen (retry missed). `quiz.html?starred` runs the same page over `combineQuizzes()` (every quiz with stars, ids `<quizId>/<questionId>`, quiz id `*starred`) with a per-quiz, per-question picker.
 * `js/a11y.js`: accessibility toolbar (text size, high contrast, underline links, stop motion); sets `data-*` on `<html>`, persists in localStorage. Imported by every page.
 * `summaries/`: סיכומים קצרים. `index.html` hub (from `js/summary-list.js`, the single list), one static `<id>.html` per summary with its content in `<article class="summary" data-system="<id>">`, and `all.html`, which fetches every summary into one page for a single PDF (`js/summaries-all.js`, DOMParser + adoptNode). Styles in `css/summary.css` (per-system accent, dark, high contrast, print). PDF = the browser's print dialog, no library.
 * `accessibility.html` (הצהרת נגישות) and `privacy.html` (מדיניות פרטיות): static content pages; every page has a footer linking to them.
@@ -35,7 +35,8 @@ Quiz site for nursing exam prep, several subjects (courses), each with one or mo
 * Mastery: correct on first try = mastered. After any miss or skip, needs 2 correct in a row (`MASTERY_STREAK`); not-yet-mastered correct answers re-queue the same way.
 * Wrong answer: chosen option red, correct green, explanation plus the note for the chosen option.
 * Progress: mastered/total and queue size. End screen: first-try score, retried questions, weak topics.
-* Session modes: `full` (whole quiz), `topics` (chosen topics), `retry` (questions that came back last run). Only `full` runs update the best score.
+* Session modes: `full` (whole quiz), `topics` (chosen topics), `retry` (questions that came back last run), `starred` (starred questions). Only `full` runs update the best score.
+* Stars change only by the user (☆ button, `F`, end-screen list), never automatically.
 * In-progress sessions persist and resume after refresh; a saved session that no longer matches the quiz is discarded.
 
 ## Commands

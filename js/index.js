@@ -1,15 +1,22 @@
-import { isValidQuizId, progressInfo } from './core.js';
+import { STARRED_QUIZ_ID, isValidQuizId, manifestQuizzes, progressInfo } from './core.js';
 import { ecgPath } from './ecg.js';
 import { keys, load } from './storage.js';
 
 const statusEl = document.getElementById('status');
 const subjectsEl = document.getElementById('subjects');
+const starredLink = document.getElementById('starred-link');
 
 function el(tag, className, text) {
   const node = document.createElement(tag);
   if (className) node.className = className;
   if (text !== undefined) node.textContent = text;
   return node;
+}
+
+// Raw stored count; ids that no longer exist in the quiz are dropped once it is opened.
+function starCount(quizId) {
+  const list = load(keys.starred(quizId), []);
+  return Array.isArray(list) ? list.length : 0;
 }
 
 function renderQuiz(entry) {
@@ -32,6 +39,8 @@ function renderQuiz(entry) {
   if (results && Number.isFinite(results.bestPercent)) {
     meta.append(el('span', null, `שיא: ${results.bestPercent}%`));
   }
+  const stars = starCount(entry.id);
+  if (stars > 0) meta.append(el('span', null, `★ ${stars} מסומנות`));
   link.append(meta);
   item.append(link);
   return item;
@@ -83,11 +92,16 @@ async function main() {
   }
 
   const subjects = manifest.subjects ?? [];
-  const total = subjects.reduce(
-    (n, s) => n + s.quizzes.length + s.units.reduce((m, u) => m + u.quizzes.length, 0),
-    0,
-  );
-  if (total === 0) {
+  const entries = manifestQuizzes(manifest);
+
+  const stars = entries.reduce((n, e) => n + (isValidQuizId(e.id) ? starCount(e.id) : 0), 0);
+  const starredSession = load(keys.session(STARRED_QUIZ_ID));
+  if (stars > 0 || starredSession) {
+    starredLink.textContent = stars > 0 ? `★ שאלות מסומנות (${stars})` : '★ שאלות מסומנות';
+    starredLink.hidden = false;
+  }
+
+  if (entries.length === 0) {
     statusEl.textContent = 'עדיין אין בחנים.';
     return;
   }

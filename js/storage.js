@@ -6,6 +6,7 @@ const PREFIX = 'anatomy-quizzes:v1:';
 export const keys = {
   session: (quizId) => `session:${quizId}`,
   results: (quizId) => `results:${quizId}`,
+  starred: (quizId) => `starred:${quizId}`,
 };
 
 export function load(key, fallback = null) {

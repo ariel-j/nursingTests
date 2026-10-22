@@ -9,8 +9,12 @@ export const REQUEUE_MAX = 5;
 // Consecutive correct answers needed to master a question that was missed or skipped.
 export const MASTERY_STREAK = 2;
 export const SESSION_VERSION = 1;
-// full: every question; topics: questions from chosen topics; retry: questions missed last time.
-export const SESSION_MODES = ['full', 'topics', 'retry'];
+// full: every question; topics: questions from chosen topics; retry: questions missed last time;
+// starred: questions the user starred.
+export const SESSION_MODES = ['full', 'topics', 'retry', 'starred'];
+// Id of the in-memory quiz that combines starred questions from several quizzes. Not a valid
+// quiz id, so it can never clash with a real quiz's storage keys.
+export const STARRED_QUIZ_ID = '*starred';
 
 const ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const QUIZ_KEYS = new Set(['id', 'subject', 'unit', 'title', 'description', 'questions']);
@@ -274,6 +278,55 @@ export function progressInfo(state) {
     total: all.length,
     queueSize: state.queue.length,
   };
+}
+
+// ---------- manifest ----------
+
+/** Every quiz entry in the manifest, in display order (subject quizzes first, then each unit's). */
+export function manifestQuizzes(manifest) {
+  return (manifest?.subjects ?? []).flatMap((s) => [...(s.quizzes ?? []), ...(s.units ?? []).flatMap((u) => u.quizzes ?? [])]);
+}
+
+// ---------- stars ----------
+
+/** Starred question ids with `id` added or removed. Returns a new array. */
+export function toggleStar(starred, id) {
+  const list = Array.isArray(starred) ? starred : [];
+  return list.includes(id) ? list.filter((s) => s !== id) : [...list, id];
+}
+
+/** The stored starred ids that still exist in the quiz, in authored order. */
+export function starredIds(starred, quiz) {
+  const wanted = new Set(Array.isArray(starred) ? starred : []);
+  return quiz.questions.filter((q) => wanted.has(q.id)).map((q) => q.id);
+}
+
+/** "הלב · מבחן 1": the unit (or subject) and title, to tell quizzes apart in a mixed list. */
+export function quizLabel(quiz) {
+  return `${quiz.unit ?? quiz.subject} · ${quiz.title}`;
+}
+
+/**
+ * One in-memory quiz holding every question of `quizzes`, so the session engine can run over
+ * questions from several quizzes. Ids become "<quizId>/<questionId>"; `source` points back to
+ * the original question (where its star is stored).
+ */
+export function combineQuizzes(quizzes) {
+  return {
+    id: STARRED_QUIZ_ID,
+    questions: quizzes.flatMap((quiz) => quiz.questions.map((q) => ({
+      ...q,
+      id: `${quiz.id}/${q.id}`,
+      source: { quizId: quiz.id, questionId: q.id, label: quizLabel(quiz) },
+    }))),
+  };
+}
+
+/** Quiz ids a saved combined session refers to, so their files can be loaded to resume it. */
+export function combinedSessionQuizIds(state) {
+  if (!isPlainObject(state) || !isPlainObject(state.progress)) return [];
+  const ids = Object.keys(state.progress).map((id) => id.split('/')[0]);
+  return [...new Set(ids)].filter(isValidQuizId);
 }
 
 // ---------- results ----------
