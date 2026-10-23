@@ -151,6 +151,8 @@ function renderTools(subject, media) {
   return list;
 }
 
+const unitQuizzes = (unit) => unit.quizzes.filter((q) => isValidQuizId(q.id));
+
 /**
  * "מבחן סיכום אישי" for a unit with two or more quizzes: the subject's mixed practice opened with
  * only this unit chosen, so its quizzes are pooled and sampled per topic.
@@ -158,31 +160,45 @@ function renderTools(subject, media) {
 function renderUnitMix(subject, unit, quizzes) {
   const href = `${subjectPaths(subject.id).practice}&group=${encodeURIComponent(unit.name)}`;
   const total = quizzes.reduce((n, q) => n + q.questionCount, 0);
-  return card(href, 'mix-card', 'מבחן סיכום אישי',
+  return card(href, 'mix-card', `מבחן סיכום אישי · ${unit.name}`,
     el('p', 'muted', 'שאלות מכל הבחנים ביחידה, בחלוקה לפי גודל הנושא. בוחרים מספר שאלות, תרגול או מבחן.'),
     el('p', 'meta', `${quizzes.length} בחנים · ${num(total)} שאלות`));
 }
 
+/** The units' "מבחן סיכום אישי" cards in one section at the top of the tab, or null if none. */
+function renderUnitMixes(subject) {
+  const cards = subject.units
+    .map((unit) => [unit, unitQuizzes(unit)])
+    .filter(([, quizzes]) => quizzes.length > 1)
+    .map(([unit, quizzes]) => renderUnitMix(subject, unit, quizzes));
+  if (cards.length === 0) return null;
+  const group = el('section', 'group');
+  group.append(el('h2', 'group-title', 'מבחני סיכום אישי'));
+  const list = el('ul', 'quiz-list');
+  list.append(...cards);
+  group.append(list);
+  return group;
+}
+
 /** A unit's quizzes under a heading, or a "coming soon" note when it has none. */
-function renderUnit(subject, unit, index) {
+function renderUnit(unit, index) {
   const group = el('section', 'group');
   group.id = unitAnchor(index);
   group.append(el('h2', 'group-title', unit.name));
-  const quizzes = unit.quizzes.filter((q) => isValidQuizId(q.id));
+  const quizzes = unitQuizzes(unit);
   if (quizzes.length === 0) {
     group.append(el('p', 'muted soon', 'בקרוב'));
   } else {
     const list = el('ul', 'quiz-list');
     list.append(...quizzes.map(renderQuiz));
-    if (quizzes.length > 1) list.append(renderUnitMix(subject, unit, quizzes));
     group.append(list);
   }
   return group;
 }
 
 /**
- * The subject's quizzes in one tab, "מבחנים לפי נושאים": quizzes placed directly on the subject
- * first, then each unit as a section. Returns the tab list and its panel.
+ * The subject's quizzes in one tab, "מבחנים לפי נושאים": the units' "מבחן סיכום אישי" cards first,
+ * then quizzes placed directly on the subject, then each unit as a section. Returns the tab list and its panel.
  */
 function renderQuizTabs(subject) {
   const tab = el('button', 'tab', 'מבחנים לפי נושאים');
@@ -200,13 +216,15 @@ function renderQuizTabs(subject) {
   panel.id = 'quizzes-panel';
   panel.setAttribute('role', 'tabpanel');
   panel.setAttribute('aria-labelledby', tab.id);
+  const mixes = renderUnitMixes(subject);
+  if (mixes) panel.append(mixes);
   const own = subject.quizzes.filter((q) => isValidQuizId(q.id));
   if (own.length > 0) {
     const list = el('ul', 'quiz-list');
     list.append(...own.map(renderQuiz));
     panel.append(list);
   }
-  panel.append(...subject.units.map((unit, i) => renderUnit(subject, unit, i)));
+  panel.append(...subject.units.map((unit, i) => renderUnit(unit, i)));
   return [tabList, panel];
 }
 
