@@ -68,6 +68,36 @@ function setupTabs(article) {
   select(0, false);
 }
 
+// Scroll-through hubs: a sticky row of links to the sections, highlighting the one in view.
+function setupNav(article) {
+  const sections = [...article.querySelectorAll(':scope > section[data-nav]')];
+  if (sections.length < 2) return;
+  const bar = el('nav', 'chipnav no-print');
+  bar.setAttribute('aria-label', 'ניווט בסיכום');
+  const links = new Map(sections.map((sec) => {
+    const a = el('a', 'chip', sec.dataset.nav);
+    a.href = `#${sec.id}`;
+    return [sec, a];
+  }));
+  bar.append(...links.values());
+  article.querySelector(':scope > header').after(bar);
+  if (!('IntersectionObserver' in window)) return;
+  const seen = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      for (const [sec, a] of links) {
+        if (sec === entry.target) {
+          a.setAttribute('aria-current', 'true');
+          a.scrollIntoView({ inline: 'center', block: 'nearest' });
+        } else {
+          a.removeAttribute('aria-current');
+        }
+      }
+    }
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  for (const sec of sections) seen.observe(sec);
+}
+
 function setupCards(article) {
   for (const card of article.querySelectorAll('.fc')) {
     const front = card.querySelector('.fc-front');
@@ -223,6 +253,7 @@ function setupQuiz(article) {
 export function enhance(article) {
   article.classList.add('is-interactive');
   setupTabs(article);
+  setupNav(article);
   setupCards(article);
   setupLevels(article);
   setupScales(article);
@@ -230,5 +261,5 @@ export function enhance(article) {
 }
 
 for (const article of document.querySelectorAll('article.summary')) {
-  if (article.querySelector('[data-tab]')) enhance(article);
+  if (article.querySelector('[data-tab], [data-nav]')) enhance(article);
 }

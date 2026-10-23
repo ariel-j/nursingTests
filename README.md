@@ -112,7 +112,9 @@ A summary can also be a **study hub**: the same static page with `<section data-
 (`.fc` with `.fc-front` / `.fc-back`), expandable rows (`.lvl`), a `.scales` switch and a mini quiz (`.mq-set` with
 `.mq` questions, the right option marked `<li class="ok">`). `js/summary-interactive.js` turns those into tabs,
 flip cards, a toggle and a quiz with XP; without JS, in print and in `all.html` every panel is simply shown and
-the quiz prints as questions with the right answers marked. See `summaries/hygiene.html`.
+the quiz prints as questions with the right answers marked. A hub uses either `data-tab` sections (tabs, see
+`summaries/hygiene.html`) or `data-nav` sections with unique ids (one scrolling page with a sticky section bar,
+see `summaries/sleep.html`).
 
 ## Development
 

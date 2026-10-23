@@ -9,6 +9,8 @@
 [data-system="endocrine"]      { --a: #a86a1e; --a-soft: #f4e9d6; --a-ink: #7e4e12; --a-d: #e8aa5c; --a-soft-d: #3a2a14; --a-ink-d: #f3cb93; }
 [data-system="hygiene"]        { --a: #1a7587; --a-soft: #dff0f3; --a-ink: #125563; --a-d: #4fc3d6; --a-soft-d: #12323a; --a-ink-d: #9fdde9; }
 [data-system="tissue-integrity"] { --a: #a8472f; --a-soft: #f6e5df; --a-ink: #7f3320; --a-d: #e8836a; --a-soft-d: #3b1f19; --a-ink-d: #f4b3a2; }
+[data-system="mobility"]       { --a: #0b7a6e; --a-soft: #dcf1ee; --a-ink: #085a51; --a-d: #2ec4b1; --a-soft-d: #113038; --a-ink-d: #a6ece2; }
+[data-system="sleep"]          { --a: #4a44b8; --a-soft: #e7e6fb; --a-ink: #38339a; --a-d: #908cf2; --a-soft-d: #1c1a3d; --a-ink-d: #cbc9fb; }
 [data-system="excretory"]      { --a: #126e82; --a-soft: #dcedf0; --a-ink: #0c4e5c; --a-d: #5fc4d9; --a-soft-d: #12333a; --a-ink-d: #a2ddea; }
 
 [data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
@@ -156,6 +158,43 @@
 .summary .tag-mid { background: #a8472f; }
 .summary .tag-5 { background: #a3281a; }
 
+/* Scroll-through hubs (data-nav): sticky section links, tables, cause chains. */
+.summary .chipnav { position: sticky; inset-block-start: 0; z-index: 5; display: flex; gap: 8px; overflow-x: auto; padding-block: 10px; background: var(--paper); scrollbar-width: none; }
+.summary .chipnav::-webkit-scrollbar { display: none; }
+.summary .chip { flex: 0 0 auto; padding: 6px 12px; border: 1px solid transparent; border-radius: 999px; color: var(--muted); font-size: 0.85rem; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.summary .chip[aria-current="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-ink); }
+.summary .chip:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.summary section[data-nav] { scroll-margin-block-start: 64px; }
+
+.summary .tablewrap { margin-block: 0.8rem 1rem; overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+.summary table { inline-size: 100%; min-inline-size: 400px; border-collapse: collapse; background: var(--card); font-size: 0.92rem; }
+.summary th, .summary td { padding: 10px 12px; border-block-end: 1px solid var(--line); text-align: start; vertical-align: top; }
+.summary thead th { background: var(--accent-soft); color: var(--accent-ink); }
+.summary tbody tr:last-child td { border-block-end: 0; }
+.summary td .t { color: var(--accent-ink); font-weight: 700; }
+.summary .nowrap { white-space: nowrap; }
+
+.summary dl.defs { margin: 0.8rem 0 1rem; }
+.summary .ic-accent { border-block-start: 3px solid var(--accent); }
+.summary .ic-good { border-block-start: 3px solid var(--ok); }
+.summary .ic-warn { border-inline-start: 4px solid #b9770e; }
+.summary .ic-danger { border-block-start: 3px solid var(--bad); }
+.summary .ic p { margin: 0; font-size: 0.92rem; }
+.summary .chain { display: grid; gap: 2px; margin-block: 8px; font-size: 0.9rem; }
+.summary .chain-step { padding: 5px 9px; border-radius: 8px; background: var(--accent-soft); }
+.summary .chain-arr { color: var(--accent); font-weight: 700; line-height: 1; text-align: center; }
+.summary .notes { display: grid; gap: 6px; margin-block-start: 10px; }
+.summary .note { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: start; padding: 7px 9px; border-radius: 9px; font-size: 0.88rem; }
+.summary .note-aim { background: var(--accent-soft); }
+.summary .note-comp { background: var(--bad-bg); }
+.summary .note-contra { background: #f8e8cf; color: #3d2706; }
+.summary .note-care { background: var(--ok-bg); }
+:root[data-contrast="high"] .summary .note,
+:root[data-contrast="high"] .summary .tablewrap { border: 2px solid #000; }
+@media (prefers-color-scheme: dark) {
+  .summary .note-contra { background: #352612; color: #f1dcb4; }
+}
+
 /* Mini quiz: the static list is the print / no-JS version, the live box replaces it on screen. */
 .summary .mq { margin-block: 0 1rem; padding: 12px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
 .summary .mq-q { font-weight: 700; margin-block-end: 0.3rem; }
@@ -255,6 +294,9 @@
   .summary [data-tab][hidden], .summary .scale-card[hidden] { display: block !important; }
   .summary .quiz { display: none; }
   .summary .mq-set.is-live { display: block; }
+  .summary .tablewrap { overflow: visible; }
+  .summary tr, .summary .note, .summary .chain { break-inside: avoid; }
+  .summary .note-contra { color: #3d2706; background: #f8e8cf; }
   .summary .fc, .summary .ic, .summary .lvl, .summary .step, .summary .ustage, .summary .scale-card, .summary .mq { break-inside: avoid; }
   .summary .risk, .summary .tag { color: #fff; }
 }
