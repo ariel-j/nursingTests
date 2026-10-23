@@ -5,23 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <title>ניעות — סיכום</title>
-  <link rel="preload" href="../fonts/assistant-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/summary.css">
   <script type="module" src="../js/summary.js"></script>
   <script type="module" src="../js/summary-interactive.js"></script>
+  <script type="module" src="../js/nav.js"></script>
   <script type="module" src="../js/a11y.js"></script>
+  <script type="module" src="../js/analytics.js"></script>
 </head>
 <body class="summary-page">
   <main class="page wide">
     <nav class="top-nav no-print">
-      <a href="./">→ כל הסיכומים</a>
+      <a href="./?subject=nursing-fundamentals">→ כל הסיכומים</a>
       <button type="button" class="secondary" data-print>הדפסה / שמירה כ‑PDF</button>
     </nav>
 
 <article class="summary" data-system="mobility">
   <header>
-    <p class="kicker">יסודות להתערבות סיעודית · ניעות</p>
+    <p class="kicker">יסודות להתערבות סיעודית · ניעות · סיכום נושא</p>
     <h1>ניעות — Mobility &amp; Immobility</h1>
     <p class="lede">ניעות היא <b>מיומנות סיעודית</b>: לזהות הפרעה בתנועה, להחזיר עצמאות ב‑<span class="en">ADL</span>, למנוע נפילות וסיבוכי שכיבה. הכלל המנחה — <b>תנועה מונעת נזק, שכיבה גורמת נזק</b>, ובכל מערכת בגוף.</p>
     <svg class="motif" viewBox="0 0 480 60" preserveAspectRatio="none" aria-hidden="true">
@@ -29,16 +31,34 @@
     </svg>
   </header>
 
+  <section class="intro" id="mo-intro">
+    <h2>מבוא: על מה כל זה?</h2>
+    <p><b>ניעות</b> היא היכולת להניע את הגוף בעזרת השרירים. כשמטופל שוכב או לא זז, נפגעות כמעט כל מערכות הגוף, ולכן הכלל שמנחה את הפרק הוא: <b>תנועה מונעת נזק, שכיבה גורמת נזק</b>. תפקיד האחות לזהות הפרעה בתנועה, להחזיר עצמאות בפעולות היומיום, ולמנוע נפילות וסיבוכי שכיבה.</p>
+    <p>הפרק עובר על הגורמים שמשפיעים על ניעות, על חוזר מנהל הסיעוד 249/2025 (מתי מעריכים ומה חובה לעשות), על מה שקורה בכל מערכת בגוף כשאין תנועה, על הסיבוכים שחוזרים בבחינות, על תנוחות ואומדן, ועל ארגונומיה: איך להרים ולהעביר מטופל בלי לפגוע בו ובגב שלך.</p>
+    <p>למבחן: ההבדל בין ניעות לניידות, התדירויות בחוזר, מה אסור לעשות ב-DVT, זוויות התנוחות, וכללי ההרמה וההעברה.</p>
+  </section>
+
+  <section class="glossary" id="mo-glossary">
+    <h2>מילון מונחים</h2>
+    <p class="sec-note">כל מונח שמופיע בהמשך, בשפה פשוטה.</p>
+    <dl class="def"><dt>ניעות <span class="en">(Mobility)</span></dt><dd>כושר תנועה באמצעות השרירים: הנעת חלקי גוף.</dd></dl>
+    <dl class="def"><dt>ניידות</dt><dd>מעבר <b>עצמאי</b> ממקום למקום (נוהל גריאטרי). ניעות ≠ ניידות.</dd></dl>
+    <dl class="def"><dt><span class="en">ADL</span></dt><dd>פעולות היומיום (<span class="en">Activities of Daily Living</span>). מטרת-על של הטיפול: להחזיר עצמאות בהן.</dd></dl>
+    <dl class="def"><dt><span class="en">Deconditioning</span></dt><dd>ירידה תפקודית אחרי מחלה או אשפוז: חולשת שרירים, ירידה בשיווי משקל ובקוגניציה.</dd></dl>
+    <dl class="def"><dt>קונטרקטורה <span class="en">(Contracture)</span></dt><dd>קיצור קבוע של שריר ומפרק משכיבה ממושכת.</dd></dl>
+    <dl class="def"><dt><span class="en">Foot drop</span></dt><dd>כיפוף קבוע של כף הרגל כלפי מטה בקרסול.</dd></dl>
+    <dl class="def"><dt><span class="en">DVT</span></dt><dd>קריש דם בוריד עמוק, בדרך כלל בשוק. סימנים: כאב ונפיחות בצד אחד.</dd></dl>
+    <dl class="def"><dt><span class="en">Orthostatic Hypotension</span></dt><dd>צניחת לחץ דם במעבר לישיבה או לעמידה, עם סחרחורת וסכנת נפילה.</dd></dl>
+    <dl class="def"><dt><span class="en">Dangling</span></dt><dd>ישיבה עם רגליים משתלשלות לפני קימה ראשונה, כדי שמערכת הדם תסתגל.</dd></dl>
+    <dl class="def"><dt><span class="en">ROM</span> <span class="en">(Range of Motion)</span></dt><dd>טווח התנועה של מפרק. תרגילי ROM שומרים עליו.</dd></dl>
+    <dl class="def"><dt><span class="en">Valsalva</span></dt><dd>נשיפה כנגד גלוטיס סגור או עצירת נשימה במאמץ, שעלולה לגרום לעילפון.</dd></dl>
+    <dl class="def"><dt><span class="en">Atelectasis</span></dt><dd>קריסה של חלק מהריאה, מנשימה שטחית והצטברות הפרשות.</dd></dl>
+  </section>
+
   <section id="mobility-yesod" data-nav="יסודות">
     <h2>1 · יסודות מהירים</h2>
-    <p class="sec-note">ההבחנות שחייבים לדעת לפני כל השאר — ומודל ששת הגורמים.</p>
-    <dl class="defs">
-      <div class="def"><dt>ניעות <span class="en">(Mobility)</span></dt><dd>כושר תנועה באמצעות השרירים — הנעת חלקי גוף.</dd></div>
-      <div class="def"><dt>ניידות</dt><dd>מעבר <b>עצמאי</b> ממקום למקום (נוהל גריאטרי). ניעות ≠ ניידות.</dd></div>
-      <div class="def"><dt><span class="en">ADL</span></dt><dd>פעולות היומיום — <span class="en">Activities of Daily Living</span>. מטרת-על של הטיפול: החזרת עצמאות.</dd></div>
-      <div class="def"><dt>תפקיד האחות</dt><dd>זיהוי הפרעה · החזרת עצמאות · הדרכה · מניעת נפילות וסיבוכי שכיבה · התאמת אביזרי עזר.</dd></div>
-    </dl>
-    <div class="cards">
+    <p class="sec-note">ששת הגורמים שמשפיעים על ניעות.</p>
+    <div class="hub-cards">
       <div class="ic"><h3>גדילה והתפתחות</h3><p>עם הגיל ↓טונוס שריר, ↓צפיפות עצם (נשים אחרי בלות), ↓גמישות מפרקים, זמן תגובה מתארך.</p></div>
       <div class="ic"><h3>תזונה</h3><p><b>Obesity</b> → קושי בתנועה ויציבות. <b>Malnutrition</b> → עייפות, חוסר <span class="en">Vit D</span>+סידן, דפורמציות.</p></div>
       <div class="ic"><h3>ערכים ותרבות</h3><p>הרגלי משפחה, דימוי עצמי, גורמים גיאוגרפיים ואימון אישי.</p></div>
@@ -59,7 +79,7 @@
         <tr><td><span class="t">לפני שחרור</span></td><td><b>48 שעות</b> לפני (אם יש שינוי בניידות)</td></tr>
       </tbody>
     </table></div>
-    <div class="cards">
+    <div class="hub-cards">
       <div class="ic ic-accent"><h3>התערבויות מחויבות</h3><ul><li><b>הדרכה</b> ועידוד עצמאות</li><li><b>ניוד/הפעלה לפחות פעם ביום</b></li><li>הערכת <b>פיזיותרפיה</b> כשיש קושי בניידות</li></ul><p>מטרת-על: מניעת ירידה תפקודית (<span class="en">Deconditioning</span>) וסיבוכי שכיבה.</p></div>
     </div>
   </section>
@@ -67,19 +87,19 @@
   <section id="mobility-systems" data-nav="השפעת שכיבה">
     <h2>3 · השפעת חוסר ניעות לפי מערכות</h2>
     <p class="sec-note">ליבת הנושא. לכל מערכת: שרשרת הסיבה ↓ ותג סיעודי. הכלל — <b>פעילות מיטיבה, שכיבה מזיקה</b>.</p>
-    <div class="cards">
-      <div class="ic ic-accent"><h3>🦴 שלד-שריר <span class="en">(Musculoskeletal)</span></h3><div class="chain"><div class="chain-step">חוסר עומס מכני</div><div class="chain-arr" aria-hidden="true">↓</div><div class="chain-step">פירוק (אוסטאוקלסט) גובר על בנייה</div><div class="chain-arr" aria-hidden="true">↓</div><div class="chain-step">דמינרליזציה · <span class="en">Osteoporosis</span> · קונטרקטורות</div></div><div class="notes"><div class="note note-comp"><b aria-hidden="true">⚠️</b><span>שברים ספונטניים, קונטרקטורה, אטרופיה, <span class="en">Foot drop</span>.</span></div><div class="note note-care"><b aria-hidden="true">👩‍⚕️</b><span>שינוי תנוחה, <span class="en">ROM</span>, מזרן אוויר, תזונה עשירה בחלבון.</span></div></div></div>
-      <div class="ic ic-accent"><h3>❤️ לב וכלי דם <span class="en">(Cardiovascular)</span></h3><div class="chain"><div class="chain-step">סטזיס ורידי + ↓תפקוד לבבי</div><div class="chain-arr" aria-hidden="true">↓</div><div class="chain-step">גודש, בצקות, <span class="en">Valsalva</span></div><div class="chain-arr" aria-hidden="true">↓</div><div class="chain-step"><span class="en">DVT</span> · <span class="en">Orthostatic Hypotension</span></div></div><div class="notes"><div class="note note-comp"><b aria-hidden="true">⚠️</b><span><span class="en">DVT</span>: כאב+נפיחות בשוק → <b>לא לעסות!</b> לדווח. צניחת ל"ד בקימה → נפילה.</span></div><div class="note note-care"><b aria-hidden="true">👩‍⚕️</b><span>הפעלת גפיים, שינוי תנוחה הדרגתי (<span class="en">Dangling</span>), גרבי לחץ.</span></div></div></div>
-      <div class="ic ic-accent"><h3>🫁 נשימה <span class="en">(Respiratory)</span></h3><div class="chain"><div class="chain-step">↓תנועת שרירי נשימה</div><div class="chain-arr" aria-hidden="true">↓</div><div class="chain-step">הצטברות הפרשות</div><div class="chain-arr" aria-hidden="true">↓</div><div class="chain-step"><span class="en">Atelectasis</span> · <span class="en">Hypostatic Pneumonia</span></div></div><div class="notes"><div class="note note-comp"><b aria-hidden="true">⚠️</b><span>חום, שיעול, ↑קצב נשימה, ↓סטורציה = חשד לדלקת ריאה.</span></div><div class="note note-care"><b aria-hidden="true">👩‍⚕️</b><span>תרגילי נשימה, <span class="en">Semi-Fowler</span>, פיזיותרפיה נשימתית.</span></div></div></div>
-      <div class="ic ic-accent"><h3>🍽️ עיכול + מטבולי</h3><div class="chain"><div class="chain-step">↓פריסטלטיקה · קטבוליזם</div><div class="chain-arr" aria-hidden="true">↓</div><div class="chain-step"><span class="en">Constipation</span> · מאזן חנקן/סידן שלילי</div><div class="chain-arr" aria-hidden="true">↓</div><div class="chain-step">אבני צואה · אובדן מסת שריר</div></div><div class="notes"><div class="note note-care"><b aria-hidden="true">👩‍⚕️</b><span>פעילות, תזונה עתירת סיבים+נוזלים, רישום יציאות, העשרה קלורית-חלבונית, מעקב אלקטרוליטים.</span></div></div></div>
-      <div class="ic ic-accent"><h3>💧 שתן <span class="en">(Urinary)</span></h3><div class="chain"><div class="chain-step">סטזיס שתן</div><div class="chain-arr" aria-hidden="true">↓</div><div class="chain-step"><span class="en">Urinary Retention</span> · הפרשת מינרלים</div><div class="chain-arr" aria-hidden="true">↓</div><div class="chain-step"><span class="en">UTI</span> · אבנים בכליות (<span class="en">Renal calculi</span>)</div></div><div class="notes"><div class="note note-comp"><b aria-hidden="true">⚠️</b><span>צריבה, תכיפות, חום, שתן עכור = <span class="en">UTI</span>.</span></div><div class="note note-care"><b aria-hidden="true">👩‍⚕️</b><span>עידוד שתייה והשתנה, מעקב <span class="en">Output</span>, אספטיקה בקטטר.</span></div></div></div>
-      <div class="ic ic-accent"><h3>🧠 נפשי-נוירולוגי + חיסון</h3><div class="chain"><div class="chain-step">בידוד + חוסר גירוי</div><div class="chain-arr" aria-hidden="true">↓</div><div class="chain-step">↓הערכה עצמית, אפתיה, חרדה</div><div class="chain-arr" aria-hidden="true">↓</div><div class="chain-step">דיכאון · ↓תפיסת זמן</div></div><div class="notes"><div class="note note-aim"><b aria-hidden="true">🎯</b><span>פעילות מתונה: ↑endorphins/serotonin, הקלת דיכאון, שיפור שינה וחיסון.</span></div><div class="note note-contra"><b aria-hidden="true">🚫</b><span>פעילות <b>מואצת/מוגזמת</b> דווקא מדכאת חיסון.</span></div></div></div>
+    <div class="hub-cards">
+      <div class="ic ic-accent"><h3>🦴 שלד-שריר <span class="en">(Musculoskeletal)</span></h3><div class="hub-chain"><div class="hub-chain-step">חוסר עומס מכני</div><div class="hub-chain-arr" aria-hidden="true">↓</div><div class="hub-chain-step">פירוק (אוסטאוקלסט) גובר על בנייה</div><div class="hub-chain-arr" aria-hidden="true">↓</div><div class="hub-chain-step">דמינרליזציה · <span class="en">Osteoporosis</span> · קונטרקטורות</div></div><div class="hub-notes"><div class="hub-note hub-note-comp"><b aria-hidden="true">⚠️</b><span>שברים ספונטניים, קונטרקטורה, אטרופיה, <span class="en">Foot drop</span>.</span></div><div class="hub-note hub-note-care"><b aria-hidden="true">👩‍⚕️</b><span>שינוי תנוחה, <span class="en">ROM</span>, מזרן אוויר, תזונה עשירה בחלבון.</span></div></div></div>
+      <div class="ic ic-accent"><h3>❤️ לב וכלי דם <span class="en">(Cardiovascular)</span></h3><div class="hub-chain"><div class="hub-chain-step">סטזיס ורידי + ↓תפקוד לבבי</div><div class="hub-chain-arr" aria-hidden="true">↓</div><div class="hub-chain-step">גודש, בצקות, <span class="en">Valsalva</span></div><div class="hub-chain-arr" aria-hidden="true">↓</div><div class="hub-chain-step"><span class="en">DVT</span> · <span class="en">Orthostatic Hypotension</span></div></div><div class="hub-notes"><div class="hub-note hub-note-comp"><b aria-hidden="true">⚠️</b><span><span class="en">DVT</span>: כאב+נפיחות בשוק → <b>לא לעסות!</b> לדווח. צניחת ל"ד בקימה → נפילה.</span></div><div class="hub-note hub-note-care"><b aria-hidden="true">👩‍⚕️</b><span>הפעלת גפיים, שינוי תנוחה הדרגתי (<span class="en">Dangling</span>), גרבי לחץ.</span></div></div></div>
+      <div class="ic ic-accent"><h3>🫁 נשימה <span class="en">(Respiratory)</span></h3><div class="hub-chain"><div class="hub-chain-step">↓תנועת שרירי נשימה</div><div class="hub-chain-arr" aria-hidden="true">↓</div><div class="hub-chain-step">הצטברות הפרשות</div><div class="hub-chain-arr" aria-hidden="true">↓</div><div class="hub-chain-step"><span class="en">Atelectasis</span> · <span class="en">Hypostatic Pneumonia</span></div></div><div class="hub-notes"><div class="hub-note hub-note-comp"><b aria-hidden="true">⚠️</b><span>חום, שיעול, ↑קצב נשימה, ↓סטורציה = חשד לדלקת ריאה.</span></div><div class="hub-note hub-note-care"><b aria-hidden="true">👩‍⚕️</b><span>תרגילי נשימה, <span class="en">Semi-Fowler</span>, פיזיותרפיה נשימתית.</span></div></div></div>
+      <div class="ic ic-accent"><h3>🍽️ עיכול + מטבולי</h3><div class="hub-chain"><div class="hub-chain-step">↓פריסטלטיקה · קטבוליזם</div><div class="hub-chain-arr" aria-hidden="true">↓</div><div class="hub-chain-step"><span class="en">Constipation</span> · מאזן חנקן/סידן שלילי</div><div class="hub-chain-arr" aria-hidden="true">↓</div><div class="hub-chain-step">אבני צואה · אובדן מסת שריר</div></div><div class="hub-notes"><div class="hub-note hub-note-care"><b aria-hidden="true">👩‍⚕️</b><span>פעילות, תזונה עתירת סיבים+נוזלים, רישום יציאות, העשרה קלורית-חלבונית, מעקב אלקטרוליטים.</span></div></div></div>
+      <div class="ic ic-accent"><h3>💧 שתן <span class="en">(Urinary)</span></h3><div class="hub-chain"><div class="hub-chain-step">סטזיס שתן</div><div class="hub-chain-arr" aria-hidden="true">↓</div><div class="hub-chain-step"><span class="en">Urinary Retention</span> · הפרשת מינרלים</div><div class="hub-chain-arr" aria-hidden="true">↓</div><div class="hub-chain-step"><span class="en">UTI</span> · אבנים בכליות (<span class="en">Renal calculi</span>)</div></div><div class="hub-notes"><div class="hub-note hub-note-comp"><b aria-hidden="true">⚠️</b><span>צריבה, תכיפות, חום, שתן עכור = <span class="en">UTI</span>.</span></div><div class="hub-note hub-note-care"><b aria-hidden="true">👩‍⚕️</b><span>עידוד שתייה והשתנה, מעקב <span class="en">Output</span>, אספטיקה בקטטר.</span></div></div></div>
+      <div class="ic ic-accent"><h3>🧠 נפשי-נוירולוגי + חיסון</h3><div class="hub-chain"><div class="hub-chain-step">בידוד + חוסר גירוי</div><div class="hub-chain-arr" aria-hidden="true">↓</div><div class="hub-chain-step">↓הערכה עצמית, אפתיה, חרדה</div><div class="hub-chain-arr" aria-hidden="true">↓</div><div class="hub-chain-step">דיכאון · ↓תפיסת זמן</div></div><div class="hub-notes"><div class="hub-note hub-note-aim"><b aria-hidden="true">🎯</b><span>פעילות מתונה: ↑endorphins/serotonin, הקלת דיכאון, שיפור שינה וחיסון.</span></div><div class="hub-note hub-note-contra"><b aria-hidden="true">🚫</b><span>פעילות <b>מואצת/מוגזמת</b> דווקא מדכאת חיסון.</span></div></div></div>
     </div>
   </section>
 
   <section id="mobility-comps" data-nav="סיבוכים">
     <h2>4 · סיבוכי שכיבה — לזהות ולהגיב</h2>
-    <p class="sec-note">המצבים שחוזרים בשחזורים. שימו לב למה ש<b>אסור</b> לעשות, לא רק למה שעושים.</p>
+    <p class="sec-note">המצבים שהופיעו בעבר. שימו לב למה ש<b>אסור</b> לעשות, לא רק למה שעושים.</p>
     <div class="tablewrap"><table>
       <thead><tr><th scope="col">סיבוך</th><th scope="col">ביטוי קליני</th><th scope="col">התערבות / מלכודת</th></tr></thead>
       <tbody>
@@ -115,7 +135,7 @@
   <section id="mobility-assess" data-nav="אומדן">
     <h2>6 · אומדן ניעות <span class="en">(TABLE 44-3)</span></h2>
     <p class="sec-note">מה האחות בודקת בכל מערכת — ומה זה מגלה.</p>
-    <div class="cards">
+    <div class="hub-cards">
       <div class="ic"><h3>שלד-שריר</h3><p>היקף גפה (אטרופיה/בצקת) · <span class="en">Goniometer</span> למדידת <span class="en">ROM</span>.</p></div>
       <div class="ic"><h3>לב-כלי דם</h3><p>ל"ד + דפקים, בצקת, סימני <span class="en">thrombophlebitis</span>.</p></div>
       <div class="ic"><h3>נשימה</h3><p>קצב, עומק, קולות נשימה, סטורציה.</p></div>
@@ -128,9 +148,9 @@
   <section id="mobility-ergo" data-nav="ארגונומיה">
     <h2>7 · ארגונומיה, הרמות ואמצעי עזר</h2>
     <p class="sec-note">בטיחות <b>המטפל</b> (הגב!) ובטיחות <b>המטופל</b>. גם זה נבחן.</p>
-    <div class="cards">
+    <div class="hub-cards">
       <div class="ic"><h3>מכניקת גוף <span class="en">(Body Mechanics)</span></h3><ul><li>להרים עם <b>שרירי הרגליים</b>, לא עם הגב; גב זקוף, ברכיים כפופות.</li><li>לקרב את המשא לגוף (מנוף קצר = פחות עומס).</li><li><b>לא לסובב</b> תחת עומס — להסתובב עם הרגליים.</li><li>בסיס משען רחב (פיסוק/פסיעה) = יציבות.</li></ul></div>
-      <div class="ic"><h3>פריצת דיסק — המנגנון</h3><div class="chain"><div class="chain-step">כיפוף מהגב / עומס חוזר</div><div class="chain-arr" aria-hidden="true">↓</div><div class="chain-step">בקיעת טבעות ה-<span class="en">Annulus</span></div><div class="chain-arr" aria-hidden="true">↓</div><div class="chain-step">זליגת גרעין (<span class="en">Nucleus</span>) → לחץ על עצב</div></div></div>
+      <div class="ic"><h3>פריצת דיסק — המנגנון</h3><div class="hub-chain"><div class="hub-chain-step">כיפוף מהגב / עומס חוזר</div><div class="hub-chain-arr" aria-hidden="true">↓</div><div class="hub-chain-step">בקיעת טבעות ה-<span class="en">Annulus</span></div><div class="hub-chain-arr" aria-hidden="true">↓</div><div class="hub-chain-step">זליגת גרעין (<span class="en">Nucleus</span>) → לחץ על עצב</div></div></div>
       <div class="ic"><h3>אמצעי עזר להליכה</h3><ul><li>מטרה: להגדיל את <b>בסיס התמיכה</b>.</li><li>מקל ביד ה<b>בריאה</b> (הנגדית לרגל הפגועה).</li><li>גובה: ידית סמוך לשורש כף היד, מרפק כפוף ~15–30°.</li><li>קביים: אקסילריות / קנדיות (אמה).</li></ul></div>
       <div class="ic"><h3>העברות <span class="en">(Transfers)</span></h3><ul><li><b>לנעול מעצורים</b> (מיטה + כיסא) לפני כל העברה.</li><li>כיסא בצד ה<b>חזק</b> של המטופל.</li><li>Dangling לפני ניוד ראשון — מניעת נפילה.</li></ul></div>
       <div class="ic"><h3>תרגילי <span class="en">ROM</span></h3><p>שלושה סוגים: <b>אקטיבי</b> (המטופל לבד) · <b>אקטיבי-נעזר</b> (המטופל + סיוע) · <b>פסיבי</b> (המטפל בלבד). מטרה: מניעת קונטרקטורות.</p></div>
@@ -141,7 +161,7 @@
   <section id="mobility-decon" data-nav="Deconditioning">
     <h2>8 · Deconditioning — ירידה תפקודית</h2>
     <p class="sec-note">הסיבה המספר-1 לאשפוז מתמשך בקשיש. הפתרון פשוט ועוצמתי.</p>
-    <div class="cards">
+    <div class="hub-cards">
       <div class="ic"><h3>מה קורה</h3><p>אחרי מחלה/אשפוז: ↓כוח שריר, ↓נוזלים, ↓שיווי משקל, ↓קוגניציה. סיכון לדלקות ריאה, נפילות, שברים, פצעי לחץ ואשפוזים חוזרים.</p></div>
       <div class="ic ic-good"><h3>הדגש הסיעודי</h3><p><b>ירידה מוקדמת מהמיטה</b> (<span class="en">Early mobilization</span>), הפעלה אקטיבית הדרגתית — תוך שמירה על בטיחות. לא מנוחה מופרזת, ולא ניוד מסוכן ללא ליווי.</p></div>
     </div>
@@ -150,7 +170,7 @@
   <section id="mobility-cards" data-nav="כרטיסיות">
     <h2>★ · כרטיסיות זיכרון</h2>
     <p class="sec-note">לחצו כדי להפוך כרטיס.</p>
-    <div class="deck">
+    <div class="hub-deck">
       <div class="fc">
         <div class="fc-front"><span class="term">ניעות מול ניידות</span><span class="hint">מה ההבדל?</span></div>
         <div class="fc-back"><b>ניעות</b>=כושר תנועה בעזרת שרירים. <b>ניידות</b>=מעבר עצמאי ממקום למקום.</div>
@@ -227,8 +247,8 @@
 
   <section id="mobility-quiz" data-nav="חידון">
     <h2>? · חידון מהיר</h2>
-    <p class="sec-note">שאלה אחת בכל פעם. תשובה נכונה = 10 XP ורצף גדל. (בהדפסה: השאלות והתשובות הנכונות מסומנות.)</p>
-    <div class="mq-set">
+    <p class="sec-note">שאלה אחת בכל פעם. תשובה נכונה = 10 XP ורצף גדל.</p>
+    <div class="mq-set no-print" data-interactive>
       <div class="mq">
         <p class="mq-q">מטופל עם חולשה ברגל ימין מקבל מקל. באיזו יד יאחז?</p>
         <ul class="mq-opts">
@@ -342,6 +362,7 @@
       <a href="../privacy.html">מדיניות פרטיות</a>
     </nav>
     <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+    <p>תוכן לימודי לתרגול בלבד. אינו מהווה ייעוץ רפואי ואינו תחליף לחומרי הקורס.</p>
   </footer>
 </body>
 </html>

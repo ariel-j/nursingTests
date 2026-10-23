@@ -30,11 +30,11 @@ function makeToggle(node, onToggle) {
 function setupTabs(article) {
   const panels = [...article.querySelectorAll(':scope > section[data-tab]')];
   if (panels.length < 2) return;
-  const bar = el('div', 'tabs no-print');
+  const bar = el('div', 'hub-tabs no-print');
   bar.setAttribute('role', 'tablist');
   const tabs = panels.map((panel, i) => {
     panel.id ||= `${article.dataset.system}-panel-${i}`;
-    const tab = el('button', 'tab', panel.dataset.tab);
+    const tab = el('button', 'hub-tab', panel.dataset.tab);
     tab.type = 'button';
     tab.id = `${panel.id}-tab`;
     tab.setAttribute('role', 'tab');
@@ -64,7 +64,7 @@ function setupTabs(article) {
     });
   });
   bar.append(...tabs);
-  article.querySelector(':scope > header').after(bar);
+  panels[0].before(bar);
   select(0, false);
 }
 
@@ -72,15 +72,15 @@ function setupTabs(article) {
 function setupNav(article) {
   const sections = [...article.querySelectorAll(':scope > section[data-nav]')];
   if (sections.length < 2) return;
-  const bar = el('nav', 'chipnav no-print');
+  const bar = el('nav', 'hub-nav no-print');
   bar.setAttribute('aria-label', 'ניווט בסיכום');
   const links = new Map(sections.map((sec) => {
-    const a = el('a', 'chip', sec.dataset.nav);
+    const a = el('a', 'hub-chip', sec.dataset.nav);
     a.href = `#${sec.id}`;
     return [sec, a];
   }));
   bar.append(...links.values());
-  article.querySelector(':scope > header').after(bar);
+  sections[0].before(bar);
   if (!('IntersectionObserver' in window)) return;
   const seen = new IntersectionObserver((entries) => {
     for (const entry of entries) {

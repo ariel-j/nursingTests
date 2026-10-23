@@ -1,0 +1,131 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtemp, mkdir, readFile, writeFile, rm } from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import { MAX_BYTES, buildMedia, checkMedia, displayName, isDraft } from '../scripts/media.mjs';
+import { mediaCount } from '../js/catalog.js';
+import { loadCatalog } from '../scripts/quizzes.mjs';
+
+const ids = ['anatomy', 'pharmacology'];
+const f = (p, size = 1000) => ({ path: p, size });
+
+test('displayName drops the extension (files) and an ordering prefix', () => {
+  assert.equal(displayName('01 - נושא א.mp4'), 'נושא א');
+  assert.equal(displayName('2_נושא ב.pdf'), 'נושא ב');
+  assert.equal(displayName('3. נושא ג', { isFile: false }), 'נושא ג');
+  assert.equal(displayName('3. נושא ג.pdf'), 'נושא ג');
+  assert.equal(displayName('נושא ד.png'), 'נושא ד');
+  // Underscores read as spaces (downloaded files), runs collapse.
+  assert.equal(displayName('נוירופיזיולוגיה_ופרקינסון.mp4'), 'נוירופיזיולוגיה ופרקינסון');
+  assert.equal(displayName('02_מסע_התרופה__מהי_פרמקוקינטיקה_.mp4'), 'מסע התרופה מהי פרמקוקינטיקה');
+  // A name that is only a number stays a number.
+  assert.equal(displayName('12.png'), '12');
+});
+
+test('buildMedia groups by sub-subject folder in numeric order, loose files first', () => {
+  const { manifest, errors } = buildMedia([
+    f('pharmacology/10 - נושא י/1 - סרטון.mp4'),
+    f('pharmacology/10 - נושא י/1 - סרטון.vtt'),
+    f('pharmacology/2 - נושא ב/2 - תרשים.png'),
+    f('pharmacology/2 - נושא ב/10 - דף.pdf'),
+    f('pharmacology/כללי.html'),
+  ], ids);
+  assert.deepEqual(errors, []);
+  const groups = manifest.subjects.pharmacology.groups;
+  assert.deepEqual(groups.map((g) => g.name), ['', 'נושא ב', 'נושא י']);
+  assert.deepEqual(groups[1].items.map((i) => [i.title, i.kind]), [['תרשים', 'image'], ['דף', 'pdf']]);
+  assert.equal(groups[0].items[0].src, 'media/pharmacology/כללי.html');
+  assert.equal(mediaCount(manifest, 'pharmacology'), 4);
+  assert.equal(mediaCount(manifest, 'anatomy'), 0);
+  assert.deepEqual(Object.keys(manifest.subjects), ['pharmacology']);
+});
+
+test('buildMedia rejects two topic folders with the same name (it is the ?topic= address)', () => {
+  const { manifest, errors } = buildMedia([
+    f('pharmacology/01 - פרקינסון/א.pdf'),
+    f('pharmacology/פרקינסון/ב.pdf'),
+    f('anatomy/פרקינסון/ג.pdf'),
+  ], ids);
+  assert.equal(errors.length, 1);
+  assert.match(errors[0], /media\/pharmacology\/פרקינסון: same topic name/);
+  assert.deepEqual(manifest.subjects.pharmacology.groups.map((g) => [g.name, g.items.length]), [['פרקינסון', 1]]);
+  assert.equal(mediaCount(manifest, 'anatomy'), 1);
+});
+
+test('buildMedia pairs captions with their video and leaves out videos without them', () => {
+  const { manifest, errors, warnings } = buildMedia([
+    f('pharmacology/א/1 - סרטון.mp4'),
+    f('pharmacology/א/1 - סרטון.vtt'),
+    f('pharmacology/א/2 - בלי.webm'),
+  ], ids);
+  const items = manifest.subjects.pharmacology.groups[0].items;
+  assert.deepEqual(items.map((i) => i.captions), ['media/pharmacology/א/1 - סרטון.vtt']);
+  assert.deepEqual(warnings, []);
+  assert.equal(errors.length, 1);
+  assert.match(errors[0], /בלי\.webm: no captions/);
+});
+
+test('buildMedia rejects course files, unplayable video, big files, bad places and stray captions', () => {
+  const { manifest, errors } = buildMedia([
+    f('pharmacology/א/מצגת.pptx'),
+    f('pharmacology/א/סרטון.mov'),
+    f('pharmacology/א/קובץ.zip'),
+    f('pharmacology/א/גדול.mp4', MAX_BYTES + 1),
+    f('pharmacology/א/ב/עמוק.png'),
+    f('loose.png'),
+    f('chemistry/x.png'),
+    f('pharmacology/א/יתום.vtt'),
+  ], ids);
+  for (const re of [/pptx.*public/, /convert it to \.mp4/, /unsupported/, /over the 50MB/, /media\/<subject-id>/, /media\/loose\.png/, /"chemistry"/, /captions without a video/]) {
+    assert.ok(errors.some((e) => re.test(e)), `expected an error matching ${re}`);
+  }
+  assert.deepEqual(manifest.subjects, {});
+});
+
+test('buildMedia leaves drafts (a "_" file or folder) out, without a captions error', () => {
+  const { manifest, errors, warnings } = buildMedia([
+    f('pharmacology/_טיוטה.mp4'),
+    f('pharmacology/_טיוטה.vtt'),
+    f('pharmacology/_בעבודה/סרטון.mp4'),
+    f('pharmacology/מוכן.pdf'),
+  ], ids);
+  assert.deepEqual(errors, []);
+  assert.deepEqual(warnings, []);
+  assert.deepEqual(manifest.subjects.pharmacology.groups.flatMap((g) => g.items.map((i) => i.title)), ['מוכן']);
+  // The repo is public, so a draft course file is still rejected.
+  assert.ok(buildMedia([f('pharmacology/_שקפים.pptx')], ids).errors.some((e) => /course files/.test(e)));
+  assert.equal(isDraft('pharmacology/01 - נושא/_סרטון.mp4'), true);
+  assert.equal(isDraft('pharmacology/01 - נושא/סרטון_1.mp4'), false);
+});
+
+test('buildMedia ignores notes, dotfiles and the manifest itself', () => {
+  const { manifest, errors } = buildMedia([
+    f('README.md'), f('manifest.json'), f('pharmacology/.gitkeep'), f('pharmacology/א/.DS_Store'),
+  ], ids);
+  assert.deepEqual(errors, []);
+  assert.deepEqual(manifest, { subjects: {} });
+});
+
+test('checkMedia writes the manifest and flags HTML that loads from a CDN', async () => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), 'media-'));
+  try {
+    await mkdir(path.join(dir, 'pharmacology', '1 - נושא'), { recursive: true });
+    await writeFile(path.join(dir, 'pharmacology', '1 - נושא', 'סרטון.mp4'), 'placeholder');
+    await writeFile(path.join(dir, 'pharmacology', '1 - נושא', 'סרטון.vtt'), 'WEBVTT\n');
+    await writeFile(path.join(dir, 'pharmacology', 'עמוד.html'), '<script src="https://cdn.example/x.js"></script>');
+    const written = await checkMedia(ids, { write: true, dir });
+    assert.deepEqual(written.errors, []);
+    assert.ok(written.warnings.some((w) => /עמוד\.html: loads external/.test(w)));
+    const saved = JSON.parse(await readFile(path.join(dir, 'manifest.json'), 'utf8'));
+    assert.deepEqual(saved, written.manifest);
+    assert.equal(mediaCount(saved, 'pharmacology'), 2);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('the committed media folder and manifest pass every check', async () => {
+  const { catalog } = await loadCatalog();
+  assert.deepEqual((await checkMedia(catalog.subjects.map((s) => s.id))).errors, []);
+});

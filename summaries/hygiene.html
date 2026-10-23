@@ -5,23 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <title>היגיינה ואומדן העור — סיכום</title>
-  <link rel="preload" href="../fonts/assistant-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/summary.css">
   <script type="module" src="../js/summary.js"></script>
   <script type="module" src="../js/summary-interactive.js"></script>
+  <script type="module" src="../js/nav.js"></script>
   <script type="module" src="../js/a11y.js"></script>
+  <script type="module" src="../js/analytics.js"></script>
 </head>
 <body class="summary-page">
   <main class="page wide">
     <nav class="top-nav no-print">
-      <a href="./">→ כל הסיכומים</a>
+      <a href="./?subject=nursing-fundamentals">→ כל הסיכומים</a>
       <button type="button" class="secondary" data-print>הדפסה / שמירה כ‑PDF</button>
     </nav>
 
 <article class="summary" data-system="hygiene">
   <header>
-    <p class="kicker">יסודות להתערבות סיעודית · היגיינה ואומדן העור</p>
+    <p class="kicker">יסודות להתערבות סיעודית · היגיינה ואומדן העור · סיכום נושא</p>
     <h1>היגיינה ואומדן העור</h1>
     <p class="lede">מבנה העור, ממצאי העור שאסור לבלבל, מודל רמת התפקוד (0–4), טיפול בפה, בחושים ובשיער ורחצה. למבחן: <b>המונחים באנגלית, הכיוון של מודל התפקוד (0 = עצמאי) וטווח טמפרטורת הרחצה</b>.</p>
     <svg class="motif" viewBox="0 0 480 60" preserveAspectRatio="none" aria-hidden="true">
@@ -29,10 +31,41 @@
     </svg>
   </header>
 
+  <section class="intro" id="hy-intro">
+    <h2>מבוא: על מה כל זה?</h2>
+    <p><b>היגיינה אישית</b> היא הבסיס של הטיפול הסיעודי. העור הוא האיבר הגדול בגוף והמחסום הראשון מפני זיהום, ולכן ניקיון, אומדן והגנה עליו הם חלק מכל טיפול. לפני שרוחצים מטופל, האחות מעריכה אותו: מה מצב העור, כמה הוא מסוגל לעשות לבד, ואילו אזורים (פה, עיניים, רגליים) דורשים תשומת לב מיוחדת.</p>
+    <p>הפרק בנוי מהמבנה אל המעשה: שכבות העור ותפקידיו, מילון הממצאים שחייבים לזהות, <b>מודל רמת התפקוד (0–4)</b> שקובע כמה עזרה לתת, טיפול באזורי גוף ספציפיים, ולבסוף הרחצה עצמה ועקרונות הכבוד והפרטיות.</p>
+    <p>למבחן: שמות הממצאים באנגלית, הכיוון של מודל התפקוד (0 = עצמאי, 4 = לא עצמאי) והמספרים (מים 43-46°C, רוחצים מהנקי אל המלוכלך).</p>
+  </section>
+
+  <section class="glossary" id="hy-glossary">
+    <h2>מילון מונחים</h2>
+    <p class="sec-note">כל מונח שמופיע בהמשך, בשפה פשוטה.</p>
+    <dl class="def"><dt>אפידרמיס <span class="en">(Epidermis)</span></dt><dd>השכבה החיצונית של העור. אין בה כלי דם, והיא המחסום הראשון מפני חיידקים ואיבוד נוזלים.</dd></dl>
+    <dl class="def"><dt>דרמיס <span class="en">(Dermis)</span></dt><dd>השכבה האמצעית, בעובי 1-2 מ"מ: קולגן, כלי דם, עצבים, זקיקי שיער ובלוטות.</dd></dl>
+    <dl class="def"><dt>שכבה תת-עורית <span class="en">(Subcutaneous)</span></dt><dd>השכבה השומנית העמוקה. מבודדת, מווסתת חום ומאגר אנרגיה.</dd></dl>
+    <dl class="def"><dt>שכבה באזלית <span class="en">(Basal layer)</span></dt><dd>השכבה הפנימית של האפידרמיס. מתחלקת כל הזמן ויוצרת תאים חדשים שנודדים החוצה.</dd></dl>
+    <dl class="def"><dt>מודל רמת תפקוד</dt><dd>סקאלה 0-4 שקובעת כמה סיוע נותנים למטופל. 0 = עצמאי לחלוטין, 4 = לא עצמאי.</dd></dl>
+    <dl class="def"><dt><span class="en">Jaundice</span></dt><dd>צהבת: גוון צהוב בעור ובלחמית, מעודף בילירובין.</dd></dl>
+    <dl class="def"><dt><span class="en">Edema</span></dt><dd>בצקת: נפיחות מהצטברות נוזלים ברקמה.</dd></dl>
+    <dl class="def"><dt><span class="en">Purpura</span></dt><dd>שטפי דם סגולים-אדומים בעור, שאינם מחווירים בלחיצה.</dd></dl>
+    <dl class="def"><dt><span class="en">Erythema</span></dt><dd>אודם של העור, לרוב מהרחבת כלי דם או מדלקת.</dd></dl>
+    <dl class="def"><dt><span class="en">Urticaria</span></dt><dd>חרלת: פריחה מגרדת ומורמת בתגובה אלרגית.</dd></dl>
+    <dl class="def"><dt><span class="en">Hirsutism</span></dt><dd>שעירות יתר באזורים לא אופייניים, לרוב ברקע הורמונלי.</dd></dl>
+    <dl class="def"><dt><span class="en">Abrasion</span></dt><dd>פצע שפשוף: פגיעה בשכבה החיצונית של העור מחיכוך מול משטח.</dd></dl>
+    <dl class="def"><dt><span class="en">Ammonia Dermatitis</span></dt><dd>פריחת חיתול: דלקת מעור שנמצא זמן רב במגע עם לחות והפרשות.</dd></dl>
+    <dl class="def"><dt><span class="en">Pediculosis</span></dt><dd>כינמת: נוכחות כינים בראש, בגוף או באזור הערווה.</dd></dl>
+    <dl class="def"><dt><span class="en">Alopecia</span></dt><dd>נשירת שיער.</dd></dl>
+    <dl class="def"><dt><span class="en">Gingivitis</span></dt><dd>דלקת חניכיים.</dd></dl>
+    <dl class="def"><dt><span class="en">Caries</span></dt><dd>עששת.</dd></dl>
+    <dl class="def"><dt><span class="en">Cheilosis</span></dt><dd>סדקים ופצעונים בזוויות הפה.</dd></dl>
+    <dl class="def"><dt><span class="en">Stomatitis</span></dt><dd>דלקת ברירית הפה.</dd></dl>
+  </section>
+
   <section data-tab="מבנה העור">
-    <h2>מבנה ותפקידי העור</h2>
+    <h2>1 · מבנה ותפקידי העור</h2>
     <p class="sec-note">העור הוא האיבר הגדול בגוף (10-15% ממשקל הגוף). לחצו על כרטיס כדי להפוך אותו.</p>
-    <div class="deck">
+    <div class="hub-deck">
       <div class="fc">
         <div class="fc-front"><span class="term">אפידרמיס</span><span class="en">Epidermis</span><span class="hint">שכבה חיצונית</span></div>
         <div class="fc-back">החיצונית, ללא כלי דם. השכבה הבאזלית מתחלקת ויוצרת תאים הנודדים כלפי חוץ.</div>
@@ -58,7 +91,7 @@
         <div class="fc-back">אפידרמיס ← דרמיס ← תת-עורי.</div>
       </div>
     </div>
-    <div class="cards">
+    <div class="hub-cards">
       <div class="ic"><h3>👩‍⚕️ תפקידי העור</h3><ul>
         <li>הגנה מכאנית, בקטריאלית, מ-UV</li>
         <li>מניעת התייבשות</li>
@@ -69,9 +102,9 @@
   </section>
 
   <section data-tab="ממצאי עור">
-    <h2>ממצאי עור ואבחנות</h2>
+    <h2>2 · ממצאי עור ואבחנות</h2>
     <p class="sec-note">מילון הממצאים — אל תבלבלו ביניהם. הפכו כל כרטיס לתשובה.</p>
-    <div class="deck">
+    <div class="hub-deck">
       <div class="fc">
         <div class="fc-front"><span class="term">Jaundice</span><span class="hint">מה הממצא?</span></div>
         <div class="fc-back">צהבת — גוון צהוב בעור ובלחמית. עודף בילירובין (מצב מערכתי).</div>
@@ -108,7 +141,7 @@
   </section>
 
   <section data-tab="מודל תפקוד">
-    <h2>מודל רמת תפקוד (0–4)</h2>
+    <h2>3 · מודל רמת תפקוד (0–4)</h2>
     <p class="sec-note">הכלי שקובע כמה סיוע נותנים. 0 = עצמאי, 4 = לא עצמאי. לחצו על שורה לפתיחת דוגמה.</p>
     <div class="levels">
       <div class="lvl lvl-0"><span class="num">0</span><div><div class="lbl">עצמאי לחלוטין</div><div class="desc">מבצע הכול בכוחות עצמו ללא סיוע.</div></div></div>
@@ -117,7 +150,7 @@
       <div class="lvl lvl-3"><span class="num">3</span><div><div class="lbl">זקוק לעזרה + ציוד/אדם</div><div class="desc">זקוק לעזרה פעילה בנוסף לציוד או לאדם אחר.</div></div></div>
       <div class="lvl lvl-4"><span class="num">4</span><div><div class="lbl">לא עצמאי</div><div class="desc">האחות מבצעת את הטיפול במלואו (רחצה מלאה ללא שיתוף).</div></div></div>
     </div>
-    <div class="cards">
+    <div class="hub-cards">
       <div class="ic"><h3>⚠️ מלכודת מבחן</h3><ul>
         <li>קל להתבלבל בכיוון: <b>0 = עצמאי</b>, <b>4 = לא עצמאי</b>.</li>
         <li>מתרחץ בעצמו + כיסא רחצה = רמה 1, לא 4.</li>
@@ -126,9 +159,9 @@
   </section>
 
   <section data-tab="פה · חושים · רגליים">
-    <h2>פה, חושים, שיער ורגליים</h2>
+    <h2>4 · פה, חושים, שיער ורגליים</h2>
     <p class="sec-note">כל אזור — אומדן והתערבות ייעודיים. שימו לב לקבוצות הסיכון.</p>
-    <div class="cards">
+    <div class="hub-cards">
       <div class="ic"><h3>🦷 חלל הפה <span class="badge b-cont">סיכון</span></h3><ul>
         <li>מברשת <b>רכה</b> / שפדל / גזה</li>
         <li>סיכון: צום, זונדה, חמצן, התייבשות, תרופות (משתנים/מדכאי חיסון)</li>
@@ -151,9 +184,9 @@
   </section>
 
   <section data-tab="רחצה ועקרונות">
-    <h2>רחצה ועקרונות-על</h2>
+    <h2>5 · רחצה ועקרונות-על</h2>
     <p class="sec-note">הביצוע בפועל — בטיחות, כבוד וצניעות.</p>
-    <div class="cards">
+    <div class="hub-cards">
       <div class="ic"><h3>🚿 רחצה — מספרים</h3><ul>
         <li>מים: <b>43-46°C</b></li>
         <li>כיוון: <b>מהנקי אל המלוכלך</b></li>
@@ -170,9 +203,9 @@
   </section>
 
   <section data-tab="חידון ⚡">
-    <h2>חידון מהיר ⚡</h2>
-    <p class="sec-note">שאלה אחת בכל פעם. תשובה נכונה = 10 XP ורצף גדל. (בהדפסה: השאלות והתשובות הנכונות מסומנות.)</p>
-    <div class="mq-set">
+    <h2>6 · חידון מהיר ⚡</h2>
+    <p class="sec-note">שאלה אחת בכל פעם. תשובה נכונה = 10 XP ורצף גדל.</p>
+    <div class="mq-set no-print" data-interactive>
       <div class="mq">
         <p class="mq-q">מהו תפקיד ייחודי של שכבת האפידרמיס?</p>
         <ul class="mq-opts">
@@ -266,6 +299,7 @@
       <a href="../privacy.html">מדיניות פרטיות</a>
     </nav>
     <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+    <p>תוכן לימודי לתרגול בלבד. אינו מהווה ייעוץ רפואי ואינו תחליף לחומרי הקורס.</p>
   </footer>
 </body>
 </html>
