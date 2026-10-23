@@ -24,6 +24,7 @@ export const keys = {
 // Global (not per quiz) preferences.
 export const prefs = {
   autoAdvance: 'pref:auto-advance',
+  showTopic: 'pref:show-topic',
 };
 
 export function load(key, fallback = null) {
