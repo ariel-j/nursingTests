@@ -81,6 +81,7 @@ const ui = {
   feedback: $('feedback'),
   countdown: $('countdown'),
   autoToggle: $('auto-advance'),
+  topicToggle: $('show-topic'),
   verdict: $('verdict'),
   explanation: $('explanation'),
   note: $('note'),
@@ -628,6 +629,7 @@ function renderQuestion() {
   renderProgress();
 
   ui.topic.textContent = question.topic;
+  ui.topic.hidden = !ui.topicToggle.checked;
   ui.star.hidden = !canStar();
   if (canStar()) paintStar(ui.star, isStarred(question));
   const { attempts } = state.progress[question.id];
@@ -857,6 +859,9 @@ function onKeyDown(event) {
   } else if ((phase === 'question' || phase === 'feedback') && event.code === 'KeyA' && !isExam()) {
     event.preventDefault();
     ui.autoToggle.click();
+  } else if ((phase === 'question' || phase === 'feedback') && event.code === 'KeyT') {
+    event.preventDefault();
+    ui.topicToggle.click();
   } else if (phase === 'question' && event.code === 'KeyS') {
     event.preventDefault();
     skipQuestion();
@@ -924,6 +929,11 @@ async function main() {
   ui.practiceWeak.addEventListener('click', practiceWeakTopics);
   ui.practiceQuestions.addEventListener('click', practiceWeakQuestions);
   ui.clearStats.addEventListener('click', clearStats);
+  ui.topicToggle.checked = load(prefs.showTopic) === true;
+  ui.topicToggle.addEventListener('change', () => {
+    save(prefs.showTopic, ui.topicToggle.checked);
+    ui.topic.hidden = !ui.topicToggle.checked;
+  });
   ui.autoToggle.checked = autoAdvanceOn();
   ui.autoToggle.addEventListener('change', () => {
     save(prefs.autoAdvance, ui.autoToggle.checked);
