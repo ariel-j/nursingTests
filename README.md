@@ -176,6 +176,14 @@ mark each widget `data-interactive` (and `no-print`), keep its script and styles
 (`js/pharmacodynamics.js`, `css/pharmacodynamics.css`, pure maths in `js/pharma-math.js`; the search, flashcards, panels and progress bar come from `js/summary-widgets.js` and `css/summary-widgets.css`), and keep the article's
 text complete without them. `all.html` drops every `[data-interactive]` block, so only the text is printed.
 
+A summary can also be a **study hub**: the same static page with `<section data-tab="…">` panels, flip cards
+(`.fc` with `.fc-front` / `.fc-back`), expandable rows (`.lvl`), a `.scales` switch and a mini quiz (`.mq-set` with
+`.mq` questions, the right option marked `<li class="ok">`). `js/summary-interactive.js` turns those into tabs,
+flip cards, a toggle and a quiz with XP; without JS, in print and in `all.html` every panel is simply shown and
+the quiz prints as questions with the right answers marked. A hub uses either `data-tab` sections (tabs, see
+`summaries/hygiene.html`) or `data-nav` sections with unique ids (one scrolling page with a sticky section bar,
+see `summaries/sleep.html`).
+
 ## Development
 
 ```sh
@@ -200,6 +208,7 @@ A run takes about a minute; GitHub Actions are free for public repositories.
 | `js/nav.js` | the top bar and side menu on every page (a modal `<dialog>`), built from the manifest and the summaries list |
 | `js/stats-transfer.js` | export / import of statistics (home page) |
 | `summaries/`, `css/summary.css` | short summaries, the hub and the combined print page |
+| `js/summary-interactive.js` | the study-hub layer (tabs, flip cards, scale switch, mini quiz) |
 | `js/summary-list.js` | the list of summaries (no DOM); `js/summaries.js`, `js/summary.js`, `js/summaries-all.js` drive the pages |
 | `scripts/` | manifest, validate (quizzes, summaries, and that every page has the toolbar, menu and footer), and a tiny static dev server |
 | `css/style.css` | the whole site's styles; follows `design/STYLE.md` |

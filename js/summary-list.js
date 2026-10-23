@@ -136,6 +136,30 @@ export const SUMMARIES = [
     title: 'תרופות לדיכוי חיסוני',
     blurb: 'מניעת דחיית שתל: שלבי הטיפול, נוגדנים, מעכבי קלצינאורין ו-mTOR, אנטי-פרוליפרטיביים וסטרואידים, וסיעוד.',
   },
+  {
+    subject: 'nursing-fundamentals',
+    id: 'hygiene',
+    title: 'היגיינה ואומדן העור',
+    blurb: 'מבנה העור, ממצאי עור, מודל רמת התפקוד, טיפול בפה ובחושים ורחצה. עם כרטיסיות וחידון.',
+  },
+  {
+    subject: 'nursing-fundamentals',
+    id: 'tissue-integrity',
+    title: 'שלמות הרקמה',
+    blurb: 'פצעים אקוטיים וכרוניים, שלבי ריפוי, פצעי לחץ, נורטון וברדן וחוזר 153. עם כרטיסיות וחידון.',
+  },
+  {
+    subject: 'nursing-fundamentals',
+    id: 'mobility',
+    title: 'ניעות',
+    blurb: 'חוזר 249/2025, השפעת שכיבה לפי מערכות, סיבוכים, תנוחות, ארגונומיה ו‑Deconditioning. עם כרטיסיות וחידון.',
+  },
+  {
+    subject: 'nursing-fundamentals',
+    id: 'sleep',
+    title: 'מנוחה ושינה',
+    blurb: 'שלבי NREM ו‑REM, מלטונין ומקצב צירקדי, הפרעות שינה, דום נשימה והיגיינת שינה. עם כרטיסיות וחידון.',
+  },
 ];
 
 /** The summaries of one subject, in list order. */
