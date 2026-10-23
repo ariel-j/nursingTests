@@ -27,6 +27,13 @@ export function pageErrors(html, { id, isSummary }) {
       errors.push(`needs exactly one <article class="summary" data-system="${id}">`);
     }
     if (!html.includes('data-print')) errors.push('missing the print / PDF button');
+    // Study-hub quizzes (summary-interactive.js): every question has exactly one right option.
+    for (const q of html.split('<div class="mq">').slice(1)) {
+      const block = q.split('</ul>')[0];
+      if ((block.match(/<li class="ok">/g) ?? []).length !== 1) {
+        errors.push('a mini-quiz question (.mq) must have exactly one <li class="ok"> option');
+      }
+    }
   }
   return errors;
 }

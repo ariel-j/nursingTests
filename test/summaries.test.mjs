@@ -32,3 +32,12 @@ test('pageErrors requires the toolbar, footer links, article and print button', 
 test('the committed summaries pass every check', async () => {
   assert.deepEqual(await checkSummaries(), []);
 });
+
+test('pageErrors needs exactly one correct option per mini-quiz question', () => {
+  const quiz = (items) => summary('heart').replace('</article>',
+    `<div class="mq-set"><div class="mq"><p class="mq-q">ש</p><ul class="mq-opts">${items}</ul><p class="mq-exp">ה</p></div></div></article>`);
+  const opts = (n) => '<li class="ok">א</li>'.repeat(n) + '<li>ב</li>';
+  assert.deepEqual(pageErrors(quiz(opts(1)), { id: 'heart', isSummary: true }), []);
+  assert.equal(pageErrors(quiz(opts(0)), { id: 'heart', isSummary: true }).length, 1);
+  assert.equal(pageErrors(quiz(opts(2)), { id: 'heart', isSummary: true }).length, 1);
+});
