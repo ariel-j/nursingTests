@@ -1117,15 +1117,15 @@
           "text": "Adrenaline (Epinephrine) בזריקה לשריר"
         },
         {
-          "text": "Propranolol בהזרקה לווריד",
+          "text": "Propranolol בהזרקה איטית לווריד",
           "note": "חוסם בטא עלול להחמיר ברונכוספזם ולהקשות על הטיפול."
         },
         {
-          "text": "Atropine בהזרקה לווריד",
+          "text": "Atropine בהזרקה מהירה לווריד",
           "note": "חוסם מוסקריני אינו מטפל באנפילקסיס."
         },
         {
-          "text": "Prazosin פומי במנה גבוהה",
+          "text": "Prazosin פומי במנה גבוהה אחת",
           "note": "חוסם אלפא-1 מוריד לחץ דם ואינו מתאים."
         }
       ],
@@ -1258,19 +1258,19 @@
       "question": "מהי תופעת הלוואי המסוכנת ביותר של אופיואידים?",
       "options": [
         {
-          "text": "דיכוי נשימתי"
+          "text": "דיכוי נשימתי חמור"
         },
         {
-          "text": "עצירות",
-          "note": "עצירות מטרידה אך אינה מסכנת חיים כמו דיכוי נשימה."
+          "text": "עצירות מתמשכת",
+          "note": "שכיחה אך אינה מסכנת חיים."
         },
         {
-          "text": "בחילה",
-          "note": "בחילה שכיחה אך אינה התופעה הקטלנית."
+          "text": "בחילה והקאות",
+          "note": "שכיחות אך אינן מסכנות חיים."
         },
         {
-          "text": "גרד בעור",
-          "note": "גרד הוא תופעה קלה יחסית."
+          "text": "גרד בעור ובפנים",
+          "note": "שכיח ואינו מסכן חיים."
         }
       ],
       "correct": 0,
@@ -1429,16 +1429,16 @@
           "text": "לא — לאופיואידים אין השפעה אנטי-פירטית"
         },
         {
-          "text": "כן, הם מורידי חום יעילים",
-          "note": "אין לאופיואידים פעילות על מרכז ויסות החום."
+          "text": "כן — הם מורידי חום דרך עיכוב מרכז החום",
+          "note": "אופיואידים אינם מורידים חום."
         },
         {
-          "text": "כן, אך רק ב-Codeine",
-          "note": "גם ל-Codeine אין אפקט אנטי-פירטי."
+          "text": "כן — אך רק Codeine, בזכות הפיכתו ל-Morphine",
+          "note": "גם Codeine אינו מוריד חום."
         },
         {
-          "text": "כן, דרך עיכוב פרוסטגלנדינים",
-          "note": "אופיואידים אינם מעכבים פרוסטגלנדינים."
+          "text": "כן — דרך עיכוב סינתזת פרוסטגלנדינים ב-COX",
+          "note": "זהו מנגנון NSAIDs ולא אופיואידים."
         }
       ],
       "correct": 0,
@@ -1717,16 +1717,16 @@
           "text": "הוא בעל אפקט נוגד דלקת חזק"
         },
         {
-          "text": "משמש להורדת חום",
-          "note": "נכון — הוא אנטי-פירטי יעיל."
+          "text": "הוא משמש להורדת חום בילדים ובמבוגרים",
+          "note": "נכון — מוריד חום."
         },
         {
-          "text": "רעיל לכבד במנת יתר",
-          "note": "נכון — לכן יש גבול מינון יומי מחמיר."
+          "text": "הוא רעיל לכבד במנת יתר ובשימוש כרוני",
+          "note": "נכון — רעילות כבדית ידועה."
         },
         {
-          "text": "משכך כאב קל עד בינוני",
-          "note": "נכון — זו התוויה מרכזית."
+          "text": "הוא משכך כאב קל עד בינוני",
+          "note": "נכון — זו התוויה עיקרית."
         }
       ],
       "correct": 0,
@@ -1837,16 +1837,16 @@
           "text": "Protamine sulfate"
         },
         {
-          "text": "Vitamin K",
-          "note": "ויטמין K הוא סם הנגד ל-Warfarin, לא ל-Heparin."
+          "text": "Vitamin K (Phytonadione)",
+          "note": "סם נגד ל-Warfarin ולא ל-Heparin."
         },
         {
-          "text": "Idarucizumab",
-          "note": "Idarucizumab הופך Dabigatran, לא Heparin."
+          "text": "Idarucizumab (Praxbind)",
+          "note": "סם נגד ל-Dabigatran."
         },
         {
-          "text": "Naloxone",
-          "note": "Naloxone הוא סם נגד אופיואידים, לא נוגדי קרישה."
+          "text": "Naloxone (Narcan)",
+          "note": "סם נגד לאופיואידים."
         }
       ],
       "correct": 0,
@@ -2509,16 +2509,16 @@
           "text": "חוסם קולטני דופמין ומחמיר את התסמינים"
         },
         {
-          "text": "מגביר יתר על המידה את הדופמין",
-          "note": "הוא חוסם דופמין, לא מגביר."
+          "text": "מגביר יתר על המידה את פעילות הדופמין",
+          "note": "הוא חוסם דופמין ולא מגביר."
         },
         {
-          "text": "מעכב MAO-B בצורה לא-סלקטיבית",
-          "note": "אין זה מנגנון Haloperidol."
+          "text": "מעכב MAO-B ומפחית את מלאי הדופמין",
+          "note": "אינו מעכב MAO-B."
         },
         {
-          "text": "גורם ליתר לחץ דם",
-          "note": "הבעיה אינה לחץ דם אלא החמרת הפרקינסוניזם."
+          "text": "מעלה לחץ דם ומגביר עומס על הלב",
+          "note": "אין זה הנימוק לאיסור."
         }
       ],
       "correct": 0,
@@ -3754,7 +3754,7 @@
       "question": "שילוב Metoclopramide עם אנטיפסיכוטי (חוסם דופמין) עלול להחמיר:",
       "options": [
         {
-          "text": "החמרת תופעות חוץ-פירמידליות (EPS) בגלל חסימת D2"
+          "text": "החמרת EPS בגלל חסימת D2 כפולה"
         },
         {
           "text": "דיכוי נשימתי מצטבר מרכזי",
@@ -3997,16 +3997,16 @@
           "text": "Protamine sulfate"
         },
         {
-          "text": "Vitamin K",
-          "note": "ויטמין K הוא סם הנגד ל-Warfarin."
+          "text": "Vitamin K (Phytonadione)",
+          "note": "סם נגד ל-Warfarin ולא ל-Heparin."
         },
         {
-          "text": "Naloxone",
-          "note": "Naloxone מיועד לאופיואידים."
+          "text": "Naloxone (Narcan)",
+          "note": "סם נגד לאופיואידים."
         },
         {
-          "text": "Flumazenil",
-          "note": "Flumazenil מיועד לבנזודיאזפינים."
+          "text": "Flumazenil (Anexate)",
+          "note": "סם נגד לבנזודיאזפינים."
         }
       ],
       "correct": 0,
@@ -4045,16 +4045,16 @@
           "text": "N-acetylcysteine"
         },
         {
-          "text": "Naloxone",
-          "note": "Naloxone מיועד לאופיואידים."
+          "text": "Naloxone (Narcan)",
+          "note": "סם נגד לאופיואידים."
         },
         {
-          "text": "Vitamin K",
-          "note": "ויטמין K מיועד ל-Warfarin."
+          "text": "Vitamin K (Phytonadione)",
+          "note": "סם נגד ל-Warfarin."
         },
         {
-          "text": "Flumazenil",
-          "note": "Flumazenil מיועד לבנזודיאזפינים."
+          "text": "Flumazenil (Anexate)",
+          "note": "סם נגד לבנזודיאזפינים."
         }
       ],
       "correct": 0,
@@ -4114,19 +4114,19 @@
       "question": "מהו סם הנגד הספציפי להיפוך Dabigatran?",
       "options": [
         {
-          "text": "Idarucizumab"
+          "text": "Idarucizumab (Praxbind)"
         },
         {
-          "text": "Vitamin K",
-          "note": "ויטמין K מיועד ל-Warfarin, לא ל-Dabigatran."
+          "text": "Vitamin K (Phytonadione)",
+          "note": "סם נגד ל-Warfarin."
         },
         {
-          "text": "Protamine",
-          "note": "Protamine מנטרל Heparin."
+          "text": "Protamine sulfate",
+          "note": "סם נגד ל-Heparin."
         },
         {
-          "text": "Naloxone",
-          "note": "Naloxone מיועד לאופיואידים."
+          "text": "Naloxone (Narcan)",
+          "note": "סם נגד לאופיואידים."
         }
       ],
       "correct": 0,
