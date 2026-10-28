@@ -39,6 +39,11 @@ export function pagePath(pathname, search = '', base = '/') {
   return query ? `${path}?${query}` : path;
 }
 
+/** Event name for a played video: its file under media/ without the extension. */
+export function videoEvent(src) {
+  return `video-play/${src.replace(/^media\//, '').replace(/\.[^./]+$/, '')}`;
+}
+
 const pad = (n) => String(n).padStart(2, '0');
 const localDay = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
