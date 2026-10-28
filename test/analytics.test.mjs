@@ -13,6 +13,8 @@ test('pagePath drops the site folder and .html, folds index.html and keeps only 
   assert.equal(at('/nursingTests/quiz.html', '?exam=1&drugs=pharmacology'), '/quiz?drugs=pharmacology&exam=1');
   assert.equal(at('/nursingTests/', '?subject=anatomy&utm=x'), '/?subject=anatomy');
   assert.equal(at('/nursingTests/quiz.html', '?id='), '/quiz');
+  assert.equal(at('/nursingTests/media.html', '?topic=NSAID&subject=pharmacology'), '/media?subject=pharmacology&topic=NSAID');
+  assert.equal(at('/nursingTests/quiz.html', '?group=A&subject=anatomy'), '/quiz?subject=anatomy&group=A');
   assert.equal(pagePath('/quiz.html', '?id=heart'), '/quiz?id=heart'); // site at the domain root
 });
 
