@@ -21,11 +21,14 @@ const VISITOR_KEY = 'visitor';
 const KEPT_PARAMS = ['id', 'subject', 'drugs', 'exam'];
 
 /**
- * The path a page is counted under: index.html folds into its folder, and only KEPT_PARAMS
- * stay, so each quiz, subject and deck counts separately and nothing else leaks in.
+ * The path a page is counted under: `base` (the site's folder, e.g. /nursingTests/) and `.html`
+ * are dropped and index.html folds into its folder, so the dashboard rows stay short on a
+ * phone; only KEPT_PARAMS stay, so each quiz, subject and deck counts separately and nothing
+ * else leaks in.
  */
-export function pagePath(pathname, search = '') {
-  const path = pathname.replace(/\/index\.html$/, '/');
+export function pagePath(pathname, search = '', base = '/') {
+  const rest = pathname.startsWith(base) ? pathname.slice(base.length - 1) : pathname;
+  const path = rest.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
   const params = new URLSearchParams(search);
   const kept = new URLSearchParams();
   for (const name of KEPT_PARAMS) {
@@ -93,6 +96,9 @@ function send(url) {
   }
 }
 
+// The site's folder on the host (/nursingTests/ on GitHub Pages), from where this file lives.
+const SITE_BASE = typeof window !== 'undefined' ? new URL('..', import.meta.url).pathname : '/';
+
 const allowed = typeof window !== 'undefined' && enabled();
 
 /** Counts a named event, e.g. `quiz-done/heart/full`. Safe to call when counting is off. */
@@ -107,12 +113,27 @@ function countVisitor() {
   for (const name of events) trackEvent(name);
 }
 
-if (allowed) {
-  countVisitor();
+// Pages set their real title (the quiz, the subject) after loading their data, so the page view
+// waits for the first title change; a page that never changes it is counted after a short delay
+// or when it is left, so quick visits still count.
+const TITLE_WAIT_MS = 4000;
+
+function sendPageView() {
+  if (viewSent) return;
+  viewSent = true;
   send(countUrl(GOATCOUNTER_CODE, {
-    path: pagePath(location.pathname, location.search),
+    path: pagePath(location.pathname, location.search, SITE_BASE),
     title: document.title,
     referrer: document.referrer,
     screen: `${screen.width},${screen.height},${window.devicePixelRatio || 1}`,
   }));
+}
+
+let viewSent = false;
+if (allowed) {
+  countVisitor();
+  const titleEl = document.querySelector('title');
+  if (titleEl) new MutationObserver(sendPageView).observe(titleEl, { childList: true, characterData: true, subtree: true });
+  setTimeout(sendPageView, TITLE_WAIT_MS);
+  addEventListener('pagehide', sendPageView);
 }
