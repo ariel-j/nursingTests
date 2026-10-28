@@ -549,7 +549,7 @@ function begin(questionIds, mode, style = 'practice', sampled = false) {
   state = createSession(quiz, Math.random, { questionIds, mode, style });
   if (sampled) saveServed(questionIds);
   persist();
-  trackEvent(`quiz-start/${quiz.id}/${mode}`, quiz.title);
+  trackEvent(`quiz-start/${quiz.id}/${mode}`, document.title);
   renderQuestion();
 }
 
@@ -712,7 +712,7 @@ function apply(result, chosenIndex) {
   state = result.state;
   persist();
   if (isComplete(state)) {
-    trackEvent(`quiz-done/${quiz.id}/${state.mode}`, quiz.title);
+    trackEvent(`quiz-done/${quiz.id}/${state.mode}`, document.title);
     // Best score only means something for a run over the whole of one quiz.
     if (state.mode === 'full' && !quiz.mixed) {
       const summary = summarize(state, quiz);
