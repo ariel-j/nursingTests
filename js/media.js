@@ -5,6 +5,7 @@
 import {
   findMediaTopic, findSubject, loadManifest, loadMedia, mediaCount, mediaTopicPath, subjectPaths,
 } from './catalog.js';
+import { trackEvent, videoEvent } from './analytics.js';
 
 const $ = (id) => document.getElementById(id);
 const KIND_LABEL = { image: 'תמונה', pdf: 'PDF', html: 'עמוד אינטראקטיבי' };
@@ -32,6 +33,8 @@ function renderVideo(item, headingTag) {
   video.playsInline = true;
   video.src = url(item.src);
   video.setAttribute('aria-label', item.title);
+  // Once per page load: pausing and resuming is not another view.
+  video.addEventListener('play', () => trackEvent(videoEvent(item.src), `${item.title} · ${document.title}`), { once: true });
   if (item.captions) {
     const track = el('track');
     track.kind = 'captions';

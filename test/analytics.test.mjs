@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { GOATCOUNTER_CODE, countUrl, pagePath, shouldCount, visitorEvents } from '../js/analytics.js';
+import { GOATCOUNTER_CODE, countUrl, pagePath, shouldCount, videoEvent, visitorEvents } from '../js/analytics.js';
 
 test('pagePath drops the site folder and .html, folds index.html and keeps only the quiz, subject and deck parameters', () => {
   const at = (pathname, search) => pagePath(pathname, search, '/nursingTests/');
@@ -64,4 +64,9 @@ test('countUrl builds a GoatCounter request for page views and events', () => {
 
 test('the code is empty or a valid GoatCounter code', () => {
   assert.match(GOATCOUNTER_CODE, /^(?:[a-z0-9-]+)?$/);
+});
+
+test('videoEvent names a played video by its file under media/, without the extension', () => {
+  assert.equal(videoEvent('media/pharmacology/06 NSAID/intro.mp4'), 'video-play/pharmacology/06 NSAID/intro');
+  assert.equal(videoEvent('pharmacology/clip.webm'), 'video-play/pharmacology/clip');
 });
