@@ -2,17 +2,18 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { GOATCOUNTER_CODE, countUrl, pagePath, shouldCount, visitorEvents } from '../js/analytics.js';
 
-test('pagePath folds index.html and keeps only the quiz, subject and deck parameters', () => {
-  assert.equal(pagePath('/nursingTests/'), '/nursingTests/');
-  assert.equal(pagePath('/nursingTests/index.html'), '/nursingTests/');
-  assert.equal(pagePath('/nursingTests/summaries/index.html'), '/nursingTests/summaries/');
-  assert.equal(pagePath('/nursingTests/privacy.html', '?utm=x'), '/nursingTests/privacy.html');
-  assert.equal(pagePath('/nursingTests/quiz.html', '?id=heart&x=1'), '/nursingTests/quiz.html?id=heart');
-  assert.equal(pagePath('/nursingTests/quiz.html', '?subject=anatomy'), '/nursingTests/quiz.html?subject=anatomy');
-  assert.equal(pagePath('/nursingTests/quiz.html', '?exam=1&drugs=pharmacology'),
-    '/nursingTests/quiz.html?drugs=pharmacology&exam=1');
-  assert.equal(pagePath('/nursingTests/', '?subject=anatomy&utm=x'), '/nursingTests/?subject=anatomy');
-  assert.equal(pagePath('/nursingTests/quiz.html', '?id='), '/nursingTests/quiz.html');
+test('pagePath drops the site folder and .html, folds index.html and keeps only the quiz, subject and deck parameters', () => {
+  const at = (pathname, search) => pagePath(pathname, search, '/nursingTests/');
+  assert.equal(at('/nursingTests/'), '/');
+  assert.equal(at('/nursingTests/index.html'), '/');
+  assert.equal(at('/nursingTests/summaries/index.html'), '/summaries/');
+  assert.equal(at('/nursingTests/privacy.html', '?utm=x'), '/privacy');
+  assert.equal(at('/nursingTests/quiz.html', '?id=heart&x=1'), '/quiz?id=heart');
+  assert.equal(at('/nursingTests/quiz.html', '?subject=anatomy'), '/quiz?subject=anatomy');
+  assert.equal(at('/nursingTests/quiz.html', '?exam=1&drugs=pharmacology'), '/quiz?drugs=pharmacology&exam=1');
+  assert.equal(at('/nursingTests/', '?subject=anatomy&utm=x'), '/?subject=anatomy');
+  assert.equal(at('/nursingTests/quiz.html', '?id='), '/quiz');
+  assert.equal(pagePath('/quiz.html', '?id=heart'), '/quiz?id=heart'); // site at the domain root
 });
 
 test('visitorEvents counts a browser once a day and once a week', () => {
