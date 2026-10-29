@@ -1,4 +1,4 @@
-// Videos and the owner's own artifacts (images, PDFs, HTML pages) under media/<subject-id>/,
+// Videos, podcasts (m4a/mp3, no captions needed) and the owner's own artifacts (images, PDFs, HTML pages) under media/<subject-id>/,
 // optionally one folder deeper per sub-subject. GitHub Pages can't list a folder, so this scans
 // media/ into media/manifest.json, which the media page reads. The file is not committed: the Pages
 // deploy workflow builds it on every deploy, and `npm run manifest` builds it for local use.
@@ -15,6 +15,7 @@ export const MAX_BYTES = 50 * 1024 * 1024;
 
 const KINDS = {
   mp4: 'video', webm: 'video',
+  m4a: 'audio', mp3: 'audio',
   png: 'image', jpg: 'image', jpeg: 'image', webp: 'image', gif: 'image', svg: 'image',
   pdf: 'pdf',
   html: 'html', htm: 'html',
@@ -87,7 +88,7 @@ export function buildMedia(files, subjectIds) {
     }
     const kind = KINDS[ext];
     if (!kind) {
-      errors.push(`${where}: unsupported file type (use mp4/webm, png/jpg/webp/gif/svg, pdf or html)`);
+      errors.push(`${where}: unsupported file type (use mp4/webm, m4a/mp3, png/jpg/webp/gif/svg, pdf or html)`);
       continue;
     }
     if (size > MAX_BYTES) {

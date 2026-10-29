@@ -1,7 +1,7 @@
 // Videos and artifacts page (media.html), from media/manifest.json. Without ?subject= it lists the
 // subjects that have media. ?subject=<id> shows the subject's loose files and a card per sub-subject
 // (topic); ?subject=<id>&topic=<name> shows that topic alone: its videos first (native player,
-// captions when a .vtt was uploaded, a note when not), then images, PDFs and HTML pages as cards.
+// captions when a .vtt was uploaded, a note when not), then podcasts (audio player), then images, PDFs and HTML pages as cards.
 import {
   findMediaTopic, findSubject, loadManifest, loadMedia, mediaCount, mediaTopicPath, subjectPaths,
 } from './catalog.js';
@@ -54,6 +54,24 @@ function renderVideo(item, headingTag) {
   return figure;
 }
 
+function renderAudio(item, headingTag) {
+  const figure = el('figure', 'media-audio');
+  const caption = el('figcaption');
+  caption.append(el(headingTag, 'card-title', item.title));
+  const audio = el('audio');
+  audio.controls = true;
+  audio.preload = 'metadata';
+  audio.src = url(item.src);
+  audio.setAttribute('aria-label', item.title);
+  // Once per page load: pausing and resuming is not another listen.
+  audio.addEventListener('play', () => trackEvent(videoEvent(item.src), `${item.title} · ${document.title}`), { once: true });
+  const fallback = el('a', null, 'הדפדפן לא מנגן את ההקלטה. להורדה');
+  fallback.href = url(item.src);
+  audio.append(fallback);
+  figure.append(caption, audio);
+  return figure;
+}
+
 function renderCard(item, headingTag) {
   const link = el('a', `quiz-card media-card is-${item.kind}`);
   link.href = url(item.src);
@@ -77,8 +95,9 @@ function renderCard(item, headingTag) {
 function renderItems(items, itemHeading) {
   const section = el('section', 'group media-group');
   const videos = items.filter((i) => i.kind === 'video');
-  const others = items.filter((i) => i.kind !== 'video');
-  section.append(...videos.map((v) => renderVideo(v, itemHeading)));
+  const podcasts = items.filter((i) => i.kind === 'audio');
+  const others = items.filter((i) => i.kind !== 'video' && i.kind !== 'audio');
+  section.append(...videos.map((v) => renderVideo(v, itemHeading)), ...podcasts.map((a) => renderAudio(a, itemHeading)));
   if (others.length > 0) {
     const list = el('ul', 'quiz-list media-list');
     list.append(...others.map((i) => renderCard(i, itemHeading)));
@@ -87,12 +106,14 @@ function renderItems(items, itemHeading) {
   return section;
 }
 
-/** "2 סרטונים · חומר עזר אחד" */
+/** "2 סרטונים · פודקאסט אחד · חומר עזר אחד" */
 function countLabel(items) {
   const videos = items.filter((i) => i.kind === 'video').length;
-  const others = items.length - videos;
+  const podcasts = items.filter((i) => i.kind === 'audio').length;
+  const others = items.length - videos - podcasts;
   const parts = [];
   if (videos > 0) parts.push(videos === 1 ? 'סרטון אחד' : `${videos} סרטונים`);
+  if (podcasts > 0) parts.push(podcasts === 1 ? 'פודקאסט אחד' : `${podcasts} פודקאסטים`);
   if (others > 0) parts.push(others === 1 ? 'חומר עזר אחד' : `${others} חומרי עזר`);
   return parts.join(' · ');
 }

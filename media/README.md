@@ -1,6 +1,6 @@
 # media/: videos and artifacts
 
-Short explainer videos and your own artifacts, shown on `media.html?subject=<id>`
+Short explainer videos, podcasts and your own artifacts, shown on `media.html?subject=<id>`
 (the "סרטוני הסבר קצרים" card on a subject's page, and in the side menu). That page has a button per
 sub-subject folder; each opens its own page, `media.html?subject=<id>&topic=<name>`, with that
 topic's videos only.
@@ -23,7 +23,7 @@ media/
   subject's page, above the topic buttons.
 - Every sub-subject folder needs its own name (`01 פרקינסון` and `פרקינסון` clash): the name is
   the topic's address, so renaming a folder changes its link.
-- Supported: `mp4` / `webm` (H.264 mp4 plays everywhere), `png` `jpg` `webp` `gif` `svg`, `pdf`, `html`.
+- Supported: `mp4` / `webm` (H.264 mp4 plays everywhere), podcasts as `m4a` / `mp3` (audio player, no captions needed, shown after the videos), `png` `jpg` `webp` `gif` `svg`, `pdf`, `html`.
 - Up to 50MB per file. GitHub's web upload stops at 25MB anyway. For a few minutes of 720p that's plenty.
 - Captions: a `.vtt` file with the same name as the video. You don't have to make it: when you upload
   a video without one, the "Deploy site" action transcribes it (about half the video's length),

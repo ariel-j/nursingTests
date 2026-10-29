@@ -989,6 +989,9 @@ kbd {
 }
 .media-video figcaption { margin-block-start: 0.5rem; }
 .media-video figcaption .meta { margin-block-start: 0.25rem; }
+.media-audio { margin: 0 0 12px; }
+.media-audio figcaption { margin-block-end: 0.5rem; }
+.media-audio audio { display: block; inline-size: 100%; }
 /* Two per row on a phone, more on wider screens: the video stays the main thing. */
 .media-list { grid-template-columns: repeat(auto-fill, minmax(min(140px, 100%), 1fr)); }
 .media-card { padding: 12px; block-size: 100%; }
