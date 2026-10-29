@@ -66,6 +66,17 @@ test('buildMedia pairs captions with their video and leaves out videos without t
   assert.match(errors[0], /בלי\.webm: no captions/);
 });
 
+test('buildMedia lists m4a/mp3 podcasts as audio, with no captions needed', () => {
+  const { manifest, errors } = buildMedia([
+    f('pharmacology/פודקאסטים/1 - מה_קורה.m4a'),
+    f('pharmacology/פודקאסטים/2 - שיעור.mp3'),
+  ], ids);
+  assert.deepEqual(errors, []);
+  const items = manifest.subjects.pharmacology.groups[0].items;
+  assert.deepEqual(items.map((i) => [i.title, i.kind, i.captions]), [['מה קורה', 'audio', undefined], ['שיעור', 'audio', undefined]]);
+  assert.equal(buildMedia([f('pharmacology/א/ענק.m4a', MAX_BYTES + 1)], ids).errors.length, 1);
+});
+
 test('buildMedia rejects course files, unplayable video, big files, bad places and stray captions', () => {
   const { manifest, errors } = buildMedia([
     f('pharmacology/א/מצגת.pptx'),
