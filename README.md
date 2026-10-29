@@ -184,12 +184,35 @@ the quiz prints as questions with the right answers marked. A hub uses either `d
 `summaries/hygiene.html`) or `data-nav` sections with unique ids (one scrolling page with a sticky section bar,
 see `summaries/sleep.html`).
 
+## Drug memory game (`memory.html`)
+
+A game for learning 70 drugs by their memory associations. The home page links to it.
+
+- **Pairs:** flip a drug-name card and an association card (6, 8 or 10 pairs per round, drawn from the pool
+  with a bias towards drugs you know least). A match opens the explanation, side effects included.
+  Matching builds a combo (up to x3); a wrong flip costs points only when the partner of a flipped card was
+  already seen, so guessing at unseen cards is free. Bonuses for speed and for a round with no such misses.
+- **Speed:** 10 questions, an association (or a drug name) and four options, against a clock (12-18 s).
+  "Relaxed mode" turns the clock off.
+- **Pool:** all drugs, only your weak ones, or one topic. Weak drugs come back more often.
+- **Mastery:** each drug has a level, not seen / seen / familiar / mine. Pairs lifts a drug up to "familiar";
+  only a correct answer in speed mode makes it "mine". A miss drops it one level (never below "seen").
+- **Meta:** XP and player levels, a daily streak, a daily goal, 3-star rounds, a collection of all 70 drugs
+  (unlocked as they are met) and achievements. Sound and vibration are off until switched on.
+- Progress lives in `localStorage` (`memory:progress`). A round in progress is not saved.
+
+Cards come from `games/drugs.json`, generated from the authoring file with
+`npm run import-drugs -- <source.json>`. Only the fields the game shows are kept (name, family, topic,
+indication, side effects, explanation, association); sources, lecturers and exam statistics are dropped.
+`npm run validate` rejects any other field.
+
 ## Development
 
 ```sh
 npm test          # unit tests for js/core.js and the scripts (node:test)
 npm run validate  # validate all quizzes, summaries and media files, and check the quiz manifest is current
 npm run manifest  # regenerate quizzes/manifest.json and media/manifest.json
+npm run import-drugs -- <source.json>  # rebuild games/drugs.json for the memory game
 npm run serve     # http://localhost:8000 (fetch() does not work over file://)
 ```
 
@@ -207,6 +230,9 @@ A run takes about a minute; GitHub Actions are free for public repositories.
 | `js/catalog.js` | the manifest as the pages see it: one cached fetch, plus pure helpers (find a subject, its quizzes, counts, links) |
 | `js/nav.js` | the top bar and side menu on every page (a modal `<dialog>`), built from the manifest and the summaries list |
 | `js/stats-transfer.js` | export / import of statistics (home page) |
+| `memory.html`, `css/memory.css`, `games/drugs.json` | the drug memory game and its cards |
+| `js/memory-core.js` | pure game logic: dealing, matching, scoring, mastery, XP, streaks, achievements |
+| `js/memory.js` | hub, collection, achievements and result screens; `memory-pairs.js` and `memory-speed.js` are the two modes; `memory-fx.js` sound, vibration, confetti; `memory-dom.js`, `memory-detail.js` helpers |
 | `summaries/`, `css/summary.css` | short summaries, the hub and the combined print page |
 | `js/summary-interactive.js` | the study-hub layer (tabs, flip cards, scale switch, mini quiz) |
 | `js/summary-list.js` | the list of summaries (no DOM); `js/summaries.js`, `js/summary.js`, `js/summaries-all.js` drive the pages |

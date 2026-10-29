@@ -14,7 +14,7 @@ export const MEDICAL_DISCLAIMER = 'אינו מהווה ייעוץ רפואי';
 
 // Site pages outside summaries/, checked with the same rules (paths relative to the root).
 export const ROOT_DIR = fileURLToPath(new URL('../', import.meta.url));
-export const ROOT_PAGES = ['index.html', 'quiz.html', 'print.html', 'media.html', 'drugs.html', 'accessibility.html', 'privacy.html'];
+export const ROOT_PAGES = ['index.html', 'quiz.html', 'print.html', 'media.html', 'drugs.html', 'memory.html', 'accessibility.html', 'privacy.html'];
 
 /**
  * Problems with one page's HTML. `root` is the path from the page to the site root ('../' for

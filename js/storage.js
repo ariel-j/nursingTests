@@ -19,6 +19,8 @@ export const keys = {
   drugTopics: (subjectId) => `drug-topics:${subjectId}`,
   // Personal bests of the drug-card games: { stems, odd, blitz: { score, stars, plays }, match: { "<family>|<field>": ms } }.
   drugGames: (subjectId) => `drug-games:${subjectId}`,
+  // Progress of the drug memory game (memory.html): levels per drug, XP, streak, achievements.
+  memory: 'memory:progress',
 };
 
 // Global (not per quiz) preferences.

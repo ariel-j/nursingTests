@@ -1,0 +1,28 @@
+// The explanation shown for a drug: after a match, after a speed answer and in the collection.
+import { drugName, el } from './memory-dom.js';
+
+export function drugDetail(drug, { headingTag = 'h3', headingId } = {}) {
+  const box = document.createDocumentFragment();
+
+  const heading = el(headingTag, 'detail-name');
+  if (headingId) heading.id = headingId;
+  heading.append(drugName(drug.name));
+  const family = el('p', 'detail-family', drug.family);
+
+  const assoc = el('p', 'detail-assoc');
+  assoc.append(el('span', 'detail-label', '💡 אסוציאציה: '), document.createTextNode(drug.association));
+
+  const explanation = el('p', 'detail-explanation', drug.explanation);
+
+  const indication = el('p', 'detail-indication');
+  indication.append(el('span', 'detail-label', 'התוויה: '), document.createTextNode(drug.indication));
+
+  const effects = el('details', 'detail-effects');
+  effects.append(el('summary', null, 'תופעות לוואי'));
+  const list = el('ul');
+  for (const text of drug.sideEffects) list.append(el('li', null, text));
+  effects.append(list);
+
+  box.append(heading, family, assoc, explanation, indication, effects);
+  return box;
+}

@@ -374,7 +374,13 @@
       "units": [],
       "quizzes": [],
       "upcoming": [],
-      "tools": []
+      "tools": [
+        {
+          "title": "משחק זיכרון: 70 התרופות",
+          "href": "memory.html",
+          "description": "מצמידים כל תרופה לאסוציאציה שלה, עם הסבר אחרי כל התאמה, ניקוד, רמות ואוסף."
+        }
+      ]
     },
     {
       "id": "nursing-fundamentals",
