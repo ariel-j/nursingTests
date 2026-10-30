@@ -892,7 +892,7 @@ async function main() {
   // Kicker shows the subject and, when present, the unit: "אנטומיה ופיזיולוגיה · הלב".
   // Opened from a unit's "מבחן סיכום אישי" card (&group=<unit>): name it after that unit.
   const group = preselectedGroup();
-  const place = quiz.starred ? 'מכל הבחנים' : `${quizPlace(quiz)}${group ? ` · ${group}` : ''}`;
+  const place = quiz.starred ? (quiz.subject ?? 'מכל הבחנים') : `${quizPlace(quiz)}${group ? ` · ${group}` : ''}`;
   const title = group ? 'מבחן סיכום אישי' : quiz.title;
   document.title = `${title} · ${place}`;
   ui.subject.textContent = place;

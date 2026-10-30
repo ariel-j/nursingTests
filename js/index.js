@@ -1,6 +1,6 @@
 // Home page. Without ?subject= it lists the subjects to choose from; with ?subject=<id> it shows
 // that subject: mixed practice, the printable exam, its summaries and videos, then its quizzes by unit.
-import { STARRED_QUIZ_ID, isValidQuizId, mixedQuizId, progressInfo, sessionStyle } from './core.js';
+import { isValidQuizId, mixedQuizId, progressInfo, sessionStyle, starredQuizId } from './core.js';
 import { findSubject, loadManifest, loadMedia, mediaCount, subjectPaths, subjectQuizzes, subjectStats, unitAnchor } from './catalog.js';
 import { keys, load, loadStars } from './storage.js';
 import { summariesFor } from './summary-list.js';
@@ -248,15 +248,18 @@ async function main() {
     ui.status.textContent = 'עדיין אין מקצועות.';
     return;
   }
+  const key = new URLSearchParams(location.search).get('subject');
+  const subject = findSubject(manifest, key);
+  // A subject's page links only its own starred questions; the subject list links all of them.
   // Stored counts, so an id dropped from its quiz still counts until that quiz is opened.
-  const stars = subjects.flatMap(subjectQuizzes).reduce((n, q) => n + loadStars(q.id).length, 0);
-  if (stars > 0 || savedSession(STARRED_QUIZ_ID)) {
+  const scope = subject ? [subject] : subjects;
+  const stars = scope.flatMap(subjectQuizzes).reduce((n, q) => n + loadStars(q.id).length, 0);
+  if (stars > 0 || savedSession(starredQuizId(subject?.name ?? null))) {
     ui.starredLink.textContent = stars > 0 ? `★ שאלות מסומנות (${stars})` : '★ שאלות מסומנות';
+    ui.starredLink.href = subject ? subjectPaths(subject.id).starred : 'quiz.html?starred';
     ui.starredWrap.hidden = false;
   }
 
-  const key = new URLSearchParams(location.search).get('subject');
-  const subject = findSubject(manifest, key);
   if (key !== null && !subject) {
     ui.status.textContent = 'המקצוע לא נמצא. אפשר לבחור מהרשימה:';
   } else {

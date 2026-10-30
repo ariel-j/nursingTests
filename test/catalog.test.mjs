@@ -61,6 +61,7 @@ test('subjectPaths and unitAnchor build the subject links', () => {
   assert.deepEqual(subjectPaths('pharmacology'), {
     home: './?subject=pharmacology',
     practice: 'quiz.html?subject=pharmacology',
+    starred: 'quiz.html?starred&subject=pharmacology',
     print: 'print.html?subject=pharmacology',
     summaries: 'summaries/?subject=pharmacology',
     media: 'media.html?subject=pharmacology',

@@ -367,11 +367,18 @@ export function quizLabel(quiz) {
 
 /**
  * Every question of `quizzes` in one quiz, grouped per quiz (two quizzes of one unit stay apart),
- * shaped like a mixed practice. The page offers only the starred ones; holding all of them keeps a
+ * shaped like a mixed practice. With a `subject` (name) it is that subject's starred practice. The
+ * page offers only the starred ones; holding all of them keeps a
  * saved session valid after a question in it is unstarred.
  */
-export function buildStarredQuiz(quizzes) {
-  return { id: STARRED_QUIZ_ID, mixed: true, starred: true, questions: mergeQuestions(quizzes, quizLabel) };
+export function buildStarredQuiz(quizzes, subject = null) {
+  const scope = subject === null ? { id: STARRED_QUIZ_ID } : { id: starredQuizId(subject), subject };
+  return { ...scope, mixed: true, starred: true, questions: mergeQuestions(quizzes, quizLabel) };
+}
+
+/** Session id of the starred practice: all subjects, or one subject (its own saved session). */
+export function starredQuizId(subject = null) {
+  return subject === null ? STARRED_QUIZ_ID : `${STARRED_QUIZ_ID}-${mixedQuizId(subject).slice('mix-'.length)}`;
 }
 
 /** Quiz ids a saved starred session refers to, so their files can be loaded to resume it. */

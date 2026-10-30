@@ -68,6 +68,7 @@ function subjectItem(subject, open, media) {
     items.push(el('li', { class: 'drawer-unit' }, link(`${paths.home}#${unitAnchor(i)}`, unit.name)));
   });
   if (canMix) items.push(el('li', {}, link(paths.practice, 'תרגול לפי נושאים')));
+  if (quizCount > 0) items.push(el('li', {}, link(paths.starred, '★ שאלות מסומנות')));
   if (quizCount > 0) items.push(el('li', {}, link(paths.print, 'מבחן להדפסה')));
   if (summariesFor(subject.id).length > 0) items.push(el('li', {}, link(paths.summaries, 'סיכומים קצרים')));
   if (mediaCount(media, subject.id) > 0) items.push(el('li', {}, link(paths.media, 'סרטוני הסבר קצרים')));
@@ -102,7 +103,7 @@ function build() {
     el('ul', { class: 'drawer-list' },
       el('li', {}, link('./', 'דף הבית · כל המקצועות')),
       el('li', {}, link('summaries/', 'כל הסיכומים')),
-      el('li', {}, link('quiz.html?starred', '★ שאלות מסומנות'))),
+      el('li', {}, link('quiz.html?starred', '★ שאלות מסומנות מכל המקצועות'))),
     ...subjectsSection(manifest, media),
     el('ul', { class: 'drawer-list drawer-foot' },
       el('li', {}, link('accessibility.html', 'הצהרת נגישות')),

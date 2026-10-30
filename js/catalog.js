@@ -43,6 +43,7 @@ export function subjectPaths(id) {
   return {
     home: `./${q}`,
     practice: `quiz.html${q}`,
+    starred: `quiz.html?starred&subject=${encodeURIComponent(id)}`,
     print: `print.html${q}`,
     summaries: `summaries/${q}`,
     media: `media.html${q}`,

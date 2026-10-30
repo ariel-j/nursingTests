@@ -34,7 +34,8 @@ No build step and no runtime dependencies. Node is only needed for the tests and
 - Any question can be **starred** (☆ next to the topic, `F`, or on the end screen's list).
   A quiz's start screen can practise or browse its starred questions, and the home page links to
   `quiz.html?starred`, which gathers starred questions from every quiz: tick which quizzes and
-  which questions to practise. Stars only change when you change them.
+  which questions to practise. A subject's page (and its menu entry) links `quiz.html?starred&subject=<id>`,
+  with only that subject's starred questions. Stars only change when you change them.
 - An unfinished session is saved in `localStorage` and resumes after a refresh.
   The quiz list shows which quizzes are in progress and your best first-try score
   (best score counts only runs over the whole quiz).
