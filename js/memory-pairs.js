@@ -1,4 +1,4 @@
-// Pairs mode: flip a drug's name card and its association card. The board is built once and updated
+// Pairs mode: flip a drug's name card and its use card. The board is built once and updated
 // in place, so keyboard focus stays on the card that was pressed.
 import { clearMismatch, comboMultiplier, createPairs, finishPairs, flip } from './memory-core.js';
 import { drugDetail } from './memory-detail.js';
@@ -10,7 +10,7 @@ const FLIP_BACK_MS = 450;
 
 const KIND = {
   name: { icon: '💊', label: 'שם', spoken: 'שם תרופה' },
-  assoc: { icon: '💡', label: 'אסוציאציה', spoken: 'אסוציאציה' },
+  use: { icon: '🩺', label: 'שימוש', spoken: 'שימוש' },
 };
 
 function hudItem(label) {
@@ -52,7 +52,7 @@ export function playPairs({ root, ids, byId, rng, announce, onFinish, onExit }) 
 
   const content = (i) => {
     const card = state.cards[i];
-    return card.kind === 'name' ? byId.get(card.drugId).name : byId.get(card.drugId).association;
+    return card.kind === 'name' ? byId.get(card.drugId).name : byId.get(card.drugId).use;
   };
 
   const buttons = state.cards.map((card, i) => {

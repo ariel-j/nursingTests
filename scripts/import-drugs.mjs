@@ -2,7 +2,7 @@
 // Converts the authoring file of drug cards into games/drugs.json (game fields only).
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { DRUGS_FILE, buildDrugs, drugErrors } from './memory-drugs.mjs';
+import { DRUGS_FILE, buildDrugs, drugErrors, loadDrugs } from './memory-drugs.mjs';
 
 const src = process.argv[2];
 if (!src) {
@@ -11,7 +11,14 @@ if (!src) {
 }
 
 try {
-  const data = buildDrugs(JSON.parse(await readFile(src, 'utf8')));
+  // The short uses are written by hand in the published file, so carry them over.
+  let uses = {};
+  try {
+    uses = Object.fromEntries((await loadDrugs()).drugs.map((d) => [d.id, d.use]));
+  } catch {
+    // first import: no file yet
+  }
+  const data = buildDrugs(JSON.parse(await readFile(src, 'utf8')), uses);
   const errors = drugErrors(data);
   if (errors.length > 0) {
     for (const e of errors) console.error(e);

@@ -155,8 +155,8 @@ function renderSetup() {
 
   $('relaxed').checked = progress.settings.relaxed;
   $('speed-desc').textContent = progress.settings.relaxed
-    ? `${SPEED_QUESTIONS} שאלות בלי שעון: מזהים את התרופה או האסוציאציה הנכונה.`
-    : `${SPEED_QUESTIONS} שאלות, ${SPEED_MS.toName / 1000}–${SPEED_MS.toAssoc / 1000} שניות לכל אחת. מהר יותר שווה יותר נקודות.`;
+    ? `${SPEED_QUESTIONS} שאלות בלי שעון: מזהים את התרופה או את השימוש הנכון.`
+    : `${SPEED_QUESTIONS} שאלות, ${SPEED_MS.toName / 1000}–${SPEED_MS.toUse / 1000} שניות לכל אחת. מהר יותר שווה יותר נקודות.`;
   renderNote();
 }
 
@@ -363,7 +363,7 @@ function renderResult(result, report, before) {
   for (const id of missed) {
     const drug = byId.get(id);
     const li = el('li');
-    li.append(drugName(drug.name, 'strong'), el('span', null, drug.association));
+    li.append(drugName(drug.name, 'strong'), el('span', null, drug.indication));
     review.append(li);
   }
   $('result-review-box').hidden = missed.length === 0;
