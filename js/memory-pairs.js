@@ -52,7 +52,7 @@ export function playPairs({ root, ids, byId, rng, announce, onFinish, onExit }) 
 
   const content = (i) => {
     const card = state.cards[i];
-    return card.kind === 'name' ? byId.get(card.drugId).name : byId.get(card.drugId).indication;
+    return card.kind === 'name' ? byId.get(card.drugId).name : byId.get(card.drugId).use;
   };
 
   const buttons = state.cards.map((card, i) => {

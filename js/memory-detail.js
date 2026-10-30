@@ -10,11 +10,12 @@ export function drugDetail(drug, { headingTag = 'h3', headingId } = {}) {
   const family = el('p', 'detail-family', drug.family);
 
   const use = el('p', 'detail-use');
-  use.append(el('span', 'detail-label', '🩺 שימוש: '), document.createTextNode(drug.indication));
+  use.append(el('span', 'detail-label', '🩺 שימושים: '), document.createTextNode(drug.indication));
 
   const explanation = el('p', 'detail-explanation', drug.explanation);
 
   const effects = el('details', 'detail-effects');
+  effects.open = true;
   effects.append(el('summary', null, 'תופעות לוואי'));
   const list = el('ul');
   for (const text of drug.sideEffects) list.append(el('li', null, text));

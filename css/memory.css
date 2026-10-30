@@ -225,7 +225,7 @@ h1[tabindex="-1"]:focus, h2[tabindex="-1"]:focus, #game:focus { outline: none; }
   text-align: center;
   overflow: auto;
 }
-.mcard[data-kind="use"] .mcard-front { background: var(--assoc-soft); font-size: 0.95rem; }
+.mcard[data-kind="use"] .mcard-front { background: var(--assoc-soft); font-size: 1rem; }
 .mcard[data-kind="name"] .mcard-front { font: 600 1rem/1.2 var(--sans); overflow-wrap: anywhere; }
 :root[data-contrast="high"] .mcard-front { background: #fff; }
 

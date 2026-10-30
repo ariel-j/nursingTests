@@ -188,7 +188,7 @@ see `summaries/sleep.html`).
 
 A game for learning what 70 key drugs are used for. The home page links to it.
 
-- **Pairs:** flip a drug-name card and a use card (its indication) (6, 8 or 10 pairs per round, drawn from the pool
+- **Pairs:** flip a drug-name card and a use card (a short `use`, at most 60 characters; the full indication appears in the explanation) (6, 8 or 10 pairs per round, drawn from the pool
   with a bias towards drugs you know least). A match opens the explanation, side effects included.
   Matching builds a combo (up to x3); a wrong flip costs points only when the partner of a flipped card was
   already seen, so guessing at unseen cards is free. Bonuses for speed and for a round with no such misses.
@@ -203,7 +203,7 @@ A game for learning what 70 key drugs are used for. The home page links to it.
 
 Cards come from `games/drugs.json`, generated from the authoring file with
 `npm run import-drugs -- <source.json>`. Only the fields the game shows are kept (name, family, topic,
-indication, side effects, explanation); sources, lecturers and exam statistics are dropped.
+use, indication, side effects, explanation); the short `use` is written by hand in the file and a re-import keeps it; sources, lecturers and exam statistics are dropped.
 `npm run validate` rejects any other field.
 
 ## Development

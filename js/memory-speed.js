@@ -79,7 +79,7 @@ export function playSpeed({ root, ids, drugs, byId, rng, relaxed, announce, onFi
 
   // ----- a question -----
   function optionContent(q, drugId) {
-    return q.direction === 'toName' ? drugName(byId.get(drugId).name, 'span') : document.createTextNode(byId.get(drugId).indication);
+    return q.direction === 'toName' ? drugName(byId.get(drugId).name, 'span') : document.createTextNode(byId.get(drugId).use);
   }
 
   function showQuestion() {
@@ -90,7 +90,7 @@ export function playSpeed({ root, ids, drugs, byId, rng, relaxed, announce, onFi
     clear(feedback);
     label.textContent = PROMPTS[q.direction];
     clear(prompt);
-    if (q.direction === 'toName') prompt.textContent = drug.indication;
+    if (q.direction === 'toName') prompt.textContent = drug.use;
     else prompt.append(drugName(drug.name));
 
     clear(options);
@@ -125,7 +125,7 @@ export function playSpeed({ root, ids, drugs, byId, rng, relaxed, announce, onFi
         }
       }, TICK_MS);
     }
-    announce(`${PROMPTS[q.direction]} ${q.direction === 'toName' ? drug.indication : drug.name}`);
+    announce(`${PROMPTS[q.direction]} ${q.direction === 'toName' ? drug.use : drug.name}`);
   }
 
   function choose(choice) {
