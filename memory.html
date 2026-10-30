@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>משחק זיכרון תרופות מרכזיות</title>
+  <link rel="preload" href="fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/memory.css">
+  <script type="module" src="js/memory.js"></script>
+  <script type="module" src="js/nav.js"></script>
+  <script type="module" src="js/a11y.js"></script>
+  <script type="module" src="js/analytics.js"></script>
+</head>
+<body class="memory">
+  <main class="page">
+    <nav class="top-nav">
+      <a href="./?subject=pharmacology">→ דף המקצוע</a>
+      <button id="fx-toggle" class="link-button" type="button" aria-pressed="false">צלילים ורטט: כבויים</button>
+    </nav>
+
+    <header class="quiz-header">
+      <p class="kicker">פרמקולוגיה א'</p>
+      <h1 id="page-title" tabindex="-1">משחק זיכרון תרופות מרכזיות</h1>
+    </header>
+    <p id="status" class="status" role="status">טוען…</p>
+    <div id="live" class="sr-only" role="status" aria-live="polite"></div>
+
+    <!-- Hub: player, settings, modes -->
+    <section id="hub" hidden aria-label="תפריט ראשי">
+      <div class="card player">
+        <div class="player-top">
+          <div class="level-badge"><span class="level-num" id="level-num"></span><span class="level-cap">רמה</span></div>
+          <div class="player-main">
+            <p class="player-title" id="player-title"></p>
+            <div class="xp-bar" id="xp-bar" role="progressbar" aria-label="התקדמות לרמה הבאה" aria-valuemin="0">
+              <i id="xp-fill"></i>
+            </div>
+            <p class="muted xp-text" id="xp-text"></p>
+          </div>
+        </div>
+        <ul class="player-stats">
+          <li id="streak-stat"></li>
+          <li id="daily-stat"></li>
+        </ul>
+        <div class="mastery">
+          <div class="mastery-bar" id="mastery-bar" role="img"></div>
+          <ul class="mastery-legend" id="mastery-legend"></ul>
+        </div>
+      </div>
+
+      <form id="setup" class="card">
+        <h2>מה משחקים?</h2>
+        <div class="setup-grid">
+          <label class="field">
+            <span>אילו תרופות</span>
+            <select id="pool"></select>
+          </label>
+          <fieldset class="field sizes">
+            <legend>גודל לוח (זוגות)</legend>
+            <div id="sizes" class="segmented"></div>
+          </fieldset>
+        </div>
+        <label class="check">
+          <input type="checkbox" id="relaxed">
+          <span>מצב רגוע: בלי שעון במצב מהירות</span>
+        </label>
+
+        <div class="modes">
+          <button type="button" class="mode-card" id="play-pairs">
+            <span class="mode-icon" aria-hidden="true">🃏</span>
+            <span class="mode-name">זוגות</span>
+            <span class="mode-desc">מצאו לכל תרופה את השימוש שלה. אחרי כל התאמה מופיע ההסבר.</span>
+          </button>
+          <button type="button" class="mode-card" id="play-connect">
+            <span class="mode-icon" aria-hidden="true">🔗</span>
+            <span class="mode-name">חיבור</span>
+            <span class="mode-desc">כל התרופות והשימושים גלויים. בוחרים תרופה ושימוש כדי לחבר ביניהם.</span>
+          </button>
+          <button type="button" class="mode-card" id="play-speed">
+            <span class="mode-icon" aria-hidden="true">⚡</span>
+            <span class="mode-name">מהירות</span>
+            <span class="mode-desc" id="speed-desc"></span>
+          </button>
+        </div>
+        <p id="pool-note" class="muted" role="status"></p>
+      </form>
+
+      <div class="hub-links">
+        <button type="button" class="secondary" id="open-collection">🗂 האוסף</button>
+        <button type="button" class="secondary" id="open-achievements">🏆 הישגים</button>
+      </div>
+
+      <details class="card rules">
+        <summary>איך זה עובד</summary>
+        <p>בחיבור כל התרופות והשימושים גלויים: בוחרים תרופה ואז שימוש כדי לחבר ביניהם. כל חיבור שגוי מוריד נקודות ומאפס את הרצף.</p>
+        <p>בזוגות הפכו שני קלפים: שם של תרופה והשימוש שלה. התאמה נכונה מעלה את הרצף ואת הניקוד, וטעות על קלף שכבר ראיתם מורידה נקודות. ניחוש על קלפים שעוד לא ראיתם לא עולה כלום.</p>
+        <p>כל תרופה עוברת ארבע רמות: לא נראתה, נראתה, מוכרת ו"שלי". זוגות מקדם עד "מוכרת". כדי שתרופה תהיה "שלי" צריך לזהות אותה במצב מהירות, בלי לראות את הזוג.</p>
+        <p>תרופות חלשות חוזרות לעתים קרובות יותר. ההתקדמות נשמרת בדפדפן. במהירות אפשר לבחור גם במקשים <kbd>1</kbd>–<kbd>4</kbd>.</p>
+      </details>
+    </section>
+
+    <!-- Collection -->
+    <section id="collection" hidden aria-labelledby="collection-title">
+      <div class="section-head">
+        <h2 id="collection-title" tabindex="-1">האוסף</h2>
+        <button type="button" class="link-button back" data-back>← חזרה לתפריט</button>
+      </div>
+      <p class="muted" id="collection-summary"></p>
+      <div id="collection-groups"></div>
+    </section>
+
+    <!-- Achievements -->
+    <section id="achievements" hidden aria-labelledby="achievements-title">
+      <div class="section-head">
+        <h2 id="achievements-title" tabindex="-1">הישגים</h2>
+        <button type="button" class="link-button back" data-back>← חזרה לתפריט</button>
+      </div>
+      <p class="muted" id="achievements-summary"></p>
+      <ul id="achievements-list" class="achievements"></ul>
+    </section>
+
+    <!-- Game (pairs or speed) -->
+    <section id="game" hidden aria-label="משחק"></section>
+
+    <!-- Result -->
+    <section id="result" hidden aria-labelledby="result-title">
+      <div class="card result">
+        <h2 id="result-title" tabindex="-1"></h2>
+        <div id="stars" class="stars" role="img"></div>
+        <p class="muted">ניקוד</p>
+        <p id="result-score" class="score"></p>
+        <p id="result-best" class="best-banner" hidden></p>
+        <ul id="result-breakdown" class="breakdown"></ul>
+        <div id="result-level" class="level-up" hidden></div>
+        <div id="result-xp" class="xp-gain"></div>
+
+        <div id="result-promoted-box" hidden>
+          <h3>עלו רמה</h3>
+          <ul id="result-promoted" class="chips"></ul>
+        </div>
+        <div id="result-achievements-box" hidden>
+          <h3>הישגים חדשים</h3>
+          <ul id="result-achievements" class="achievements compact"></ul>
+        </div>
+        <div id="result-review-box" hidden>
+          <h3>כדאי לחזור על</h3>
+          <ul id="result-review" class="review"></ul>
+        </div>
+
+        <div class="actions">
+          <button id="again" class="primary" type="button">סבב נוסף</button>
+          <button id="again-weak" class="secondary" type="button" hidden>תרגול החלשות שלי</button>
+          <button id="to-hub" class="secondary" type="button">לתפריט</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="detail" class="detail" aria-labelledby="detail-title">
+    <div id="detail-body"></div>
+    <form method="dialog"><button class="primary" type="submit">סגירה</button></form>
+  </dialog>
+
+  <footer class="site-footer page">
+    <nav>
+      <a href="accessibility.html">הצהרת נגישות</a>
+      <a href="privacy.html">מדיניות פרטיות</a>
+    </nav>
+    <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+    <p>תוכן לימודי לתרגול בלבד. אינו מהווה ייעוץ רפואי ואינו תחליף לחומרי הקורס.</p>
+  </footer>
+</body>
+</html>

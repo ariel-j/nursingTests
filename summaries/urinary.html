@@ -5,23 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <title>מערכת השתן — סיכום</title>
-  <link rel="preload" href="../fonts/assistant-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/summary.css">
   <script type="module" src="../js/summary.js"></script>
+  <script type="module" src="../js/nav.js"></script>
   <script type="module" src="../js/a11y.js"></script>
+  <script type="module" src="../js/analytics.js"></script>
 </head>
 <body class="summary-page">
   <main class="page wide">
     <nav class="top-nav no-print">
-      <a href="./">→ כל הסיכומים</a>
+      <a href="./?subject=nursing-fundamentals">→ כל הסיכומים</a>
       <a href="../study/urinary.html">תרגול אינטראקטיבי</a>
       <button type="button" class="secondary" data-print>הדפסה / שמירה כ‑PDF</button>
     </nav>
 
 <article class="summary" data-system="urinary">
   <header>
-    <p class="kicker">יסודות להתערבות ומיומנויות סיעודיות · סיכום נושא</p>
+    <p class="kicker">יסודות להתערבות סיעודית · מערכת השתן · סיכום נושא</p>
     <h1>מערכת השתן</h1>
     <p class="lede">מהאנטומיה של הכליה ועד הטיית שתן: המערכת מסננת דם, מווסתת נוזלים ואלקטרוליטים ומפרישה פסולת. הדגשים הנבחנים הם <b>ערכי שתן תקינים</b>, הפרעות במתן שתן, סוגי אי-שליטה (<b>DIAPPERS</b>) וטיפול בטוח בקטטר.</p>
     <svg class="motif" viewBox="0 0 480 64" preserveAspectRatio="none" aria-hidden="true">
@@ -29,9 +31,31 @@
     </svg>
     <div class="legend">
       <span><span class="arrowmark">←</span> <b>גורם ← תוצאה</b> (קוראים מימין לשמאל)</span>
-      <span><span class="exam exam-legend">נשאל בשחזורים</span> נקודה שחזרה במבחנים</span>
+      <span><span class="exam exam-legend">הופיע בעבר</span> נקודה שהופיעה בעבר — כדאי לשים לב</span>
     </div>
   </header>
+
+  <section class="intro" id="ur-intro">
+    <h2>מבוא: על מה כל זה?</h2>
+    <p><b>מערכת השתן</b> מסננת את הדם, מפרישה פסולת ומווסתת נוזלים, אלקטרוליטים ולחץ דם. בסיעוד היא חשובה משום ששתן הוא כלי אומדן זמין: הכמות, הצבע, ה-PH והתרבית אומרים הרבה על התייבשות, זיהום וסוכרת, והטיפול בקטטר הוא פעולה סיעודית שכיחה עם סיכון זיהום.</p>
+    <p>הסיכום בנוי מהמבנה אל המעשה: מסלול השתן ותפקידי הכליה, מספרי ההשתנה, ערכי השתן התקינים, מילון ההפרעות, אי-שליטה ואצירה (<b>DIAPPERS</b>), ולבסוף בדיקות, צנתור והטיית שתן.</p>
+    <p>למבחן: הערכים התקינים (PH 4.5-8, משקל סגולי 1.010-1.025, תרבית פחות מ-10,000), ראשי התיבות DIAPPERS, וכללי הטיפול בקטטר.</p>
+  </section>
+
+  <section class="glossary" id="ur-glossary">
+    <h2>מילון מונחים</h2>
+    <p class="sec-note">כל מונח שמופיע בהמשך, בשפה פשוטה.</p>
+    <dl class="def"><dt>נפרון <span class="en">(Nephron)</span></dt><dd>יחידת הסינון של הכליה; בכל כליה כמיליון נפרונים.</dd></dl>
+    <dl class="def"><dt>שופכן <span class="en">(Ureter)</span></dt><dd>צינור שמוביל שתן מהכליה לשלפוחית.</dd></dl>
+    <dl class="def"><dt>שופכה <span class="en">(Urethra)</span></dt><dd>הצינור שמוציא שתן מהשלפוחית החוצה.</dd></dl>
+    <dl class="def"><dt>נפח שאריתי</dt><dd>השתן שנשאר בשלפוחית אחרי ההשתנה.</dd></dl>
+    <dl class="def"><dt>משקל סגולי <span class="en">(Specific gravity)</span></dt><dd>מדד לריכוז השתן: גבוה = מרוכז, נמוך = מדולל.</dd></dl>
+    <dl class="def"><dt>UTI</dt><dd>זיהום בדרכי השתן.</dd></dl>
+    <dl class="def"><dt>אי-שליטה <span class="en">(Incontinence)</span></dt><dd>איבוד שתן בלתי רצוני.</dd></dl>
+    <dl class="def"><dt>אצירה <span class="en">(Retention)</span></dt><dd>חוסר יכולת לרוקן את השלפוחית.</dd></dl>
+    <dl class="def"><dt>קטטר פולי <span class="en">(Foley)</span></dt><dd>קטטר קבוע עם בלון שמקבע אותו בשלפוחית.</dd></dl>
+    <dl class="def"><dt><span class="en">French</span></dt><dd>יחידת המידה של עובי הקטטר.</dd></dl>
+  </section>
 
   <section>
     <h2>1 · יסודות מהירים</h2>
@@ -140,6 +164,7 @@
       <a href="../privacy.html">מדיניות פרטיות</a>
     </nav>
     <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+    <p>תוכן לימודי לתרגול בלבד. אינו מהווה ייעוץ רפואי ואינו תחליף לחומרי הקורס.</p>
   </footer>
 </body>
 </html>

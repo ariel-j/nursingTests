@@ -5,23 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <title>מערכת העיכול וההפרשות — סיכום</title>
-  <link rel="preload" href="../fonts/assistant-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/summary.css">
   <script type="module" src="../js/summary.js"></script>
+  <script type="module" src="../js/nav.js"></script>
   <script type="module" src="../js/a11y.js"></script>
+  <script type="module" src="../js/analytics.js"></script>
 </head>
 <body class="summary-page">
   <main class="page wide">
     <nav class="top-nav no-print">
-      <a href="./">→ כל הסיכומים</a>
+      <a href="./?subject=nursing-fundamentals">→ כל הסיכומים</a>
       <a href="../study/gi.html">תרגול אינטראקטיבי</a>
       <button type="button" class="secondary" data-print>הדפסה / שמירה כ‑PDF</button>
     </nav>
 
 <article class="summary" data-system="gi">
   <header>
-    <p class="kicker">יסודות להתערבות ומיומנויות סיעודיות · סיכום נושא</p>
+    <p class="kicker">יסודות להתערבות סיעודית · מערכת העיכול וההפרשות · סיכום נושא</p>
     <h1>מערכת העיכול וההפרשות</h1>
     <p class="lede">מערכת פתוחה באורך כ-<b>7.5 מטר</b> הקולטת, מפרקת, סופגת ומפנה פסולת. הדגשים הנבחנים: ערכי צואה תקינים וסולם בריסטול, ההבדל בין עצירות לשלשול, תכשירים משלשלים וחוקן, ו<b>אבני צואה</b> — פעולת סיעוד עם סיבוכים מסוכנים.</p>
     <svg class="motif" viewBox="0 0 480 64" preserveAspectRatio="none" aria-hidden="true">
@@ -29,9 +31,32 @@
     </svg>
     <div class="legend">
       <span><span class="arrowmark">←</span> <b>גורם ← תוצאה</b> (קוראים מימין לשמאל)</span>
-      <span><span class="exam exam-legend">נשאל בשחזורים</span> נקודה שחזרה במבחנים</span>
+      <span><span class="exam exam-legend">הופיע בעבר</span> נקודה שהופיעה בעבר — כדאי לשים לב</span>
     </div>
   </header>
+
+  <section class="intro" id="gi-intro">
+    <h2>מבוא: על מה כל זה?</h2>
+    <p><b>מערכת העיכול</b> היא צינור פתוח באורך כ-7.5 מטר שקולט מזון, מפרק אותו, סופג ממנו ומפנה את הפסולת. בסיעוד חשוב לדעת מה תקין ומה לא: תדירות וצורת הצואה, עצירות, שלשול והתייבשות, וגם פעולות סיעודיות כמו מתן חוקן, הוצאת אבני צואה וטיפול בסטומה.</p>
+    <p>הסיכום בנוי מהמבנה אל המעשה: אנטומיה, צואה תקינה וסולם בריסטול, עצירות ושלשול, תכשירים משלשלים וחוקן, אבני צואה וסיבוכיהן, ולבסוף קולונוסקופיה וסטומה.</p>
+    <p>למבחן: סולם בריסטול (1 = עצירות, 7 = שלשול), מנגנון הפעולה של כל תכשיר, הסיבוך הוואגאלי של אבני צואה, וההבדל בין אילאוסטומיה לקולוסטומיה.</p>
+  </section>
+
+  <section class="glossary" id="gi-glossary">
+    <h2>מילון מונחים</h2>
+    <p class="sec-note">כל מונח שמופיע בהמשך, בשפה פשוטה.</p>
+    <dl class="def"><dt>סולם בריסטול <span class="en">(Bristol)</span></dt><dd>סיווג של צורת הצואה ל-7 סוגים, מעצירות (1) ועד שלשול (7).</dd></dl>
+    <dl class="def"><dt>עצירות</dt><dd>קושי ביציאה או תדירות נמוכה.</dd></dl>
+    <dl class="def"><dt>שלשול</dt><dd>יותר מ-4 יציאות רכות ביום.</dd></dl>
+    <dl class="def"><dt>משלשל</dt><dd>תכשיר שמעודד יציאה. לכל סוג מנגנון משלו: ממריץ, אוסמוטי, עוטף או מגדיל נפח.</dd></dl>
+    <dl class="def"><dt>חוקן <span class="en">(Enema)</span></dt><dd>החדרת נוזל לרקטום כדי לעודד יציאה.</dd></dl>
+    <dl class="def"><dt>אבני צואה <span class="en">(Fecal impaction)</span></dt><dd>גוש צואתי קשה שלא מופרש.</dd></dl>
+    <dl class="def"><dt>גירוי ואגאלי</dt><dd>גירוי של עצב הוואגוס שעלול להאט את הלב (ברדיקרדיה) ולגרום לעילפון.</dd></dl>
+    <dl class="def"><dt>צניחת רקטום <span class="en">(Prolapse)</span></dt><dd>יציאה של הרקטום החוצה דרך פי הטבעת; התווית-נגד להוצאת אבני צואה.</dd></dl>
+    <dl class="def"><dt>סטומה <span class="en">(Stoma)</span></dt><dd>פתח מלאכותי בדופן הבטן שדרכו יוצאת הצואה.</dd></dl>
+    <dl class="def"><dt>אילאוסטומיה / קולוסטומיה</dt><dd>סטומה מהמעי הדק (צואה נוזלית) או מהמעי הגס (צואה מוצקה יותר).</dd></dl>
+    <dl class="def"><dt>קולונוסקופיה <span class="en">(Colonoscopy)</span></dt><dd>בדיקה של המעי הגס, גם לאבחון וגם להסרת פוליפים.</dd></dl>
+  </section>
 
   <section>
     <h2>1 · יסודות מהירים — אנטומיה</h2>
@@ -148,6 +173,7 @@
       <a href="../privacy.html">מדיניות פרטיות</a>
     </nav>
     <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+    <p>תוכן לימודי לתרגול בלבד. אינו מהווה ייעוץ רפואי ואינו תחליף לחומרי הקורס.</p>
   </footer>
 </body>
 </html>
