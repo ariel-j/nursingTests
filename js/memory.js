@@ -1,5 +1,5 @@
 // Drug memory game: hub, collection, achievements, result screen. The two play modes live in
-// memory-pairs.js and memory-speed.js; all rules and scoring are in memory-core.js.
+// memory-pairs.js, memory-connect.js and memory-speed.js; all rules and scoring are in memory-core.js.
 import {
   ACHIEVEMENTS,
   DAILY_BONUS,
@@ -25,6 +25,7 @@ import {
 import { drugDetail } from './memory-detail.js';
 import { clear, countUp, drugName, el, formatNumber, ltr, motionAllowed, todayString } from './memory-dom.js';
 import { confetti, setEffects, sound } from './memory-fx.js';
+import { playConnect } from './memory-connect.js';
 import { playPairs } from './memory-pairs.js';
 import { playSpeed } from './memory-speed.js';
 import { keys, load, save } from './storage.js';
@@ -267,7 +268,7 @@ function openAchievements() {
 
 function start(mode) {
   const pool = poolDrugs();
-  const count = mode === 'pairs' ? Math.min(size, pool.length) : Math.min(SPEED_QUESTIONS, pool.length);
+  const count = mode === 'speed' ? Math.min(SPEED_QUESTIONS, pool.length) : Math.min(size, pool.length);
   if (count < MIN_PAIRS) {
     $('pool-note').textContent = 'אין מספיק תרופות לסבב הזה.';
     return;
@@ -277,11 +278,12 @@ function start(mode) {
   const ids = pickDrugs(pool, progress, count, Math.random);
   show('game');
   const common = { root: $('game'), ids, byId, rng: Math.random, announce, onExit: showHub, onFinish: finish };
-  active = mode === 'pairs'
-    ? playPairs(common)
-    : playSpeed({ ...common, drugs, relaxed: progress.settings.relaxed });
+  if (mode === 'pairs') active = playPairs(common);
+  else if (mode === 'connect') active = playConnect(common);
+  else active = playSpeed({ ...common, drugs, relaxed: progress.settings.relaxed });
   $('game').focus({ preventScroll: true });
-  announce(mode === 'pairs' ? `סבב זוגות: ${ids.length} זוגות` : `סבב מהירות: ${ids.length} שאלות`);
+  const intro = { pairs: `סבב זוגות: ${ids.length} זוגות`, connect: `סבב חיבור: ${ids.length} תרופות לחבר לשימושים`, speed: `סבב מהירות: ${ids.length} שאלות` };
+  announce(intro[mode]);
 }
 
 function finish(result) {
@@ -324,8 +326,8 @@ function renderResult(result, report, before) {
     li.append(el('span', null, text), el('b', null, value));
     rows.append(li);
   };
-  if (result.mode === 'pairs') {
-    row('התאמות', `${formatNumber(result.base)}`);
+  if (result.mode !== 'speed') {
+    row(result.mode === 'connect' ? 'חיבורים' : 'התאמות', `${formatNumber(result.base)}`);
     row('רצף הכי ארוך', `${result.bestCombo}`);
     row('טעויות שאפשר היה להימנע מהן', `${result.misses}`);
     if (result.timeBonus) row('בונוס מהירות', ltr(`+${formatNumber(result.timeBonus)}`));
@@ -387,6 +389,7 @@ function wire() {
   });
   $('setup').addEventListener('submit', (e) => e.preventDefault());
   $('play-pairs').addEventListener('click', () => start('pairs'));
+  $('play-connect').addEventListener('click', () => start('connect'));
   $('play-speed').addEventListener('click', () => start('speed'));
   $('open-collection').addEventListener('click', openCollection);
   $('open-achievements').addEventListener('click', openAchievements);

@@ -192,6 +192,7 @@ A game for learning what 70 key drugs are used for. The home page links to it.
   with a bias towards drugs you know least). A match opens the explanation, side effects included.
   Matching builds a combo (up to x3); a wrong flip costs points only when the partner of a flipped card was
   already seen, so guessing at unseen cards is free. Bonuses for speed and for a round with no such misses.
+- **Connect:** every drug and every use is in view (6, 8 or 10 of each); press a name, then a use, to join them. A wrong join costs the combo and 50 points; joined pairs get a matching number and colour. Recognition only, like pairs (lifts a drug to "familiar"), with its own best score.
 - **Speed:** 10 questions, a use (or a drug name) and four options, against a clock (12-15 s).
   "Relaxed mode" turns the clock off.
 - **Pool:** all drugs, only your weak ones, or one topic. Weak drugs come back more often.
@@ -232,7 +233,7 @@ A run takes about a minute; GitHub Actions are free for public repositories.
 | `js/stats-transfer.js` | export / import of statistics (home page) |
 | `memory.html`, `css/memory.css`, `games/drugs.json` | the drug memory game and its cards |
 | `js/memory-core.js` | pure game logic: dealing, matching, scoring, mastery, XP, streaks, achievements |
-| `js/memory.js` | hub, collection, achievements and result screens; `memory-pairs.js` and `memory-speed.js` are the two modes; `memory-fx.js` sound, vibration, confetti; `memory-dom.js`, `memory-detail.js` helpers |
+| `js/memory.js` | hub, collection, achievements and result screens; `memory-pairs.js`, `memory-connect.js` and `memory-speed.js` are the three modes; `memory-explain.js` the shared explanation panel; `memory-fx.js` sound, vibration, confetti; `memory-dom.js`, `memory-detail.js` helpers |
 | `summaries/`, `css/summary.css` | short summaries, the hub and the combined print page |
 | `js/summary-interactive.js` | the study-hub layer (tabs, flip cards, scale switch, mini quiz) |
 | `js/summary-list.js` | the list of summaries (no DOM); `js/summaries.js`, `js/summary.js`, `js/summaries-all.js` drive the pages |

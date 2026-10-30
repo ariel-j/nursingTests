@@ -9,8 +9,8 @@ import { overlaps } from './drugs-core.js';
 /** Mastery levels per drug: 0 unseen, 1 seen, 2 familiar (earned in pairs), 3 mastered (earned by recall). */
 export const LEVEL_LABELS = ['לא נראתה', 'נראתה', 'מוכרת', 'שלי'];
 export const MAX_LEVEL = 3;
-/** Pairs only needs recognition, so it can lift a drug to "familiar"; "mastered" takes recall (speed mode). */
-export const MAX_LEVEL_BY_MODE = { pairs: 2, speed: 3 };
+/** Pairs and connect only need recognition, so they lift a drug up to "familiar"; "mastered" takes recall (speed mode). */
+export const MAX_LEVEL_BY_MODE = { pairs: 2, connect: 2, speed: 3 };
 
 export const PAIR_SIZES = [6, 8, 10];
 export const DEFAULT_PAIRS = 8;
@@ -73,7 +73,7 @@ export function emptyProgress() {
     streak: { days: 0, last: null },
     daily: { date: null, rounds: 0, bonusPaid: false },
     drugs: {},
-    best: { pairs: 0, speed: 0 },
+    best: { pairs: 0, connect: 0, speed: 0 },
     achievements: {},
     settings: { effects: false, relaxed: false },
   };
@@ -92,7 +92,7 @@ export function normalizeProgress(raw) {
     rounds: int(raw.rounds, 0, 1e9),
     streak: { days: int(raw.streak?.days, 0, 1e5), last: date(raw.streak?.last) },
     daily: { date: date(raw.daily?.date), rounds: int(raw.daily?.rounds, 0, 1e5), bonusPaid: raw.daily?.bonusPaid === true },
-    best: { pairs: int(raw.best?.pairs, 0, 1e9), speed: int(raw.best?.speed, 0, 1e9) },
+    best: { pairs: int(raw.best?.pairs, 0, 1e9), connect: int(raw.best?.connect, 0, 1e9), speed: int(raw.best?.speed, 0, 1e9) },
     settings: { effects: raw.settings?.effects === true, relaxed: raw.settings?.relaxed === true },
   };
   if (raw.drugs && typeof raw.drugs === 'object') {
@@ -305,8 +305,8 @@ export function pairStars(pairs, misses) {
   return misses <= pairs ? 2 : 1;
 }
 
-export function timeBonus(pairs, elapsedMs) {
-  const over = PAR_SECONDS_PER_PAIR * pairs - elapsedMs / 1000;
+export function timeBonus(pairs, elapsedMs, parSecondsPerPair = PAR_SECONDS_PER_PAIR) {
+  const over = parSecondsPerPair * pairs - elapsedMs / 1000;
   return Math.max(0, Math.round(over)) * TIME_BONUS_PER_SECOND;
 }
 
@@ -327,6 +327,112 @@ export function finishPairs(state, elapsedMs) {
     bestCombo: state.bestCombo,
     elapsedMs,
     stars: pairStars(state.pairs, state.misses),
+    outcomes: state.matched.map((drugId) => ({ drugId, ok: !state.missedIds.includes(drugId) })),
+  };
+}
+
+// ---------- connect mode ----------
+
+const CONNECT_PAR_SECONDS_PER_PAIR = 5;
+
+/**
+ * Every drug and every use is in view at once; the player joins a name to its use. Both columns are
+ * shuffled, and no name starts level with its own use. Any wrong join is avoidable, so every one
+ * costs the combo and some points.
+ */
+export function createConnect(ids, rng) {
+  const names = shuffle(ids, rng);
+  let uses = shuffle(ids, rng);
+  for (let t = 0; t < 20 && ids.length > 1 && uses.some((id, i) => id === names[i]); t++) uses = shuffle(ids, rng);
+  if (ids.length > 1 && uses.some((id, i) => id === names[i])) uses = [...names.slice(1), names[0]];
+  return {
+    names,
+    uses,
+    pairs: ids.length,
+    selected: null,
+    matched: [],
+    missedIds: [],
+    moves: 0,
+    misses: 0,
+    combo: 0,
+    bestCombo: 0,
+    score: 0,
+    done: false,
+  };
+}
+
+const columnOf = (state, side) => (side === 'name' ? state.names : state.uses);
+
+/**
+ * Press an item of a column ('name' or 'use'). The first press selects it; a press in the same column
+ * moves the selection (the same item again clears it); a press in the other column joins the two.
+ * Events: 'select', 'deselect', then 'match' or 'mismatch', and 'done'.
+ */
+export function pickItem(state, side, index) {
+  const column = columnOf(state, side);
+  const invalid = state.done || !['name', 'use'].includes(side) || !Number.isInteger(index) || index < 0
+    || index >= column.length || state.matched.includes(column[index]);
+  if (invalid) return { state, events: [] };
+
+  const sel = state.selected;
+  if (!sel || sel.side === side) {
+    if (sel && sel.index === index) return { state: { ...state, selected: null }, events: [{ type: 'deselect', side, index }] };
+    return { state: { ...state, selected: { side, index } }, events: [{ type: 'select', side, index }] };
+  }
+
+  const nameIndex = side === 'name' ? index : sel.index;
+  const useIndex = side === 'use' ? index : sel.index;
+  const drugId = state.names[nameIndex];
+  const moves = state.moves + 1;
+
+  if (drugId === state.uses[useIndex]) {
+    const combo = state.combo + 1;
+    const points = Math.round(PAIR_POINTS * comboMultiplier(combo));
+    const matched = [...state.matched, drugId];
+    const done = matched.length === state.pairs;
+    const events = [{ type: 'match', drugId, nameIndex, useIndex, points, combo }];
+    if (done) events.push({ type: 'done' });
+    return {
+      state: {
+        ...state, selected: null, matched, moves, combo,
+        bestCombo: Math.max(state.bestCombo, combo), score: state.score + points, done,
+      },
+      events,
+    };
+  }
+
+  const penalty = Math.min(MISS_PENALTY, state.score);
+  return {
+    state: {
+      ...state, selected: null, moves, combo: 0, misses: state.misses + 1,
+      missedIds: [...new Set([...state.missedIds, drugId])], score: state.score - penalty,
+    },
+    events: [{ type: 'mismatch', drugId, nameIndex, useIndex, penalty }],
+  };
+}
+
+export function connectStars(pairs, misses) {
+  if (misses === 0) return 3;
+  return misses <= Math.floor(pairs / 3) ? 2 : 1;
+}
+
+/** Final result of a finished connect round, in the shape `applyResult` takes. */
+export function finishConnect(state, elapsedMs) {
+  const bonus = timeBonus(state.pairs, elapsedMs, CONNECT_PAR_SECONDS_PER_PAIR);
+  const perfect = state.misses === 0 ? PERFECT_BONUS : 0;
+  return {
+    mode: 'connect',
+    size: state.pairs,
+    base: state.score,
+    timeBonus: bonus,
+    perfectBonus: perfect,
+    score: state.score + bonus + perfect,
+    misses: state.misses,
+    mistakes: state.misses,
+    moves: state.moves,
+    bestCombo: state.bestCombo,
+    elapsedMs,
+    stars: connectStars(state.pairs, state.misses),
     outcomes: state.matched.map((drugId) => ({ drugId, ok: !state.missedIds.includes(drugId) })),
   };
 }
@@ -424,8 +530,8 @@ export function finishSpeed(state) {
 
 export const ACHIEVEMENTS = [
   { id: 'first-round', icon: '🎉', title: 'סבב ראשון', desc: 'סיימו סבב ראשון', check: ({ progress }) => progress.rounds >= 1 },
-  { id: 'combo-5', icon: '🔥', title: 'להבה', desc: '5 התאמות ברצף בסבב זוגות', check: ({ result }) => result.mode === 'pairs' && result.bestCombo >= 5 },
-  { id: 'perfect', icon: '💎', title: 'זיכרון חד', desc: 'סבב זוגות בלי אף טעות שאפשר היה להימנע ממנה', check: ({ result }) => result.mode === 'pairs' && result.misses === 0 },
+  { id: 'combo-5', icon: '🔥', title: 'להבה', desc: '5 התאמות ברצף בסבב זוגות או חיבור', check: ({ result }) => result.mode !== 'speed' && result.bestCombo >= 5 },
+  { id: 'perfect', icon: '💎', title: 'זיכרון חד', desc: 'סבב זוגות או חיבור בלי אף טעות שאפשר היה להימנע ממנה', check: ({ result }) => result.mode !== 'speed' && result.misses === 0 },
   { id: 'three-stars', icon: '⭐', title: 'שלושה כוכבים', desc: 'קבלו 3 כוכבים בסבב', check: ({ result }) => result.stars === 3 },
   { id: 'speed-ace', icon: '⚡', title: 'מהיר ובטוח', desc: '10 מתוך 10 במצב מהירות', check: ({ result }) => result.mode === 'speed' && result.correct === result.total },
   { id: 'seen-10', icon: '🔎', title: 'מגלים', desc: 'גלו 10 תרופות', check: ({ progress, drugs }) => countAtLevel(progress, drugs, 1) >= 10 },
@@ -477,7 +583,7 @@ export function applyResult(progress, result, today, drugs) {
     streak: touchStreak(progress.streak, today),
     daily: { date: today, rounds: dailyRounds, bonusPaid: paid || dailyBonus > 0 },
     drugs: { ...progress.drugs, ...doneDrugs },
-    best: { ...progress.best, [result.mode]: Math.max(progress.best[result.mode], result.score) },
+    best: { ...progress.best, [result.mode]: Math.max(progress.best[result.mode] ?? 0, result.score) },
   };
 
   const newAchievements = [];
@@ -500,7 +606,7 @@ export function applyResult(progress, result, today, drugs) {
       levelBefore: before.level,
       levelAfter: after.level,
       leveledUp: after.level > before.level,
-      isBest: result.score > progress.best[result.mode],
+      isBest: result.score > (progress.best[result.mode] ?? 0),
       promoted,
       demoted,
       newAchievements,
