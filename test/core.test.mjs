@@ -3,25 +3,37 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   MASTERY_STREAK,
+  STARRED_QUIZ_ID,
   REQUEUE_MAX,
   REQUEUE_MIN,
   answer,
+  buildStarredQuiz,
   createSession,
   currentQuestion,
   hasPositionalReference,
   isComplete,
   isSessionCompatible,
   isolateNumberRanges,
+  buildMixedQuiz,
+  mixedQuizId,
   listTopics,
+  questionById,
   questionIdsForTopics,
+  quizLabel,
   sessionQuestions,
+  sessionQuizIds,
   presentOptions,
   progressInfo,
   recordResult,
+  recordServed,
   requeue,
+  sampleQuestionIds,
   shuffle,
   skip,
+  starTarget,
+  starredIds,
   summarize,
+  toggleStar,
   validateQuiz,
 } from '../js/core.js';
 
@@ -106,7 +118,7 @@ test('requeue on an empty queue is the only case it comes straight back', () => 
 test('createSession queues every question once', () => {
   const s = createSession(fixture, seeded(1));
   assert.deepEqual([...s.queue].sort(), fixture.questions.map((q) => q.id).sort());
-  assert.deepEqual(progressInfo(s), { mastered: 0, total: 6, queueSize: 6 });
+  assert.deepEqual(progressInfo(s), { mastered: 0, answered: 0, total: 6, queueSize: 6 });
   assert.ok(isSessionCompatible(s, fixture));
 });
 
@@ -218,7 +230,7 @@ test('createSession can cover a subset of questions', () => {
   const s = createSession(fixture, seeded(1), { questionIds: ids, mode: 'topics' });
   assert.equal(s.mode, 'topics');
   assert.deepEqual([...s.queue].sort(), ['q3', 'q4']);
-  assert.deepEqual(progressInfo(s), { mastered: 0, total: 2, queueSize: 2 });
+  assert.deepEqual(progressInfo(s), { mastered: 0, answered: 0, total: 2, queueSize: 2 });
   assert.deepEqual(sessionQuestions(s, fixture).map((q) => q.id), ['q3', 'q4']);
   assert.ok(isSessionCompatible(s, fixture));
 });
@@ -390,4 +402,176 @@ test('option notes are optional', () => {
   const quiz = clone(fixture);
   delete quiz.questions[0].options[0].note;
   assert.deepEqual(validateQuiz(quiz), []);
+});
+
+// ---------- mixed practice ----------
+
+function unitQuiz(id, unit, title = 'מבחן 1') {
+  return { ...clone(fixture), id, unit, title };
+}
+
+test('buildMixedQuiz merges quizzes with unique ids, groups and prefixed topics', () => {
+  const a = unitQuiz('unit-a-1', 'יחידה א');
+  const b = unitQuiz('unit-a-2', 'יחידה א', 'מבחן 2');
+  const c = { ...clone(fixture), id: 'no-unit', title: 'בוחן בלי יחידה' };
+  const mix = buildMixedQuiz(fixture.subject, [a, b, c]);
+
+  assert.equal(mix.questions.length, 3 * fixture.questions.length);
+  assert.equal(new Set(mix.questions.map((q) => q.id)).size, mix.questions.length);
+  assert.equal(mix.questions[0].id, `unit-a-1/${fixture.questions[0].id}`);
+  assert.equal(mix.questions[0].topic, `יחידה א · ${fixture.questions[0].topic}`);
+  assert.equal(mix.questions.at(-1).group, 'בוחן בלי יחידה');
+  // Groups keep catalog order; a unit with two quizzes is one group.
+  assert.deepEqual(listTopics(mix, 'group'), [
+    { topic: 'יחידה א', count: 2 * fixture.questions.length },
+    { topic: 'בוחן בלי יחידה', count: fixture.questions.length },
+  ]);
+  // Source quizzes are untouched.
+  assert.deepEqual(a, unitQuiz('unit-a-1', 'יחידה א'));
+});
+
+test('a mixed quiz plays like any quiz and can be limited to chosen groups', () => {
+  const mix = buildMixedQuiz(fixture.subject, [unitQuiz('u-1', 'א'), unitQuiz('u-2', 'ב')]);
+  const ids = questionIdsForTopics(mix, ['ב'], 'group');
+  assert.equal(ids.length, fixture.questions.length);
+  assert.ok(ids.every((id) => id.startsWith('u-2/')));
+
+  const rng = seeded(3);
+  let state = createSession(mix, rng, { questionIds: ids, mode: 'topics' });
+  assert.ok(isSessionCompatible(JSON.parse(JSON.stringify(state)), mix));
+  while (!isComplete(state)) {
+    state = answer(state, mix, currentQuestion(state, mix).correct, rng).state;
+  }
+  const summary = summarize(state, mix);
+  assert.equal(summary.firstTryPercent, 100);
+  assert.equal(summary.total, fixture.questions.length);
+});
+
+test('mixedQuizId is stable, storage-safe and differs per subject', () => {
+  const id = mixedQuizId('אנטומיה ופיזיולוגיה');
+  assert.equal(id, mixedQuizId('אנטומיה ופיזיולוגיה'));
+  assert.match(id, /^mix-[a-z0-9]+$/);
+  assert.notEqual(id, mixedQuizId('פרמקולוגיה'));
+});
+
+// ---------- stars ----------
+
+test('toggleStar adds and removes without mutating', () => {
+  const before = ['q1'];
+  assert.deepEqual(toggleStar(before, 'q2'), ['q1', 'q2']);
+  assert.deepEqual(toggleStar(before, 'q1'), []);
+  assert.deepEqual(before, ['q1']);
+  assert.deepEqual(toggleStar(null, 'q3'), ['q3']);
+});
+
+test('starredIds keeps known ids in authored order and drops stale ones', () => {
+  assert.deepEqual(starredIds(['q3', 'gone', 'q1'], fixture), ['q1', 'q3']);
+  assert.deepEqual(starredIds('garbage', fixture), []);
+});
+
+test('quizLabel prefers the unit over the subject', () => {
+  assert.equal(quizLabel({ subject: 'S', unit: 'U', title: 'T' }), 'U · T');
+  assert.equal(quizLabel({ subject: 'S', title: 'T' }), 'S · T');
+});
+
+test('starTarget points a merged question back to its own quiz', () => {
+  assert.deepEqual(starTarget(fixture, 'q2'), { quizId: fixture.id, questionId: 'q2' });
+  const mix = buildMixedQuiz(fixture.subject, [unitQuiz('u-1', 'א')]);
+  assert.deepEqual(starTarget(mix, 'u-1/q2'), { quizId: 'u-1', questionId: 'q2' });
+});
+
+test('buildStarredQuiz groups per quiz, even two quizzes of one unit', () => {
+  const a = unitQuiz('unit-a-1', 'יחידה א');
+  const b = unitQuiz('unit-a-2', 'יחידה א', 'מבחן 2');
+  const starred = buildStarredQuiz([a, b]);
+  assert.equal(starred.id, STARRED_QUIZ_ID);
+  assert.ok(starred.mixed);
+  assert.deepEqual(listTopics(starred, 'group').map((g) => g.topic), ['יחידה א · מבחן 1', 'יחידה א · מבחן 2']);
+  const q = questionById(starred, 'unit-a-2/q2');
+  assert.equal(q.question, fixture.questions[1].question);
+  assert.deepEqual(starTarget(starred, q.id), { quizId: 'unit-a-2', questionId: 'q2' });
+});
+
+test('a starred session plays through and lists the quizzes it needs', () => {
+  const starred = buildStarredQuiz([unitQuiz('u-1', 'א'), unitQuiz('u-2', 'ב')]);
+  const ids = ['u-1/q1', 'u-2/q2'];
+  let state = createSession(starred, seeded(1), { questionIds: ids, mode: 'starred' });
+  assert.ok(isSessionCompatible(JSON.parse(JSON.stringify(state)), starred));
+  assert.deepEqual(sessionQuizIds(state).sort(), ['u-1', 'u-2']);
+  while (!isComplete(state)) {
+    state = answer(state, starred, currentQuestion(state, starred).correct, seeded(2)).state;
+  }
+  assert.equal(summarize(state, starred).firstTryPercent, 100);
+
+  // Once one of its quizzes is not loaded, the saved session no longer matches.
+  state = createSession(starred, seeded(1), { questionIds: ids, mode: 'starred' });
+  assert.ok(!isSessionCompatible(state, buildStarredQuiz([unitQuiz('u-1', 'א')])));
+});
+
+test('sessionQuizIds ignores malformed state', () => {
+  assert.deepEqual(sessionQuizIds(null), []);
+  assert.deepEqual(sessionQuizIds({ progress: { 'BAD ID/q1': {} } }), []);
+});
+
+// ---------- exam style ----------
+
+test('exam style is one pass: every question leaves the queue after one answer', () => {
+  let state = createSession(fixture, seeded(2), { style: 'exam' });
+  assert.equal(state.style, 'exam');
+  const first = currentQuestion(state, fixture);
+  const wrong = (first.correct + 1) % 4;
+  state = answer(state, fixture, wrong, seeded(2)).state;
+  assert.ok(!state.queue.includes(first.id));
+  assert.equal(state.progress[first.id].firstTry, 'wrong');
+  assert.equal(state.progress[first.id].choice, wrong);
+  state = skip(state, fixture, seeded(2)).state;
+  while (!isComplete(state)) state = answer(state, fixture, correctOf(state), seeded(2)).state;
+
+  const summary = summarize(state, fixture);
+  assert.equal(summary.firstTryCorrect, fixture.questions.length - 2);
+  assert.equal(summary.retried.length, 2);
+  assert.ok(summary.retried.some((r) => r.id === first.id && r.choice === wrong));
+  assert.ok(summary.retried.some((r) => r.choice === null)); // the skip
+  assert.equal(progressInfo(state).answered, fixture.questions.length);
+  assert.ok(isSessionCompatible(JSON.parse(JSON.stringify(createSession(fixture, seeded(1), { style: 'exam' }))), fixture));
+});
+
+test('sessions saved before styles existed still load, as practice', () => {
+  const state = createSession(fixture, seeded(1));
+  delete state.style;
+  assert.ok(isSessionCompatible(state, fixture));
+  assert.ok(!isSessionCompatible({ ...state, style: 'nope' }, fixture));
+  assert.throws(() => createSession(fixture, seeded(1), { style: 'nope' }));
+});
+
+// ---------- rotation ----------
+
+test('sampleQuestionIds with a served history avoids questions already served', () => {
+  const rng = seeded(6);
+  const topicSize = questionIdsForTopics(fixture, [fixture.questions[0].topic]).length;
+  const topics = [fixture.questions[0].topic];
+  let served = null;
+  const picked = [];
+  for (let i = 0; i < topicSize; i++) {
+    const ids = sampleQuestionIds(fixture, { topics, count: 1, served }, rng);
+    picked.push(...ids);
+    served = recordServed(served, ids, 1000 + i);
+  }
+  assert.equal(new Set(picked).size, topicSize); // each once before any repeats
+  // All served once now, so the one served longest ago comes back first.
+  assert.deepEqual(sampleQuestionIds(fixture, { topics, count: 1, served }, rng), [picked[0]]);
+});
+
+test('rotation keeps the proportional split per topic', () => {
+  const served = recordServed(null, fixture.questions.slice(0, 3).map((q) => q.id), 1);
+  const ids = sampleQuestionIds(fixture, { count: 3, served }, seeded(1));
+  const perTopic = listTopics({ questions: ids.map((id) => questionById(fixture, id)) });
+  assert.deepEqual(perTopic.map((t) => t.count), listTopics(fixture).map(() => 1));
+});
+
+test('recordServed counts times served and does not mutate its input', () => {
+  const a = recordServed(null, ['q1', 'q2'], 10);
+  const b = recordServed(a, ['q2'], 20);
+  assert.deepEqual(a, { seen: { q1: { times: 1, last: 10 }, q2: { times: 1, last: 10 } } });
+  assert.deepEqual(b.seen, { q1: { times: 1, last: 10 }, q2: { times: 2, last: 20 } });
 });

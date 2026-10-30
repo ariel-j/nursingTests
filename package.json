@@ -2,12 +2,13 @@
   "name": "nursing-tests",
   "private": true,
   "type": "module",
-  "description": "Hebrew quiz site for nursing anatomy & physiology exam prep",
+  "description": "Hebrew quiz site for nursing exam prep, by subject",
   "scripts": {
     "test": "node --test",
     "validate": "node scripts/validate.mjs",
     "manifest": "node scripts/manifest.mjs",
     "import": "node scripts/import.mjs",
+    "import-drugs": "node scripts/import-drugs.mjs",
     "serve": "node scripts/serve.mjs"
   },
   "engines": {
