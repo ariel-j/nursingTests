@@ -93,6 +93,9 @@
 /* ---------- hub (summaries/index.html) ---------- */
 
 .summary-list { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; gap: var(--gap); }
+.subject-heading h2 { margin: 1rem 0 0; font-size: 1.15rem; color: var(--muted); }
+.subject-heading:first-child h2 { margin-block-start: 0; }
+.study-link { display: inline-block; margin-block-start: 0.35rem; padding-inline: 0.25rem; font-weight: 600; color: var(--accent-ink); }
 .summary-card { border-inline-start-color: var(--accent); }
 .summary-card:hover { border-inline-start-color: var(--accent); }
 .summary-card h2 { margin: 0 0 0.2rem; font-size: 1.35rem; }

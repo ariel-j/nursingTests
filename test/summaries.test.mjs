@@ -32,3 +32,11 @@ test('pageErrors requires the toolbar, footer links, article and print button', 
 test('the committed summaries pass every check', async () => {
   assert.deepEqual(await checkSummaries(), []);
 });
+
+test('bySubject groups summaries in order of first appearance', async () => {
+  const { bySubject } = await import('../js/summary-list.js');
+  const groups = bySubject([
+    { id: 'a', subject: 'X' }, { id: 'b', subject: 'Y' }, { id: 'c', subject: 'X' },
+  ]);
+  assert.deepEqual(groups.map((g) => [g.subject, g.items.map((s) => s.id)]), [['X', ['a', 'c']], ['Y', ['b']]]);
+});

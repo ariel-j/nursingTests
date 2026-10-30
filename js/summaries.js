@@ -1,5 +1,5 @@
-// Summaries hub (summaries/index.html): one card per summary.
-import { SUMMARIES, summaryFile } from './summary-list.js';
+// Summaries hub (summaries/index.html): one card per summary, grouped by subject.
+import { bySubject, studyFile, summaryFile } from './summary-list.js';
 
 function el(tag, className, text) {
   const node = document.createElement(tag);
@@ -15,7 +15,18 @@ function renderCard(summary) {
   link.dataset.system = summary.id;
   link.append(el('h2', null, summary.title), el('p', 'muted', summary.blurb));
   item.append(link);
+  if (summary.study) {
+    const practice = el('a', 'study-link', 'תרגול אינטראקטיבי ←');
+    practice.href = studyFile(summary.id);
+    practice.dataset.system = summary.id;
+    item.append(practice);
+  }
   return item;
 }
 
-document.getElementById('summary-list').replaceChildren(...SUMMARIES.map(renderCard));
+const root = document.getElementById('summary-list');
+root.replaceChildren(...bySubject().flatMap(({ subject, items }) => {
+  const heading = el('li', 'subject-heading');
+  heading.append(el('h2', null, subject));
+  return [heading, ...items.map(renderCard)];
+}));

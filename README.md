@@ -100,11 +100,15 @@ static page, `summaries/<id>.html`, with a print button; the browser's print dia
 (light colors, A4, rows kept whole across pages). `summaries/all.html` loads every summary into one page,
 so they print as a single PDF.
 
+A summary can also have an interactive practice page, `study/<id>.html` (flip cards, expandable value rows,
+filters, a quick quiz). Set `study: true` on its entry in `js/summary-list.js`, copy `study/urinary.html`
+(change `data-study`) and write the content in `js/study-data/<id>.js`; add a palette in `css/study.css`.
+
 To add a summary:
 
 1. Save it as `summaries/<id>.html`, copying the structure of an existing one: its content goes in
    `<article class="summary" data-system="<id>">` and uses the same classes (`rel`, `def`, `call`, `flags`, `exam`).
-2. Add `{ id, title, blurb }` to `js/summary-list.js` (this sets the order on the hub and in the combined PDF).
+2. Add `{ id, subject, title, blurb }` to `js/summary-list.js` (this sets the order on the hub and in the combined PDF).
 3. Give it accent colors in `css/summary.css` (a `[data-system="<id>"]` rule with light and dark values).
 4. `npm run validate` checks it: listed, self-hosted only, no inline styles or handlers, toolbar and footer present.
 

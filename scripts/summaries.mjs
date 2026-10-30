@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { SUMMARIES, summaryFile } from '../js/summary-list.js';
 
 export const SUMMARY_DIR = fileURLToPath(new URL('../summaries/', import.meta.url));
+export const STUDY_DIR = fileURLToPath(new URL('../study/', import.meta.url));
 export const SUMMARY_CSS = fileURLToPath(new URL('../css/summary.css', import.meta.url));
 // Pages in summaries/ that are not summaries themselves.
 const SUPPORT_PAGES = new Set(['index.html', 'all.html']);
@@ -32,7 +33,7 @@ export function pageErrors(html, { id, isSummary }) {
 }
 
 /** Every problem across the summaries: the list, the pages and the stylesheet's accents. */
-export async function checkSummaries(dir = SUMMARY_DIR, cssFile = SUMMARY_CSS) {
+export async function checkSummaries(dir = SUMMARY_DIR, cssFile = SUMMARY_CSS, studyDir = STUDY_DIR) {
   const errors = [];
   const ids = SUMMARIES.map((s) => s.id);
   if (new Set(ids).size !== ids.length) errors.push('js/summary-list.js: duplicate id');
@@ -56,6 +57,22 @@ export async function checkSummaries(dir = SUMMARY_DIR, cssFile = SUMMARY_CSS) {
     const html = await readFile(path.join(dir, file), 'utf8');
     const id = file.replace(/\.html$/, '');
     for (const e of pageErrors(html, { id, isSummary: listed.has(file) })) errors.push(`summaries/${file}: ${e}`);
+  }
+
+  // Interactive study pages: one per summary that declares `study`, and no strays.
+  const studyIds = SUMMARIES.filter((s) => s.study).map((s) => s.id);
+  const studyFiles = (await readdir(studyDir)).filter((f) => f.endsWith('.html'));
+  for (const file of studyFiles) {
+    if (!studyIds.includes(file.replace(/\.html$/, ''))) errors.push(`study/${file}: no summary with study: true`);
+  }
+  for (const id of studyIds) {
+    if (!studyFiles.includes(`${id}.html`)) {
+      errors.push(`study/${id}.html: missing`);
+      continue;
+    }
+    const html = await readFile(path.join(studyDir, `${id}.html`), 'utf8');
+    if (!html.includes(`data-study="${id}"`)) errors.push(`study/${id}.html: needs data-study="${id}"`);
+    for (const e of pageErrors(html, { id, isSummary: false })) errors.push(`study/${id}.html: ${e}`);
   }
 
   const css = await readFile(cssFile, 'utf8');
