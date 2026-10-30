@@ -34,6 +34,7 @@ import {
   weakDrugs,
   xpForLevel,
 } from '../js/memory-core.js';
+import { overlaps } from '../js/drugs-core.js';
 
 const data = JSON.parse(readFileSync(new URL('../games/drugs.json', import.meta.url), 'utf8'));
 const drugs = data.drugs;
@@ -56,7 +57,7 @@ function playPerfect(state) {
   let s = state;
   for (const drugId of [...new Set(s.cards.map((c) => c.drugId))]) {
     s = flip(s, indexOf(s, drugId, 'name')).state;
-    s = flip(s, indexOf(s, drugId, 'assoc')).state;
+    s = flip(s, indexOf(s, drugId, 'use')).state;
   }
   return s;
 }
@@ -112,12 +113,12 @@ test('weakDrugs lists seen drugs at level 1 or below, most mistakes first', () =
 
 // ---------- pairs ----------
 
-test('dealBoard makes a name card and an association card for every drug', () => {
+test('dealBoard makes a name card and a use card for every drug', () => {
   const cards = dealBoard(ids(8), seeded(3));
   assert.equal(cards.length, 16);
   for (const id of ids(8)) {
     assert.equal(cards.filter((c) => c.drugId === id && c.kind === 'name').length, 1);
-    assert.equal(cards.filter((c) => c.drugId === id && c.kind === 'assoc').length, 1);
+    assert.equal(cards.filter((c) => c.drugId === id && c.kind === 'use').length, 1);
   }
 });
 
@@ -140,7 +141,7 @@ test('flipping reports events and ignores invalid flips', () => {
   assert.deepEqual(flip(first.state, a).events, [], 'same card twice');
   assert.deepEqual(flip(s0, 99).events, []);
   assert.deepEqual(flip(s0, -1).events, []);
-  const match = flip(first.state, indexOf(s0, drugs[0].id, 'assoc'));
+  const match = flip(first.state, indexOf(s0, drugs[0].id, 'use'));
   assert.deepEqual(match.events.map((e) => e.type), ['flip', 'match']);
   assert.equal(match.events[1].drugId, drugs[0].id);
   assert.deepEqual(flip(match.state, a).events, [], 'matched cards stay put');
@@ -150,7 +151,7 @@ test('flipping reports events and ignores invalid flips', () => {
 test('a mismatch locks the board until it is cleared', () => {
   const s0 = createPairs(ids(4), seeded(2));
   let s = flip(s0, indexOf(s0, drugs[0].id, 'name')).state;
-  const bad = flip(s, indexOf(s0, drugs[1].id, 'assoc'));
+  const bad = flip(s, indexOf(s0, drugs[1].id, 'use'));
   assert.deepEqual(bad.events.map((e) => e.type), ['flip', 'mismatch']);
   assert.equal(bad.state.locked, true);
   assert.deepEqual(flip(bad.state, indexOf(s0, drugs[2].id, 'name')).events, [], 'locked');
@@ -163,7 +164,7 @@ test('a mismatch locks the board until it is cleared', () => {
 test('guessing at unseen cards costs the combo but no points', () => {
   const s0 = createPairs(ids(4), seeded(2));
   let s = flip(s0, indexOf(s0, drugs[0].id, 'name')).state;
-  const bad = flip(s, indexOf(s0, drugs[1].id, 'assoc'));
+  const bad = flip(s, indexOf(s0, drugs[1].id, 'use'));
   const mismatch = bad.events[1];
   assert.equal(mismatch.avoidable, false);
   assert.equal(bad.state.misses, 0);
@@ -174,16 +175,16 @@ test('guessing at unseen cards costs the combo but no points', () => {
 test('missing a pair whose partner was already seen is a real miss with a penalty', () => {
   let s = createPairs(ids(4), seeded(2));
   const [d0, d1, d2] = ids(3);
-  // Show d0's association (then flip it back by pairing it wrongly with d1's name).
-  s = flip(s, indexOf(s, d0, 'assoc')).state;
+  // Show d0's use (then flip it back by pairing it wrongly with d1's name).
+  s = flip(s, indexOf(s, d0, 'use')).state;
   s = clearMismatch(flip(s, indexOf(s, d1, 'name')).state);
   // Earn some score first so the penalty is visible.
   s = flip(s, indexOf(s, d2, 'name')).state;
-  s = flip(s, indexOf(s, d2, 'assoc')).state;
+  s = flip(s, indexOf(s, d2, 'use')).state;
   assert.equal(s.score, 100);
-  // Now d0's name is flipped next to the wrong card although d0's association is known.
+  // Now d0's name is flipped next to the wrong card although d0's use is known.
   s = flip(s, indexOf(s, d0, 'name')).state;
-  const bad = flip(s, indexOf(s, ids(4)[3], 'assoc'));
+  const bad = flip(s, indexOf(s, ids(4)[3], 'use'));
   assert.equal(bad.events[1].avoidable, true);
   assert.equal(bad.state.misses, 1);
   assert.equal(bad.state.score, 50);
@@ -192,10 +193,10 @@ test('missing a pair whose partner was already seen is a real miss with a penalt
 
 test('the penalty never takes the score below zero', () => {
   let s = createPairs(ids(4), seeded(2));
-  s = flip(s, indexOf(s, drugs[0].id, 'assoc')).state;
+  s = flip(s, indexOf(s, drugs[0].id, 'use')).state;
   s = clearMismatch(flip(s, indexOf(s, drugs[1].id, 'name')).state);
   s = flip(s, indexOf(s, drugs[0].id, 'name')).state;
-  const bad = flip(s, indexOf(s, drugs[2].id, 'assoc'));
+  const bad = flip(s, indexOf(s, drugs[2].id, 'use'));
   assert.equal(bad.state.score, 0);
 });
 
@@ -224,11 +225,40 @@ test('finishPairs adds the bonuses and lists one outcome per drug', () => {
 
 test('pickDistractors prefers the same topic and never includes the drug', () => {
   const topics = topicMap(drugs);
-  const drug = drugs.find((d) => topics[d.id] === 'פרקינסון');
+  const drug = drugs.find((d) => d.name === 'Levodopa');
   const near = pickDistractors(drug, drugs, topics, seeded(4));
   assert.equal(near.length, 3);
   assert.ok(!near.includes(drug.id));
-  assert.ok(near.every((id) => topics[id] === 'פרקינסון'));
+  assert.ok(near.every((id) => topics[id] === topics[drug.id]), 'Parkinson drugs with a different use fill the options');
+});
+
+test('wrong options never share a use with the right one', () => {
+  const topics = topicMap(drugs);
+  const byId = new Map(drugs.map((d) => [d.id, d]));
+  const rng = seeded(11);
+  for (const drug of drugs) {
+    for (const id of pickDistractors(drug, drugs, topics, rng)) {
+      assert.ok(!overlaps(drug.indication, byId.get(id).indication), `${drug.name} / ${byId.get(id).name}`);
+    }
+  }
+});
+
+test('a round avoids drugs whose uses overlap while the pool allows it', () => {
+  const byId = new Map(drugs.map((d) => [d.id, d]));
+  const rng = seeded(21);
+  for (let i = 0; i < 100; i++) {
+    const picked = pickDrugs(drugs, emptyProgress(), 8, rng).map((id) => byId.get(id));
+    for (let a = 0; a < picked.length; a++) {
+      for (let b = a + 1; b < picked.length; b++) {
+        assert.ok(!overlaps(picked[a].indication, picked[b].indication), `${picked[a].name} / ${picked[b].name}`);
+      }
+    }
+  }
+});
+
+test('a narrow pool still fills the round, even when every use overlaps', () => {
+  const epilepsy = drugs.filter((d) => /status|סטטוס/i.test(d.indication)).slice(0, 4);
+  assert.equal(pickDrugs(epilepsy, emptyProgress(), 4, seeded(3)).length, 4);
 });
 
 test('buildQuestion has four distinct options with the right one marked', () => {

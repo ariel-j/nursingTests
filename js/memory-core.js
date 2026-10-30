@@ -2,6 +2,7 @@
 // achievements. No DOM, no storage, no clock: randomness comes in as `rng`, dates as 'YYYY-MM-DD'
 // strings. State is plain JSON and is never mutated; every function returns new objects.
 import { shuffle } from './core.js';
+import { overlaps } from './drugs-core.js';
 
 // ---------- constants ----------
 
@@ -16,7 +17,7 @@ export const DEFAULT_PAIRS = 8;
 export const MIN_PAIRS = 3;
 export const WEAK_MIN = 4;
 export const SPEED_QUESTIONS = 10;
-export const SPEED_MS = { toName: 12000, toAssoc: 18000 };
+export const SPEED_MS = { toName: 12000, toUse: 15000 };
 export const DAILY_GOAL = 3;
 export const DAILY_BONUS = 300;
 
@@ -170,31 +171,40 @@ export function liveStreak(streak, today) {
 
 // ---------- picking drugs ----------
 
-/** `count` distinct ids from `pool`, favouring drugs that need work (seen but shaky, then new). */
+/** Two drugs whose uses share an item ("סטטוס אפילפטיקוס") can be mistaken for each other. */
+const sameUse = (a, b) => overlaps(a.indication, b.indication);
+
+/**
+ * `count` distinct ids from `pool`, favouring drugs that need work (seen but shaky, then new).
+ * A round never mixes two drugs with overlapping uses while the pool has another choice, so a use
+ * card has one right name. A narrow pool (one topic) may not allow that; it then fills up anyway.
+ */
 export function pickDrugs(pool, progress, count, rng) {
   const left = pool.slice();
-  const picked = [];
-  while (picked.length < count && left.length > 0) {
-    const weights = left.map((d) => LEVEL_WEIGHT[levelOf(progress, d.id)]);
+  const chosen = [];
+  while (chosen.length < count && left.length > 0) {
+    const clear = left.filter((d) => !chosen.some((c) => sameUse(c, d)));
+    const from = clear.length > 0 ? clear : left;
+    const weights = from.map((d) => LEVEL_WEIGHT[levelOf(progress, d.id)]);
     let r = rng() * weights.reduce((a, b) => a + b, 0);
     let i = 0;
-    while (i < left.length - 1 && r >= weights[i]) {
+    while (i < from.length - 1 && r >= weights[i]) {
       r -= weights[i];
       i += 1;
     }
-    picked.push(left[i].id);
-    left.splice(i, 1);
+    chosen.push(from[i]);
+    left.splice(left.indexOf(from[i]), 1);
   }
-  return picked;
+  return chosen.map((d) => d.id);
 }
 
 // ---------- pairs mode ----------
 
-/** Cards for the given drug ids: one name card and one association card each, shuffled. */
+/** Cards for the given drug ids: one name card and one use card each, shuffled. */
 export function dealBoard(ids, rng) {
   const cards = ids.flatMap((drugId) => [
     { drugId, kind: 'name' },
-    { drugId, kind: 'assoc' },
+    { drugId, kind: 'use' },
   ]);
   return shuffle(cards, rng);
 }
@@ -323,15 +333,23 @@ export function finishPairs(state, elapsedMs) {
 
 // ---------- speed mode ----------
 
-/** Three wrong options for `drug`, from its own topic first (the confusable ones), then from the rest. */
+/**
+ * Three wrong options for `drug`, from its own topic first (the confusable ones), then from the rest.
+ * Drugs whose use overlaps the right one are left out: they would be right answers too. Only when
+ * too few others remain are they used to fill the gap.
+ */
 export function pickDistractors(drug, drugs, topics, rng, count = 3) {
   const others = drugs.filter((d) => d.id !== drug.id);
-  const near = shuffle(others.filter((d) => topics[d.id] === topics[drug.id]), rng);
-  const far = shuffle(others.filter((d) => topics[d.id] !== topics[drug.id]), rng);
-  return [...near, ...far].slice(0, count).map((d) => d.id);
+  const ranked = [
+    ...shuffle(others.filter((d) => topics[d.id] === topics[drug.id]), rng),
+    ...shuffle(others.filter((d) => topics[d.id] !== topics[drug.id]), rng),
+  ];
+  const clear = ranked.filter((d) => !sameUse(drug, d));
+  const rest = ranked.filter((d) => sameUse(drug, d));
+  return [...clear, ...rest].slice(0, count).map((d) => d.id);
 }
 
-export function buildQuestion(drug, drugs, topics, rng, direction = rng() < 0.6 ? 'toName' : 'toAssoc') {
+export function buildQuestion(drug, drugs, topics, rng, direction = rng() < 0.6 ? 'toName' : 'toUse') {
   const options = shuffle([drug.id, ...pickDistractors(drug, drugs, topics, rng)], rng);
   return { drugId: drug.id, direction, options, correctIndex: options.indexOf(drug.id), ms: SPEED_MS[direction] };
 }

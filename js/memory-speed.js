@@ -1,4 +1,4 @@
-// Speed mode: an association (or a drug name) and four options against a shrinking clock.
+// Speed mode: a use (or a drug name) and four options against a shrinking clock.
 // Recognising the right option without seeing the pair is what lifts a drug to "mastered".
 import { answerSpeed, createSpeed, finishSpeed, speedMultiplier } from './memory-core.js';
 import { drugDetail } from './memory-detail.js';
@@ -9,8 +9,8 @@ const TICK_MS = 100;
 const LETTERS = ['א', 'ב', 'ג', 'ד'];
 
 const PROMPTS = {
-  toName: 'איזו תרופה מתאימה לאסוציאציה?',
-  toAssoc: 'איזו אסוציאציה שייכת לתרופה?',
+  toName: 'איזו תרופה משמשת לטיפול הזה?',
+  toUse: 'מה השימוש בתרופה?',
 };
 
 export function playSpeed({ root, ids, drugs, byId, rng, relaxed, announce, onFinish, onExit }) {
@@ -79,7 +79,7 @@ export function playSpeed({ root, ids, drugs, byId, rng, relaxed, announce, onFi
 
   // ----- a question -----
   function optionContent(q, drugId) {
-    return q.direction === 'toName' ? drugName(byId.get(drugId).name, 'span') : document.createTextNode(byId.get(drugId).association);
+    return q.direction === 'toName' ? drugName(byId.get(drugId).name, 'span') : document.createTextNode(byId.get(drugId).indication);
   }
 
   function showQuestion() {
@@ -90,7 +90,7 @@ export function playSpeed({ root, ids, drugs, byId, rng, relaxed, announce, onFi
     clear(feedback);
     label.textContent = PROMPTS[q.direction];
     clear(prompt);
-    if (q.direction === 'toName') prompt.textContent = drug.association;
+    if (q.direction === 'toName') prompt.textContent = drug.indication;
     else prompt.append(drugName(drug.name));
 
     clear(options);
@@ -125,7 +125,7 @@ export function playSpeed({ root, ids, drugs, byId, rng, relaxed, announce, onFi
         }
       }, TICK_MS);
     }
-    announce(`${PROMPTS[q.direction]} ${q.direction === 'toName' ? drug.association : drug.name}`);
+    announce(`${PROMPTS[q.direction]} ${q.direction === 'toName' ? drug.indication : drug.name}`);
   }
 
   function choose(choice) {

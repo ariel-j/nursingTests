@@ -203,7 +203,7 @@ h1[tabindex="-1"]:focus, h2[tabindex="-1"]:focus, #game:focus { outline: none; }
 }
 
 .mcard-back { color: var(--surface); background-color: var(--accent); }
-.mcard[data-kind="assoc"] .mcard-back { background-color: var(--assoc); }
+.mcard[data-kind="use"] .mcard-back { background-color: var(--assoc); }
 :root[data-contrast="high"] .mcard-back { color: #fff; background-color: #000; }
 .mcard-back::before {
   content: "";
@@ -225,8 +225,8 @@ h1[tabindex="-1"]:focus, h2[tabindex="-1"]:focus, #game:focus { outline: none; }
   text-align: center;
   overflow: auto;
 }
-.mcard[data-kind="assoc"] .mcard-front { background: var(--assoc-soft); font-size: 0.86rem; }
-.mcard[data-kind="name"] .mcard-front { font: 700 1.2rem/1.2 var(--sans); overflow-wrap: anywhere; }
+.mcard[data-kind="use"] .mcard-front { background: var(--assoc-soft); font-size: 0.95rem; }
+.mcard[data-kind="name"] .mcard-front { font: 600 1rem/1.2 var(--sans); overflow-wrap: anywhere; }
 :root[data-contrast="high"] .mcard-front { background: #fff; }
 
 .mcard.is-matched .mcard-front { background: var(--ok-soft); border-color: var(--ok); }
@@ -273,9 +273,9 @@ h1[tabindex="-1"]:focus, h2[tabindex="-1"]:focus, #game:focus { outline: none; }
 .detail-name { margin: 0.2rem 0 0; font: 700 1.6rem/1.2 var(--serif); }
 .detail-family { margin: 0 0 0.6rem; color: var(--muted); font-size: 0.95rem; }
 .explain p, .detail p, .speed-feedback p { margin-block: 0 0.55rem; }
-.detail-assoc, .detail-explanation { white-space: pre-line; }
+.detail-use, .detail-explanation { white-space: pre-line; }
 .detail-label { font-weight: 700; }
-.detail-assoc {
+.detail-use {
   padding: 0.5rem 0.75rem;
   border-inline-start: 4px solid var(--assoc);
   background: var(--assoc-soft);

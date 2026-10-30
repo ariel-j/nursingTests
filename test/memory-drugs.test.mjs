@@ -6,7 +6,7 @@ const source = (extra = {}) => ({
   meta: { lecturers: ['placeholder'] },
   drugs: [{
     rank: 2, name: 'Placebo A', family: 'משפחה', topic: 'נושא', indication: 'התוויה',
-    side_effects: ['אחת', ' '], explanation: 'הסבר', association: 'אסוציאציה',
+    side_effects: ['אחת', ' '], explanation: 'הסבר',
     evidence: { score: 9 }, ...extra,
   }],
 });
@@ -19,14 +19,14 @@ test('slug makes url-safe ids', () => {
 
 test('buildDrugs keeps only the game fields and drops sources and statistics', () => {
   const { drugs } = buildDrugs(source());
-  assert.deepEqual(Object.keys(drugs[0]).sort(), ['association', 'explanation', 'family', 'id', 'indication', 'name', 'rank', 'sideEffects', 'topic']);
+  assert.deepEqual(Object.keys(drugs[0]).sort(), ['explanation', 'family', 'id', 'indication', 'name', 'rank', 'sideEffects', 'topic']);
   assert.deepEqual(drugs[0].sideEffects, ['אחת']);
   assert.equal(drugs[0].id, 'placebo-a');
 });
 
 test('buildDrugs rejects a source with missing fields', () => {
   assert.throws(() => buildDrugs({}), /drugs/);
-  assert.throws(() => buildDrugs(source({ association: '' })), /association/);
+  assert.throws(() => buildDrugs(source({ explanation: '' })), /explanation/);
   assert.throws(() => buildDrugs(source({ side_effects: undefined })), /side_effects/);
 });
 

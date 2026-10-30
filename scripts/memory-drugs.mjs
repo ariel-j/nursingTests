@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 export const DRUGS_FILE = fileURLToPath(new URL('../games/drugs.json', import.meta.url));
 
-const TEXT_FIELDS = ['name', 'family', 'topic', 'indication', 'explanation', 'association'];
+const TEXT_FIELDS = ['name', 'family', 'topic', 'indication', 'explanation'];
 
 export function slug(name) {
   return String(name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
@@ -28,14 +28,13 @@ export function buildDrugs(source) {
       indication: d.indication.trim(),
       sideEffects: d.side_effects.map((s) => String(s).trim()).filter(Boolean),
       explanation: d.explanation.trim(),
-      association: d.association.trim(),
     };
   });
   drugs.sort((a, b) => a.rank - b.rank);
   return { drugs };
 }
 
-const ALLOWED_KEYS = ['id', 'rank', 'name', 'family', 'topic', 'indication', 'sideEffects', 'explanation', 'association'];
+const ALLOWED_KEYS = ['id', 'rank', 'name', 'family', 'topic', 'indication', 'sideEffects', 'explanation'];
 
 /** Every problem with a published drugs file. */
 export function drugErrors(data) {
