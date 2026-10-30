@@ -8,6 +8,8 @@
 [data-system="digestive"]      { --a: #5f6b1f; --a-soft: #eceedc; --a-ink: #474f17; --a-d: #bccb6c; --a-soft-d: #2a2e14; --a-ink-d: #d8e39e; }
 [data-system="endocrine"]      { --a: #a86a1e; --a-soft: #f4e9d6; --a-ink: #7e4e12; --a-d: #e8aa5c; --a-soft-d: #3a2a14; --a-ink-d: #f3cb93; }
 [data-system="excretory"]      { --a: #126e82; --a-soft: #dcedf0; --a-ink: #0c4e5c; --a-d: #5fc4d9; --a-soft-d: #12333a; --a-ink-d: #a2ddea; }
+[data-system="bowel"]          { --a: #7a4a2b; --a-soft: #f1e7df; --a-ink: #5a3419; --a-d: #d9a47c; --a-soft-d: #33231a; --a-ink-d: #ecc9ab; }
+[data-system="sensory"]        { --a: #2d3a8c; --a-soft: #e3e6f7; --a-ink: #1f2a6b; --a-d: #a9b4ff; --a-soft-d: #232a52; --a-ink-d: #cdd3ff; }
 
 [data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
 @media (prefers-color-scheme: dark) {
@@ -23,8 +25,9 @@
 .summary { font-size: 1.0625rem; line-height: 1.72; overflow-wrap: break-word; }
 .summary b, .summary strong { font-weight: 600; }
 .summary p { margin: 0 0 0.75rem; }
-.summary ul { margin: 0 0 0.9rem; padding-inline-start: 1.4rem; }
+.summary ul, .summary ol { margin: 0 0 0.9rem; padding-inline-start: 1.4rem; }
 .summary li { margin: 0 0 0.4rem; }
+.summary ol li::marker { color: var(--accent); font-weight: 700; }
 .summary .flush { margin: 0; }
 .summary .en { direction: ltr; unicode-bidi: isolate; }
 

@@ -23,6 +23,16 @@ export const SUMMARIES = [
     title: 'מערכת העיכול',
     blurb: 'הפה והקיבה, לבלב, כבד ומרה, ספיגה, המעי הגס ובקרה עצבית.',
   },
+  {
+    id: 'bowel',
+    title: 'הפרשות מערכת העיכול',
+    blurb: 'סולם ההתערבות, עצירות ושלשול, משלשלים, חוקן, אבני צואה, בדיקות וסטומה.',
+  },
+  {
+    id: 'sensory',
+    title: 'גירוי סנסורי',
+    blurb: 'קליטה ותפיסה, RAS ומצבי מודעות, חסך והצפה, אבחנות NANDA והתערבות.',
+  },
 ];
 
 /** Page file for a summary, relative to the summaries/ folder. */
