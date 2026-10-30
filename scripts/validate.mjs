@@ -6,6 +6,7 @@ import { MANIFEST_FILE, QUIZ_DIR, buildManifest, loadAll, serializeManifest } fr
 import { checkMedia, mediaTotal } from './media.mjs';
 import { checkDrugs } from './drugs.mjs';
 import { checkRootPages, checkSummaries, recollectionMentions } from './summaries.mjs';
+import { drugErrors, loadDrugs } from './memory-drugs.mjs';
 import { SUMMARIES } from '../js/summary-list.js';
 
 let { failures, catalog, entries } = await loadAll();
@@ -40,7 +41,7 @@ failures += media.errors.length;
 
 // Published text says "הופיע בעבר", never "שחזור" (exam recollections).
 const ROOT = path.resolve(QUIZ_DIR, '..');
-for (const dir of ['.', 'summaries', 'js', 'quizzes', 'data', 'self-study']) {
+for (const dir of ['.', 'summaries', 'js', 'quizzes', 'data', 'games', 'self-study']) {
   const files = await readdir(path.join(ROOT, dir), { recursive: dir !== '.' }).catch(() => []);
   const published = dir === 'self-study' ? /\.(?:html|js|json|md)$/ : /\.(?:html|js|json)$/;
   for (const file of files) {
@@ -53,9 +54,21 @@ for (const dir of ['.', 'summaries', 'js', 'quizzes', 'data', 'self-study']) {
   }
 }
 
+let drugCount = 0;
+try {
+  const data = await loadDrugs();
+  const drugProblems = drugErrors(data);
+  for (const e of drugProblems) console.error(`games/drugs.json: ${e}`);
+  failures += drugProblems.length;
+  drugCount = data.drugs?.length ?? 0;
+} catch (err) {
+  console.error(`games/drugs.json: ${err.message}`);
+  failures += 1;
+}
+
 if (failures > 0) {
   console.error(`\n${failures} problem(s) found.`);
   process.exit(1);
 }
 const questions = entries.reduce((n, e) => n + e.quiz.questions.length, 0);
-console.log(`OK: ${entries.length} quiz(zes), ${questions} question(s), manifest up to date, ${SUMMARIES.length} summaries, ${mediaTotal(media.manifest)} media file(s).`);
+console.log(`OK: ${entries.length} quiz(zes), ${questions} question(s), manifest up to date, ${SUMMARIES.length} summaries, ${mediaTotal(media.manifest)} media file(s), ${drugCount} memory-game drugs.`);
