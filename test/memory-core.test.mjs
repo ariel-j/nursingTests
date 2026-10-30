@@ -10,6 +10,10 @@ import {
   applyResult,
   buildQuestion,
   clearMismatch,
+  connectStars,
+  createConnect,
+  finishConnect,
+  pickItem,
   comboMultiplier,
   createPairs,
   createSpeed,
@@ -430,4 +434,102 @@ test('normalizeProgress repairs bad stored data', () => {
   assert.deepEqual(messy.settings, { effects: false, relaxed: true });
   const good = applyResult(emptyProgress(), fakeResult('pairs', [{ drugId: 'x', ok: true }]), '2026-10-01', drugs).progress;
   assert.deepEqual(normalizeProgress(JSON.parse(JSON.stringify(good))), good);
+});
+
+// ---------- connect ----------
+
+const rowOf = (state, side, drugId) => (side === 'name' ? state.names : state.uses).indexOf(drugId);
+
+test('createConnect shows every drug once on each side, never level with its own use', () => {
+  for (let seed = 1; seed < 60; seed++) {
+    const s = createConnect(ids(8), seed % 7 === 0 ? () => 0.3 : seeded(seed));
+    assert.deepEqual([...s.names].sort(), [...ids(8)].sort());
+    assert.deepEqual([...s.uses].sort(), [...ids(8)].sort());
+    assert.ok(s.uses.every((id, i) => id !== s.names[i]), `seed ${seed}`);
+  }
+});
+
+test('pickItem selects, moves the selection and clears it', () => {
+  const s0 = createConnect(ids(4), seeded(2));
+  const a = pickItem(s0, 'name', 0);
+  assert.deepEqual(a.events.map((e) => e.type), ['select']);
+  assert.deepEqual(a.state.selected, { side: 'name', index: 0 });
+  const moved = pickItem(a.state, 'name', 1);
+  assert.deepEqual(moved.state.selected, { side: 'name', index: 1 });
+  const cleared = pickItem(moved.state, 'name', 1);
+  assert.deepEqual(cleared.events.map((e) => e.type), ['deselect']);
+  assert.equal(cleared.state.selected, null);
+  assert.deepEqual(pickItem(s0, 'name', 9).events, []);
+  assert.deepEqual(pickItem(s0, 'side', 0).events, []);
+  assert.equal(s0.selected, null, 'input state is not mutated');
+});
+
+test('joining a name to its use scores with a growing combo, in either order', () => {
+  let s = createConnect(ids(6), seeded(5));
+  const [d0, d1, d2] = s.names;
+  s = pickItem(s, 'name', rowOf(s, 'name', d0)).state;
+  const first = pickItem(s, 'use', rowOf(s, 'use', d0));
+  assert.deepEqual(first.events.map((e) => e.type), ['match']);
+  assert.equal(first.events[0].points, 100);
+  s = first.state;
+  s = pickItem(s, 'use', rowOf(s, 'use', d1)).state;
+  const second = pickItem(s, 'name', rowOf(s, 'name', d1));
+  assert.equal(second.events[0].points, 150);
+  assert.equal(second.events[0].nameIndex, rowOf(s, 'name', d1));
+  s = second.state;
+  assert.deepEqual(pickItem(s, 'name', rowOf(s, 'name', d0)).events, [], 'a joined item stays put');
+  assert.equal(s.bestCombo, 2);
+  assert.equal(s.selected, null);
+  void d2;
+});
+
+test('a wrong join costs the combo and points, and counts the name against its drug', () => {
+  let s = createConnect(ids(6), seeded(5));
+  const [d0, d1] = s.names;
+  s = pickItem(s, 'name', rowOf(s, 'name', d0)).state;
+  s = pickItem(s, 'use', rowOf(s, 'use', d0)).state;
+  assert.equal(s.score, 100);
+  s = pickItem(s, 'name', rowOf(s, 'name', d1)).state;
+  const bad = pickItem(s, 'use', rowOf(s, 'use', d0 === d1 ? s.uses[0] : s.uses.find((u) => u !== d1 && u !== d0)));
+  assert.deepEqual(bad.events.map((e) => e.type), ['mismatch']);
+  assert.equal(bad.events[0].penalty, 50);
+  assert.equal(bad.state.score, 50);
+  assert.equal(bad.state.combo, 0);
+  assert.equal(bad.state.misses, 1);
+  assert.deepEqual(bad.state.missedIds, [d1]);
+  assert.equal(bad.state.selected, null);
+});
+
+test('connect: finishing ends the round and reports stars, bonuses and outcomes', () => {
+  let s = createConnect(ids(6), seeded(8));
+  for (const id of [...s.names]) {
+    s = pickItem(s, 'name', rowOf(s, 'name', id)).state;
+    const r = pickItem(s, 'use', rowOf(s, 'use', id));
+    s = r.state;
+    if (id === s.names[s.names.length - 1]) assert.ok(r.events.some((e) => e.type === 'done'));
+  }
+  assert.equal(s.done, true);
+  assert.deepEqual(pickItem(s, 'name', 0).events, []);
+  const result = finishConnect(s, 20000);
+  assert.equal(result.mode, 'connect');
+  assert.equal(result.perfectBonus, 200);
+  assert.equal(result.timeBonus, (30 - 20) * 10);
+  assert.equal(result.stars, 3);
+  assert.equal(result.outcomes.length, 6);
+  assert.ok(result.outcomes.every((o) => o.ok));
+  assert.equal(connectStars(8, 0), 3);
+  assert.equal(connectStars(8, 2), 2);
+  assert.equal(connectStars(8, 3), 1);
+});
+
+test('connect lifts a drug to familiar at most and keeps its own best score', () => {
+  const id = drugs[0].id;
+  let p = emptyProgress();
+  const run = (ok) => { p = applyResult(p, { mode: 'connect', score: 700, stars: 2, outcomes: [{ drugId: id, ok }], misses: 1, bestCombo: 2 }, '2026-10-01', drugs).progress; };
+  run(true);
+  run(true);
+  run(true);
+  assert.equal(levelOf(p, id), 2);
+  assert.equal(p.best.connect, 700);
+  assert.equal(p.best.pairs, 0);
 });

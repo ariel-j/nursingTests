@@ -1,7 +1,7 @@
 // Pairs mode: flip a drug's name card and its use card. The board is built once and updated
 // in place, so keyboard focus stays on the card that was pressed.
 import { clearMismatch, comboMultiplier, createPairs, finishPairs, flip } from './memory-core.js';
-import { drugDetail } from './memory-detail.js';
+import { showExplanation } from './memory-explain.js';
 import { clear, countUp, drugName, el, formatTime, ltr } from './memory-dom.js';
 import { sound, vibrate } from './memory-fx.js';
 
@@ -127,33 +127,6 @@ export function playPairs({ root, ids, byId, rng, announce, onFinish, onExit }) 
     setTimeout(() => node.remove(), 1300);
   }
 
-  function showExplanation(drugId, points, comboNow, finished) {
-    clear(explain);
-    const head = el('div', 'explain-head');
-    head.append(el('span', 'explain-points', ltr(`+${points}`) + (comboNow >= 2 ? ` · רצף ${ltr(`×${comboMultiplier(comboNow)}`)}` : '')));
-    if (!finished) {
-      const close = el('button', 'link-button', 'סגירה');
-      close.type = 'button';
-      close.addEventListener('click', () => { explain.hidden = true; });
-      head.append(close);
-    }
-    explain.append(head, drugDetail(byId.get(drugId)));
-    let next = null;
-    if (finished) {
-      next = el('button', 'primary', 'לתוצאות');
-      next.type = 'button';
-      next.addEventListener('click', () => onFinish(finishPairs(state, elapsed)));
-      const actions = el('div', 'actions');
-      actions.append(next);
-      explain.append(actions);
-    }
-    explain.hidden = false;
-    explain.classList.remove('is-new');
-    void explain.offsetWidth; // restart the slide-in
-    explain.classList.add('is-new');
-    return next;
-  }
-
   // ----- play -----
   function resolveMismatch() {
     clearTimeout(mismatchTimer);
@@ -181,7 +154,7 @@ export function playPairs({ root, ids, byId, rng, announce, onFinish, onExit }) 
         pop(ltr(`+${ev.points}`), ev.indices[1]);
         announce(`התאמה! ${byId.get(ev.drugId).name}. ${ev.points} נקודות`);
         const done = state.done;
-        const next = showExplanation(ev.drugId, ev.points, ev.combo, done);
+        const next = showExplanation(explain, byId.get(ev.drugId), ev.points, ev.combo, done ? () => onFinish(finishPairs(state, elapsed)) : null);
         if (done) {
           stop();
           sound('win');
