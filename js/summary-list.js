@@ -1,6 +1,7 @@
 // The short summaries, in the order the hub and the combined print show them. Each id is a page
 // summaries/<id>.html whose <article class="summary" data-system="<id>"> holds the content, and
 // `subject` is the id of its subject in quizzes/subjects.json.
+// `study: true` means study/<id>.html (interactive practice) exists too.
 // No DOM here, so the Node tests can check it against the files.
 
 export const SUMMARIES = [
@@ -160,6 +161,20 @@ export const SUMMARIES = [
     title: 'מנוחה ושינה',
     blurb: 'שלבי NREM ו‑REM, מלטונין ומקצב צירקדי, הפרעות שינה, דום נשימה והיגיינת שינה. עם כרטיסיות וחידון.',
   },
+  {
+    subject: 'nursing-fundamentals',
+    study: true,
+    id: 'urinary',
+    title: 'מערכת השתן',
+    blurb: 'ערכי שתן תקינים, הפרעות במתן שתן, DIAPPERS, צנתור והטיית שתן. עם תרגול אינטראקטיבי.',
+  },
+  {
+    subject: 'nursing-fundamentals',
+    study: true,
+    id: 'gi',
+    title: 'מערכת העיכול וההפרשות',
+    blurb: 'סולם בריסטול, תכשירים משלשלים וחוקן, אבני צואה וסטומה. עם תרגול אינטראקטיבי.',
+  },
 ];
 
 /** The summaries of one subject, in list order. */
@@ -167,3 +182,6 @@ export const summariesFor = (subjectId) => SUMMARIES.filter((s) => s.subject ===
 
 /** Page file for a summary, relative to the summaries/ folder. */
 export const summaryFile = (id) => `${id}.html`;
+
+/** Interactive study page for a summary, relative to the summaries/ folder. */
+export const studyFile = (id) => `../study/${id}.html`;

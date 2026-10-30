@@ -9,6 +9,8 @@
 [data-system="endocrine"]      { --a: #9a6018; --a-soft: #f4e9d6; --a-ink: #7e4e12; --a-d: #e8aa5c; --a-soft-d: #3a2a14; --a-ink-d: #f3cb93; }
 [data-system="pharmacodynamics"] { --a: #0f766e; --a-soft: #dcf1ee; --a-ink: #0b514b; --a-d: #4fd1c5; --a-soft-d: #11322f; --a-ink-d: #9be7de; }
 [data-system="excretory"]      { --a: #126e82; --a-soft: #dcedf0; --a-ink: #0c4e5c; --a-d: #5fc4d9; --a-soft-d: #12333a; --a-ink-d: #a2ddea; }
+[data-system="urinary"]        { --a: #3a5fa8; --a-soft: #e2e9f5; --a-ink: #284278; --a-d: #8fb0f0; --a-soft-d: #1b2640; --a-ink-d: #c3d4f8; }
+[data-system="gi"]             { --a: #7a4a8a; --a-soft: #eee4f1; --a-ink: #5a3367; --a-d: #cfa0e0; --a-soft-d: #2f1f38; --a-ink-d: #e6c8f1; }
 [data-system="parasympathetic"] { --a: #2f7a3e; --a-soft: #e1f1e4; --a-ink: #1f5a2c; --a-d: #6fcf86; --a-soft-d: #15301b; --a-ink-d: #a9e5b8; }
 [data-system="sympathetic"] { --a: #c2410c; --a-soft: #fbe9df; --a-ink: #8f2f08; --a-d: #ff9d6b; --a-soft-d: #3f2316; --a-ink-d: #ffc4a3; }
 [data-system="opioids"] { --a: #6d28d9; --a-soft: #ede9fe; --a-ink: #4c1d95; --a-d: #b79cf7; --a-soft-d: #2a1d4a; --a-ink-d: #d9cbfb; }
@@ -418,3 +420,6 @@
   .summary .hub-risk, .summary .hub-tag { color: #fff; }
   .summary .fc, .summary .ic, .summary .lvl, .summary .step, .summary .ustage, .summary .scale-card { break-inside: avoid; }
 }
+
+/* link from a hub card to the interactive study page */
+.study-link { display: inline-block; margin-block-start: 0.35rem; padding-inline: 0.25rem; font-weight: 600; color: var(--accent-ink); }

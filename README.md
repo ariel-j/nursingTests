@@ -138,6 +138,10 @@ It is dropped, and the quiz starts fresh.
 A4, rows kept whole across pages). `summaries/all.html` loads every summary into one page, so they print
 as a single PDF; `all.html?subject=<id>` prints one subject's.
 
+A summary can also have a separate interactive practice page, `study/<id>.html` (flip cards, expandable value rows,
+filters, a quick quiz). Set `study: true` on its entry in `js/summary-list.js`, copy `study/urinary.html` (change
+`data-study`), write the content in `js/study-data/<id>.js` and add a palette in `css/study.css`.
+
 To add a summary, see [docs/summary-authoring.md](docs/summary-authoring.md): a brief for writing one in the
 site's style, then these steps:
 
