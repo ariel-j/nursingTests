@@ -1,0 +1,99 @@
+# Publishes the site to GitHub Pages on every push to main. Before publishing it builds
+# media/manifest.json from the media/ folder (Pages can't list a folder, and the list is not
+# committed), so an upload through the GitHub web UI is all it takes to add a video. A video with no
+# captions gets automatic Hebrew ones first (scripts/captions.mjs): committed back to main, with an
+# issue listing the words to check by ear.
+# Needs Settings → Pages → Source: "GitHub Actions".
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write # commits the captions it makes
+  issues: write # opens the captions review issue
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Captions take about half a video's length; a plain deploy takes a minute.
+    timeout-minutes: 120
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The branch tip, not the pushed commit: a queued run then sees the captions the run before
+          # it committed instead of making them again.
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Find videos without captions
+        id: pending
+        run: echo "videos=$(node scripts/captions.mjs pending)" >> "$GITHUB_OUTPUT"
+      - if: steps.pending.outputs.videos != '[]'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: scripts/requirements-captions.txt
+      # The Hebrew Whisper model (1.6GB), downloaded once.
+      - if: steps.pending.outputs.videos != '[]'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: whisper-ivrit-ai-large-v3-turbo-ct2
+      # A video whose transcription fails is skipped; the manifest step then leaves it out (no
+      # captions), and the run fails so GitHub emails the owner.
+      - name: Make captions
+        if: steps.pending.outputs.videos != '[]'
+        continue-on-error: true
+        env:
+          VIDEOS: ${{ steps.pending.outputs.videos }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pip install -r scripts/requirements-captions.txt
+          status=0
+          node -e 'process.stdout.write(JSON.parse(process.env.VIDEOS).join("\0"))' \
+            | xargs -0 python scripts/transcribe.py "$RUNNER_TEMP/words" || status=$?
+          if compgen -G "$RUNNER_TEMP/words/*.json" > /dev/null; then
+            node scripts/captions.mjs build "$RUNNER_TEMP/words" > "$RUNNER_TEMP/review.md"
+            git config user.name "github-actions[bot]"
+            git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
+            git add media
+            git commit -m "Add automatic captions"
+            git pull --rebase
+            git push
+            gh issue create --title "בדיקת כתוביות אוטומטיות" --body-file "$RUNNER_TEMP/review.md"
+          fi
+          exit $status
+      # Files that break a rule are left out of the list; the site still deploys, and the last step
+      # fails the run so GitHub emails the owner.
+      - name: Build media/manifest.json
+        id: media
+        continue-on-error: true
+        run: node scripts/media-manifest.mjs
+      # Drafts ("_" files and folders in media/) stay in the repo but are not published.
+      - name: Leave out media drafts
+        run: find media -name '_*' -prune -exec rm -rf {} +
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Fail on rejected media files
+        if: steps.media.outcome == 'failure'
+        run: |
+          echo "::error::Some files in media/ were left out, see the 'Build media/manifest.json' step."
+          exit 1

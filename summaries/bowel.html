@@ -5,22 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <title>הפרשות מערכת העיכול — סיכום</title>
-  <link rel="preload" href="../fonts/assistant-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/summary.css">
   <script type="module" src="../js/summary.js"></script>
+  <script type="module" src="../js/nav.js"></script>
   <script type="module" src="../js/a11y.js"></script>
+  <script type="module" src="../js/analytics.js"></script>
 </head>
 <body class="summary-page">
   <main class="page wide">
     <nav class="top-nav no-print">
-      <a href="./">→ כל הסיכומים</a>
+      <a href="./?subject=nursing-fundamentals">→ כל הסיכומים</a>
       <button type="button" class="secondary" data-print>הדפסה / שמירה כ‑PDF</button>
     </nav>
 
 <article class="summary" data-system="bowel">
   <header>
-    <p class="kicker">יסודות להתערבות סיעודית · סיכום נושא</p>
+    <p class="kicker">יסודות להתערבות סיעודית · הפרשות מערכת העיכול · סיכום נושא</p>
     <h1>הפרשות מערכת העיכול</h1>
     <p class="lede">כל הנושא נשען על עיקרון אחד: <b>מטפסים בסולם ההתערבות רק כשהשלב הקודם לא הצליח</b>. למבחן: <b>מה תקין, איזה תכשיר פועל באיזה מנגנון, איך מבצעים חוקן והוצאת אבני צואה, ומה ההבדל בין סוגי הסטומה</b>.</p>
     <svg class="motif" viewBox="0 0 480 60" preserveAspectRatio="none" aria-hidden="true">
@@ -30,6 +32,34 @@
       <span><span class="arrowmark">←</span> <b>גורם ← תוצאה</b> (קוראים מימין לשמאל)</span>
     </div>
   </header>
+
+  <section class="intro" id="bowel-intro">
+    <h2>מבוא: על מה כל זה?</h2>
+    <p>יציאות הן מדד פשוט לבריאות המטופל, ובאשפוז הן נפגעות בקלות: ריתוק למיטה, תרופות ופחד מנפילה מעכבים את המעי, ובקשישים זה מוביל לעצירות, אבני צואה ואי שליטה. לכן הנושא בנוי כ<b>סולם התערבות</b>: מתחילים במניעה ועולים שלב רק כשהקודם לא הצליח.</p>
+    <p>הפרק מתחיל במה תקין (מספרים, סולם בריסטול, צבעים), עובר לעצירות ושלשול ולחוזר מנהל הסיעוד 248/2025 על אי שליטה, ואז לכלים: תכשירים משלשלים לפי מנגנון, חוקן ואבני צואה. הוא נסגר בהפרעות ברקטום ובאנוס, בבדיקות ובסטומה.</p>
+    <p>למבחן: מנגנון כל תכשיר, מי רשאי לבצע כל פעולה ובאיזו הוראה, התוויות נגד, וההבדל בין אילאוסטומיה לקולוסטומיה.</p>
+  </section>
+
+  <section class="glossary" id="bowel-glossary">
+    <h2>מילון מונחים</h2>
+    <h3>יציאות</h3>
+    <dl class="def"><dt>עצירות</dt><dd>יציאות מעטות או קשות להפרשה. יותר מ‑3 ימים בלי יציאה, או יציאה במאמץ וכאב.</dd></dl>
+    <dl class="def"><dt>שלשול</dt><dd>צואה רכה ותכופה, יותר מ‑4 ביום. מנגנון הגנה של הגוף.</dd></dl>
+    <dl class="def"><dt>אי שליטה על צואה</dt><dd>איבוד בלתי רצוני של צואה או גזים.</dd></dl>
+    <dl class="def"><dt>מלנה</dt><dd>צואה שחורה וזפתית, מדם מעוכל.</dd></dl>
+    <dl class="def"><dt>אבני צואה</dt><dd>גוש צואה קשה שנתקע ואינו יוצא בפעילות מעיים רגילה.</dd></dl>
+    <h3>טיפולים</h3>
+    <dl class="def"><dt>תכשיר משלשל</dt><dd>תרופה שמזרזת יציאה. סוגיה: אוסמוטי, מגרה עצבים, משמן ועוטף, מגדיל נפח.</dd></dl>
+    <dl class="def"><dt>חוקן</dt><dd>החדרת נוזל דרך פי הטבעת לריקון המעי.</dd></dl>
+    <dl class="def"><dt>תנוחת Sims</dt><dd>שכיבה על צד שמאל עם ברכיים מכופפות.</dd></dl>
+    <dl class="def"><dt>אספירציה</dt><dd>שאיפת חומר אל הריאות במקום בליעה.</dd></dl>
+    <dl class="def"><dt>ברדיקרדיה</dt><dd>האטת הדופק, כאן מגירוי עצב הוואגוס.</dd></dl>
+    <h3>מבנה ובדיקות</h3>
+    <dl class="def"><dt>סטומה</dt><dd>פתח מלאכותי בדופן הבטן שדרכו יוצאת צואה לשקית.</dd></dl>
+    <dl class="def"><dt>פיסורה / טחורים / פוליפים</dt><dd>סדק בפי הטבעת / כלי דם מודלקים / בליטות בציפוי המעי הגס.</dd></dl>
+    <dl class="def"><dt>פרפורציה</dt><dd>נקב בדופן המעי.</dd></dl>
+    <dl class="def"><dt>קולונוסקופיה</dt><dd>בדיקת המעי הגס במצלמה, בסדציה.</dd></dl>
+  </section>
 
   <!-- 1 סולם ההתערבות -->
   <section>
@@ -480,6 +510,7 @@
       <a href="../privacy.html">מדיניות פרטיות</a>
     </nav>
     <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+    <p>תוכן לימודי לתרגול בלבד. אינו מהווה ייעוץ רפואי ואינו תחליף לחומרי הקורס.</p>
   </footer>
 </body>
 </html>

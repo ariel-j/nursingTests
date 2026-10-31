@@ -5,22 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <title>גירוי סנסורי — סיכום</title>
-  <link rel="preload" href="../fonts/assistant-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/summary.css">
   <script type="module" src="../js/summary.js"></script>
+  <script type="module" src="../js/nav.js"></script>
   <script type="module" src="../js/a11y.js"></script>
+  <script type="module" src="../js/analytics.js"></script>
 </head>
 <body class="summary-page">
   <main class="page wide">
     <nav class="top-nav no-print">
-      <a href="./">→ כל הסיכומים</a>
+      <a href="./?subject=nursing-fundamentals">→ כל הסיכומים</a>
       <button type="button" class="secondary" data-print>הדפסה / שמירה כ‑PDF</button>
     </nav>
 
 <article class="summary" data-system="sensory">
   <header>
-    <p class="kicker">יסודות להתערבות סיעודית · סיכום נושא</p>
+    <p class="kicker">יסודות להתערבות סיעודית · גירוי סנסורי · סיכום נושא</p>
     <h1>גירוי סנסורי</h1>
     <p class="lede">המוח צריך <b>כמות נכונה</b> של גירויים: מעט מדי → חסך, יותר מדי → הצפה, ובאמצע → ערות אופטימלית (<span class="en">Sensoristasis</span>). למבחן: <b>קליטה מול תפיסה, ארבעת התנאים, ה‑RAS, ההבדל בין חסך להצפה, ומה עושים לכל מטופל</b>.</p>
     <svg class="motif" viewBox="0 0 480 60" preserveAspectRatio="none" aria-hidden="true">
@@ -30,6 +32,34 @@
       <span><span class="arrowmark">←</span> <b>גורם ← תוצאה</b> (קוראים מימין לשמאל)</span>
     </div>
   </header>
+
+  <section class="intro" id="sensory-intro">
+    <h2>מבוא: על מה כל זה?</h2>
+    <p>המוח קולט כל הזמן גירויים מהסביבה ומהגוף, ומסנן אותם. כדי לתפקד הוא צריך כמות מאוזנת: מעט מדי מוביל ל<b>חסך</b> (בדידות, בלבול, הלוצינציות), ויותר מדי מוביל ל<b>הצפה</b> (עייפות, חוסר התמצאות, רצון להיעלם). באשפוז שני המצבים שכיחים.</p>
+    <p>הפרק מתחיל בהבחנה בין קליטה לתפיסה ובארבעת התנאים לחוויה סנסורית, ממשיך ל‑RAS ולסולם המודעות, ואז לחסך והצפה, לגורמים המשפיעים, לאבחנות סיעודיות ולהתערבות ליד סוגי מטופלים שונים.</p>
+    <p>למבחן: לזהות אם הבעיה בקליטה, בתפיסה, בחסך או בהצפה, ולדעת מה עושים בכל מקרה.</p>
+  </section>
+
+  <section class="glossary" id="sensory-glossary">
+    <h2>מילון מונחים</h2>
+    <h3>מושגי יסוד</h3>
+    <dl class="def"><dt>גירוי</dt><dd>כל שינוי בסביבה או בגוף שהחושים יכולים לקלוט.</dd></dl>
+    <dl class="def"><dt>קליטה חושית</dt><dd>הגירוי הגיע לקולטן.</dd></dl>
+    <dl class="def"><dt>תפיסה חושית</dt><dd>המוח מפרש את הגירוי ונותן לו משמעות.</dd></dl>
+    <dl class="def"><dt>הסתגלות</dt><dd>הפסקת תגובה לגירוי שנשאר קבוע.</dd></dl>
+    <dl class="def"><dt>Sensoristasis</dt><dd>רמת גירויים מאוזנת שמאפשרת ערות אופטימלית.</dd></dl>
+    <dl class="def"><dt>RAS</dt><dd>מערכת במוח שמסננת אילו גירויים יגיעו לקורטקס.</dd></dl>
+    <h3>הפרעות</h3>
+    <dl class="def"><dt>חסך סנסורי</dt><dd>מעט מדי גירויים משמעותיים.</dd></dl>
+    <dl class="def"><dt>הצפה סנסורית</dt><dd>יותר גירויים ממה שהמוח מצליח לעבד.</dd></dl>
+    <dl class="def"><dt>הלוצינציה / אילוזיה</dt><dd>תפיסה של משהו שאין / פירוש שגוי של גירוי אמיתי.</dd></dl>
+    <dl class="def"><dt>אפטיה</dt><dd>חוסר עניין ורגש.</dd></dl>
+    <dl class="def"><dt>אוטוטוקסי</dt><dd>תרופה שעלולה לפגוע בשמיעה.</dd></dl>
+    <h3>מונחי חושים</h3>
+    <dl class="def"><dt>Kinesthetic / Stereognosis / Visceral</dt><dd>מודעות לתנועה / זיהוי חפץ במגע / תחושה מאיברים פנימיים.</dd></dl>
+    <dl class="def"><dt>Ageusia / Anosmia</dt><dd>אובדן חוש הטעם / הריח.</dd></dl>
+    <dl class="def"><dt>סנוזלן</dt><dd>חדר רב‑חושי לגרייה ולרגיעה.</dd></dl>
+  </section>
 
   <!-- 1 איזון -->
   <section>
@@ -438,6 +468,7 @@
       <a href="../privacy.html">מדיניות פרטיות</a>
     </nav>
     <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+    <p>תוכן לימודי לתרגול בלבד. אינו מהווה ייעוץ רפואי ואינו תחליף לחומרי הקורס.</p>
   </footer>
 </body>
 </html>
