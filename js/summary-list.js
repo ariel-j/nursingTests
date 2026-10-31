@@ -175,6 +175,18 @@ export const SUMMARIES = [
     title: 'מערכת העיכול וההפרשות',
     blurb: 'סולם בריסטול, תכשירים משלשלים וחוקן, אבני צואה וסטומה. עם תרגול אינטראקטיבי.',
   },
+  {
+    subject: 'nursing-fundamentals',
+    id: 'bowel',
+    title: 'הפרשות מערכת העיכול (חוזר 248/2025)',
+    blurb: 'סולם ההתערבות, אי שליטה על צואה, משלשלים, חוקן, אבני צואה, בדיקות וסטומה.',
+  },
+  {
+    subject: 'nursing-fundamentals',
+    id: 'sensory',
+    title: 'גירוי סנסורי',
+    blurb: 'קליטה ותפיסה, RAS ומצבי מודעות, חסך והצפה, אבחנות NANDA והתערבות.',
+  },
 ];
 
 /** The summaries of one subject, in list order. */
