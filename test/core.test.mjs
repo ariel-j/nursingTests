@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import {
   MASTERY_STREAK,
   STARRED_QUIZ_ID,
+  starredQuizId,
   REQUEUE_MAX,
   REQUEUE_MIN,
   answer,
@@ -490,6 +491,16 @@ test('buildStarredQuiz groups per quiz, even two quizzes of one unit', () => {
   const q = questionById(starred, 'unit-a-2/q2');
   assert.equal(q.question, fixture.questions[1].question);
   assert.deepEqual(starTarget(starred, q.id), { quizId: 'unit-a-2', questionId: 'q2' });
+});
+
+test('a subject-scoped starred quiz has its own session id and subject', () => {
+  const scoped = buildStarredQuiz([unitQuiz('u-1', 'א')], 'פרמקולוגיה א\'');
+  assert.equal(scoped.subject, 'פרמקולוגיה א\'');
+  assert.equal(scoped.id, starredQuizId('פרמקולוגיה א\''));
+  assert.notEqual(scoped.id, STARRED_QUIZ_ID);
+  assert.notEqual(scoped.id, starredQuizId('פרמקולוגיה ב\''));
+  assert.equal(starredQuizId(), STARRED_QUIZ_ID);
+  assert.equal(buildStarredQuiz([unitQuiz('u-1', 'א')]).subject, undefined);
 });
 
 test('a starred session plays through and lists the quizzes it needs', () => {

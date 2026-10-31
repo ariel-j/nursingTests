@@ -1,9 +1,9 @@
 // Loads the quiz a page was opened for: ?id=<quiz> is one quiz; ?subject=<id> (or the subject's
 // name, from older links) merges all of that subject's quizzes for mixed practice; ?drugs=<id>
 // builds a quiz from the subject's drug cards (data/<id>/drugs.json), &exam=1 from exam drugs only;
-// ?starred merges every quiz that has starred questions.
+// ?starred merges every quiz that has starred questions; with &subject=<id>, only that subject's.
 // Shared by quiz.js and print.js.
-import { STARRED_QUIZ_ID, buildMixedQuiz, buildStarredQuiz, isValidQuizId, sessionQuizIds, validateQuiz } from './core.js';
+import { buildMixedQuiz, buildStarredQuiz, isValidQuizId, sessionQuizIds, starredQuizId, validateQuiz } from './core.js';
 import { findSubject, loadManifest, subjectPaths, subjectQuizzes } from './catalog.js';
 import { buildDrugQuiz, drugDeckUrl, validateDrugDeck } from './drugs-core.js';
 import { keys, load, loadStars } from './storage.js';
@@ -50,9 +50,12 @@ async function loadDrugQuiz(subjectId, examOnly) {
  * Every quiz with starred questions, plus any a saved starred session still needs, merged in
  * home-page order. A quiz that fails to load is left out rather than failing the page.
  */
-async function loadStarredQuiz() {
-  const needed = new Set(sessionQuizIds(load(keys.session(STARRED_QUIZ_ID))));
-  const ids = (await loadManifest()).subjects
+async function loadStarredQuiz(subjectKey) {
+  const manifest = await loadManifest();
+  const entry = subjectKey === null ? null : findSubject(manifest, subjectKey);
+  if (subjectKey !== null && !entry) throw new LoadError('המקצוע לא נמצא.');
+  const needed = new Set(sessionQuizIds(load(keys.session(starredQuizId(entry?.name ?? null)))));
+  const ids = (entry ? [entry] : manifest.subjects)
     .flatMap(subjectQuizzes)
     .map((q) => q.id)
     .filter((id) => needed.has(id) || loadStars(id).length > 0);
@@ -61,14 +64,16 @@ async function loadStarredQuiz() {
     if (r.status === 'rejected') console.error(`Could not load ${ids[i]}:`, r.reason);
   });
   return {
-    ...buildStarredQuiz(loaded.filter((r) => r.status === 'fulfilled').map((r) => r.value)),
+    ...buildStarredQuiz(loaded.filter((r) => r.status === 'fulfilled').map((r) => r.value), entry?.name ?? null),
     title: 'שאלות מסומנות',
-    description: 'השאלות שסימנתם בכוכב. בחרו מאילו בחנים ואילו שאלות לתרגל.',
+    description: entry
+      ? `השאלות שסימנתם בכוכב ב${entry.name}. בחרו מאילו בחנים ואילו שאלות לתרגל.`
+      : 'השאלות שסימנתם בכוכב. בחרו מאילו בחנים ואילו שאלות לתרגל.',
   };
 }
 
 async function loadQuiz(params) {
-  if (params.has('starred')) return loadStarredQuiz();
+  if (params.has('starred')) return loadStarredQuiz(params.get('subject'));
   const drugs = params.get('drugs');
   if (drugs !== null) return loadDrugQuiz(drugs, params.get('exam') === '1');
   const subject = params.get('subject');
