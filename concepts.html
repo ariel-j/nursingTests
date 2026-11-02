@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>כרטיסיות מושגים · תרגול למבחנים בסיעוד</title>
+  <link rel="preload" href="fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/drugs.css">
+  <link rel="stylesheet" href="css/concepts.css">
+  <script type="module" src="js/concepts.js"></script>
+  <script type="module" src="js/nav.js"></script>
+  <script type="module" src="js/a11y.js"></script>
+  <script type="module" src="js/analytics.js"></script>
+</head>
+<body>
+  <main class="page drugs-page concepts-page">
+    <nav class="top-nav"><a id="back-link" href="./">→ דף המקצוע</a></nav>
+    <header class="site-header">
+      <p id="subject" class="kicker"></p>
+      <h1>כרטיסיות מושגים</h1>
+      <p class="lede">מושגים, מספרים, בדיקות, תרופות, סדרים והתאמות במקום אחד: עיון וחיפוש, חזרה יומית שמחזירה כל כרטיסייה בדיוק כשצריך, משחקים לשינון ומבחן שנוצר מהכרטיסיות.</p>
+      <p id="deck-stats" class="meta"></p>
+    </header>
+    <p id="status" class="status" role="status">טוען…</p>
+
+    <div id="tabs" class="tab-list" role="tablist" aria-label="מצבי לימוד" hidden>
+      <button type="button" class="tab" role="tab" id="tab-browse" aria-controls="panel-browse" aria-selected="true">עיון</button>
+      <button type="button" class="tab" role="tab" id="tab-review" aria-controls="panel-review" aria-selected="false" tabindex="-1">חזרה יומית</button>
+      <button type="button" class="tab" role="tab" id="tab-games" aria-controls="panel-games" aria-selected="false" tabindex="-1">משחקים</button>
+      <button type="button" class="tab" role="tab" id="tab-test" aria-controls="panel-test" aria-selected="false" tabindex="-1">מבחן</button>
+    </div>
+
+    <section id="panel-browse" class="tab-panel" role="tabpanel" aria-labelledby="tab-browse" hidden>
+      <div class="drug-controls">
+        <label class="drug-search">
+          <span class="visually-hidden">חיפוש</span>
+          <input id="browse-query" type="search" placeholder="חיפוש מושג, מספר, בדיקה, תרופה…" autocomplete="off" enterkeyhint="search">
+        </label>
+        <label class="drug-select">
+          <span>סוג</span>
+          <select id="browse-kind"></select>
+        </label>
+        <label class="drug-select">
+          <span>נושא</span>
+          <select id="browse-topic"></select>
+        </label>
+        <label class="drug-check"><input id="browse-hide" type="checkbox"> מצב שינון: הסתרת התשובות</label>
+        <button id="browse-print" type="button" class="secondary">הדפסה / שמירה כ‑PDF</button>
+      </div>
+      <p id="browse-count" class="muted drug-count" role="status"></p>
+      <div id="browse-list"></div>
+    </section>
+
+    <section id="panel-review" class="tab-panel" role="tabpanel" aria-labelledby="tab-review" hidden>
+      <p class="muted">כל יום כמה כרטיסיות: קודם אלה שהגיע זמן לחזור עליהן, ואחר כך חדשות. כרטיסייה שידעתם חוזרת אחרי יומיים, ארבעה, שמונה ו‑16 ימים; כרטיסייה ששכחתם חוזרת מחר.</p>
+      <div class="drug-controls">
+        <label class="drug-select">
+          <span>סוג</span>
+          <select id="review-kind"></select>
+        </label>
+        <button id="review-reset" type="button" class="link-button">איפוס ההתקדמות</button>
+      </div>
+      <div id="review-topics"></div>
+      <p id="review-stats" class="meta"></p>
+      <div id="review-area" class="review-area"></div>
+    </section>
+
+    <section id="panel-games" class="tab-panel" role="tabpanel" aria-labelledby="tab-games" hidden>
+      <div id="games-topics" class="games-topics"></div>
+      <fieldset class="game-picker">
+        <legend class="visually-hidden">בחירת משחק</legend>
+        <label><input type="radio" name="game" value="match"> התאמה</label>
+        <label><input type="radio" name="game" value="concepts"> מושגים</label>
+        <label><input type="radio" name="game" value="numbers"> מספרים</label>
+        <label><input type="radio" name="game" value="practice"> בדיקות ותרופות</label>
+        <label><input type="radio" name="game" value="order"> סדרים וזוגות</label>
+        <label><input type="radio" name="game" value="blitz"> בליץ ⚡</label>
+      </fieldset>
+
+      <div id="game-match" hidden>
+        <p class="muted">בכל סבב כמה זוגות. בחרו פריט ואז את מה שמתאים לו (או להפך). זוגות שטעיתם בהם יחזרו בתדירות גבוהה יותר.</p>
+        <div class="drug-controls">
+          <fieldset class="drug-fields">
+            <legend>להתאים</legend>
+            <label><input type="radio" name="match-source" value="sets" checked> קבוצות מוכנות</label>
+            <label><input type="radio" name="match-source" value="concepts"> מושגים והסבריהם</label>
+          </fieldset>
+          <button id="match-new" type="button" class="secondary">סבב חדש</button>
+        </div>
+        <p id="match-title" class="match-title"></p>
+        <p id="match-status" class="match-status" role="status"></p>
+        <div id="match-board" class="match-board"></div>
+      </div>
+
+      <div id="game-concepts" hidden>
+        <p class="muted">מההסבר למושג, או מהמושג להסבר. הסבר שנבחר לא נכון יוצג עם ההסבר של המושג הנכון.</p>
+        <div id="concepts-area" class="game-area"></div>
+      </div>
+
+      <div id="game-numbers" hidden>
+        <p class="muted">מספרים וטווחים שחשוב לדעת. התשובות המוצעות הן מאותו סוג, כדי שהבחירה תהיה אמיתית.</p>
+        <div id="numbers-area" class="game-area"></div>
+      </div>
+
+      <div id="game-practice" hidden>
+        <p class="muted">איזו בדיקה או פעולה מתאימה למטרה, לאיזו קבוצה שייכת תרופה, ולאיזה תיאור מתאים כל פריט.</p>
+        <div id="practice-area" class="game-area"></div>
+      </div>
+
+      <div id="game-order" hidden>
+        <p class="muted">מה השלב הבא או הקודם בסדר פעולות, ומה מתאים לכל פריט בטבלאות ההתאמה.</p>
+        <div id="order-area" class="game-area"></div>
+      </div>
+
+      <div id="game-blitz" hidden>
+        <div id="blitz-area" class="game-area"></div>
+      </div>
+    </section>
+
+    <section id="panel-test" class="tab-panel" role="tabpanel" aria-labelledby="tab-test" hidden>
+      <p class="muted">מבחן אמריקאי שנוצר מהכרטיסיות: הגדרות, מספרים, בדיקות, תרופות, סדרים והתאמות. בוחרים נושאים ומספר שאלות. כמו בכל בוחן באתר, שאלה שטעיתם בה חוזרת עד שתענו עליה נכון פעמיים ברצף, וההתקדמות נשמרת.</p>
+      <ul class="quiz-list tool-list">
+        <li><a id="test-all" class="quiz-card mix-card" href="quiz.html"><h3 class="card-title">מבחן מושגים</h3><p class="muted">כל הנושאים, או רק חלק מהם.</p></a></li>
+        <li><a id="test-print" class="quiz-card tool-card" href="print.html"><h3 class="card-title">מבחן להדפסה</h3><p class="muted">שאלות מהכרטיסיות עם מפתח תשובות. אפשר לשמור כ‑PDF.</p></a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer page">
+    <nav>
+      <a href="accessibility.html">הצהרת נגישות</a>
+      <a href="privacy.html">מדיניות פרטיות</a>
+    </nav>
+    <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+    <p>תוכן לימודי לתרגול בלבד. אינו מהווה ייעוץ רפואי ואינו תחליף לחומרי הקורס.</p>
+  </footer>
+</body>
+</html>

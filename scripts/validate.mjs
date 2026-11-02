@@ -4,6 +4,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { MANIFEST_FILE, QUIZ_DIR, buildManifest, loadAll, serializeManifest } from './quizzes.mjs';
 import { checkMedia, mediaTotal } from './media.mjs';
+import { checkConcepts } from './concepts.mjs';
 import { checkDrugs } from './drugs.mjs';
 import { checkRootPages, checkSummaries, recollectionMentions } from './summaries.mjs';
 import { checkTools } from './tools.mjs';
@@ -32,6 +33,7 @@ const pageErrors = [
   ...await checkRootPages(),
   ...await checkTools(),
   ...(catalog ? await checkDrugs(catalog) : []),
+  ...(catalog ? await checkConcepts(catalog) : []),
 ];
 for (const e of pageErrors) console.error(e);
 failures += pageErrors.length;

@@ -11,6 +11,7 @@ test('pagePath drops the site folder and .html, folds index.html and keeps only 
   assert.equal(at('/nursingTests/quiz.html', '?id=heart&x=1'), '/quiz?id=heart');
   assert.equal(at('/nursingTests/quiz.html', '?subject=anatomy'), '/quiz?subject=anatomy');
   assert.equal(at('/nursingTests/quiz.html', '?exam=1&drugs=pharmacology'), '/quiz?drugs=pharmacology&exam=1');
+  assert.equal(at('/nursingTests/quiz.html', '?concepts=nursing-fundamentals&x=1'), '/quiz?concepts=nursing-fundamentals');
   assert.equal(at('/nursingTests/', '?subject=anatomy&utm=x'), '/?subject=anatomy');
   assert.equal(at('/nursingTests/quiz.html', '?id='), '/quiz');
   assert.equal(at('/nursingTests/media.html', '?topic=NSAID&subject=pharmacology'), '/media?subject=pharmacology&topic=NSAID');
