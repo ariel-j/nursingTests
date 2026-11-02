@@ -6,6 +6,7 @@ import { MANIFEST_FILE, QUIZ_DIR, buildManifest, loadAll, serializeManifest } fr
 import { checkMedia, mediaTotal } from './media.mjs';
 import { checkDrugs } from './drugs.mjs';
 import { checkRootPages, checkSummaries, recollectionMentions } from './summaries.mjs';
+import { checkTools } from './tools.mjs';
 import { drugErrors, loadDrugs } from './memory-drugs.mjs';
 import { SUMMARIES } from '../js/summary-list.js';
 
@@ -29,6 +30,7 @@ const subjectIds = catalog ? catalog.subjects.map((s) => s.id) : [];
 const pageErrors = [
   ...await checkSummaries(subjectIds),
   ...await checkRootPages(),
+  ...await checkTools(),
   ...(catalog ? await checkDrugs(catalog) : []),
 ];
 for (const e of pageErrors) console.error(e);
