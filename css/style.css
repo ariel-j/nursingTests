@@ -18,7 +18,7 @@
 /* ---------- tokens ---------- */
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light dark; /* follows the device; data-theme (js/theme.js) overrides below */
   --bg: #F1EFF4;
   --surface: #FFFFFF;
   --ink: #1E1B2B;
@@ -68,6 +68,10 @@
   --bad: #F08A80;
   --bad-soft: #3B1D1B;
 }
+
+/* Native controls and scrollbars follow the chosen theme. */
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -769,6 +773,30 @@ kbd {
   font-size: 0.9375rem;
 }
 .menu-toggle:hover, .drawer-close:hover { border-color: var(--accent); }
+.site-bar-inner .theme-toggle { margin-inline-start: auto; }
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink);
+  font-weight: 500;
+  font-size: 0.9375rem;
+}
+.theme-toggle:hover { border-color: var(--accent); }
+.theme-toggle svg {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+@media (max-width: 420px) { .theme-toggle-text { display: none; } }
 .menu-toggle svg, .drawer-close svg {
   inline-size: 1.25rem;
   block-size: 1.25rem;
@@ -895,6 +923,8 @@ kbd {
 }
 .a11y-btn:hover:not(:disabled) { border-color: var(--accent); }
 .a11y-btn:disabled { opacity: 0.4; cursor: default; }
+.a11y-theme-row { flex-wrap: wrap; }
+.a11y-theme[aria-pressed="true"] { background: var(--accent); color: var(--surface); border-color: var(--accent); }
 .a11y-switch { inline-size: 100%; text-align: start; }
 .a11y-switch[aria-pressed="true"] { background: var(--accent); color: var(--surface); border-color: var(--accent); }
 .a11y-switch[aria-pressed="true"]::after { content: " ✓"; }

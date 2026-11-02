@@ -5,6 +5,8 @@
 // URL, so pages in subfolders (summaries/) get the same menu.
 import { findSubject, loadManifest, loadMedia, mediaCount, subjectOfQuiz, subjectPaths, subjectStats, unitAnchor } from './catalog.js';
 import { SUMMARIES, summariesFor } from './summary-list.js';
+import { getTheme, onTheme, setTheme } from './theme.js';
+import { THEME_LABELS, nextTheme } from './theme-core.js';
 
 const ROOT = new URL('../', import.meta.url);
 const SITE_TITLE = 'תרגול למבחנים בסיעוד';
@@ -22,6 +24,13 @@ function el(tag, props = {}, ...children) {
   node.append(...children);
   return node;
 }
+
+/** Icon paths for the theme button: half disc = auto, sun = light, moon = dark. */
+const THEME_ICONS = {
+  auto: 'M12 3a9 9 0 1 0 0 18V3z M12 3a9 9 0 0 1 0 18',
+  light: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z M12 2v2 M12 20v2 M4.9 4.9l1.4 1.4 M17.7 17.7l1.4 1.4 M2 12h2 M20 12h2 M4.9 19.1l1.4-1.4 M17.7 6.3l1.4-1.4',
+  dark: 'M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z',
+};
 
 function icon(d) {
   const svg = document.createElementNS(SVG_NS, 'svg');
@@ -133,8 +142,20 @@ function build() {
   });
   dialog.addEventListener('close', () => toggle.setAttribute('aria-expanded', 'false'));
 
+  // One button that cycles auto → light → dark. The label says the current mode, so it is
+  // understood without the icon (screen readers, and not relying on the icon alone).
+  const themeBtn = el('button', { type: 'button', class: 'theme-toggle' });
+  const themeText = el('span', { class: 'theme-toggle-text' });
+  themeBtn.addEventListener('click', () => setTheme(nextTheme(getTheme())));
+  onTheme((mode) => {
+    themeBtn.replaceChildren(icon(THEME_ICONS[mode]), themeText);
+    themeText.textContent = THEME_LABELS[mode];
+    themeBtn.setAttribute('aria-label', `מראה האתר: ${THEME_LABELS[mode]}. לחצו להחלפה`);
+    themeBtn.title = 'מראה האתר';
+  });
+
   const bar = el('header', { class: 'site-bar' },
-    el('div', { class: 'site-bar-inner' }, toggle, el('a', { class: 'site-name', href: href('./'), text: SITE_TITLE })));
+    el('div', { class: 'site-bar-inner' }, toggle, el('a', { class: 'site-name', href: href('./'), text: SITE_TITLE }), themeBtn));
   document.body.prepend(bar);
   document.body.append(dialog);
 }

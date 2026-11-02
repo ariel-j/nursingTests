@@ -10,7 +10,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --assoc: #7d9dff;
     --assoc-soft: #232f52;
     --gold: #ffc533;
@@ -18,6 +18,14 @@
     --bronze: #e08e5b;
     --level-0: #5a4a50;
   }
+}
+:root[data-theme="dark"] {
+  --assoc: #7d9dff;
+  --assoc-soft: #232f52;
+  --gold: #ffc533;
+  --silver: #aab6c4;
+  --bronze: #e08e5b;
+  --level-0: #5a4a50;
 }
 
 :root[data-contrast="high"] {
