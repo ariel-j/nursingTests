@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>מעבדת הבטיחות · תרגול למבחנים בסיעוד</title>
+  <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/tool.css">
+  <script type="module" src="../js/tool-safety.js"></script>
+  <script type="module" src="../js/nav.js"></script>
+  <script type="module" src="../js/a11y.js"></script>
+  <script type="module" src="../js/analytics.js"></script>
+</head>
+<body>
+  <main class="page">
+    <nav class="top-nav"><a href="../?subject=nursing-fundamentals">→ דף המקצוע</a></nav>
+    <header class="quiz-header">
+      <p class="kicker">יסודות להתערבות סיעודית · בטיחות ובטחון</p>
+      <h1>מעבדת הבטיחות</h1>
+      <p class="lede">בטיחות ובטחון: כל כלי כאן מבוסס על הטבלאות והמספרים מהחומר, חוזר 145/2019 לנפילות וחוזר רפואה 15/2009 להגבלה פיזית.</p>
+    </header>
+    <nav class="tool-nav" aria-label="ניווט בעמוד">
+      <a href="#factors">גורמים</a><a href="#falls">נפילות</a><a href="#calc">מחשבון סיכון</a><a href="#dx">אבחנות</a><a href="#restraint">הגבלה פיזית</a><a href="#goals">יעדי בטיחות</a><a href="#quiz">חידון</a>
+    </nav>
+
+    <section class="tool-section" id="factors" aria-labelledby="factors-h">
+      <h2 id="factors-h">תשעת הגורמים שקובעים אם אדם יכול להגן על עצמו</h2>
+      <p class="lede">לחצו על גורם כדי לראות דוגמה. המילה שהחומר מדגיש: מודעות.</p>
+      <div class="flips" id="flips"></div>
+    </section>
+
+    <section class="tool-section" id="falls" aria-labelledby="falls-h">
+      <h2 id="falls-h">נפילות במספרים</h2>
+      <ul class="fact-stats">
+        <li><strong>35%-45%</strong><small>מבני 65+ בקהילה נופלים לפחות פעם בשנה</small></li>
+        <li><strong>45%-75%</strong><small>נופלים בבתי אבות</small></li>
+        <li><strong>5%-15%</strong><small>סובלים משבר כלשהו</small></li>
+      </ul>
+      <div class="card">
+        <h3>מה מעלה את הסיכון</h3>
+        <p>הפרעה קוגניטיבית, ליקוי חושי (בעיקר ראייה), גיל מעל 65, חולשת שרירים, הגבלה בתנועתיות, תגובה איטית, <span dir="ltr">Orthostatic hypotension</span>, תרופות, אי שליטה על סוגרים והיסטוריה של נפילות.</p>
+        <p>מרבית הנפילות בבית החולים: <b>סביב המיטה והשירותים</b>. השכיחות עולה בבתי חולים ובתי אבות בשל <b>שינוי סביבה</b>. נפילה קודמת מעלה סיכון לנפילה חוזרת (מעגל הנפילה).</p>
+      </div>
+      <h3>חוזר 145/2019 בקצרה</h3>
+      <div class="scroll">
+        <table class="tool-table">
+          <thead><tr><th scope="col">נושא</th><th scope="col">מה כתוב</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">מי</th><td>האחות המוסמכת, במבוגר מעל גיל 65</td></tr>
+            <tr><th scope="row">מתי</th><td>באיסוף הנתונים הראשוני, לא יאוחר מ-24 שעות</td></tr>
+            <tr><th scope="row">אחריות</th><td>בניית תוכנית מניעה והתערבות, כולל הפניה לגורם מטפל נוסף</td></tr>
+            <tr><th scope="row">תיעוד</th><td>תיעוד וחתימה</td></tr>
+            <tr><th scope="row">החליף את</th><td>חוזר 74/2008 (מבוטל)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="tool-section" id="calc" aria-labelledby="calc-h">
+      <h2 id="calc-h">מחשבון סיכון לנפילות</h2>
+      <p class="lede">הניקוד מכלי האומדן. סמנו את מצב המטופל ותראו את הדרגה. דוגמת פתיחה: בן 80, נפל בעבר, זקוק לעזרה רבה בניידות.</p>
+      <div class="card">
+        <form id="calc-form" aria-label="כלי אומדן נפילות"></form>
+        <div class="risk-score" role="status">
+          <strong id="calc-total">0</strong>
+          <span id="calc-band" class="pill"></span>
+        </div>
+        <div class="risk-bar" id="calc-bar" aria-hidden="true"><i></i><i></i><i></i></div>
+        <p class="muted">עד 5 נמוכה · 6-11 גבוהה · 12-16 גבוהה מאוד</p>
+        <div class="actions-row"><button type="button" class="secondary" id="calc-reset">איפוס לאפס</button></div>
+      </div>
+      <div class="card">
+        <h3>צ'קליסט 10 הגורמים</h3>
+        <p>3 גורמים או יותר = מטופל בסיכון. סמנו כמה מתקיימים:</p>
+        <div id="checklist" class="checks"></div>
+        <p id="checklist-verdict" class="drill-feedback" role="status"></p>
+      </div>
+    </section>
+
+    <section class="tool-section" id="dx" aria-labelledby="dx-h">
+      <h2 id="dx-h">אבחנות סיעוד: מי שייך למי</h2>
+      <p class="lede">הגורם מופיע למעלה. בחרו את האבחנה שהוא קשור אליה.</p>
+      <div class="card" id="dx-drill"></div>
+      <p class="lede">אבחנות סיכון הן פוטנציאליות: גורמי הסיכון קיימים, הבעיה עוד לא התרחשה. הרשימה: פציעה, הרעלות, חנק, טראומה, תחזוקת בית לא נאותה, תסמונת חוסר ניעות.</p>
+    </section>
+
+    <section class="tool-section" id="restraint" aria-labelledby="restraint-h">
+      <h2 id="restraint-h">הגבלה פיזית: שעון הנוהל</h2>
+      <p class="lede">חוזר רפואה 15/2009. הזיזו את המחוון כדי לראות מה נדרש עד השעה שנבחרה.</p>
+      <div class="card">
+        <label for="hours" class="hours-label">שעות מתחילת ההגבלה: <span id="hours-value">9</span></label>
+        <input type="range" id="hours" min="0" max="30" step="1" value="9">
+        <div class="hours-scale" aria-hidden="true"><span>0</span><span>8</span><span>16</span><span>24</span><span>30</span></div>
+        <ul class="fact-stats">
+          <li><strong id="clock-orders">2</strong><small>הוראות שניתנו (תוקף כל אחת 8 שעות)</small></li>
+          <li><strong id="clock-assessments">4</strong><small>אומדנים שעברו (כל שעתיים)</small></li>
+          <li><strong id="clock-visits">18</strong><small>ביקורי צוות (כל חצי שעה)</small></li>
+        </ul>
+        <div id="clock-note" class="callout" role="status"></div>
+      </div>
+      <h3>מה נבדק באומדן</h3>
+      <ul>
+        <li>שיתוף הפעולה והצורך בהמשך ההגבלה, רמת ההכרה</li>
+        <li>הגפה המוגבלת: בצקת, צבע, שלמות העור, תנועתיות</li>
+        <li>טיפול: שינוי תנוחה, שחרור גפיים, מניעת סיבוכים, פעמון בהישג יד, תיעוד</li>
+      </ul>
+      <div class="callout bad"><p><b>מי מחליט:</b> רופא מחלקה, אחות מוסמכת אחראית משמרת או אחות כללית. ההגבלה חלה על מטופל שאינו יכול להסכים ואין לו אפוטרופוס על גופו. אמצעי כימי (<span dir="ltr">Valium, Haldol, Mellaril</span>) וגם פיזי הם אלטרנטיבה אחרונה.</p></div>
+    </section>
+
+    <section class="tool-section" id="goals" aria-labelledby="goals-h">
+      <h2 id="goals-h">יעדי בטיחות המטופל (NPSG 2016)</h2>
+      <div class="grid">
+        <div class="card"><h3>בבית חולים</h3><ul><li>זיהוי מטופל</li><li>תקשורת בין צוותים</li><li>תרופות בטוחות</li><li>הפחתת נזקי מערכת אזעקה</li><li>מניעת זיהומים</li><li>מניעת נפילות</li><li>מניעת פצעי לחץ</li><li>זיהוי מטופלים בסיכון לפגיעה</li><li>מניעת טעויות בניתוח: סימון, Time-out</li></ul></div>
+        <div class="card"><h3>אקרדיטציה</h3><ul><li>זיהוי מטופל</li><li>תקשורת בין מטפלים</li><li>תרופות בנות סיכון</li><li>אימות נתונים ופסק זמן</li><li>היגיינת ידיים</li><li>מניעת נפילות</li></ul></div>
+      </div>
+    </section>
+
+    <section class="tool-section" id="quiz" aria-labelledby="quiz-h">
+      <h2 id="quiz-h">חידון מהיר</h2>
+      <div class="card" id="quiz-drill"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer page">
+    <nav>
+      <a href="../accessibility.html">הצהרת נגישות</a>
+      <a href="../privacy.html">מדיניות פרטיות</a>
+    </nav>
+    <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+    <p>תוכן לימודי לתרגול בלבד. אינו מהווה ייעוץ רפואי ואינו תחליף לחומרי הקורס.</p>
+  </footer>
+</body>
+</html>

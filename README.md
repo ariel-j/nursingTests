@@ -154,6 +154,17 @@ site's style, then these steps:
 4. `npm run validate` checks it: listed, a known subject, self-hosted only, no inline styles or handlers,
    toolbar, menu and footer present.
 
+## Interactive tools (כלים אינטראקטיביים)
+
+Small study tools with their own page, `tools/<id>.html`, listed under a subject's `tools` in
+`quizzes/subjects.json` (today: `circulars` and `safety`, under יסודות להתערבות סיעודית). Static content
+(tables, figures) lives in the page HTML; the interactive parts (drills, calculator, restraint clock,
+filter) are built by `js/tool-<id>.js` with the DOM API only. Drills never advance on a timer: feedback is
+announced in a live region and focus moves on. The logic and data are in `js/tool-core.js` and are unit-tested.
+
+To add a tool: copy an existing `tools/<id>.html`, write `js/tool-<id>.js`, and add a `tools` entry to the
+subject. `npm run validate` checks the page rules and that the script's `getElementById` ids exist in the page.
+
 ## Videos and artifacts (סרטוני הסבר קצרים)
 
 `media.html?subject=<id>` shows a subject's short explainer videos and the owner's own artifacts (images,
