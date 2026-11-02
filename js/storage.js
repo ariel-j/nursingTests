@@ -19,6 +19,14 @@ export const keys = {
   drugTopics: (subjectId) => `drug-topics:${subjectId}`,
   // Personal bests of the drug-card games: { stems, odd, blitz: { score, stars, plays }, match: { "<family>|<field>": ms } }.
   drugGames: (subjectId) => `drug-games:${subjectId}`,
+  // Daily review (Leitner boxes) of a subject's concept cards: { [card id]: { box, due, last } }.
+  conceptReview: (subjectId) => `concept-review:${subjectId}`,
+  // Topics chosen on a subject's concept-cards page, for the daily review and the games: [topic id], missing = all.
+  conceptTopics: (subjectId) => `concept-topics:${subjectId}`,
+  // Matching-board weights of a subject's concept cards: { [pair id]: weight }, missed pairs weigh more.
+  conceptMatch: (subjectId) => `concept-match:${subjectId}`,
+  // Personal bests of the concept games: { concepts, numbers, practice, order, blitz: { score, stars, plays }, match: { "<source>": ms } }.
+  conceptGames: (subjectId) => `concept-games:${subjectId}`,
   // Progress of the drug memory game (memory.html): levels per drug, XP, streak, achievements.
   memory: 'memory:progress',
 };

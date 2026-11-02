@@ -1,10 +1,12 @@
 // Loads the quiz a page was opened for: ?id=<quiz> is one quiz; ?subject=<id> (or the subject's
 // name, from older links) merges all of that subject's quizzes for mixed practice; ?drugs=<id>
 // builds a quiz from the subject's drug cards (data/<id>/drugs.json), &exam=1 from exam drugs only;
+// ?concepts=<id> builds one from the subject's concept cards (data/<id>/concepts.json);
 // ?starred merges every quiz that has starred questions; with &subject=<id>, only that subject's.
 // Shared by quiz.js and print.js.
 import { buildMixedQuiz, buildStarredQuiz, isValidQuizId, sessionQuizIds, starredQuizId, validateQuiz } from './core.js';
 import { findSubject, loadManifest, subjectPaths, subjectQuizzes } from './catalog.js';
+import { buildConceptQuiz, conceptsUrl, validateConceptDeck } from './concepts-core.js';
 import { buildDrugQuiz, drugDeckUrl, validateDrugDeck } from './drugs-core.js';
 import { keys, load, loadStars } from './storage.js';
 
@@ -46,6 +48,19 @@ async function loadDrugQuiz(subjectId, examOnly) {
   return { ...quiz, generated: true };
 }
 
+async function loadConceptQuiz(subjectId) {
+  const entry = findSubject(await loadManifest(), subjectId);
+  if (!entry) throw new LoadError('המקצוע לא נמצא.');
+  const deck = await fetchJson(conceptsUrl(entry.id));
+  const errors = validateConceptDeck(deck);
+  if (errors.length > 0) {
+    console.error('Invalid concept cards:', errors);
+    throw new LoadError('קובץ כרטיסיות המושגים פגום. פרטים בקונסול.');
+  }
+  // Generated from the deck, not a quiz file, so its questions cannot be starred.
+  return { ...buildConceptQuiz(deck, { id: `concepts-${entry.id}`, subject: entry.name, unit: 'כרטיסיות מושגים' }), generated: true };
+}
+
 /**
  * Every quiz with starred questions, plus any a saved starred session still needs, merged in
  * home-page order. A quiz that fails to load is left out rather than failing the page.
@@ -74,6 +89,8 @@ async function loadStarredQuiz(subjectKey) {
 
 async function loadQuiz(params) {
   if (params.has('starred')) return loadStarredQuiz(params.get('subject'));
+  const concepts = params.get('concepts');
+  if (concepts !== null) return loadConceptQuiz(concepts);
   const drugs = params.get('drugs');
   if (drugs !== null) return loadDrugQuiz(drugs, params.get('exam') === '1');
   const subject = params.get('subject');

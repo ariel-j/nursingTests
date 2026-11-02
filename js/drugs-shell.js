@@ -17,12 +17,15 @@ const BLITZ_PAUSE_BAD = 1600;
  *   explain?(): [Node | string] }.
  * `mode` is 'round' (ROUND_SIZE questions, then the end screen) or 'blitz' (as many as fit in
  * BLITZ_SECONDS, after a start screen). `next()` returning null (nothing to ask about the chosen
- * topics) ends the game with a notice instead. Bests are saved under `bestKey` → `gameId`, only while
+ * topics) ends the game with a notice (`emptyText`) instead. Bests are saved under `bestKey` → `gameId`, only while
  * `countsBest()` (false = only some topics are chosen, so the score is not comparable).
  * Returns start(), which (re)starts the game.
  */
-export function createGame(root, { gameId, title, mode = 'round', next, bestKey, intro, countsBest = () => true }) {
-  const EMPTY = 'אין מספיק תרופות בנושאים שבחרתם. בחרו עוד נושאים.';
+export function createGame(root, {
+  gameId, title, mode = 'round', next, bestKey, intro, countsBest = () => true,
+  emptyText = 'אין מספיק תרופות בנושאים שבחרתם. בחרו עוד נושאים.',
+}) {
+  const EMPTY = emptyText;
   let state = newRoundState();
   let question = null;
   let answered = false;
