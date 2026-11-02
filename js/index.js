@@ -78,7 +78,9 @@ function renderSubjectCard(subject, media) {
     .filter((id) => savedSession(id)).length;
   const progress = inProgress > 0 ? el('p', 'card-progress', `${inProgress} בתהליך`) : null;
 
-  return card(subjectPaths(subject.id).home, 'subject-card', subject.name, meta, progress);
+  const item = card(subjectPaths(subject.id).home, 'subject-card', subject.name, meta, progress);
+  item.firstElementChild.dataset.subject = subject.id; // its own color (css/style.css)
+  return item;
 }
 
 function renderSubjectList(subjects, media) {

@@ -8,4 +8,7 @@
   } catch (e) {
     // storage blocked or unreadable: stay on auto
   }
+  // The subject's color theme, known at once from ?subject=<id> (js/nav.js sets it for other pages).
+  var m = /[?&]subject=([a-z0-9-]+)(?:&|$)/.exec(window.location.search);
+  if (m) document.documentElement.setAttribute('data-subject', m[1]);
 })();

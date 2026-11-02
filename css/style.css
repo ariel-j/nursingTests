@@ -17,57 +17,86 @@
 
 /* ---------- tokens ---------- */
 
+/* Light is the base. Dark values sit twice below (device setting + manual data-theme="dark"). */
 :root {
   color-scheme: light dark; /* follows the device; data-theme (js/theme.js) overrides below */
-  --bg: #F1EFF4;
+  --bg: #F6F5F2;
   --surface: #FFFFFF;
-  --ink: #1E1B2B;
-  --muted: #5E5A6E;
-  --line: #DAD5E1;
+  --ink: #1C1A26;
+  --muted: #5F5B6B;
+  --line: #E4E1EA;
   --accent: #6B2F63;
-  --accent-soft: #F1E4EF;
-  --loop: #2E6E6A;
-  --loop-track: #D9E6E4;
+  --accent-soft: #F3E8F1;
+  --accent-ink: #4E1F48;
+  --loop: var(--accent);
+  --loop-track: color-mix(in srgb, var(--accent) 20%, transparent);
   --ok: #1F7A4D;
   --ok-soft: #E3F3EA;
   --bad: #B3261E;
   --bad-soft: #FBE7E5;
   --serif: "Frank Ruhl Libre", "David", Georgia, serif;
   --sans: "Rubik", system-ui, "Segoe UI", Arial, sans-serif;
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow-1: 0 1px 2px rgba(28, 26, 38, 0.06), 0 6px 18px rgba(28, 26, 38, 0.06);
+  --shadow-2: 0 2px 4px rgba(28, 26, 38, 0.08), 0 14px 32px rgba(28, 26, 38, 0.14);
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #16141C;
-    --surface: #211E29;
-    --ink: #EDEAF3;
-    --muted: #A7A2B5;
-    --line: #38334A;
+    --bg: #121116;
+    --surface: #1B1A21;
+    --ink: #EFEDF4;
+    --muted: #A9A5B8;
+    --line: #2E2C38;
     --accent: #D48CC6;
-    --accent-soft: #3A2536;
-    --loop: #6FC2BB;
-    --loop-track: #253836;
+    --accent-soft: #35233A;
+    --accent-ink: #EBC3E3;
     --ok: #5FC98F;
     --ok-soft: #173226;
     --bad: #F08A80;
     --bad-soft: #3B1D1B;
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.3);
+    --shadow-2: 0 2px 4px rgba(0, 0, 0, 0.5), 0 14px 32px rgba(0, 0, 0, 0.5);
   }
 }
 :root[data-theme="dark"] {
-  --bg: #16141C;
-  --surface: #211E29;
-  --ink: #EDEAF3;
-  --muted: #A7A2B5;
-  --line: #38334A;
+  --bg: #121116;
+  --surface: #1B1A21;
+  --ink: #EFEDF4;
+  --muted: #A9A5B8;
+  --line: #2E2C38;
   --accent: #D48CC6;
-  --accent-soft: #3A2536;
-  --loop: #6FC2BB;
-  --loop-track: #253836;
+  --accent-soft: #35233A;
+  --accent-ink: #EBC3E3;
   --ok: #5FC98F;
   --ok-soft: #173226;
   --bad: #F08A80;
   --bad-soft: #3B1D1B;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.3);
+  --shadow-2: 0 2px 4px rgba(0, 0, 0, 0.5), 0 14px 32px rgba(0, 0, 0, 0.5);
 }
+
+/* ---------- a theme per subject ----------
+   data-subject="<id>" on <html> (set by theme-init.js from ?subject=, or js/nav.js from the page's
+   subject) or on a card recolors --accent* and the ring for everything inside. Each subject has a
+   light and a dark set; test/theme-contrast.test.mjs checks them for contrast. */
+
+[data-subject="anatomy"]              { --s: #B0245F; --s-soft: #FCE7F0; --s-ink: #7E1243; --d: #FF8DB5; --d-soft: #3B1726; --d-ink: #FFC4DA; }
+[data-subject="pharmacology"]         { --s: #4338CA; --s-soft: #E8E7FB; --s-ink: #2E2690; --d: #A5A3FF; --d-soft: #23224A; --d-ink: #D0CFFF; }
+[data-subject="pharmacology-b"]       { --s: #0E7490; --s-soft: #DFF3F8; --s-ink: #0A5266; --d: #5CD0EA; --d-soft: #10323B; --d-ink: #A6E6F5; }
+[data-subject="nursing-fundamentals"] { --s: #A84B07; --s-soft: #FCEBD3; --s-ink: #7C3A06; --d: #F5B04A; --d-soft: #3A2A10; --d-ink: #FADDA6; }
+
+[data-subject] { --accent: var(--s); --accent-soft: var(--s-soft); --accent-ink: var(--s-ink); --loop: var(--s); --loop-track: color-mix(in srgb, var(--s) 20%, transparent); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"])[data-subject],
+  :root:not([data-theme="light"]) [data-subject] { --accent: var(--d); --accent-soft: var(--d-soft); --accent-ink: var(--d-ink); --loop: var(--d); --loop-track: color-mix(in srgb, var(--d) 28%, transparent); }
+}
+:root[data-theme="dark"][data-subject],
+:root[data-theme="dark"] [data-subject] { --accent: var(--d); --accent-soft: var(--d-soft); --accent-ink: var(--d-ink); --loop: var(--d); --loop-track: color-mix(in srgb, var(--d) 28%, transparent); }
+:root[data-contrast="high"][data-subject],
+:root[data-contrast="high"] [data-subject] { --accent: #4A0E44; --accent-soft: #FFFFFF; --accent-ink: #000000; --loop: #00413D; --loop-track: #C8C8C8; }
 
 /* Native controls and scrollbars follow the chosen theme. */
 :root[data-theme="light"] { color-scheme: light; }
@@ -80,12 +109,16 @@ html { scroll-padding-block-start: env(safe-area-inset-top, 0px); }
 body {
   margin: 0;
   min-block-size: 100vh;
-  background: var(--bg);
+  background-color: var(--bg);
+  /* A soft wash of the page's accent at the top: the subject's color shows from the first screen. */
+  background-image: radial-gradient(120% 340px at 50% -80px, var(--accent-soft), transparent 70%);
+  background-repeat: no-repeat;
   color: var(--ink);
   font-family: var(--sans);
   font-size: 1.0625rem; /* 17px */
   line-height: 1.55;
 }
+:root[data-contrast="high"] body { background-image: none; }
 
 .page {
   max-inline-size: 720px;
@@ -123,8 +156,9 @@ kbd {
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
+  padding: 22px;
   margin-block-end: 14px;
 }
 
@@ -136,12 +170,16 @@ kbd {
   gap: 0.5rem;
   padding: 10px 20px;
   border: 1.5px solid var(--accent);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   font-weight: 600;
   line-height: 1.4;
   text-decoration: none;
+  transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease), background-color 0.18s, filter 0.18s;
 }
-.primary { background: var(--accent); color: var(--surface); }
+.primary { background: var(--accent); color: var(--surface); box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 32%, transparent); }
+.primary:not(:disabled):hover { transform: translateY(-1px); filter: brightness(1.08); box-shadow: 0 10px 22px color-mix(in srgb, var(--accent) 38%, transparent); }
+.secondary:not(:disabled):hover, .button.secondary:hover { background: var(--accent-soft); transform: translateY(-1px); }
+.primary:not(:disabled):active, .secondary:not(:disabled):active, .button:active { transform: translateY(0) scale(0.98); }
 .secondary, .button.secondary { background: transparent; color: var(--accent); }
 .primary:disabled, .secondary:disabled { opacity: 0.4; cursor: default; }
 
@@ -226,17 +264,26 @@ kbd {
 }
 
 .quiz-card {
+  position: relative;
   display: block;
-  padding: 20px;
+  padding: 20px 22px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
   color: inherit;
   text-decoration: none;
+  overflow: hidden;
+  transition: transform 0.22s var(--ease), box-shadow 0.22s var(--ease), border-color 0.22s;
 }
-.quiz-card:hover { border-color: var(--accent); }
+.quiz-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow-2); }
+.quiz-card:active { transform: translateY(0); }
 .quiz-card.is-soon { cursor: default; }
-.quiz-card.is-soon:hover { border-color: var(--line); }
+.quiz-card.is-soon:hover { border-color: var(--line); transform: none; box-shadow: var(--shadow-1); }
+/* A subject's card carries its own color: a bar at the start edge and a soft glow in the corner. */
+.subject-card { padding-inline-start: 28px; background-image: radial-gradient(130% 160% at 100% 0, var(--accent-soft), transparent 62%); }
+.subject-card::before { content: ""; position: absolute; inset-block: 0; inset-inline-start: 0; inline-size: 7px; background: var(--accent); }
+:root[data-contrast="high"] .subject-card { background-image: none; }
 .mix-card { background: var(--accent-soft); border-color: var(--accent); }
 .mix-card .card-title { color: var(--accent); }
 .card-title { margin: 0 0 0.2rem; font-family: var(--sans); font-size: 1.0625rem; font-weight: 600; line-height: 1.35; }
@@ -421,11 +468,12 @@ kbd {
   align-items: flex-start;
   gap: 12px;
   inline-size: 100%;
-  padding: 12px 14px;
+  padding: 13px 15px;
   text-align: start;
   background: var(--bg);
   border: 1.5px solid var(--line);
-  border-radius: 10px;
+  border-radius: 14px;
+  transition: transform 0.18s var(--ease), border-color 0.18s, background-color 0.18s, box-shadow 0.18s, opacity 0.3s;
 }
 .letter {
   flex: none;
@@ -440,9 +488,11 @@ kbd {
   font-size: 0.875rem;
   font-weight: 600;
   line-height: 1;
+  transition: background-color 0.18s, border-color 0.18s, color 0.18s;
 }
 .option-text { flex: 1; }
-.option:not(:disabled):hover { border-color: var(--accent); }
+.option:not(:disabled):hover { border-color: var(--accent); background: var(--accent-soft); transform: translateY(-1px); box-shadow: var(--shadow-1); }
+.option:not(:disabled):active { transform: scale(0.99); }
 .option:disabled { cursor: default; color: inherit; }
 .option.is-dim { opacity: 0.55; }
 .option.is-correct { border-color: var(--ok); background: var(--ok-soft); }
@@ -459,8 +509,8 @@ kbd {
 
 .feedback {
   margin-block-start: 16px;
-  padding: 14px 16px;
-  border-radius: 10px;
+  padding: 16px 18px;
+  border-radius: 14px;
   background: var(--bad-soft);
 }
 .feedback.good { background: var(--ok-soft); }
@@ -744,7 +794,15 @@ kbd {
 
 /* ---------- site bar and side menu (js/nav.js) ---------- */
 
-.site-bar { background: var(--surface); border-block-end: 1px solid var(--line); }
+.site-bar {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 40;
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-block-end: 1px solid var(--line);
+}
 .site-bar-inner {
   display: flex;
   align-items: center;
@@ -938,6 +996,30 @@ kbd {
   text-decoration: underline;
 }
 .a11y-statement { display: block; margin-block-start: 0.6rem; text-align: center; font-size: 0.875rem; }
+
+/* ---------- motion ----------
+   Everything that moves is here and runs only when the device allows it; the toolbar's "stop
+   motion" (data-motion="off", below) also cancels all of it. Nothing depends on it to be understood. */
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.035); } 100% { transform: scale(1); } }
+  @keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-6px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(3px); } }
+  @keyframes glow { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 45%, transparent); } 100% { box-shadow: 0 0 0 14px transparent; } }
+
+  .card, .feedback { animation: rise 0.34s var(--ease) both; }
+  .quiz-list > li { animation: rise 0.4s var(--ease) both; }
+  .quiz-list > li:nth-child(2) { animation-delay: 0.04s; }
+  .quiz-list > li:nth-child(3) { animation-delay: 0.08s; }
+  .quiz-list > li:nth-child(4) { animation-delay: 0.12s; }
+  .quiz-list > li:nth-child(5) { animation-delay: 0.16s; }
+  .quiz-list > li:nth-child(6) { animation-delay: 0.2s; }
+  .quiz-list > li:nth-child(n+7) { animation-delay: 0.24s; }
+
+  .option.is-correct { animation: pop 0.38s var(--ease), glow 0.7s ease-out; }
+  .option.is-wrong { animation: shake 0.4s ease-in-out; }
+  .ring-fill { transition: stroke-dashoffset 0.6s var(--ease); }
+}
 
 /* ---------- accessibility states (set by the toolbar on <html>) ---------- */
 

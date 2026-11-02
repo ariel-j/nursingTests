@@ -71,3 +71,8 @@ or topic. It defines the page's visual style: cause → effect rows, definitions
 3. `npm run manifest && npm test && npm run validate`, then check it with `npm run serve`:
    the home card, the subject page, the menu, one quiz, mixed practice, the print preview, and a summary.
 4. Commit the catalog, quizzes, manifest and summaries together.
+
+
+## Color theme
+
+Add a `[data-subject="<id>"]` palette to `css/style.css` (light `--s`, `--s-soft`, `--s-ink`; dark `--d`, `--d-soft`, `--d-ink`). `npm test` fails until every subject in `quizzes/subjects.json` has one and each passes AA contrast.

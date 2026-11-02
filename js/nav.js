@@ -95,6 +95,8 @@ function subjectsSection(manifest, media) {
   const subjects = manifest?.subjects ?? [];
   if (subjects.length === 0) return [];
   const current = currentSubjectId(manifest);
+  // Color theme of the page (css/style.css, [data-subject]); theme-init.js already did ?subject=.
+  if (current) document.documentElement.setAttribute('data-subject', current);
   return [
     el('h3', { class: 'drawer-heading', text: 'מקצועות' }),
     // The current subject starts open; with none (home, statement pages) every subject does.
