@@ -5,16 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <title>מערכת העיכול — סיכום</title>
-  <link rel="preload" href="../fonts/assistant-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/summary.css">
   <script type="module" src="../js/summary.js"></script>
+  <script type="module" src="../js/nav.js"></script>
   <script type="module" src="../js/a11y.js"></script>
+  <script type="module" src="../js/analytics.js"></script>
 </head>
 <body class="summary-page">
   <main class="page wide">
     <nav class="top-nav no-print">
-      <a href="./">→ כל הסיכומים</a>
+      <a href="./?subject=anatomy">→ כל הסיכומים</a>
       <button type="button" class="secondary" data-print>הדפסה / שמירה כ‑PDF</button>
     </nav>
 
@@ -28,9 +30,47 @@
     </svg>
     <div class="legend">
       <span><span class="arrowmark">←</span> <b>גורם ← תוצאה</b> (קוראים מימין לשמאל)</span>
-      <span><span class="exam exam-legend">נשאל בשחזורים</span> נקודה שחזרה במבחנים</span>
+      <span><span class="exam exam-legend">הופיע בעבר</span> נקודה שהופיעה בעבר — כדאי לשים לב</span>
     </div>
   </header>
+
+  <section class="intro" id="dig-intro">
+    <h2>מבוא: על מה כל זה?</h2>
+    <p>מערכת העיכול היא צינור אחד ארוך, מהפה ועד פי הטבעת, שמפרק מזון לחלקיקים קטנים מספיק כדי לעבור לדם או ללימפה. את העבודה עושים שלושה דברים: <b>פירוק מכני</b> (לעיסה, ערבול, תחלוב), <b>פירוק כימי</b> (אנזימים שבורים קשרים) ו<b>ספיגה</b> (מעבר דרך דופן המעי).</p>
+    <p>כל קטע בצינור מתמחה: הפה מתחיל עם פחמימות, הקיבה עם חלבונים וחומצה, התריסריון מקבל "עוזרים" (לבלב, כבד, כיס מרה) שמפרקים הכול, המעי הדק סופג ~90%, והמעי הגס סופג מים ויוצר צואה. הורמונים (גסטרין, סקרטין, <span class="en">CCK</span>) ועצבים (סימפתטי ופאראסימפתטי) מתזמנים את ההפרשות.</p>
+    <p>אפשר ללמוד את הפרק כמו מפה: <b>איפה זה קורה, מי מפריש, מה הוא מפרק, ומי מאותת לו.</b> המילון שלמטה מסביר כל מונח.</p>
+  </section>
+
+  <section class="glossary" id="dig-glossary">
+    <h2>מילון מונחים</h2>
+    <p class="sec-note">כל מונח שמופיע בסיכום, בשפה פשוטה.</p>
+    <dl class="def"><dt>צינור העיכול</dt><dd>צינור אחד רציף: פה, ושט, קיבה, מעי דק, מעי גס, פי הטבעת. הלבלב, הכבד וכיס המרה הם "עוזרים" מחוץ לצינור.</dd></dl>
+    <dl class="def"><dt>רירית / תת‑רירית / שריר / סרוזה</dt><dd>ארבע שכבות הדופן, מבפנים החוצה. רירית: הפנימית, בקשר עם המזון. סרוזה: המעטפת החיצונית.</dd></dl>
+    <dl class="def"><dt>פירוק מכני מול כימי</dt><dd>מכני: מקטין חלקיקים בלי לשבור קשרים (לעיסה, תחלוב). כימי: אנזים שובר קשרים בין מולקולות.</dd></dl>
+    <dl class="def"><dt>תחלוב (<span class="en">Emulsification</span>)</dt><dd>פירוק של טיפת שומן גדולה לטיפות זעירות על ידי מלחי מרה, כדי שיהיה שטח גדול לאנזימים.</dd></dl>
+    <dl class="def"><dt>אנזים</dt><dd>חלבון שמאיץ תגובה כימית. אנזימי העיכול מפרקים: עמילאז (פחמימות), פפסין ופרוטאזות (חלבונים), ליפאז (שומנים).</dd></dl>
+    <dl class="def"><dt>פחמימות / חלבונים / שומנים</dt><dd>שלושת רכיבי המזון העיקריים. מפורקים בהתאמה לגלוקוז (וסוכרים), חומצות אמינו וגליצרול עם חומצות שומן.</dd></dl>
+    <dl class="def"><dt>עמילאז / ליפאז / פפסין</dt><dd>עמילאז (ברוק ובלבלב): מפרק עמילן. ליפאז: מפרק שומן. פפסין (בקיבה): מפרק חלבון.</dd></dl>
+    <dl class="def"><dt><span class="en">HCl</span> (חומצת מלח)</dt><dd>חומצה חזקה שמפרישים תאי הדופן בקיבה. מפעילה פפסינוגן והורגת חיידקים.</dd></dl>
+    <dl class="def"><dt>פפסינוגן / פפסין</dt><dd>פפסינוגן: צורה לא פעילה של האנזים, מופרשת מתאים ראשיים. <span class="en">HCl</span> הופכת אותו לפפסין פעיל.</dd></dl>
+    <dl class="def"><dt>גורם פנימי (<span class="en">IF</span>) / ויטמין <span class="en">B12</span></dt><dd><span class="en">IF</span>: חלבון שתאי הדופן מפרישים, חיוני לספיגת ויטמין <span class="en">B12</span> במעי הדק. בלי הקיבה אין <span class="en">IF</span>.</dd></dl>
+    <dl class="def"><dt>גסטרין</dt><dd>הורמון מתאי <span class="en">G</span> בקיבה. מגרה הפרשת <span class="en">HCl</span> ופפסינוגן.</dd></dl>
+    <dl class="def"><dt><span class="en">LES</span> / פילורוס</dt><dd><span class="en">LES</span>: סוגר בין הוושט לקיבה, מונע חזרת חומצה. פילורוס: סוגר בין הקיבה לתריסריון.</dd></dl>
+    <dl class="def"><dt>צרבת (ריפלוקס)</dt><dd>חזרה של חומצת קיבה לוושט כשה‑<span class="en">LES</span> נרפה.</dd></dl>
+    <dl class="def"><dt>תריסריון / ג'וג'ונום / אילאום</dt><dd>שלושת חלקי המעי הדק. תריסריון: מקבל מיצים ומפרק. אילאום: החלק האחרון, מחובר לצקום (תחילת המעי הגס).</dd></dl>
+    <dl class="def"><dt>מיץ לבלב / ביקרבונט</dt><dd>הלבלב מפריש אנזימים לכל שלושת רכיבי המזון, וביקרבונט שמנטרל את חומצת הקיבה ומעלה <span class="en">pH</span>.</dd></dl>
+    <dl class="def"><dt><span class="en">pH</span></dt><dd>מדד חומציות: נמוך = חומצי. אנזימי הקיבה פועלים ב‑<span class="en">pH</span> חומצי ונעצרים בתריסריון, שם ה‑<span class="en">pH</span> גבוה.</dd></dl>
+    <dl class="def"><dt>כבד / מרה / כיס מרה</dt><dd>הכבד מייצר מרה, כיס המרה אוגר אותה ומשחרר לתריסריון. המרה מכילה מלחי מרה (לתחלוב) ובילירובין (צבע).</dd></dl>
+    <dl class="def"><dt>בילירובין</dt><dd>חומר צהוב‑חום, תוצר פירוק של המוגלובין. מופרש במרה וצובע את הצואה.</dd></dl>
+    <dl class="def"><dt><span class="en">CCK</span> / סקרטין</dt><dd><span class="en">CCK</span>: נוצר בתגובה לשומן וחלבון, מגרה כיס מרה ולבלב. סקרטין: נוצר בתגובה לחומצה בתריסריון, מגרה ביקרבונט מהלבלב.</dd></dl>
+    <dl class="def"><dt>ספיגה</dt><dd>מעבר חומרים מהמעי אל הדם או הלימפה. נעשה בעיקר במעי הדק, שמכוסה בקפלים וסיסים.</dd></dl>
+    <dl class="def"><dt>כילומיקרונים / לימפה</dt><dd>שומנים נארזים בחלקיקים גדולים (כילומיקרונים) שלא נכנסים לנימי דם ולכן עוברים לכלי הלימפה קודם.</dd></dl>
+    <dl class="def"><dt>וריד שער (פורטל)</dt><dd>וריד שמוביל דם עשיר בחומרים שנספגו (פחמימות, חלבונים) מהמעי אל הכבד לפני שהוא ממשיך לגוף.</dd></dl>
+    <dl class="def"><dt>צלולוז / סיבים</dt><dd>חומר צמחי שהאדם לא מפרק. עובר בצינור ומופרש בצואה.</dd></dl>
+    <dl class="def"><dt>סימפתטי / פאראסימפתטי</dt><dd>פאראסימפתטי ("האכל ונוח"): מגביר תנועתיות והפרשה. סימפתטי ("הילחם או ברח"): מפחית אותם.</dd></dl>
+    <dl class="def"><dt>תנועתיות</dt><dd>התכווצויות שריר הדופן שמזיזות את התוכן קדימה ומערבבות אותו.</dd></dl>
+  </section>
+
 
   <!-- 1 יסודות -->
   <section>
@@ -42,7 +82,7 @@
     <div class="rel">
       <div class="rel-cause">שכבת השריר לכל אורך הצינור</div>
       <span class="rel-arrow">←</span>
-      <div class="rel-effect"><b>2 שכבות</b> (טבעתי פנימי + אורכי חיצוני) — <b>פרט לקיבה שבה 3</b> <span class="exam">נשאל</span></div>
+      <div class="rel-effect"><b>2 שכבות</b> (טבעתי פנימי + אורכי חיצוני) — <b>פרט לקיבה שבה 3</b> <span class="exam">הופיע בעבר</span></div>
     </div>
     <p class="sec-note">מלכודת: השכבה הפנימית היא <b>רירית</b>, לא סרוזה.</p>
 
@@ -50,19 +90,19 @@
     <div class="rel">
       <div class="rel-cause"><b>מכני</b>: לעיסה, תנועתיות הקיבה, <b>תחלוב</b> (פירוק טיפת שומן למים ע"י מלחי מרה)</div>
       <span class="rel-arrow">←</span>
-      <div class="rel-effect">מגדיל שטח פנים למגע עם האנזימים <span class="exam">נשאל</span></div>
+      <div class="rel-effect">מגדיל שטח פנים למגע עם האנזימים <span class="exam">הופיע בעבר</span></div>
     </div>
     <p class="sec-note">מלכודת: תחלוב הוא פירוק <b>מכני</b> (לא כימי). פירוק כימי = שבירת קשרים ע"י אנזים.</p>
 
     <h3>חלקי המעי הדק והסוגרים</h3>
     <ul>
-      <li><b>תריסריון</b> (עיקר הפירוק) <span class="seq">←</span> <b>ג'וג'ונום</b> <span class="seq">←</span> <b>אילאום</b>. האילאום מחבר בין הג'וג'ונום ל<b>צקום</b>.<span class="exam">נשאל</span></li>
+      <li><b>תריסריון</b> (עיקר הפירוק) <span class="seq">←</span> <b>ג'וג'ונום</b> <span class="seq">←</span> <b>אילאום</b>. האילאום מחבר בין הג'וג'ונום ל<b>צקום</b>.<span class="exam">הופיע בעבר</span></li>
       <li>סוגרים: <b><span class="en">LES</span></b> (ושט‑קיבה) · פילורוס (קיבה‑תריסריון) · <span class="en">ileocecal</span> (מעי דק‑גס).</li>
     </ul>
     <div class="rel">
       <div class="rel-cause">בעיה/הרפיה של <b><span class="en">LES</span></b> (סוגר ושט תחתון)</div>
       <span class="rel-arrow">←</span>
-      <div class="rel-effect">חומצת קיבה עולה לוושט → <b>צרבת</b> <span class="exam">נשאל</span></div>
+      <div class="rel-effect">חומצת קיבה עולה לוושט → <b>צרבת</b> <span class="exam">הופיע בעבר</span></div>
     </div>
   </section>
 
@@ -76,7 +116,7 @@
       <div class="rel-cause"><b>עמילאז</b> ברוק</div><span class="rel-arrow">←</span>
       <div class="rel-effect">מתחיל לפרק <b>פחמימות</b> (עמילן)</div>
     </div>
-    <p class="sec-note">מלכודת: בפה <b>אין</b> פירוק שומן ואין תחלוב. ליפאז הלשון מופעל רק בקיבה.<span class="exam">נשאל</span></p>
+    <p class="sec-note">מלכודת: בפה <b>אין</b> פירוק שומן ואין תחלוב. ליפאז הלשון מופעל רק בקיבה.<span class="exam">הופיע בעבר</span></p>
 
     <h3>תאי הקיבה</h3>
     <dl class="def">
@@ -95,22 +135,22 @@
     <div class="rel">
       <div class="rel-cause"><b><span class="en">HCl</span></b> (חומצה) פוגשת פפסינוגן</div>
       <span class="rel-arrow">←</span>
-      <div class="rel-effect">הופך ל<b>פפסין</b> פעיל → מפרק <b>חלבונים</b> (משוב חיובי) <span class="exam">נשאל ×2</span></div>
+      <div class="rel-effect">הופך ל<b>פפסין</b> פעיל → מפרק <b>חלבונים</b> (משוב חיובי) <span class="exam">הופיע בעבר ×2</span></div>
     </div>
     <div class="rel">
       <div class="rel-cause"><b>גסטרין</b> (מתאי <span class="en">G</span>, בגירוי)</div>
       <span class="rel-arrow">←</span>
-      <div class="rel-effect">מעודד הפרשת <span class="en">HCl</span> ופפסינוגן; מרפה את הפילורוס <span class="exam">נשאל</span></div>
+      <div class="rel-effect">מעודד הפרשת <span class="en">HCl</span> ופפסינוגן; מרפה את הפילורוס <span class="exam">הופיע בעבר</span></div>
     </div>
     <div class="rel">
       <div class="rel-cause">מעבר לתריסריון → <span class="en">pH</span> עולה (ניטרלי)</div>
       <span class="rel-arrow">←</span>
-      <div class="rel-effect">אנזימי הקיבה (פפסין) נעצרים — הם רגישים ל‑<span class="en">pH</span> <span class="exam">נשאל</span></div>
+      <div class="rel-effect">אנזימי הקיבה (פפסין) נעצרים — הם רגישים ל‑<span class="en">pH</span> <span class="exam">הופיע בעבר</span></div>
     </div>
 
     <div class="call">
       <h4>אם מוציאים את הקיבה — מה נפגע?</h4>
-      <p class="flush">הקיבה <b>מתחילה</b> את פירוק החלבונים (פפסין), אבל לפי ההרצאה המעי הדק יכול להשלים זאת גם בלי פפסין. הדבר ה<b>ייחודי</b> לקיבה שאין לו תחליף הוא <b>הגורם הפנימי (IF)</b> הדרוש לספיגת <b>ויטמין B12</b>.<span class="exam">נשאל</span></p>
+      <p class="flush">הקיבה <b>מתחילה</b> את פירוק החלבונים (פפסין), אבל לפי ההרצאה המעי הדק יכול להשלים זאת גם בלי פפסין. הדבר ה<b>ייחודי</b> לקיבה שאין לו תחליף הוא <b>הגורם הפנימי (IF)</b> הדרוש לספיגת <b>ויטמין B12</b>.<span class="exam">הופיע בעבר</span></p>
     </div>
   </section>
 
@@ -122,17 +162,17 @@
     <div class="rel">
       <div class="rel-cause"><b>מיץ הלבלב</b></div>
       <span class="rel-arrow">←</span>
-      <div class="rel-effect">אנזימים ל<b>חלבונים + פחמימות + שומנים</b> &nbsp;<b>וגם ביקרבונט</b> (מנטרל את החומצה) <span class="exam">נשאל</span></div>
+      <div class="rel-effect">אנזימים ל<b>חלבונים + פחמימות + שומנים</b> &nbsp;<b>וגם ביקרבונט</b> (מנטרל את החומצה) <span class="exam">הופיע בעבר</span></div>
     </div>
     <div class="rel">
       <div class="rel-cause"><b>מרה</b> (מהכבד, נאגרת בכיס המרה)</div>
       <span class="rel-arrow">←</span>
-      <div class="rel-effect">מלחי מרה <b>מתחלבים שומן</b>; מכילה <b>בילירובין</b> (צבע חום לצואה) <span class="exam">נשאל</span></div>
+      <div class="rel-effect">מלחי מרה <b>מתחלבים שומן</b>; מכילה <b>בילירובין</b> (צבע חום לצואה) <span class="exam">הופיע בעבר</span></div>
     </div>
     <div class="rel">
       <div class="rel-cause">חסימת <b><span class="en">common bile duct</span></b></div>
       <span class="rel-arrow">←</span>
-      <div class="rel-effect">אין מלחי מרה → שומן לא נספג → <b>שומן רב בצואה</b> <span class="exam">נשאל</span></div>
+      <div class="rel-effect">אין מלחי מרה → שומן לא נספג → <b>שומן רב בצואה</b> <span class="exam">הופיע בעבר</span></div>
     </div>
 
     <h3>בקרה הורמונלית של ההפרשה לתריסריון</h3>
@@ -142,7 +182,7 @@
     </div>
     <div class="rel">
       <div class="rel-cause"><b>תוצרי עיכול</b> (שומן/חלבון) בתריסריון</div><span class="rel-arrow">←</span>
-      <div class="rel-effect"><b><span class="en">CCK</span></b> → אנזימי לבלב + <b>כיווץ כיס המרה</b> ושחרור מרה <span class="exam">נשאל</span></div>
+      <div class="rel-effect"><b><span class="en">CCK</span></b> → אנזימי לבלב + <b>כיווץ כיס המרה</b> ושחרור מרה <span class="exam">הופיע בעבר</span></div>
     </div>
   </section>
 
@@ -159,17 +199,17 @@
     <div class="rel">
       <div class="rel-cause"><b>שומנים</b> (טריגליצרידים גדולים, כילומיקרונים)</div>
       <span class="rel-arrow">←</span>
-      <div class="rel-effect">גדולים מדי לנימי הדם → נספגים ל<b>לימפה</b> תחילה, ורק אח"כ לדם <span class="exam">נשאל</span></div>
+      <div class="rel-effect">גדולים מדי לנימי הדם → נספגים ל<b>לימפה</b> תחילה, ורק אח"כ לדם <span class="exam">הופיע בעבר</span></div>
     </div>
     <div class="rel">
       <div class="rel-cause">חלבון מהמזון (למשל בשר עוף)</div>
       <span class="rel-arrow">←</span>
-      <div class="rel-effect">מתפרק ל<b>חומצות אמינו</b> → מהן נבנים חלבוני האדם <span class="exam">נשאל</span></div>
+      <div class="rel-effect">מתפרק ל<b>חומצות אמינו</b> → מהן נבנים חלבוני האדם <span class="exam">הופיע בעבר</span></div>
     </div>
     <div class="rel">
       <div class="rel-cause"><b>צלולוז / סיבים</b> (קליפת פירות וירקות)</div>
       <span class="rel-arrow">←</span>
-      <div class="rel-effect">האדם לא מעכל → מופרש בצואה ("סיבים תזונתיים") <span class="exam">נשאל</span></div>
+      <div class="rel-effect">האדם לא מעכל → מופרש בצואה ("סיבים תזונתיים") <span class="exam">הופיע בעבר</span></div>
     </div>
   </section>
 
@@ -183,7 +223,7 @@
     </dl>
     <dl class="def">
       <dt>הצואה</dt>
-      <dd>~75% מים; מוצק: תאי אפיתל מתים, חיידקים, מינרלים, חומרים שלא נעכלו.<span class="exam">נשאל</span></dd>
+      <dd>~75% מים; מוצק: תאי אפיתל מתים, חיידקים, מינרלים, חומרים שלא נעכלו.<span class="exam">הופיע בעבר</span></dd>
     </dl>
 
     <div class="rel">
@@ -201,7 +241,7 @@
     <div class="rel">
       <div class="rel-cause"><b>סימפתטי</b> (ריצה/לחץ)</div>
       <span class="rel-arrow">←</span>
-      <div class="rel-effect"><b>מפחית</b> פעילות ותנועתיות של מערכת העיכול <span class="exam">נשאל</span></div>
+      <div class="rel-effect"><b>מפחית</b> פעילות ותנועתיות של מערכת העיכול <span class="exam">הופיע בעבר</span></div>
     </div>
     <p class="sec-note">סוגרי פי הטבעת: פנימי = שריר חלק (לא רצוני); חיצוני = שריר שלד (רצוני). ניקוז ורידי: המעי הגס היורד מתנקז ל‑<span class="en">inferior mesenteric vein</span>, והכול דרך וריד השער לכבד.</p>
   </section>
@@ -222,8 +262,7 @@
 
   <!-- 7 דגלים -->
   <section>
-    <h2>7 · נקודות שחזרו בשחזורים — לא לפספס</h2>
-    <p class="sec-note">מרוכז מתוך שחזורי מבחן ב' (תש"פ, אדר תשפ"ו).</p>
+    <h2>7 · נקודות שהופיעו בעבר — לא לפספס</h2>
     <div class="flags">
       <ul>
         <li>דופן הצינור: <b>רירית</b> פנימית → תת‑רירית → שריר → סרוזה. 2 שכבות שריר, חוץ מהקיבה (3).</li>
@@ -247,7 +286,7 @@
     </div>
   </section>
 
-  <p class="source">סיכום לימודי המבוסס על הרצאות "מערכת העיכול" ועל שחזורי מבחן בקורס. נועד לחזרה — אין בו אבחון או ייעוץ רפואי.</p>
+  <p class="source">סיכום לימודי המבוסס על הרצאות "מערכת העיכול". נועד לחזרה — אין בו אבחון או ייעוץ רפואי.</p>
 </article>
   </main>
 
@@ -257,6 +296,7 @@
       <a href="../privacy.html">מדיניות פרטיות</a>
     </nav>
     <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+    <p>תוכן לימודי לתרגול בלבד. אינו מהווה ייעוץ רפואי ואינו תחליף לחומרי הקורס.</p>
   </footer>
 </body>
 </html>
