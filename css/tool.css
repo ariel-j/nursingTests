@@ -6,10 +6,14 @@
   --warn-bg: #fdf0d8;
 }
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --warn: #f0b04a;
     --warn-bg: #3a2b0e;
   }
+}
+:root[data-theme="dark"] {
+  --warn: #f0b04a;
+  --warn-bg: #3a2b0e;
 }
 :root[data-contrast="high"] {
   --warn: #000000;

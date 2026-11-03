@@ -304,8 +304,9 @@
 :root[data-contrast="high"] .summary .hub-note,
 :root[data-contrast="high"] .summary .tablewrap { border: 2px solid #000; }
 @media (prefers-color-scheme: dark) {
-  .summary .hub-note-contra { background: #352612; color: #f1dcb4; }
+  :root:not([data-theme="light"]) .summary .hub-note-contra { background: #352612; color: #f1dcb4; }
 }
+:root[data-theme="dark"] .summary .hub-note-contra { background: #352612; color: #f1dcb4; }
 
 /* Mini quiz: the static list is the print / no-JS version, the live box replaces it on screen. */
 .summary .mq { margin-block: 0 1rem; padding: 12px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
