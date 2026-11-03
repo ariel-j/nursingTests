@@ -36,6 +36,72 @@
         }
       ],
       "quizzes": []
+    },
+    {
+      "name": "פרמקולוגיה ב",
+      "units": [
+        {
+          "name": "מבוא אנדוקרינולוגיה ויותרת המוח",
+          "quizzes": [
+            {
+              "id": "endocrine-pituitary-1",
+              "title": "מבחן 1",
+              "description": "שאלות על מבוא למערכת האנדוקרינית ועל הורמוני ההיפותלמוס וההיפופיזה.",
+              "questionCount": 109,
+              "topicCount": 9
+            }
+          ]
+        },
+        {
+          "name": "בלוטת התריס",
+          "quizzes": [
+            {
+              "id": "endocrine-thyroid-1",
+              "title": "מבחן 1",
+              "description": "שאלות על סינתזה, בקרה וטיפול תרופתי בהפרעות של בלוטת התריס.",
+              "questionCount": 54,
+              "topicCount": 6
+            }
+          ]
+        },
+        {
+          "name": "הורמוני מין ואמצעי מניעה",
+          "quizzes": [
+            {
+              "id": "endocrine-sex-hormones-1",
+              "title": "מבחן 1",
+              "description": "שאלות על אסטרוגנים, פרוגסטרון, SERMs, אמצעי מניעה ואנדרוגנים.",
+              "questionCount": 85,
+              "topicCount": 7
+            }
+          ]
+        },
+        {
+          "name": "אדרנל וסטרואידים",
+          "quizzes": [
+            {
+              "id": "endocrine-adrenal-1",
+              "title": "מבחן 1",
+              "description": "שאלות על הורמוני האדרנל וקורטיקוסטרואידים.",
+              "questionCount": 58,
+              "topicCount": 5
+            }
+          ]
+        },
+        {
+          "name": "סוכרת א: פיזיולוגיה ואינסולין",
+          "quizzes": [
+            {
+              "id": "endocrine-diabetes-1",
+              "title": "מבחן 1",
+              "description": "שאלות על ויסות גלוקוז, סוכרת ואינסולין",
+              "questionCount": 47,
+              "topicCount": 5
+            }
+          ]
+        }
+      ],
+      "quizzes": []
     }
   ]
 }
