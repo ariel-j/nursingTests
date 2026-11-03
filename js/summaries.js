@@ -19,6 +19,7 @@ function renderList(summaries, headingTag) {
     const link = el('a', 'quiz-card summary-card');
     link.href = summaryFile(summary.id);
     link.dataset.system = summary.id;
+    if (summary.unit) link.append(el('p', 'summary-unit', summary.unit));
     link.append(el(headingTag, 'card-title', summary.title), el('p', 'muted', summary.blurb));
     item.append(link);
     if (summary.study) {

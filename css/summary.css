@@ -36,6 +36,12 @@
 [data-system="safety"]         { --a: #8a4b08; --a-soft: #f6e9d3; --a-ink: #5f3305; --a-d: #f0b16b; --a-soft-d: #392612; --a-ink-d: #f7d3a6; }
 [data-system="sensory"]        { --a: #2d3a8c; --a-soft: #e3e6f7; --a-ink: #1f2a6b; --a-d: #a9b4ff; --a-soft-d: #232a52; --a-ink-d: #cdd3ff; }
 [data-system="sleep"]          { --a: #4a44b8; --a-soft: #e7e6fb; --a-ink: #38339a; --a-d: #908cf2; --a-soft-d: #1c1a3d; --a-ink-d: #cbc9fb; }
+[data-system="pharma-b-pituitary"] { --a: #6b4fa3; --a-soft: #ece7f6; --a-ink: #4f3a80; --a-d: #bba6ee; --a-soft-d: #2a2140; --a-ink-d: #d9cdf6; }
+[data-system="pharma-b-thyroid"] { --a: #1f7a5e; --a-soft: #dcefe8; --a-ink: #165a45; --a-d: #6fcfae; --a-soft-d: #14342a; --a-ink-d: #a7e6d0; }
+[data-system="pharma-b-sex-hormones"] { --a: #a8366a; --a-soft: #f6e3ec; --a-ink: #7f2850; --a-d: #f08bb5; --a-soft-d: #40202f; --a-ink-d: #f8bcd4; }
+[data-system="pharma-b-adrenal"] { --a: #b0481f; --a-soft: #f6e4dc; --a-ink: #80351a; --a-d: #f3a07f; --a-soft-d: #40261c; --a-ink-d: #f9c9b4; }
+[data-system="pharma-b-insulin"] { --a: #1f5fae; --a-soft: #dce9f8; --a-ink: #174a88; --a-d: #7fb4f2; --a-soft-d: #1b3556; --a-ink-d: #b3d3f8; }
+[data-system="pharma-b-oral-diabetes"] { --a: #2c7a4b; --a-soft: #dcf0e2; --a-ink: #1f5937; --a-d: #7fd3a0; --a-soft-d: #1b3a27; --a-ink-d: #b4e6c7; }
 
 [data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
 @media (prefers-color-scheme: dark) {
@@ -368,6 +374,7 @@
 /* ---------- hub (summaries/index.html) ---------- */
 
 .summary-list { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; gap: 0.75rem; }
+.summary-unit { margin: 0 0 0.2rem; color: var(--accent-ink); font-size: 0.85rem; font-weight: 600; }
 .summary-card { border-inline-start: 5px solid var(--accent); }
 .summary-card:hover { border-color: var(--accent); }
 .summary-card .card-title { font-family: var(--serif); font-size: 1.35rem; font-weight: 700; }

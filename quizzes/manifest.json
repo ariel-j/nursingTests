@@ -376,7 +376,128 @@
     {
       "id": "pharmacology-b",
       "name": "פרמקולוגיה ב'",
-      "units": [],
+      "units": [
+        {
+          "name": "היבטים חוקיים וחוזרים, ניהול טיפול תרופתי",
+          "quizzes": []
+        },
+        {
+          "name": "מתן אוראלי, סובלינגוואלי, NG, שאיפה, נרתיק/רקטום/עור, עיניים/אוזניים/אף",
+          "quizzes": []
+        },
+        {
+          "name": "הזרקות: ID/SC/IM, מחטים ומזרקים",
+          "quizzes": []
+        },
+        {
+          "name": "מתן תוך-ורידי, IV push וסיבוכים",
+          "quizzes": []
+        },
+        {
+          "name": "מבוא אנדוקרינולוגיה ויותרת המוח",
+          "quizzes": [
+            {
+              "id": "endocrine-pituitary-1",
+              "title": "מבחן 1",
+              "description": "שאלות על מבוא למערכת האנדוקרינית ועל הורמוני ההיפותלמוס וההיפופיזה.",
+              "questionCount": 109,
+              "topicCount": 9
+            }
+          ]
+        },
+        {
+          "name": "בלוטת התריס",
+          "quizzes": [
+            {
+              "id": "endocrine-thyroid-1",
+              "title": "מבחן 1",
+              "description": "שאלות על סינתזה, בקרה וטיפול תרופתי בהפרעות של בלוטת התריס.",
+              "questionCount": 54,
+              "topicCount": 6
+            }
+          ]
+        },
+        {
+          "name": "הורמוני מין ואמצעי מניעה",
+          "quizzes": [
+            {
+              "id": "endocrine-sex-hormones-1",
+              "title": "מבחן 1",
+              "description": "שאלות על אסטרוגנים, פרוגסטרון, SERMs, אמצעי מניעה ואנדרוגנים.",
+              "questionCount": 85,
+              "topicCount": 7
+            }
+          ]
+        },
+        {
+          "name": "אדרנל וסטרואידים",
+          "quizzes": [
+            {
+              "id": "endocrine-adrenal-1",
+              "title": "מבחן 1",
+              "description": "שאלות על הורמוני האדרנל וקורטיקוסטרואידים.",
+              "questionCount": 58,
+              "topicCount": 5
+            }
+          ]
+        },
+        {
+          "name": "סוכרת א: פיזיולוגיה ואינסולין",
+          "quizzes": [
+            {
+              "id": "endocrine-diabetes-1",
+              "title": "מבחן 1",
+              "description": "שאלות על ויסות גלוקוז, סוכרת ואינסולין",
+              "questionCount": 47,
+              "topicCount": 5
+            }
+          ]
+        },
+        {
+          "name": "סוכרת ב: תרופות פומיות",
+          "quizzes": [
+            {
+              "id": "endocrine-diabetes-2",
+              "title": "מבחן 1",
+              "description": "שאלות על התרופות הפומיות לסוכרת",
+              "questionCount": 43,
+              "topicCount": 6
+            }
+          ]
+        },
+        {
+          "name": "יתר לחץ דם: ACEi/ARB, חוסמים, CCB, משבר",
+          "quizzes": []
+        },
+        {
+          "name": "משתנים",
+          "quizzes": []
+        },
+        {
+          "name": "איסכמיה, ניטרטים, אי-ספיקת לב, גליקוזידים, אנטי-אריתמיה",
+          "quizzes": []
+        },
+        {
+          "name": "עקרונות כימותרפיה, עמידות, אנטי-מטבוליטים",
+          "quizzes": []
+        },
+        {
+          "name": "אלקילטורים, אנתרציקלינים, אלקלואידים צמחיים, מעכבי טופואיזומראז",
+          "quizzes": []
+        },
+        {
+          "name": "עקרונות אנטיביוטיקה וקבוצות הפועלות על דופן התא",
+          "quizzes": []
+        },
+        {
+          "name": "עיכוב סינתזת חלבון וחומצות גרעין, שחפת",
+          "quizzes": []
+        },
+        {
+          "name": "נגיפים/HIV, פטריות וטפילים",
+          "quizzes": []
+        }
+      ],
       "quizzes": [],
       "upcoming": [],
       "tools": []

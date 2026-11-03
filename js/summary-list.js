@@ -1,6 +1,7 @@
 // The short summaries, in the order the hub and the combined print show them. Each id is a page
 // summaries/<id>.html whose <article class="summary" data-system="<id>"> holds the content, and
 // `subject` is the id of its subject in quizzes/subjects.json.
+// `unit` (optional) is the catalog unit the summary belongs to, shown on its hub card.
 // `study: true` means study/<id>.html (interactive practice) exists too.
 // No DOM here, so the Node tests can check it against the files.
 
@@ -136,6 +137,48 @@ export const SUMMARIES = [
     id: 'pharma-immunosuppression',
     title: 'תרופות לדיכוי חיסוני',
     blurb: 'מניעת דחיית שתל: שלבי הטיפול, נוגדנים, מעכבי קלצינאורין ו-mTOR, אנטי-פרוליפרטיביים וסטרואידים, וסיעוד.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'pharma-b-pituitary',
+    unit: 'מבוא אנדוקרינולוגיה ויותרת המוח',
+    title: 'מעבדת ההיפופיזה',
+    blurb: 'הורמונים הם שליחים כימיים. כאן עוברים על סוגי ההורמונים, על לולאות המשוב ועל הציר של ההיפותלמוס וההיפופיזה, ואחר כך על כל תרופה לפי משפחה, מנגנון ותופעות לוואי.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'pharma-b-thyroid',
+    unit: 'בלוטת התריס',
+    title: 'מעבדת התריס',
+    blurb: 'בלוטת התריס קובעת את קצב המטבוליזם של הגוף. כאן עוברים על הסינתזה של T3 ו-T4, על הבקרה של TSH, ועל התרופות להיפו והיפר-תירואידיזם.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'pharma-b-sex-hormones',
+    unit: 'הורמוני מין ואמצעי מניעה',
+    title: 'מעבדת הורמוני המין',
+    blurb: 'אסטרוגנים, פרוגסטרון ואנדרוגנים מיוצרים מכולסטרול ופועלים דרך קולטן בגרעין. כאן עוברים על התרופות לפי משפחה: טיפול הורמונלי, SERMs, אמצעי מניעה ואנטי אנדרוגנים.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'pharma-b-adrenal',
+    unit: 'אדרנל וסטרואידים',
+    title: 'מעבדת האדרנל',
+    blurb: 'קורטקס האדרנל מייצר שלוש משפחות הורמונים. כאן עוברים על המבנה, על הגלוקוקורטיקואידים, על אלדוסטרון, על המחלות שבהן משתמשים בסטרואידים ועל תופעות הלוואי של טיפול ארוך.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'pharma-b-insulin',
+    unit: 'סוכרת א: פיזיולוגיה ואינסולין',
+    title: 'מעבדת הסוכרת: אינסולין',
+    blurb: 'איך הגוף מווסת גלוקוז, מה משתבש בסוכרת, ואילו אינסולינים ותרופות הזרקה קיימות: אינסולין, אמילין ואינקרטינים.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'pharma-b-oral-diabetes',
+    unit: 'סוכרת ב: תרופות פומיות',
+    title: 'מעבדת הסוכרת: תרופות פומיות',
+    blurb: 'שבע משפחות של תרופות פומיות לסוכרת מסוג 2. לכל משפחה מנגנון אחר, ותופעות לוואי אחרות.',
   },
   {
     subject: 'nursing-fundamentals',
