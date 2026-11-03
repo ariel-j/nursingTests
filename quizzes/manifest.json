@@ -99,6 +99,18 @@
               "topicCount": 5
             }
           ]
+        },
+        {
+          "name": "סוכרת ב: תרופות פומיות",
+          "quizzes": [
+            {
+              "id": "endocrine-diabetes-2",
+              "title": "מבחן 1",
+              "description": "שאלות על התרופות הפומיות לסוכרת",
+              "questionCount": 43,
+              "topicCount": 6
+            }
+          ]
         }
       ],
       "quizzes": []
