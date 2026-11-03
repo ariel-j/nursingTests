@@ -1,86 +1,254 @@
 // The short summaries, in the order the hub and the combined print show them. Each id is a page
-// summaries/<id>.html whose <article class="summary" data-system="<id>"> holds the content.
-// `subject` groups the hub and must be a subject from quizzes/subjects.json. A lab (an interactive
-// summary) also names its `unit` and the `quiz` of that unit used for its warm-up; its article then
-// carries data-quiz="<quiz>". No DOM here, so the Node tests can check it against the files.
-
-const ANATOMY = 'אנטומיה ופיזיולוגיה';
-const PHARM = 'פרמקולוגיה ב';
+// summaries/<id>.html whose <article class="summary" data-system="<id>"> holds the content, and
+// `subject` is the id of its subject in quizzes/subjects.json.
+// `unit` (optional) is the catalog unit the summary belongs to, shown on its hub card.
+// `study: true` means study/<id>.html (interactive practice) exists too.
+// No DOM here, so the Node tests can check it against the files.
 
 export const SUMMARIES = [
   {
+    subject: 'anatomy',
     id: 'cardiovascular',
-    subject: ANATOMY,
     title: 'המערכת הקרדיווסקולרית',
     blurb: 'הלב כמשאבה, הולכה חשמלית ו‑ECG, מחזור הלב, תפוקת הלב ולחץ הדם.',
   },
   {
+    subject: 'anatomy',
     id: 'excretory',
-    subject: ANATOMY,
     title: 'מערכת ההפרשה (הכליה)',
     blurb: 'הנפרון, סינון, ספיגה חוזרת והפרשה, ADH ו‑RAAS, מאזן חומצה–בסיס.',
   },
   {
+    subject: 'anatomy',
     id: 'endocrine',
-    subject: ANATOMY,
     title: 'המערכת האנדוקרינית',
     blurb: 'סוגי הורמונים, ציר היפותלמוס–היפופיזה, תריס, אדרנל, לבלב ואצטרובל.',
   },
   {
+    subject: 'anatomy',
     id: 'digestive',
-    subject: ANATOMY,
     title: 'מערכת העיכול',
     blurb: 'הפה והקיבה, לבלב, כבד ומרה, ספיגה, המעי הגס ובקרה עצבית.',
   },
   {
-    id: 'pharm-pituitary',
-    subject: PHARM,
+    subject: 'pharmacology',
+    id: 'pharmacokinetics',
+    title: 'פרמקוקינטיקה',
+    blurb: 'ADME: ספיגה וזמינות ביולוגית, פיזור ו‑Vd, CYP450 וקינטיקה, פינוי ומינון.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharmacodynamics',
+    title: 'פרמקודינמיקה',
+    blurb: 'רצפטורים ומנגנוני פעולה, עקומת מנה-תגובה, העברת אות, אינדקס וחלון טיפולי, סבילות ושילובי תרופות. עם סימולטור, מחשבון וכרטיסיות.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'parasympathetic',
+    title: 'תרופות במערכת הפאראסימפתטית',
+    blurb: 'הסינפסה הכולינרגית, רצפטורים מוסקריניים וניקוטיניים, אגוניסטים ומעכבי AChE, אנטגוניסטים וחוסמי עצב-שריר. עם סימולטור איברים, סיור בסינפסה וכרטיסיות.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'sympathetic',
+    title: 'תרופות במערכת הסימפתטית',
+    blurb: 'רצפטורים אדרנרגיים, קטכולאמינים, אגוניסטים ישירים ועקיפים, חוסמי α ו-β ונוהל דליפת NE. עם סייר רצפטורים, מצב בחינה עצמית, מעקב התקדמות וכרטיסיות.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'opioids',
+    title: 'אופיואידים',
+    blurb: 'רצפטורי μ, κ ו-δ, תופעות לוואי, סבילות וגמילה, 4 משפחות כימיות ואלרגיה צולבת, נוהל הרעלה ו-Naloxone. עם סייר רצפטורים, מצב בחינה עצמית, מעקב התקדמות וכרטיסיות.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'nsaids',
+    title: 'NSAIDs: דלקת, כאב וחום',
+    blurb: 'מסלול חומצה ארכידונית, COX-1 מול COX-2, אספירין ואקמול, לויקוטריאנים, שיגדון, RA ומיגרנה. עם סייר מסלול, מצב בחינה עצמית, מעקב התקדמות וכרטיסיות.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'coagulation',
+    title: 'תרופות בהפרעות קרישה',
+    blurb: 'נוגדי טסיות, הפרין, וורפרין ו-DOACs, טרומבוליטים, סמי-נגד ו-HIT. עם סייר שלבי הקרישה, מצב בחינה עצמית, מעקב התקדמות וכרטיסיות.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-hyperlipidemia',
+    title: 'היפרליפידמיה ושומנים בדם',
+    blurb: 'LDL ו‑HDL, סטטינים, Ezetimibe, פיברטים, Niacin ותרופות חדשות.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-parkinson',
+    title: 'פרקינסון ומחלות ניווניות',
+    blurb: 'דופמין מול אצטילכולין, L-Dopa ותוספי עזר, אגוניסטים, אלצהיימר ו‑ALS.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-anxiety',
+    title: 'נוגדי חרדה ומשרי שינה',
+    blurb: 'GABA‑A, בנזודיאזפינים, ברביטורטים, Buspirone, תרופות Z.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-depression',
+    title: 'נוגדי דיכאון ומייצבי מצב רוח',
+    blurb: 'SSRI, SNRI, TCA ו‑MAOI, סינדרום סרוטונין, טיראמין, ליתיום.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-psychosis',
+    title: 'תרופות אנטי‑פסיכוטיות',
+    blurb: 'חסימת D2, ארבעת המסלולים הדופמינרגיים, דור ראשון מול שני, EPS, Clozapine.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-epilepsy',
+    title: 'נוגדי פרכוסים (אפילפסיה)',
+    blurb: 'סוגי התקפים, ארבעת המנגנונים, תרופה לפי סוג התקף, הריון ו‑status epilepticus.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-anesthesia',
+    title: 'חומרי הרדמה',
+    blurb: 'גזים נדיפים ו‑MAC, חומרי הרדמה תוך‑ורידיים, חוסמים נוירומוסקולריים, הרדמה מקומית.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-antihistamines',
+    title: 'אנטיהיסטמינים',
+    blurb: 'היסטמין ורצפטורי H1–H4, דור ראשון מול דור שני, שימושים ותופעות לוואי.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-git',
+    title: 'תרופות במערכת העיכול',
+    blurb: 'בקרת חומצה וכיב, שלשול ועצירות, בחילות והקאות, מעי רגיז ומחלות מעי דלקתיות.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-respiratory',
+    title: 'תרופות למערכת הנשימה',
+    blurb: 'אסטמה ו-COPD: מרחיבי סמפונות, נוגדי דלקת, טיפול ביולוגי, ניהול הטיפול ותופעות הלוואי של סטרואידים.',
+  },
+  {
+    subject: 'pharmacology',
+    id: 'pharma-immunosuppression',
+    title: 'תרופות לדיכוי חיסוני',
+    blurb: 'מניעת דחיית שתל: שלבי הטיפול, נוגדנים, מעכבי קלצינאורין ו-mTOR, אנטי-פרוליפרטיביים וסטרואידים, וסיעוד.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'pharma-b-pituitary',
     unit: 'מבוא אנדוקרינולוגיה ויותרת המוח',
-    quiz: 'endocrine-pituitary-1',
     title: 'מעבדת ההיפופיזה',
     blurb: 'הורמונים הם שליחים כימיים. כאן עוברים על סוגי ההורמונים, על לולאות המשוב ועל הציר של ההיפותלמוס וההיפופיזה, ואחר כך על כל תרופה לפי משפחה, מנגנון ותופעות לוואי.',
   },
   {
-    id: 'pharm-thyroid',
-    subject: PHARM,
+    subject: 'pharmacology-b',
+    id: 'pharma-b-thyroid',
     unit: 'בלוטת התריס',
-    quiz: 'endocrine-thyroid-1',
     title: 'מעבדת התריס',
     blurb: 'בלוטת התריס קובעת את קצב המטבוליזם של הגוף. כאן עוברים על הסינתזה של T3 ו-T4, על הבקרה של TSH, ועל התרופות להיפו והיפר-תירואידיזם.',
   },
   {
-    id: 'pharm-sex-hormones',
-    subject: PHARM,
+    subject: 'pharmacology-b',
+    id: 'pharma-b-sex-hormones',
     unit: 'הורמוני מין ואמצעי מניעה',
-    quiz: 'endocrine-sex-hormones-1',
     title: 'מעבדת הורמוני המין',
     blurb: 'אסטרוגנים, פרוגסטרון ואנדרוגנים מיוצרים מכולסטרול ופועלים דרך קולטן בגרעין. כאן עוברים על התרופות לפי משפחה: טיפול הורמונלי, SERMs, אמצעי מניעה ואנטי אנדרוגנים.',
   },
   {
-    id: 'pharm-adrenal',
-    subject: PHARM,
+    subject: 'pharmacology-b',
+    id: 'pharma-b-adrenal',
     unit: 'אדרנל וסטרואידים',
-    quiz: 'endocrine-adrenal-1',
     title: 'מעבדת האדרנל',
     blurb: 'קורטקס האדרנל מייצר שלוש משפחות הורמונים. כאן עוברים על המבנה, על הגלוקוקורטיקואידים, על אלדוסטרון, על המחלות שבהן משתמשים בסטרואידים ועל תופעות הלוואי של טיפול ארוך.',
   },
   {
-    id: 'pharm-insulin',
-    subject: PHARM,
+    subject: 'pharmacology-b',
+    id: 'pharma-b-insulin',
     unit: 'סוכרת א: פיזיולוגיה ואינסולין',
-    quiz: 'endocrine-diabetes-1',
     title: 'מעבדת הסוכרת: אינסולין',
     blurb: 'איך הגוף מווסת גלוקוז, מה משתבש בסוכרת, ואילו אינסולינים ותרופות הזרקה קיימות: אינסולין, אמילין ואינקרטינים.',
   },
   {
-    id: 'pharm-oral-diabetes',
-    subject: PHARM,
+    subject: 'pharmacology-b',
+    id: 'pharma-b-oral-diabetes',
     unit: 'סוכרת ב: תרופות פומיות',
-    quiz: 'endocrine-diabetes-2',
     title: 'מעבדת הסוכרת: תרופות פומיות',
     blurb: 'שבע משפחות של תרופות פומיות לסוכרת מסוג 2. לכל משפחה מנגנון אחר, ותופעות לוואי אחרות.',
   },
+  {
+    subject: 'nursing-fundamentals',
+    id: 'circulars',
+    title: 'מפת החוזרים והפעולות',
+    blurb: 'פעולת סיעוד מול פעולה חריגה ורפואית, חוזרים לפי נושא, כוח עזר מיומן וחוקים. עם מפה אינטראקטיבית.',
+  },
+  {
+    subject: 'nursing-fundamentals',
+    id: 'safety',
+    title: 'בטיחות ובטחון',
+    blurb: 'נפילות והגבלה פיזית: כלי אומדן, צ\'קליסט, אבחנות סיכון ושעון הנוהל. עם מעבדת בטיחות אינטראקטיבית.',
+  },
+  {
+    subject: 'nursing-fundamentals',
+    id: 'hygiene',
+    title: 'היגיינה ואומדן העור',
+    blurb: 'מבנה העור, ממצאי עור, מודל רמת התפקוד, טיפול בפה ובחושים ורחצה. עם כרטיסיות וחידון.',
+  },
+  {
+    subject: 'nursing-fundamentals',
+    id: 'tissue-integrity',
+    title: 'שלמות הרקמה',
+    blurb: 'פצעים אקוטיים וכרוניים, שלבי ריפוי, פצעי לחץ, נורטון וברדן וחוזר 153. עם כרטיסיות וחידון.',
+  },
+  {
+    subject: 'nursing-fundamentals',
+    id: 'mobility',
+    title: 'ניעות',
+    blurb: 'חוזר 249/2025, השפעת שכיבה לפי מערכות, סיבוכים, תנוחות, ארגונומיה ו‑Deconditioning. עם כרטיסיות וחידון.',
+  },
+  {
+    subject: 'nursing-fundamentals',
+    id: 'sleep',
+    title: 'מנוחה ושינה',
+    blurb: 'שלבי NREM ו‑REM, מלטונין ומקצב צירקדי, הפרעות שינה, דום נשימה והיגיינת שינה. עם כרטיסיות וחידון.',
+  },
+  {
+    subject: 'nursing-fundamentals',
+    study: true,
+    id: 'urinary',
+    title: 'מערכת השתן',
+    blurb: 'ערכי שתן תקינים, הפרעות במתן שתן, DIAPPERS, צנתור והטיית שתן. עם תרגול אינטראקטיבי.',
+  },
+  {
+    subject: 'nursing-fundamentals',
+    study: true,
+    id: 'gi',
+    title: 'מערכת העיכול וההפרשות',
+    blurb: 'סולם בריסטול, תכשירים משלשלים וחוקן, אבני צואה וסטומה. עם תרגול אינטראקטיבי.',
+  },
+  {
+    subject: 'nursing-fundamentals',
+    id: 'bowel',
+    title: 'הפרשות מערכת העיכול (חוזר 248/2025)',
+    blurb: 'סולם ההתערבות, אי שליטה על צואה, משלשלים, חוקן, אבני צואה, בדיקות וסטומה.',
+  },
+  {
+    subject: 'nursing-fundamentals',
+    id: 'sensory',
+    title: 'גירוי סנסורי',
+    blurb: 'קליטה ותפיסה, RAS ומצבי מודעות, חסך והצפה, אבחנות NANDA והתערבות.',
+  },
 ];
+
+/** The summaries of one subject, in list order. */
+export const summariesFor = (subjectId) => SUMMARIES.filter((s) => s.subject === subjectId);
 
 /** Page file for a summary, relative to the summaries/ folder. */
 export const summaryFile = (id) => `${id}.html`;
+
+/** Interactive study page for a summary, relative to the summaries/ folder. */
+export const studyFile = (id) => `../study/${id}.html`;
