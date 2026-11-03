@@ -8,6 +8,8 @@
 [data-system="digestive"]      { --a: #5f6b1f; --a-soft: #eceedc; --a-ink: #474f17; --a-d: #bccb6c; --a-soft-d: #2a2e14; --a-ink-d: #d8e39e; }
 [data-system="endocrine"]      { --a: #a86a1e; --a-soft: #f4e9d6; --a-ink: #7e4e12; --a-d: #e8aa5c; --a-soft-d: #3a2a14; --a-ink-d: #f3cb93; }
 [data-system="excretory"]      { --a: #126e82; --a-soft: #dcedf0; --a-ink: #0c4e5c; --a-d: #5fc4d9; --a-soft-d: #12333a; --a-ink-d: #a2ddea; }
+[data-system="interventions"]  { --a: #0f6b5c; --a-soft: #dcefe9; --a-ink: #0a4d41; --a-d: #4cc3a9; --a-soft-d: #12332b; --a-ink-d: #9be0d0; }
+[data-system="safety"]         { --a: #3b4ea8; --a-soft: #e3e6f5; --a-ink: #2a3880; --a-d: #94a6f0; --a-soft-d: #202540; --a-ink-d: #c3cdf8; }
 
 [data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
 @media (prefers-color-scheme: dark) {
@@ -77,6 +79,7 @@
 :root[data-contrast="high"] .summary .call,
 :root[data-contrast="high"] .summary .flags,
 :root[data-contrast="high"] .summary .exam { border: 2px solid #000; }
+:root[data-contrast="high"] .summary .interactive { border: 2px solid #000; }
 
 @media (max-width: 560px) {
   .summary { font-size: 1rem; }
@@ -87,6 +90,72 @@
   .summary .rel-arrow { padding: 6px 4px; font-size: 0; line-height: 1; }
   .summary .rel-arrow::after { content: "↓"; font-size: 1.375rem; color: var(--accent); }
 }
+
+/* ---------- tables ---------- */
+
+.summary .table-scroll { overflow-x: auto; }
+.summary table { inline-size: 100%; border-collapse: collapse; margin-block: 0.6rem 1rem; font-size: 0.95rem; background: var(--card); }
+.summary th, .summary td { border: 1px solid var(--line); padding: 0.45rem 0.7rem; text-align: start; vertical-align: top; }
+.summary thead th { background: var(--accent-soft); color: var(--accent-ink); }
+.summary tbody th { font-weight: 600; background: var(--accent-soft); color: var(--accent-ink); }
+.summary tr[hidden] { display: none; }
+
+/* ---------- interactive practice (hidden when printing; see summary-*.js) ---------- */
+
+.summary .interactive { margin-block: 1.4rem; padding: 0.9rem 1rem; border: 1px dashed var(--accent); border-radius: 12px; }
+.summary .interactive h3:first-child { margin-block-start: 0; }
+.summary section.interactive { border-style: solid; }
+.summary .interactive h3 { margin-block-start: 1rem; }
+
+.summary .drill-count { color: var(--muted); font-size: 0.875rem; margin-block-end: 0.4rem; }
+.summary .drill-prompt { font-size: 1.15rem; font-weight: 600; }
+.summary .drill-options { display: grid; gap: 0.5rem; margin-block: 0.7rem; }
+.summary .drill-option { text-align: start; padding: 0.6rem 0.9rem; background: var(--card); border: 2px solid var(--line); border-radius: 8px; }
+.summary .drill-option:hover { border-color: var(--accent); }
+.summary .drill-option[aria-disabled="true"] { cursor: default; }
+.summary .drill-option[aria-disabled="true"]:hover { border-color: var(--line); }
+.summary .drill-option.is-correct { background: var(--ok-bg); border-color: var(--ok); }
+.summary .drill-option.is-wrong { background: var(--bad-bg); border-color: var(--bad); }
+.summary .drill-feedback { min-block-size: 1.7em; font-weight: 600; }
+.summary .drill-feedback.ok { color: var(--ok); }
+.summary .drill-feedback.no { color: var(--bad); }
+.summary .drill-next { margin-block-start: 0.4rem; }
+
+.summary .chips { border: 0; padding: 0; margin: 0 0 0.8rem; min-inline-size: 0; }
+.summary .chips legend { font-weight: 700; padding: 0; margin-block-end: 0.3rem; }
+.summary .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.summary .chips legend { inline-size: 100%; }
+.summary .chips label { position: relative; padding: 0.3rem 0.8rem; border: 2px solid var(--line); border-radius: 8px; background: var(--card); cursor: pointer; font-size: 0.95rem; }
+.summary .chips input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.summary .chips label:has(input:checked) { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.summary .chips label:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+.summary .calc-result { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem; margin-block: 0.6rem 0.4rem; }
+.summary .calc-total { font-family: var(--serif); font-size: 2.2rem; font-variant-numeric: tabular-nums; }
+.summary .pill { display: inline-block; padding: 0.2rem 0.8rem; border-radius: 999px; font-weight: 700; font-size: 0.9rem; border: 2px solid currentColor; }
+.summary .pill.low { background: var(--ok-bg); color: var(--ok); }
+.summary .pill.high { background: #fff1d6; color: #8a5200; }
+.summary .pill.vhigh { background: var(--bad-bg); color: var(--bad); }
+.summary .meter { block-size: 10px; border-radius: 6px; background: var(--line); overflow: hidden; }
+.summary .meter i { display: block; block-size: 100%; }
+.summary .meter .low { background: var(--ok); }
+.summary .meter .high { background: #d98a00; }
+.summary .meter .vhigh { background: var(--bad); }
+
+.summary .clock-label { display: block; font-weight: 700; margin-block-end: 0.3rem; font-variant-numeric: tabular-nums; }
+.summary input[type="range"] { inline-size: 100%; accent-color: var(--accent); }
+.summary .stats { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-block: 0.8rem; }
+.summary .stat { flex: 1 1 150px; padding: 0.6rem 0.9rem; border: 1px solid var(--line); border-radius: 10px; background: var(--card); }
+.summary .stat strong { display: block; font-family: var(--serif); font-size: 1.7rem; font-variant-numeric: tabular-nums; }
+.summary .stat small { color: var(--muted); }
+.summary .note { margin: 0.6rem 0 0; padding: 0.6rem 0.9rem; border-inline-start: 4px solid #d98a00; background: #fff1d6; color: #4a2f00; border-radius: 6px; }
+.summary .note.bad { border-color: var(--bad); background: var(--bad-bg); color: var(--ink); }
+
+/* Practice mode on the nine factors: examples stay hidden until their factor is opened. */
+.summary .practice dl.def:not(.is-open) dd { display: none; }
+.summary .practice dl.def dt { cursor: pointer; }
+.summary .practice dl.def dt::after { content: " ▾"; color: var(--accent); }
+.summary .practice dl.def.is-open dt::after { content: " ▴"; }
 
 /* ---------- hub (summaries/index.html) ---------- */
 
@@ -119,7 +188,7 @@
   body, .summary-page { background: #ffffff; }
   .summary * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 
-  .no-print, .a11y, .site-footer { display: none !important; }
+  .no-print, .interactive, .a11y, .site-footer { display: none !important; }
   .page, .page.wide { max-inline-size: none; padding: 0; }
 
   .summary > header { padding-block-start: 0; }

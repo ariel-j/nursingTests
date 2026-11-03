@@ -108,6 +108,11 @@ To add a summary:
 3. Give it accent colors in `css/summary.css` (a `[data-system="<id>"]` rule with light and dark values).
 4. `npm run validate` checks it: listed, self-hosted only, no inline styles or handlers, toolbar and footer present.
 
+A summary may also carry interactive practice (drills, a calculator, a slider), as `summaries/interventions.html`
+and `summaries/safety.html` do. The printed text stays static HTML; the practice parts sit in `.interactive`
+blocks that a per-page script (`js/summary-<id>.js`) fills in with `js/widgets.js`. Those blocks are hidden
+when printing and left out of `all.html`. Pure logic (scores, the restraint clock) is in `js/tools-logic.js`.
+
 ## Development
 
 ```sh
@@ -124,6 +129,7 @@ npm run serve     # http://localhost:8000 (fetch() does not work over file://)
 | `js/storage.js` | guarded `localStorage` wrapper (prefix `anatomy-quizzes:v1:`) |
 | `js/index.js`, `js/quiz.js` | page UI |
 | `summaries/`, `css/summary.css` | short summaries, the hub and the combined print page |
+| `js/widgets.js`, `js/tools-logic.js`, `js/summary-interventions.js`, `js/summary-safety.js` | interactive practice inside summaries; pure logic is tested |
 | `js/summary-list.js` | the list of summaries (no DOM); `js/summaries.js`, `js/summary.js`, `js/summaries-all.js` drive the pages |
 | `scripts/` | manifest, validate, and a tiny static dev server |
 | `fonts/` | self-hosted Assistant and Frank Ruhl Libre (SIL OFL, licenses included) |
