@@ -8,6 +8,12 @@
 [data-system="digestive"]      { --a: #5f6b1f; --a-soft: #eceedc; --a-ink: #474f17; --a-d: #bccb6c; --a-soft-d: #2a2e14; --a-ink-d: #d8e39e; }
 [data-system="endocrine"]      { --a: #a86a1e; --a-soft: #f4e9d6; --a-ink: #7e4e12; --a-d: #e8aa5c; --a-soft-d: #3a2a14; --a-ink-d: #f3cb93; }
 [data-system="excretory"]      { --a: #126e82; --a-soft: #dcedf0; --a-ink: #0c4e5c; --a-d: #5fc4d9; --a-soft-d: #12333a; --a-ink-d: #a2ddea; }
+[data-system="pharm-pituitary"]     { --a: #6b4fa3; --a-soft: #ece7f6; --a-ink: #4f3a80; --a-d: #bba6ee; --a-soft-d: #2a2140; --a-ink-d: #d9cdf6; }
+[data-system="pharm-thyroid"]       { --a: #1f7a5e; --a-soft: #dcefe8; --a-ink: #165a45; --a-d: #6fcfae; --a-soft-d: #14342a; --a-ink-d: #a7e6d0; }
+[data-system="pharm-sex-hormones"]  { --a: #a8366a; --a-soft: #f6e3ec; --a-ink: #7f2850; --a-d: #f08bb5; --a-soft-d: #40202f; --a-ink-d: #f8bcd4; }
+[data-system="pharm-adrenal"]       { --a: #b0481f; --a-soft: #f6e4dc; --a-ink: #80351a; --a-d: #f3a07f; --a-soft-d: #40261c; --a-ink-d: #f9c9b4; }
+[data-system="pharm-insulin"]       { --a: #1f5fae; --a-soft: #dce9f8; --a-ink: #174a88; --a-d: #7fb4f2; --a-soft-d: #1b3556; --a-ink-d: #b3d3f8; }
+[data-system="pharm-oral-diabetes"] { --a: #2c7a4b; --a-soft: #dcf0e2; --a-ink: #1f5937; --a-d: #7fd3a0; --a-soft-d: #1b3a27; --a-ink-d: #b4e6c7; }
 
 [data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
 @media (prefers-color-scheme: dark) {
@@ -93,10 +99,101 @@
 .summary-list { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; gap: var(--gap); }
 .summary-card { border-inline-start-color: var(--accent); }
 .summary-card:hover { border-inline-start-color: var(--accent); }
-.summary-card h2 { margin: 0 0 0.2rem; font-size: 1.35rem; }
+.summary-card h3 { margin: 0 0 0.2rem; font-size: 1.35rem; }
 
 .all-status { margin-block: 1rem; }
 .summary + .summary { margin-block-start: 4rem; }
+
+/* ---------- hub groups (summaries/index.html) ---------- */
+
+.summary-group { margin-block-end: 2rem; }
+.summary-group h2 { font-size: 1.5rem; margin: 0 0 0.75rem; }
+.summary-card .kicker { margin: 0 0 0.2rem; color: var(--accent-ink); font-size: 0.85rem; font-weight: 600; }
+
+/* ---------- labs: interactive summaries (summaries/pharm-*.html, js/lab.js) ----------
+   The static markup is a complete summary; js/lab.js builds the widgets beside it. */
+
+.summary { --warn: #8a5a00; }
+@media (prefers-color-scheme: dark) { .summary { --warn: #f0b956; } }
+:root[data-contrast="high"] .summary { --warn: #000000; }
+
+.summary .lab-overview { margin: 0 0 1rem; padding-inline-start: 1.4rem; display: grid; gap: 0.25rem; }
+.summary .lab-overview li { margin: 0; }
+.summary .lab-stats { display: flex; gap: 0.5rem; margin-block-start: 0.9rem; }
+.lab-stat { padding: 2px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); font-size: 0.9rem; }
+.lab-stat b { color: var(--accent-ink); }
+
+.summary .tbl { overflow-x: auto; margin-block: 0.75rem 1rem; border: 1px solid var(--line); border-radius: 10px; background: var(--card); }
+.summary .tbl table { border-collapse: collapse; inline-size: 100%; font-size: 0.95rem; }
+.summary .tbl th, .summary .tbl td { padding: 0.5rem 0.75rem; text-align: start; vertical-align: top; border-block-end: 1px solid var(--line); }
+.summary .tbl th { background: var(--accent-soft); color: var(--accent-ink); font-size: 0.85rem; }
+.summary .tbl tr:last-child td { border-block-end: 0; }
+
+.summary .lab-chain { list-style: none; margin: 0.75rem 0 1rem; padding: 0; display: grid; gap: 1.1rem; justify-items: center; text-align: center; }
+.summary .lab-chain li { position: relative; margin: 0; padding: 0.4rem 0.9rem; border-radius: 10px; background: var(--accent-soft); color: var(--accent-ink); font-weight: 600; max-inline-size: 100%; }
+.summary .lab-chain li + li::before { content: "↓"; position: absolute; inset-block-start: -1.15rem; inset-inline: 0; color: var(--accent); font-weight: 700; line-height: 1.1; }
+
+.summary .lab-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem; margin-block: 0.75rem 1rem; }
+.summary .lab-card { padding: 0.8rem 1rem; border: 1px solid var(--line); border-radius: 10px; background: var(--card); }
+.summary .lab-card h3 { margin: 0 0 0.3rem; }
+.summary .lab-card p { margin: 0; }
+
+.summary .lab-trap { border-inline-start-color: var(--warn); }
+.summary .lab-trap h4 { color: var(--warn); }
+.summary .lab-tip p, .summary .lab-trap p { margin: 0; }
+
+/* Drug facts: the label is text, color only reinforces it. */
+.summary .lab-b { --c: var(--accent); padding-inline-start: 0.75rem; border-inline-start: 4px solid var(--c); }
+.summary .lab-b dt { color: var(--c); }
+.summary .lab-b-ind { --c: var(--ok); }
+.summary .lab-b-side { --c: var(--warn); }
+.summary .lab-b-no { --c: var(--bad); }
+.summary .lab-b-care { --c: var(--accent-ink); }
+
+.summary .lab-tabs { margin-block: 0.75rem 1rem; padding: 1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
+.summary .lab-tab h3 { margin: 0 0 0.5rem; }
+.summary .lab-tab > :last-child { margin-block-end: 0; }
+.summary .lab-tab + .lab-tab { margin-block-start: 1.25rem; padding-block-start: 1rem; border-block-start: 1px dashed var(--line); }
+.lab-tablist { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-block-end: 0.9rem; }
+.lab-tab-btn { padding: 0.35rem 0.9rem; border: 1.5px solid var(--line); border-radius: 999px; background: transparent; color: var(--ink); font-weight: 600; cursor: pointer; }
+.lab-tab-btn[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+@media screen {
+  /* With tabs, the tab button names the panel; the heading stays for screen readers and print. */
+  .summary .lab-tabs.is-enhanced .lab-tab > h3 { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .summary .lab-tabs.is-enhanced .lab-tab + .lab-tab { margin: 0; padding: 0; border: 0; }
+}
+
+.summary .lab-sorter, .summary .lab-stepper, .summary .lab-slider, .summary .lab-flips { margin-block: 1rem; }
+.summary .lab-sorter, .summary .lab-slider { padding: 1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
+.summary .lab-sorter h3, .summary .lab-slider h3 { margin-block-start: 0; }
+.summary .lab-sorter .why { color: var(--muted); }
+.lab-q { margin: 0 0 0.75rem; font-size: 1.2rem; font-weight: 700; }
+.lab-choices { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.lab-choices button { flex: 1 1 9rem; justify-content: center; }
+.summary .lab-count { margin: 0.6rem 0 0; font-size: 0.85rem; }
+.lab-game .feedback, .lab-slider-ui .feedback { margin-block-start: 0.75rem; }
+.lab-game .feedback p:last-child { margin-block-end: 0; }
+.lab-step-view { margin-block: 0.5rem; padding: 0.9rem 1rem; min-block-size: 5rem; border-radius: 10px; background: var(--accent-soft); }
+.lab-step-nav { display: flex; gap: 0.5rem; justify-content: space-between; }
+.lab-slider-ui input[type="range"] { inline-size: 100%; accent-color: var(--accent); }
+.lab-flip-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.6rem; }
+.lab-flip-card { min-block-size: 5rem; padding: 0.8rem; border: 1.5px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); font-weight: 600; text-align: start; cursor: pointer; }
+.lab-flip-card[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); }
+
+.summary .lab-quiz-box { padding: 1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
+.summary .lab-quiz-box .options { padding: 0; }
+.summary .lab-quiz-box .options li { margin: 0; }
+.summary .lab-quiz-box .feedback .primary { margin-block-start: 0.25rem; }
+.summary .lab-full { margin-block-start: 1.5rem; }
+
+:root[data-contrast="high"] .summary .tbl,
+:root[data-contrast="high"] .summary .lab-card,
+:root[data-contrast="high"] .summary .lab-tabs,
+:root[data-contrast="high"] .summary .lab-sorter,
+:root[data-contrast="high"] .summary .lab-slider,
+:root[data-contrast="high"] .summary .lab-quiz-box,
+:root[data-contrast="high"] .lab-flip-card,
+:root[data-contrast="high"] .lab-tab-btn { border: 2px solid #000; }
 
 /* ---------- print / save as PDF ---------- */
 
@@ -127,4 +224,7 @@
   .summary h2, .summary h3 { break-after: avoid; }
   .summary .rel, .summary .call, .summary .def, .summary .flags li { break-inside: avoid; }
   .summary + .summary { margin-block-start: 0; break-before: page; }
+  /* Interactive widgets are screen-only; the static parts they replaced (hidden on screen) print. */
+  .summary [data-lab-static][hidden] { display: block !important; }
+  .summary .lab-tabs, .summary .lab-sorter, .summary .lab-card, .summary .lab-b, .summary .lab-chain, .summary .tbl tr { break-inside: avoid; }
 }

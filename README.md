@@ -104,7 +104,7 @@ To add a summary:
 
 1. Save it as `summaries/<id>.html`, copying the structure of an existing one: its content goes in
    `<article class="summary" data-system="<id>">` and uses the same classes (`rel`, `def`, `call`, `flags`, `exam`).
-2. Add `{ id, title, blurb }` to `js/summary-list.js` (this sets the order on the hub and in the combined PDF).
+2. Add `{ id, subject, title, blurb }` to `js/summary-list.js` (a lab also needs `unit` and `quiz`, and `data-quiz` on its article; see `summaries/pharm-*.html`) (this sets the order on the hub and in the combined PDF).
 3. Give it accent colors in `css/summary.css` (a `[data-system="<id>"]` rule with light and dark values).
 4. `npm run validate` checks it: listed, self-hosted only, no inline styles or handlers, toolbar and footer present.
 

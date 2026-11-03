@@ -6,6 +6,8 @@ const PREFIX = 'anatomy-quizzes:v1:';
 export const keys = {
   session: (quizId) => `session:${quizId}`,
   results: (quizId) => `results:${quizId}`,
+  // Total XP earned in the interactive summaries (one number for all of them).
+  labXp: () => 'lab:xp',
 };
 
 export function load(key, fallback = null) {

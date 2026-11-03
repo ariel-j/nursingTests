@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { checkSummaries, pageErrors } from '../scripts/summaries.mjs';
+import { checkSummaries, entryErrors, pageErrors } from '../scripts/summaries.mjs';
 
 const page = (body) => `<!doctype html><html><head>
 <script type="module" src="../js/a11y.js"></script></head><body>${body}
@@ -31,4 +31,31 @@ test('pageErrors requires the toolbar, footer links, article and print button', 
 
 test('the committed summaries pass every check', async () => {
   assert.deepEqual(await checkSummaries(), []);
+});
+
+const lab = (id, quiz) => page(`<button data-print>הדפסה</button><script type="module" src="../js/lab.js"></script>
+<article class="summary" data-system="${id}" data-quiz="${quiz}"><section class="lab-quiz no-print" data-quiz="${quiz}" hidden></section>
+<a href="../quiz.html?id=${quiz}">לבוחן</a></article>`);
+
+test('pageErrors accepts a lab page and checks its hooks', () => {
+  assert.deepEqual(pageErrors(lab('pharm-x', 'q-1'), { id: 'pharm-x', isSummary: true, quiz: 'q-1' }), []);
+  // The article must carry the quiz named by the list entry, and the list entry must exist for lab.js.
+  const wrongQuiz = pageErrors(lab('pharm-x', 'q-2'), { id: 'pharm-x', isSummary: true, quiz: 'q-1' });
+  assert.ok(wrongQuiz.some((e) => /data-quiz="q-1"/.test(e)));
+  const noEntryQuiz = pageErrors(lab('pharm-x', 'q-1'), { id: 'pharm-x', isSummary: true });
+  assert.ok(noEntryQuiz.some((e) => /needs exactly one/.test(e)));
+  const noLabJs = lab('pharm-x', 'q-1').replace('<script type="module" src="../js/lab.js"></script>', '');
+  assert.ok(pageErrors(noLabJs, { id: 'pharm-x', isSummary: true, quiz: 'q-1' }).some((e) => /lab\.js/.test(e)));
+});
+
+const catalog = { subjects: [{ name: 'S', units: ['U1', 'U2'] }] };
+const quizzes = [{ id: 'q-1', subject: 'S', unit: 'U1' }];
+
+test('entryErrors checks subject, unit and warm-up quiz against the catalog and quizzes', () => {
+  assert.deepEqual(entryErrors({ subject: 'S' }, catalog, quizzes), []);
+  assert.deepEqual(entryErrors({ subject: 'S', unit: 'U1', quiz: 'q-1' }, catalog, quizzes), []);
+  assert.ok(entryErrors({ subject: 'X' }, catalog, quizzes).some((e) => /subject/.test(e)));
+  assert.ok(entryErrors({ subject: 'S', unit: 'nope' }, catalog, quizzes).some((e) => /unit/.test(e)));
+  assert.ok(entryErrors({ subject: 'S', unit: 'U1', quiz: 'missing' }, catalog, quizzes).some((e) => /does not exist/.test(e)));
+  assert.ok(entryErrors({ subject: 'S', unit: 'U2', quiz: 'q-1' }, catalog, quizzes).some((e) => /belongs to/.test(e)));
 });
