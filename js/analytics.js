@@ -18,7 +18,7 @@ const OPT_OUT_KEY = 'no-count';
 const VISITOR_KEY = 'visitor';
 // Query parameters that pick what a page shows (a quiz, a subject, a drug deck, a video topic,
 // a unit's mixed practice); everything else is dropped. Fixed order, so the same page always counts under the same path.
-const KEPT_PARAMS = ['id', 'subject', 'drugs', 'exam', 'topic', 'group'];
+const KEPT_PARAMS = ['id', 'subject', 'drugs', 'concepts', 'exam', 'topic', 'group'];
 
 /**
  * The path a page is counted under: `base` (the site's folder, e.g. /nursingTests/) and `.html`

@@ -9,6 +9,7 @@
     "manifest": "node scripts/manifest.mjs",
     "import": "node scripts/import.mjs",
     "import-drugs": "node scripts/import-drugs.mjs",
+    "import-concepts": "node scripts/import-concepts.mjs",
     "serve": "node scripts/serve.mjs"
   },
   "engines": {

@@ -5,6 +5,7 @@ import { access, readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateQuiz } from '../js/core.js';
+import { conceptsUrl } from '../js/concepts-core.js';
 import { buildDrugQuiz, drugDeckUrl, stemsUrl, validateDrugDeck, validateStems } from '../js/drugs-core.js';
 
 export const ROOT_DIR = fileURLToPath(new URL('../', import.meta.url));
@@ -50,6 +51,8 @@ export async function checkDrugs(catalog, dir = ROOT_DIR) {
     try {
       deck = JSON.parse(await readFile(path.join(dir, file), 'utf8'));
     } catch (err) {
+      // A subject may have concept cards only (data/<id>/concepts.json, checked in concepts.mjs).
+      if (err.code === 'ENOENT' && (await access(path.join(dir, conceptsUrl(id))).then(() => true, () => false))) continue;
       errors.push(`${file}: ${err.code === 'ENOENT' ? 'missing' : `cannot parse: ${err.message}`}`);
       continue;
     }

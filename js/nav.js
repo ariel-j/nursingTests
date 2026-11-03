@@ -60,7 +60,7 @@ function link(path, text, className) {
 /** The subject the current page is about: ?subject=, the quiz in ?id=, or a summary page's article. */
 function currentSubjectId(manifest) {
   const params = new URLSearchParams(location.search);
-  const bySubject = findSubject(manifest, params.get('subject') ?? params.get('drugs'));
+  const bySubject = findSubject(manifest, params.get('subject') ?? params.get('drugs') ?? params.get('concepts'));
   if (bySubject) return bySubject.id;
   const id = params.get('id');
   if (id) return subjectOfQuiz(manifest, id)?.id ?? null;
