@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>מעבדת המשתנים · תרגול למבחנים בסיעוד</title>
+  <link rel="preload" href="../fonts/assistant-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/lab.css">
+  <script type="module" src="../js/lab.js"></script>
+  <script type="module" src="../js/a11y.js"></script>
+</head>
+<body class="lab-page">
+  <main class="page wide lab" data-lab="diuretics">
+    <nav class="top-nav"><a href="./">→ כל המעבדות</a></nav>
+    <div class="lab-bar">
+      <div class="lab-bar-row">
+        <p class="lab-stats" aria-label="התקדמות במעבדה"><span class="stat">XP <b id="xp">0</b></span> <span class="stat">רצף <b id="streak">0</b></span></p>
+      </div>
+      <nav class="chips" aria-label="ניווט במעבדה"><a href="#s1">נפרון</a><a href="#s2">תיאזיד</a><a href="#s3">לולאה</a><a href="#s4">חוסכי אשלגן</a><a href="#s5">מיוחדים</a><a href="#s6">השוואה</a><a href="#quiz">בוחן</a></nav>
+    </div>
+    <header class="hero">
+      <div class="eyebrow">פרמקולוגיה ב · יחידה 8 · משתנים</div>
+      <h1>מעבדת המשתנים</h1>
+      <p class="lede">חמש קבוצות משתנים לפי מקום הפעולה בנפרון: תיאזידים, לולאה, חוסכי אשלגן, מעכבי קרבוניק אנהידרז ואוסמוטיים. מה פועל איפה ומה קורה לאשלגן ולסידן.</p>
+      <div class="ladder"><button class="rung" aria-expanded="true"><span class="n">1</span><span class="t">סינון</span><span class="d">הנפרון מסנן נוזל ומחזיר את רובו.</span></button><div class="down">↓</div><button class="rung" aria-expanded="false"><span class="n">2</span><span class="t">חסימה</span><span class="d">משתן חוסם ספיגה בנקודה מסוימת.</span></button><div class="down">↓</div><button class="rung" aria-expanded="false"><span class="n">3</span><span class="t">הפרשה</span><span class="d">יותר נתרן ומים בשתן.</span></button><div class="down">↓</div><button class="rung" aria-expanded="false"><span class="n">4</span><span class="t">מחיר</span><span class="d">הפרעות אלקטרוליטים לפי המקטע.</span></button></div>
+    </header>
+        <section class="lab-section" id="s1"><div class="sec-tag">חלק 1 · נפרון</div><h2>איפה פועל כל משתן</h2>משתנים מעלים הפרשת נתרן ומים בנקודה מסוימת בנפרון. מקום הפעולה קובע את העוצמה ואת הפרעות האלקטרוליטים.<div class="tbl"><table><thead><tr><th>מקטע</th><th>משתן</th><th>עוצמה</th></tr></thead><tbody><tr><td>צינורית קרובה</td><td>Acetazolamide</td><td>חלשה</td></tr><tr><td>אנקול עולה עבה</td><td>Furosemide, bumetanide</td><td>חזקה מאוד</td></tr><tr><td>צינורית רחוקה</td><td>Hydrochlorothiazide</td><td>בינונית</td></tr><tr><td>צינורית איסוף</td><td>Spironolactone, amiloride</td><td>חלשה, חוסכים אשלגן</td></tr><tr><td>לאורך הנפרון</td><td>Mannitol</td><td>אוסמוטי</td></tr></tbody></table></div><div class="tip"><b>עיקרון:</b> ככל שהמשתן פועל מוקדם יותר בנפרון יש יותר נתרן שמגיע למקטעים הבאים, והם מפצים בחלקו. הלולאה חזקה כי היא פועלת במקום שבו נספג הרבה נתרן.</div></section>
+    <section class="lab-section" id="s2"><div class="sec-tag">חלק 2 · תיאזידים</div><h2>משתני תיאזיד</h2><div class="chain"><span>חסימת נשא נתרן-כלור</span><i>↓</i><span>פחות ספיגת נתרן וכלור בצינורית הרחוקה</span><i>↓</i><span>יותר נתרן ומים בשתן</span><i>↓</i><span>ירידה בנפח הדם ובלחץ</span></div><div class="card tabbox"><div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-i="0">מה לדעת</button><button role="tab" aria-selected="false" data-i="1">מעקב</button></div><div class="drug" data-i="0"><div class="badges"><div class="bdg"><span class="b-ind">מיועד ל</span><span>יתר לחץ דם ובצקות בעוצמה בינונית</span></div><div class="bdg"><span class="b-side">עלול לגרום</span><span>היפוקלמיה, היפונתרמיה, היפרגליקמיה, היפראוריצמיה</span></div><div class="bdg"><span class="b-care">חשוב לדעת</span><span>מפחיתים הפרשת סידן בשתן</span></div><div class="bdg"><span class="b-no">אסור ב</span><span>גאוט פעיל וזהירות בסוכרת</span></div></div></div><div class="drug" data-i="1" hidden><div class="badges"><div class="bdg"><span class="b-care">חשוב לדעת</span><span>בדיקות אלקטרוליטים בדם</span></div><div class="bdg"><span class="b-care">חשוב לדעת</span><span>עידוד אכילה עשירה באשלגן כשיש צורך</span></div><div class="bdg"><span class="b-care">חשוב לדעת</span><span>מתן בבוקר כדי לא להפריע לשינה</span></div></div></div></div><div class="trap"><strong>מלכודת</strong>תיאזיד מעלה סידן בדם ופחות מפריש אותו. לולאה מפריש סידן. זה ההבדל השימושי להשוואה.</div></section>
+    <section class="lab-section" id="s3"><div class="sec-tag">חלק 3 · לולאה</div><h2>משתני לולאה</h2><div class="chain"><span>חסימת נשא <span class="en">Na-K-2Cl</span></span><i>↓</i><span>באנקול העולה העבה של הנלה</span><i>↓</i><span>ספיגה מופחתת של נתרן, כלור ואשלגן</span><i>↓</i><span>משתן חזק מאוד</span></div><div class="card tabbox"><div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-i="0">Furosemide</button><button role="tab" aria-selected="false" data-i="1">אוטוטוקסיות</button></div><div class="drug" data-i="0"><div class="badges"><div class="bdg"><span class="b-ind">מיועד ל</span><span>בצקת ריאות, אי ספיקת לב ועודף נוזלים</span></div><div class="bdg"><span class="b-side">עלול לגרום</span><span>היפוקלמיה, התייבשות, היפוטנסיה, היפוקלצמיה, אוטוטוקסיות, היפראוריצמיה</span></div><div class="bdg"><span class="b-care">חשוב לדעת</span><span>פועל גם דרך הווריד ובמהירות</span></div><div class="bdg"><span class="b-care">חשוב לדעת</span><span>שוקלים מטופל ומנטרים אשלגן</span></div></div></div><div class="drug" data-i="1" hidden><div class="badges"><div class="bdg"><span class="b-side">עלול לגרום</span><span>טינטון ופגיעת שמיעה בעיקר במינון גבוה מהיר</span></div><div class="bdg"><span class="b-care">חשוב לדעת</span><span>זהירות בשילוב עם תרופות אחרות הפוגעות בשמיעה</span></div></div></div></div></section>
+    <section class="lab-section" id="s4"><div class="sec-tag">חלק 4 · אשלגן</div><h2>משתנים חוסכי אשלגן</h2><div class="card tabbox"><div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-i="0">Spironolactone</button><button role="tab" aria-selected="false" data-i="1">Eplerenone</button><button role="tab" aria-selected="false" data-i="2">Amiloride, triamterene</button></div><div class="drug" data-i="0"><div class="badges"><div class="bdg"><span class="b-care">חשוב לדעת</span><span>נוגד אלדוסטרון בצינורית האיסוף</span></div><div class="bdg"><span class="b-ind">מיועד ל</span><span>אי ספיקת לב, אלדוסטרוניזם, בצקת עם איבוד אשלגן</span></div><div class="bdg"><span class="b-side">עלול לגרום</span><span>היפרקלמיה, גינקומסטיה בגברים והפרעות מחזור</span></div></div></div><div class="drug" data-i="1" hidden><div class="badges"><div class="bdg"><span class="b-care">חשוב לדעת</span><span>נוגד אלדוסטרון סלקטיבי יותר</span></div><div class="bdg"><span class="b-side">עלול לגרום</span><span>פחות גינקומסטיה</span></div></div></div><div class="drug" data-i="2" hidden><div class="badges"><div class="bdg"><span class="b-care">חשוב לדעת</span><span>חוסמים תעלות נתרן בצינורית האיסוף</span></div><div class="bdg"><span class="b-side">עלול לגרום</span><span>היפרקלמיה</span></div></div></div></div><div class="trap"><strong>מלכודת</strong>אין לשלב חוסך אשלגן עם ACE, ARB או תוסף אשלגן בלי מעקב. הסיכון הוא היפרקלמיה מסכנת חיים.</div></section>
+    <section class="lab-section" id="s5"><div class="sec-tag">חלק 5 · מיוחדים</div><h2>קרבוניק אנהידרז ואוסמוטיים</h2><div class="card tabbox"><div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-i="0">Acetazolamide</button><button role="tab" aria-selected="false" data-i="1">Mannitol</button></div><div class="drug" data-i="0"><div class="badges"><div class="bdg"><span class="b-care">חשוב לדעת</span><span>מעכב קרבוניק אנהידרז בצינורית הקרובה</span></div><div class="bdg"><span class="b-ind">מיועד ל</span><span>גלאוקומה ומחלת הרים</span></div><div class="bdg"><span class="b-side">עלול לגרום</span><span>חמצת מטבולית והיפוקלמיה</span></div></div></div><div class="drug" data-i="1" hidden><div class="badges"><div class="bdg"><span class="b-care">חשוב לדעת</span><span>משתן אוסמוטי הניתן תוך ורידי</span></div><div class="bdg"><span class="b-ind">מיועד ל</span><span>הורדת לחץ תוך גולגולתי ולחץ תוך עיני</span></div><div class="bdg"><span class="b-no">אסור ב</span><span>אי ספיקת לב ובצקת ריאות כי הנפח התוך כלי עולה</span></div></div></div></div></section>
+    <section class="lab-section" id="s6"><div class="sec-tag">חלק 6 · השוואה</div><h2>השוואה בין המשתנים</h2><div class="tbl"><table><thead><tr><th>משתן</th><th>אשלגן בדם</th><th>סידן</th></tr></thead><tbody><tr><td>תיאזיד</td><td>יורד</td><td>עולה</td></tr><tr><td>לולאה</td><td>יורד</td><td>יורד</td></tr><tr><td>חוסך אשלגן</td><td>עולה</td><td>ללא שינוי עיקרי</td></tr><tr><td>Acetazolamide</td><td>יורד</td><td>ללא שינוי עיקרי</td></tr></tbody></table></div><div class="card sorter" data-s='{&quot;labels&quot;: [&quot;תיאזיד&quot;, &quot;לולאה&quot;, &quot;חוסך אשלגן&quot;, &quot;אוסמוטי&quot;], &quot;items&quot;: [[&quot;הכי חזק ופועל באנקול העולה&quot;, 1, &quot;Furosemide.&quot;], [&quot;גינקומסטיה בגברים&quot;, 2, &quot;Spironolactone.&quot;], [&quot;מעלה סידן בדם&quot;, 0, &quot;תיאזיד.&quot;], [&quot;הורדת לחץ תוך גולגולתי&quot;, 3, &quot;Mannitol.&quot;], [&quot;אוטוטוקסיות&quot;, 1, &quot;לולאה.&quot;], [&quot;היפרקלמיה&quot;, 2, &quot;חוסכי אשלגן.&quot;]]}'><div class="sort-q"></div><div class="sort-btns"></div><div class="verdict" hidden></div><div class="muted small sort-prog"></div></div></section>
+    <section class="lab-section" id="quiz">
+      <div class="sec-tag">בוחן</div>
+      <h2>עכשיו לבחון את עצמכם</h2>
+      <p>הבוחן המלא של היחידה: שאלה שטעיתם בה חוזרת עד שעונים נכון פעמיים ברצף, וההתקדמות נשמרת.</p>
+      <p><a class="button primary" href="../quiz.html?id=diuretics-1">לבוחן של המשתנים</a></p>
+    </section>
+  </main>
+
+  <footer class="site-footer page">
+    <nav>
+      <a href="../accessibility.html">הצהרת נגישות</a>
+      <a href="../privacy.html">מדיניות פרטיות</a>
+    </nav>
+    <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+  </footer>
+</body>
+</html>

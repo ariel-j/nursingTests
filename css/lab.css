@@ -1,0 +1,118 @@
+/* Interactive labs (labs/*.html). Loaded after style.css and reuses its tokens, so dark mode and
+   high contrast come along. Each lab picks an accent by data-lab. */
+
+.lab[data-lab="ischemia"]     { --a: #96263a; --a-d: #ff8496; }
+.lab[data-lab="hypertension"] { --a: #126e82; --a-d: #5fc4d9; }
+.lab[data-lab="diuretics"]    { --a: #2a5fa8; --a-d: #8db8f0; }
+
+.lab {
+  --accent: var(--a);
+  --sunk: color-mix(in srgb, var(--ink) 7%, var(--card));
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, var(--card));
+  --info: #2c5f7c;
+  --info-soft: color-mix(in srgb, var(--info) 14%, var(--card));
+  --warn: #8a5600;
+  --warn-soft: color-mix(in srgb, var(--warn) 14%, var(--card));
+}
+@media (prefers-color-scheme: dark) {
+  .lab { --accent: var(--a-d); --info: #82bfe0; --warn: #f0b956; }
+}
+:root[data-contrast="high"] .lab { --accent: #000; --info: #000; --warn: #000; --accent-soft: #fff; --info-soft: #fff; --warn-soft: #fff; --sunk: #fff; }
+
+.lab-page { background-image: none; }
+.page.wide { max-inline-size: 760px; }
+.lab { font-size: 1.0625rem; overflow-wrap: break-word; }
+.lab h1, .lab h2, .lab h3 { font-family: var(--serif); line-height: 1.25; text-wrap: balance; margin: 0; }
+.lab h2 { font-size: clamp(1.45rem, 4.4vw, 1.8rem); }
+.lab .en { direction: ltr; unicode-bidi: isolate; }
+
+/* ---------- sticky bar ---------- */
+
+.lab-bar {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 5;
+  margin-block-start: 0.5rem;
+  padding-block: 0.5rem;
+  background: var(--paper);
+  border-block-end: 1px solid var(--line);
+}
+.lab-stats { display: flex; gap: 0.5rem; margin: 0; font-size: 0.875rem; }
+.stat { white-space: nowrap; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 0.1rem 0.7rem; }
+.stat b { color: var(--accent); }
+.chips { display: flex; gap: 0.4rem; overflow-x: auto; padding-block-start: 0.5rem; scrollbar-width: none; }
+.chips a { flex: none; text-decoration: none; color: var(--ink); font-size: 0.9rem; font-weight: 600; padding: 0.2rem 0.75rem; border-radius: 999px; background: var(--sunk); }
+.chips a:hover { background: var(--accent-soft); }
+
+/* ---------- hero and ladder ---------- */
+
+.hero { display: grid; gap: 0.9rem; padding-block: 1.5rem 0.5rem; }
+.eyebrow, .sec-tag { color: var(--accent); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.04em; }
+.hero h1 { font-size: clamp(1.9rem, 6vw, 2.6rem); }
+.ladder { display: grid; gap: 0.4rem; }
+.rung {
+  display: grid; grid-template-columns: 2rem 1fr; gap: 0.6rem; align-items: start; text-align: start;
+  background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 0.6rem 0.75rem; font: inherit; cursor: pointer;
+}
+.rung .n { inline-size: 1.9rem; block-size: 1.9rem; border-radius: 50%; display: grid; place-items: center; background: var(--sunk); font-weight: 700; }
+.rung .t { font-weight: 700; }
+.rung .d { grid-column: 2; display: none; color: var(--muted); font-size: 0.95rem; }
+.rung[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent); }
+.rung[aria-expanded="true"] .n { background: var(--accent); color: var(--card); }
+.rung[aria-expanded="true"] .d { display: block; color: var(--ink); }
+.down { text-align: center; color: var(--accent); line-height: 1; }
+
+/* ---------- sections ---------- */
+
+.lab-section { display: grid; gap: 1rem; padding-block-start: 2.5rem; scroll-margin-block-start: 6rem; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; display: grid; gap: 0.7rem; min-inline-size: 0; }
+.tip, .trap { border-radius: 10px; padding: 0.7rem 0.9rem; font-size: 1rem; }
+.tip { background: var(--info-soft); }
+.tip b { color: var(--info); }
+.trap { background: var(--warn-soft); }
+.trap strong { color: var(--warn); font-size: 0.8125rem; display: block; margin-block-end: 0.1rem; }
+.chain { display: grid; gap: 0.25rem; justify-items: center; text-align: center; }
+.chain span { background: var(--sunk); border-radius: 8px; padding: 0.35rem 0.8rem; font-weight: 600; max-inline-size: 100%; }
+.chain i { font-style: normal; color: var(--accent); }
+ul.clean { margin: 0; padding-inline-start: 1.25rem; display: grid; gap: 0.25rem; }
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
+.tbl table { border-collapse: collapse; inline-size: 100%; font-size: 0.97rem; }
+.tbl th, .tbl td { padding: 0.5rem 0.75rem; text-align: start; border-block-end: 1px solid var(--line); vertical-align: top; }
+.tbl th { background: var(--sunk); font-size: 0.8125rem; }
+.tbl tr:last-child td { border-block-end: 0; }
+
+/* ---------- tabs and drug badges ---------- */
+
+.tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tabs button { border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px; padding: 0.3rem 0.9rem; font: inherit; font-weight: 700; font-size: 0.95rem; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.drug { display: grid; gap: 0.6rem; }
+.drug[hidden] { display: none; }
+.badges { display: grid; gap: 0.4rem; }
+.bdg { display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.6rem; align-items: start; font-size: 0.97rem; }
+.bdg span:first-child { font-size: 0.75rem; font-weight: 700; border-radius: 999px; padding: 0.1rem 0.5rem; text-align: center; }
+.b-ind { background: var(--ok-bg); color: var(--ok); }
+.b-side { background: var(--warn-soft); color: var(--warn); }
+.b-no { background: var(--bad-bg); color: var(--bad); }
+.b-care { background: var(--info-soft); color: var(--info); }
+:root[data-contrast="high"] .bdg span:first-child { border: 1px solid #000; }
+
+/* ---------- sorter ---------- */
+
+.btn { border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 8px; padding: 0.4rem 0.9rem; font: inherit; font-weight: 700; cursor: pointer; }
+.btn.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+.sort-q { font-size: 1.15rem; font-weight: 700; }
+.sort-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.sort-btns .btn { flex: 1; min-inline-size: 7.5rem; }
+.lab .verdict { border-radius: 10px; padding: 0.7rem 0.9rem; font-weight: 600; background: var(--sunk); }
+.verdict[hidden] { display: none; }
+.v-good { background: var(--ok-bg); color: var(--ok); }
+.v-bad { background: var(--bad-bg); color: var(--bad); }
+:root[data-contrast="high"] .verdict { border: 2px solid #000; color: #000; }
+.small { font-size: 0.875rem; }
+
+/* ---------- hub ---------- */
+
+.lab-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--gap); }
+.lab-card { border-inline-start-color: var(--lab-accent, var(--trace)); }

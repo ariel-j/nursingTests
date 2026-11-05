@@ -108,6 +108,16 @@ To add a summary:
 3. Give it accent colors in `css/summary.css` (a `[data-system="<id>"]` rule with light and dark values).
 4. `npm run validate` checks it: listed, self-hosted only, no inline styles or handlers, toolbar and footer present.
 
+## Interactive labs (מעבדות)
+
+`labs/` is a hub of interactive study pages, one per unit: a step ladder, drug tabs and a sorting game
+that awards XP (kept per lab in localStorage). The content is static HTML in `labs/<id>.html`;
+`js/lab.js` wires the behaviour and `css/lab.css` reuses the site tokens. Each lab ends with a link to
+that unit's quiz.
+
+To add a lab: save `labs/<id>.html` (copy an existing one), add `{ id, title, blurb }` to `js/lab-list.js`,
+and an accent rule `.lab[data-lab="<id>"]` to `css/lab.css`. `npm run validate` checks it.
+
 ## Development
 
 ```sh
@@ -124,6 +134,7 @@ npm run serve     # http://localhost:8000 (fetch() does not work over file://)
 | `js/storage.js` | guarded `localStorage` wrapper (prefix `anatomy-quizzes:v1:`) |
 | `js/index.js`, `js/quiz.js` | page UI |
 | `summaries/`, `css/summary.css` | short summaries, the hub and the combined print page |
+| `labs/`, `css/lab.css`, `js/lab.js`, `js/lab-list.js` | interactive labs and their hub (`js/labs.js`) |
 | `js/summary-list.js` | the list of summaries (no DOM); `js/summaries.js`, `js/summary.js`, `js/summaries-all.js` drive the pages |
 | `scripts/` | manifest, validate, and a tiny static dev server |
 | `fonts/` | self-hosted Assistant and Frank Ruhl Libre (SIL OFL, licenses included) |
