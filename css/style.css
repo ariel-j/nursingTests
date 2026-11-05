@@ -514,3 +514,22 @@ kbd {
 :root[data-contrast="high"] .a11y-btn { border-width: 2px; }
 
 [hidden] { display: none !important; }
+
+/* ---------- admin side tab (only in a browser where the admin was unlocked) ---------- */
+
+.admin-tab {
+  position: fixed;
+  inset-block-start: 40%;
+  inset-inline-end: 0;
+  z-index: 40;
+  background: var(--ink);
+  color: var(--paper);
+  border-start-start-radius: var(--radius);
+  border-end-start-radius: var(--radius);
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+/* The vertical text is on an inner span: a writing-mode on the positioned element would swap its logical axes. */
+.admin-tab span { display: block; padding: 0.55rem 0.5rem; writing-mode: vertical-rl; }
+.admin-tab:hover, .admin-tab:focus-visible { background: var(--trace); color: #fff; }
+@media print { .admin-tab { display: none; } }

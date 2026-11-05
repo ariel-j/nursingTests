@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>כותרת הסיכום — סיכום</title>
+  <link rel="preload" href="../fonts/assistant-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/summary.css">
+  <script type="module" src="../js/summary.js"></script>
+  <script type="module" src="../js/a11y.js"></script>
+</head>
+<body class="summary-page">
+  <main class="page wide">
+    <nav class="top-nav no-print">
+      <a href="./">→ כל הסיכומים</a>
+      <button type="button" class="secondary" data-print>הדפסה / שמירה כ‑PDF</button>
+    </nav>
+
+<!-- data-system חייב להיות זהה למזהה הסיכום; הפאנל מתקן אותו אוטומטית. -->
+<article class="summary" data-system="example-summary">
+  <header>
+    <p class="kicker">שם המקצוע · סיכום נושא</p>
+    <h1>כותרת הסיכום</h1>
+    <p class="lede">משפט פתיחה קצר. אפשר להדגיש <b>מילים חשובות</b>.</p>
+  </header>
+
+  <section>
+    <h2>1 · כותרת פרק</h2>
+    <p class="sec-note">הערה קצרה לפרק.</p>
+
+    <dl class="def">
+      <dt>מושג</dt>
+      <dd>הגדרה קצרה של המושג, עם מונח באנגלית: <span class="en">ADH</span>.</dd>
+    </dl>
+
+    <h3>גורם ← תוצאה</h3>
+    <div class="rel">
+      <div class="rel-cause"><b>גורם</b></div>
+      <span class="rel-arrow">←</span>
+      <div class="rel-effect">תוצאה <span class="exam">נשאל</span></div>
+    </div>
+  </section>
+
+  <p class="source">סיכום לימודי אישי. נועד לחזרה — אין בו אבחון או ייעוץ רפואי.</p>
+</article>
+  </main>
+
+  <footer class="site-footer page wide">
+    <nav>
+      <a href="../accessibility.html">הצהרת נגישות</a>
+      <a href="../privacy.html">מדיניות פרטיות</a>
+    </nav>
+    <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+  </footer>
+</body>
+</html>

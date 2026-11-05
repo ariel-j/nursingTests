@@ -1,5 +1,5 @@
 // Summaries hub (summaries/index.html): one card per summary.
-import { SUMMARIES, summaryFile } from './summary-list.js';
+import { loadSummaries, summaryFile } from './summary-list.js';
 
 function el(tag, className, text) {
   const node = document.createElement(tag);
@@ -18,4 +18,8 @@ function renderCard(summary) {
   return item;
 }
 
-document.getElementById('summary-list').replaceChildren(...SUMMARIES.map(renderCard));
+const listEl = document.getElementById('summary-list');
+loadSummaries().then(
+  (summaries) => listEl.replaceChildren(...summaries.map(renderCard)),
+  () => listEl.replaceChildren(el('li', 'muted', 'לא הצלחנו לטעון את רשימת הסיכומים.')),
+);

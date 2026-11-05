@@ -3,6 +3,7 @@
 // stopped motion. Choices persist per browser. The underlying site is already keyboard- and
 // screen-reader-friendly; this is an extra convenience, not a replacement for that.
 import { load, save } from './storage.js';
+import './admin-link.js';
 
 const KEY = 'a11y';
 const TEXT_STEPS = ['normal', 'large', 'xlarge'];

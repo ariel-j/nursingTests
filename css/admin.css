@@ -1,0 +1,37 @@
+/* Admin panel (admin/index.html). Reuses the tokens of style.css; logical properties only. */
+
+.admin-page .page.wide { max-inline-size: 960px; }
+.admin-tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-block: 1rem; padding: 0; list-style: none; }
+.admin-tabs button[aria-current="page"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+.admin-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem 1.1rem; margin-block-end: 1rem; }
+.admin-card h2, .admin-card h3 { margin-block-start: 0; }
+.admin-grid { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+
+.admin-field { display: flex; flex-direction: column; gap: 0.25rem; margin-block-end: 0.75rem; }
+.admin-field label { font-weight: 600; }
+.admin-field input[type="text"], .admin-field input[type="password"], .admin-field input[type="number"],
+.admin-field select, .admin-field textarea {
+  font: inherit; color: inherit; background: var(--paper); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 0.5rem 0.6rem; min-inline-size: 0;
+}
+.admin-field textarea { min-block-size: 6rem; }
+.admin-field .hint { color: var(--muted); font-size: 0.9rem; }
+.admin-field input:focus-visible, .admin-field select:focus-visible, .admin-field textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
+.admin-check { display: flex; gap: 0.5rem; align-items: flex-start; margin-block-end: 0.75rem; }
+
+.admin-row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-block-end: 0.5rem; }
+.admin-row > input { flex: 1 1 10rem; font: inherit; padding: 0.4rem 0.5rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); color: inherit; }
+.admin-units { margin-inline-start: 1.25rem; }
+
+.admin-errors { background: var(--bad-bg); color: var(--bad); border-radius: var(--radius); padding: 0.6rem 0.9rem; margin-block: 0.75rem; }
+.admin-errors ul { margin: 0; padding-inline-start: 1.2rem; }
+.admin-ok { background: var(--ok-bg); color: var(--ok); border-radius: var(--radius); padding: 0.6rem 0.9rem; margin-block: 0.75rem; }
+.admin-files { margin: 0.5rem 0; padding-inline-start: 1.2rem; }
+.admin-files code { direction: ltr; unicode-bidi: isolate; }
+.admin-pre { direction: ltr; text-align: left; overflow: auto; max-block-size: 22rem; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.75rem; font-size: 0.85rem; white-space: pre; }
+.admin-danger { background: var(--bad); color: #fff; border-color: var(--bad); }
+.admin-meter { block-size: 0.4rem; background: var(--line); border-radius: 2px; overflow: hidden; }
+.admin-meter > span { display: block; block-size: 100%; background: var(--bad); }
+.admin-meter[data-level="ok"] > span { background: var(--ok); }
+.admin-note { color: var(--muted); font-size: 0.95rem; }

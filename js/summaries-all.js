@@ -2,7 +2,7 @@
 // Each summary page stays the only copy of its content: this fetches the pages and moves their
 // <article> in with the DOM APIs (DOMParser does not run their scripts). Opened with #print, it
 // opens the print dialog once everything, fonts included, has loaded.
-import { SUMMARIES, summaryFile } from './summary-list.js';
+import { loadSummaries, summaryFile } from './summary-list.js';
 
 const statusEl = document.getElementById('status');
 const listEl = document.getElementById('all-summaries');
@@ -21,7 +21,7 @@ async function main() {
   printBtn.disabled = true;
   let articles;
   try {
-    articles = await Promise.all(SUMMARIES.map((s) => loadArticle(s.id)));
+    articles = await Promise.all((await loadSummaries()).map((s) => loadArticle(s.id)));
   } catch (err) {
     console.error(err);
     statusEl.textContent = location.protocol === 'file:'

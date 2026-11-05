@@ -104,7 +104,7 @@ To add a summary:
 
 1. Save it as `summaries/<id>.html`, copying the structure of an existing one: its content goes in
    `<article class="summary" data-system="<id>">` and uses the same classes (`rel`, `def`, `call`, `flags`, `exam`).
-2. Add `{ id, title, blurb }` to `js/summary-list.js` (this sets the order on the hub and in the combined PDF).
+2. Add `{ id, title, blurb }` to `summaries/list.json` (this sets the order on the hub and in the combined PDF).
 3. Give it accent colors in `css/summary.css` (a `[data-system="<id>"]` rule with light and dark values).
 4. `npm run validate` checks it: listed, self-hosted only, no inline styles or handlers, toolbar and footer present.
 
@@ -124,7 +124,19 @@ npm run serve     # http://localhost:8000 (fetch() does not work over file://)
 | `js/storage.js` | guarded `localStorage` wrapper (prefix `anatomy-quizzes:v1:`) |
 | `js/index.js`, `js/quiz.js` | page UI |
 | `summaries/`, `css/summary.css` | short summaries, the hub and the combined print page |
-| `js/summary-list.js` | the list of summaries (no DOM); `js/summaries.js`, `js/summary.js`, `js/summaries-all.js` drive the pages |
+| `summaries/list.json` | the list of summaries; `js/summary-list.js` validates/loads it, `js/summaries.js`, `js/summary.js`, `js/summaries-all.js` drive the pages |
+| `admin/`, `js/admin/` | the admin panel (see below) |
+| `templates/` | ready-to-upload example files for every format |
 | `scripts/` | manifest, validate, and a tiny static dev server |
 | `fonts/` | self-hosted Assistant and Frank Ruhl Libre (SIL OFL, licenses included) |
 | `test/` | unit tests. `test/fixtures/` holds placeholder content only |
+
+## Admin panel (`/admin/`)
+
+Adds subjects/units, quizzes and summaries from the browser and commits them to `main` through the GitHub API (one atomic commit per action, with a preview first). The panel is public but useless without a token.
+
+1. At GitHub: Settings > Developer settings > Fine-grained tokens. Repository access: only this repo. Permission: Contents, Read and write. Expiry: 90 days at most.
+2. Open `/admin/`, paste the token and choose a password (12+ characters). The token is encrypted with the password (PBKDF2 + AES-GCM) and stored only in that browser; it is never sent anywhere but `api.github.com`. After the first unlock a side "ניהול" tab appears on that browser.
+3. Use the "תבניות" tab for ready-to-upload example files (quiz in authoring or site format, summary page, subjects).
+
+The password protects a lost or shared device, not a compromised one; the real gate is the token (revoke it at GitHub if it leaks). Every upload is checked with the same validators as `npm run validate`, summary HTML is held to a strict allowlist, and `.github/workflows/check.yml` re-checks each push. Planned next: flashcards, then videos.

@@ -2,8 +2,7 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { MANIFEST_FILE, QUIZ_DIR, buildManifest, loadAll, serializeManifest } from './quizzes.mjs';
-import { checkSummaries } from './summaries.mjs';
-import { SUMMARIES } from '../js/summary-list.js';
+import { checkSummaries, loadSummaryList } from './summaries.mjs';
 
 let { failures, catalog, entries } = await loadAll();
 
@@ -30,4 +29,4 @@ if (failures > 0) {
   process.exit(1);
 }
 const questions = entries.reduce((n, e) => n + e.quiz.questions.length, 0);
-console.log(`OK: ${entries.length} quiz(zes), ${questions} question(s), manifest up to date, ${SUMMARIES.length} summaries.`);
+console.log(`OK: ${entries.length} quiz(zes), ${questions} question(s), manifest up to date, ${(await loadSummaryList()).length} summaries.`);
