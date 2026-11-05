@@ -36,6 +36,48 @@
         }
       ],
       "quizzes": []
+    },
+    {
+      "name": "פרמקולוגיה ב",
+      "units": [
+        {
+          "name": "יתר לחץ דם: ACE, ARB, אלפא, בטא ו-CCB",
+          "quizzes": [
+            {
+              "id": "hypertension-1",
+              "title": "מבחן 1",
+              "description": "שאלות על תרופות ליתר לחץ דם: מנגנונים, תופעות לוואי והתוויות נגד.",
+              "questionCount": 106,
+              "topicCount": 10
+            }
+          ]
+        },
+        {
+          "name": "משתנים",
+          "quizzes": [
+            {
+              "id": "diuretics-1",
+              "title": "מבחן 1",
+              "description": "שאלות על משתני תיאזיד, לולאה, חוסכי אשלגן, קרבוניק אנהידרז ואוסמוטיים.",
+              "questionCount": 65,
+              "topicCount": 7
+            }
+          ]
+        },
+        {
+          "name": "איסכמיה, אי ספיקת לב והפרעות קצב",
+          "quizzes": [
+            {
+              "id": "ischemia-hf-arrhythmia-1",
+              "title": "מבחן 1",
+              "description": "שאלות על תעוקת חזה, ACS, אי ספיקת לב, תרופות יונוטרופיות ותרופות נגד הפרעות קצב.",
+              "questionCount": 134,
+              "topicCount": 13
+            }
+          ]
+        }
+      ],
+      "quizzes": []
     }
   ]
 }
