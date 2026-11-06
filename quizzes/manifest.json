@@ -547,15 +547,39 @@
         },
         {
           "name": "פטריות, טפילים ותולעים",
-          "quizzes": []
+          "quizzes": [
+            {
+              "id": "fungi-1",
+              "title": "מבחן 1",
+              "description": "תרופות נגד פטריות",
+              "questionCount": 64,
+              "topicCount": 7
+            }
+          ]
         },
         {
           "name": "סיעוד: דרכי מתן לא-פרנטרליות",
-          "quizzes": []
+          "quizzes": [
+            {
+              "id": "routes-1",
+              "title": "מבחן 1",
+              "description": "דרכי מתן",
+              "questionCount": 55,
+              "topicCount": 9
+            }
+          ]
         },
         {
           "name": "סיעוד: הזרקות ומתן דרך הווריד",
-          "quizzes": []
+          "quizzes": [
+            {
+              "id": "injections-1",
+              "title": "מבחן 1",
+              "description": "הזרקות ועירוי",
+              "questionCount": 57,
+              "topicCount": 9
+            }
+          ]
         },
         {
           "name": "סיעוד: חוזרים והיבטים חוקיים",
@@ -604,6 +628,21 @@
           "title": "מעבדת השחפת והנגיפים",
           "href": "tools/tb-viruses.html",
           "description": "ארבע תרופות שחפת, תרופות נגד שפעת, RSV והרפס, והאסטרטגיה נגד HIV."
+        },
+        {
+          "title": "מעבדת הפטריות",
+          "href": "tools/fungi.html",
+          "description": "פוליאנים, אזולים, אקינוקנדינים ותרופות נוספות: מטרה, תופעות לוואי והתאמת תרופה לזיהום."
+        },
+        {
+          "title": "מעבדת דרכי המתן",
+          "href": "tools/routes.html",
+          "description": "פומי, תת לשוני, נשימה, נרתיק ורקטום, עור, אף, עין ואוזן: הכנה, טכניקה ומלכודות בטיחות."
+        },
+        {
+          "title": "מעבדת ההזרקות והעירוי",
+          "href": "tools/injections.html",
+          "description": "ארבעה סוגי הזרקה, אתרים נכונים, מחטים וסיבוכי עירוי."
         }
       ]
     },
