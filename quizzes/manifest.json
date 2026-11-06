@@ -36,6 +36,48 @@
         }
       ],
       "quizzes": []
+    },
+    {
+      "name": "פרמקולוגיה ב",
+      "units": [
+        {
+          "name": "פטריות",
+          "quizzes": [
+            {
+              "id": "fungi-1",
+              "title": "מבחן 1",
+              "description": "תרופות נגד פטריות",
+              "questionCount": 64,
+              "topicCount": 7
+            }
+          ]
+        },
+        {
+          "name": "דרכי מתן שאינן זריקה",
+          "quizzes": [
+            {
+              "id": "routes-1",
+              "title": "מבחן 1",
+              "description": "דרכי מתן",
+              "questionCount": 55,
+              "topicCount": 9
+            }
+          ]
+        },
+        {
+          "name": "הזרקות ועירוי",
+          "quizzes": [
+            {
+              "id": "injections-1",
+              "title": "מבחן 1",
+              "description": "הזרקות ועירוי",
+              "questionCount": 57,
+              "topicCount": 9
+            }
+          ]
+        }
+      ],
+      "quizzes": []
     }
   ]
 }
