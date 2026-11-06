@@ -1,0 +1,123 @@
+/* Interactive labs (labs/*.html). Loaded after style.css and reuses its tokens. Each lab picks an
+   accent by data-lab. Layout uses logical properties only. */
+
+[data-lab="fungi"]      { --a: #5f6b1f; --a-soft: #eceedc; --a-ink: #474f17; --a-d: #bccb6c; --a-soft-d: #2a2e14; --a-ink-d: #d8e39e; }
+[data-lab="routes"]     { --a: #126e82; --a-soft: #dcedf0; --a-ink: #0c4e5c; --a-d: #5fc4d9; --a-soft-d: #12333a; --a-ink-d: #a2ddea; }
+[data-lab="injections"] { --a: #a86a1e; --a-soft: #f4e9d6; --a-ink: #7e4e12; --a-d: #e8aa5c; --a-soft-d: #3a2a14; --a-ink-d: #f3cb93; }
+
+.lab {
+  --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink);
+  --warn: #8a5a00; --warn-bg: #fbefd6;
+  --sunk: #f3e9e6;
+}
+@media (prefers-color-scheme: dark) {
+  .lab {
+    --accent: var(--a-d); --accent-soft: var(--a-soft-d); --accent-ink: var(--a-ink-d);
+    --warn: #f0b956; --warn-bg: #3b2e14;
+    --sunk: #2a2024;
+  }
+}
+:root[data-contrast="high"] .lab { --accent: #000; --accent-soft: #fff; --accent-ink: #000; --warn: #000; --warn-bg: #fff; --sunk: #fff; }
+
+.lab-page { background-image: none; }
+.lab { font-size: 1.0625rem; line-height: 1.7; overflow-wrap: break-word; }
+.lab p { margin: 0; }
+.lab .small { font-size: 0.875rem; }
+.lab .en, .lab .num { direction: ltr; unicode-bidi: isolate; }
+.lab h1 { font-size: clamp(1.9rem, 6vw, 2.9rem); margin-block: 0; }
+.lab h2 { font-size: 1.5rem; margin: 0; }
+.lab section { display: grid; gap: 1rem; margin-block-start: 2.5rem; scroll-margin-block-start: 6rem; }
+.lab button { font: inherit; color: inherit; cursor: pointer; }
+.lab button:focus-visible, .lab a:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+/* sticky bar: XP, streak, section chips */
+.lab-bar { position: sticky; inset-block-start: 0; z-index: 5; background: var(--paper); border-block-end: 1px solid var(--line); padding-block: 0.5rem; }
+.lab-stats { display: flex; gap: 0.5rem; font-size: 0.8125rem; }
+.lab-stat { background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 0.1rem 0.65rem; white-space: nowrap; }
+.lab-stat b { color: var(--accent-ink); }
+.chips { display: flex; gap: 0.4rem; overflow-x: auto; padding-block-start: 0.5rem; scrollbar-width: none; }
+.chips a { flex: none; text-decoration: none; color: var(--ink); font-size: 0.875rem; font-weight: 600; padding: 0.1rem 0.75rem; border-radius: 999px; background: var(--sunk); }
+.chips a:hover { background: var(--accent-soft); }
+
+/* hero and step ladder */
+.hero { display: grid; gap: 0.9rem; padding-block: 1.5rem 0.5rem; }
+.eyebrow { color: var(--accent-ink); font-weight: 700; font-size: 0.8125rem; letter-spacing: 0.04em; }
+.ladder { display: grid; gap: 0.35rem; }
+.rung { display: grid; grid-template-columns: 2rem 1fr; gap: 0.6rem; align-items: start; text-align: start; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 0.6rem 0.8rem; }
+.rung .n { inline-size: 2rem; block-size: 2rem; border-radius: 50%; display: grid; place-items: center; background: var(--sunk); color: var(--muted); font-weight: 700; }
+.rung .t { font-weight: 700; }
+.rung .d { grid-column: 2; font-size: 0.9375rem; color: var(--muted); display: none; }
+.rung[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent); }
+.rung[aria-expanded="true"] .n { background: var(--accent); color: var(--paper); }
+.rung[aria-expanded="true"] .d { display: block; color: var(--ink); }
+.down { text-align: center; color: var(--accent); line-height: 1; }
+
+.sec-tag { color: var(--accent-ink); font-weight: 700; font-size: 0.75rem; letter-spacing: 0.06em; }
+.lab-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 1rem; display: grid; gap: 0.7rem; min-inline-size: 0; }
+.tip { background: var(--accent-soft); border-radius: 12px; padding: 0.7rem 0.9rem; }
+.trap { background: var(--warn-bg); border-radius: 12px; padding: 0.7rem 0.9rem; }
+.trap strong { display: block; color: var(--warn); font-size: 0.8125rem; }
+.chain { display: grid; gap: 0.25rem; justify-items: center; text-align: center; }
+.chain span { background: var(--sunk); border-radius: 10px; padding: 0.35rem 0.8rem; font-weight: 600; max-inline-size: 100%; }
+.chain i { font-style: normal; color: var(--accent); }
+
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--card); }
+.tbl table { border-collapse: collapse; inline-size: 100%; font-size: 0.97rem; }
+.tbl th, .tbl td { padding: 0.5rem 0.75rem; text-align: start; border-block-end: 1px solid var(--line); vertical-align: top; }
+.tbl th { background: var(--sunk); font-size: 0.8125rem; }
+.tbl tr:last-child td { border-block-end: 0; }
+
+/* flip cards */
+.flips { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.6rem; }
+.flip { min-block-size: 5.5rem; border: 1px solid var(--line); background: var(--card); border-radius: 14px; padding: 0.75rem; text-align: start; display: grid; align-items: center; }
+.flip .f-back { display: none; }
+.flip .f-front { font-weight: 700; }
+.flip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); }
+.flip[aria-pressed="true"] .f-front { display: none; }
+.flip[aria-pressed="true"] .f-back { display: block; }
+
+/* tabs and badges */
+.tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tabs button { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 0.25rem 0.9rem; font-weight: 700; font-size: 0.95rem; }
+.tabs button[aria-selected="true"] { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+.drug { display: grid; gap: 0.6rem; }
+.drug[hidden] { display: none; }
+.badges { display: grid; gap: 0.4rem; }
+.bdg { display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.6rem; align-items: start; font-size: 0.97rem; }
+.bdg > span:first-child { font-size: 0.75rem; font-weight: 700; border-radius: 999px; padding: 0.1rem 0.5rem; text-align: center; }
+.b-ind { background: var(--ok-bg); color: var(--ok); }
+.b-side { background: var(--warn-bg); color: var(--warn); }
+.b-no { background: var(--bad-bg); color: var(--bad); }
+.b-care { background: var(--accent-soft); color: var(--accent-ink); }
+
+/* buttons, sorter, mini quiz */
+.btn { border: 1px solid var(--line); background: var(--card); border-radius: 10px; padding: 0.35rem 0.9rem; font-weight: 700; }
+.btn.primary { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+.btn:disabled { opacity: 0.4; cursor: default; }
+.sort-q, .q-text { font-size: 1.125rem; font-weight: 700; }
+.sort-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.sort-btns .btn { flex: 1; min-inline-size: 7.5rem; }
+.lab-verdict { border-radius: 12px; padding: 0.7rem 0.9rem; font-weight: 600; background: var(--sunk); }
+.lab-verdict.v-good { background: var(--ok-bg); }
+.lab-verdict.v-bad { background: var(--bad-bg); }
+.quiz { display: grid; gap: 0.7rem; }
+.q-head { display: flex; justify-content: space-between; font-size: 0.8125rem; color: var(--muted); }
+.prog { block-size: 6px; background: var(--sunk); border-radius: 99px; overflow: hidden; }
+.prog i { display: block; block-size: 100%; background: var(--accent); }
+.opts { display: grid; gap: 0.5rem; }
+.opt { text-align: start; border: 1px solid var(--line); background: var(--card); border-radius: 12px; padding: 0.6rem 0.9rem; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt.ok { background: var(--ok-bg); border-color: var(--ok); }
+.opt.no { background: var(--bad-bg); border-color: var(--bad); }
+.expl { border-radius: 12px; padding: 0.7rem 0.9rem; background: var(--accent-soft); }
+.final { font-size: 1.25rem; font-weight: 700; }
+.lab-source { margin-block-start: 2rem; }
+
+@media (prefers-reduced-motion: reduce) { .lab * { transition: none !important; } }
+:root[data-motion="off"] .lab * { transition: none !important; }
+
+/* hub cards reuse the summary hub's look */
+.lab-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
+.quiz-card[data-lab] { border-inline-start-color: var(--a); }
+.quiz-card[data-lab] h2 { margin: 0 0 0.2rem; font-size: 1.35rem; }
+@media (prefers-color-scheme: dark) { .quiz-card[data-lab] { border-inline-start-color: var(--a-d); } }

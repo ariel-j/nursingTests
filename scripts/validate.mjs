@@ -1,9 +1,11 @@
-// Validates the catalog and every quiz, checks that the manifest is up to date, and checks the summaries.
+// Validates the catalog and every quiz, checks that the manifest is up to date, and checks the summaries and labs.
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { MANIFEST_FILE, QUIZ_DIR, buildManifest, loadAll, serializeManifest } from './quizzes.mjs';
 import { checkSummaries } from './summaries.mjs';
+import { checkLabs } from './labs.mjs';
 import { SUMMARIES } from '../js/summary-list.js';
+import { LABS } from '../js/lab-list.js';
 
 let { failures, catalog, entries } = await loadAll();
 
@@ -21,13 +23,13 @@ if (failures === 0) {
   }
 }
 
-const summaryErrors = await checkSummaries();
-for (const e of summaryErrors) console.error(e);
-failures += summaryErrors.length;
+const pageProblems = [...(await checkSummaries()), ...(await checkLabs())];
+for (const e of pageProblems) console.error(e);
+failures += pageProblems.length;
 
 if (failures > 0) {
   console.error(`\n${failures} problem(s) found.`);
   process.exit(1);
 }
 const questions = entries.reduce((n, e) => n + e.quiz.questions.length, 0);
-console.log(`OK: ${entries.length} quiz(zes), ${questions} question(s), manifest up to date, ${SUMMARIES.length} summaries.`);
+console.log(`OK: ${entries.length} quiz(zes), ${questions} question(s), manifest up to date, ${SUMMARIES.length} summaries, ${LABS.length} labs.`);

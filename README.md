@@ -93,6 +93,20 @@ A `\n` in a string becomes a line break.
 If you add, remove or rename question IDs in a quiz, saved progress for that quiz no longer matches.
 It is dropped, and the quiz starts fresh.
 
+## Interactive labs (מעבדות)
+
+The home page links to `labs/`, a hub with one study lab per unit (`labs/<id>.html`): a step ladder, flip cards,
+tabs, sorting cards and a closing 10-question round. A lab holds no question text of its own: its round is drawn
+from the quiz named in `data-quiz` on `<main>` (`quizzes/<quiz id>.json`), so fixing a question there fixes it everywhere.
+XP and streak are kept per lab in `localStorage`.
+
+To add a lab:
+
+1. Save it as `labs/<id>.html`, copying an existing one (the `data-lab` / `data-quiz` attributes on `<main>`, the XP and
+   streak counters and `#quizbox` are required; sorting cards take their data from `data-sorter`).
+2. Add `{ id, quiz, title, blurb }` to `js/lab-list.js` (this sets the order on the hub).
+3. Give it accent colors in `css/lab.css` (a `[data-lab="<id>"]` rule with light and dark values).
+
 ## Short summaries (סיכומים קצרים)
 
 The home page links to `summaries/`, a hub with one condensed summary per body system. Each summary is a
