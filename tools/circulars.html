@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <script src="../js/theme-init.js"></script>
+  <title>מפת החוזרים והפעולות · תרגול למבחנים בסיעוד</title>
+  <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/tool.css">
+  <script type="module" src="../js/tool-circulars.js"></script>
+  <script type="module" src="../js/nav.js"></script>
+  <script type="module" src="../js/a11y.js"></script>
+  <script type="module" src="../js/analytics.js"></script>
+</head>
+<body>
+  <main class="page">
+    <nav class="top-nav"><a href="../?subject=nursing-fundamentals">→ דף המקצוע</a></nav>
+    <header class="quiz-header">
+      <p class="kicker">יסודות להתערבות סיעודית · חוקים וחוזרים</p>
+      <h1>מפת החוזרים והפעולות</h1>
+      <p class="lede">שלוש הבחנות שנשאלות בכל מבחן: פעולת סיעוד, פעולה חריגה ופעולה רפואית. בנוסף, לאיזה נושא שייך כל חוזר, ומה מותר לכוח עזר מיומן. מבוסס על חוזר 234/2025 וחוזר 163/2020.</p>
+    </header>
+    <nav class="tool-nav" aria-label="ניווט בעמוד">
+      <a href="#compare">השוואה</a><a href="#sorter">מיון פעולות</a><a href="#map">חוזר לנושא</a><a href="#aide">כוח עזר</a><a href="#laws">חוקים</a><a href="#quiz">חידון</a>
+    </nav>
+
+    <section class="tool-section" id="compare" aria-labelledby="compare-h">
+      <h2 id="compare-h">פעולת סיעוד מול פעולה חריגה</h2>
+      <div class="scroll">
+        <table class="tool-table">
+          <thead><tr><th scope="col">&nbsp;</th><th scope="col">פעולת סיעוד</th><th scope="col">פעולה חריגה</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">בסיס חוקי</th><td>תקנות בריאות העם</td><td>פקודת הרופאים</td></tr>
+            <tr><th scope="row">תוקף</th><td>כל עוד הרישום תקף</td><td>לאחר הסכמת המנהל הרפואי המקומי</td></tr>
+            <tr><th scope="row">בעל ההיתר</th><td>כל אחות בעלת רישום תקף</td><td>אחות שקיבלה הרשאה אישית ושמית</td></tr>
+            <tr><th scope="row">מקום</th><td>בכל מקום שבו נדרש הטיפול</td><td>מוגבל ליחידה שבה ניתן האישור</td></tr>
+            <tr><th scope="row">ביצוע</th><td>חובה, לא זכות בחירה</td><td>מותנה בהסכמת האחות</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout"><p><b>פעולה רפואית:</b> עיסוק ברפואה שלא הואצל, ולכן שמור לרופא. פעולה חריגה היא עיסוק ברפואה שהואצל לפי תקנות הרופאים (כשירויות לביצוע פעולות חריגות), התשס"א-2001.</p></div>
+    </section>
+
+    <section class="tool-section" id="sorter" aria-labelledby="sorter-h">
+      <h2 id="sorter-h">מיון פעולות</h2>
+      <p class="lede">איזה סוג היא הפעולה לפי חוזר 234/2025? בחרו ותקבלו משוב מיד.</p>
+      <div class="card" id="sorter-drill"></div>
+    </section>
+
+    <section class="tool-section" id="map" aria-labelledby="map-h">
+      <h2 id="map-h">איזה חוזר שייך לאיזה נושא</h2>
+      <p class="lede">סננו לפי נושא כדי לראות את החוזרים שלו.</p>
+      <div id="map-chips"></div>
+      <p id="map-count" class="muted" role="status"></p>
+      <div class="scroll">
+        <table class="tool-table">
+          <caption class="sr-only">חוזרים לפי נושא</caption>
+          <thead><tr><th scope="col">חוזר</th><th scope="col">נושא</th></tr></thead>
+          <tbody id="map-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="tool-section" id="aide" aria-labelledby="aide-h">
+      <h2 id="aide-h">כוח עזר מיומן (חוזר 163/2020)</h2>
+      <ul class="fact-stats">
+        <li><strong>120</strong><small>שעות הכשרה לפחות</small></li>
+        <li><strong>שנה</strong><small>סיום הכשרה מרגע הקליטה לכל היותר</small></li>
+        <li><strong>שנתי</strong><small>הערכת עובד לפחות פעם בשנה</small></li>
+      </ul>
+      <p class="lede">בדקו את עצמכם: האם כוח עזר רשאי לבצע זאת?</p>
+      <div class="card" id="aide-drill"></div>
+    </section>
+
+    <section class="tool-section" id="laws" aria-labelledby="laws-h">
+      <h2 id="laws-h">חוקים לפי קבוצות</h2>
+      <div class="grid">
+        <div class="card"><h3>זכויות הפרט</h3><ul><li>חוק יסוד: כבוד האדם וחירותו, התשנ"ב-1992</li><li>חוק זכויות החולה, התשנ"ו-1996</li><li>הקוד האתי לאחים ולאחיות בישראל, 2018</li></ul></div>
+        <div class="card"><h3>עיסוק בסיעוד</h3><ul><li>פקודת בריאות העם, 1940, סעיף 33</li><li>פקודת הרופאים (נוסח חדש), התשל"ז-1976, סעיפים 1, 7, 59</li><li>תקנות הרופאים (כשירויות לביצוע פעולות חריגות), התשס"א-2001</li></ul></div>
+      </div>
+    </section>
+
+    <section class="tool-section" id="quiz" aria-labelledby="quiz-h">
+      <h2 id="quiz-h">חידון מהיר</h2>
+      <div class="card" id="quiz-drill"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer page">
+    <nav>
+      <a href="../accessibility.html">הצהרת נגישות</a>
+      <a href="../privacy.html">מדיניות פרטיות</a>
+    </nav>
+    <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+    <p>תוכן לימודי לתרגול בלבד. אינו מהווה ייעוץ רפואי ואינו תחליף לחומרי הקורס.</p>
+  </footer>
+</body>
+</html>
