@@ -73,3 +73,27 @@ test('pageErrors needs exactly one correct option per mini-quiz question', () =>
   assert.equal(pageErrors(quiz(opts(0)), { id: 'heart', isSummary: true }).length, 1);
   assert.equal(pageErrors(quiz(opts(2)), { id: 'heart', isSummary: true }).length, 1);
 });
+
+test('interactive summaries point at their tools/ page and stay out of the combined print', async () => {
+  const { SUMMARIES, summaryFile } = await import('../js/summary-list.js');
+  const tools = SUMMARIES.filter((s) => s.tool);
+  assert.ok(tools.length > 0);
+  for (const s of tools) assert.equal(summaryFile(s.id), `../tools/${s.tool}.html`);
+  assert.equal(summaryFile('cardiovascular'), 'cardiovascular.html');
+  assert.ok(!SUMMARIES.some((s) => /^מעבדת /.test(s.title)), 'no title says "מעבדת" any more');
+});
+
+test('sorterRows turns the sorting game data into printable rows', async () => {
+  const { sorterRows } = await import('../js/tool-print.js');
+  const rows = sorterRows('{"labels":["א","ב"],"items":[["x",1,"כי"],["y",0]]}');
+  assert.deepEqual(rows, [{ prompt: 'x', label: 'ב', why: 'כי' }, { prompt: 'y', label: 'א', why: '' }]);
+});
+
+test('every interactive summary page has sections to print and no hidden-only content outside them', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const { SUMMARIES } = await import('../js/summary-list.js');
+  for (const s of SUMMARIES.filter((e) => e.tool)) {
+    const html = await readFile(new URL(`../tools/${s.tool}.html`, import.meta.url), 'utf8');
+    assert.match(html, /<section class="tool-section"/, s.tool);
+  }
+});

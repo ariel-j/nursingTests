@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { SUMMARIES, summaryFile } from '../js/summary-list.js';
 
 export const SUMMARY_DIR = fileURLToPath(new URL('../summaries/', import.meta.url));
+export const TOOLS_DIR = fileURLToPath(new URL('../tools/', import.meta.url));
 export const STUDY_DIR = fileURLToPath(new URL('../study/', import.meta.url));
 export const SUMMARY_CSS = fileURLToPath(new URL('../css/summary.css', import.meta.url));
 // Pages in summaries/ that are not summaries themselves.
@@ -95,8 +96,9 @@ export async function checkRootPages(dir = ROOT_DIR) {
  * Every problem across the summaries: the list, the pages and the stylesheet's accents.
  * `subjectIds` are the catalog's subject ids; each summary's `subject` must be one of them.
  */
-export async function checkSummaries(subjectIds, dir = SUMMARY_DIR, cssFile = SUMMARY_CSS, studyDir = STUDY_DIR) {
+export async function checkSummaries(subjectIds, dir = SUMMARY_DIR, cssFile = SUMMARY_CSS, studyDir = STUDY_DIR, toolDir = TOOLS_DIR) {
   const errors = [];
+  const toolFiles = await readdir(toolDir);
   const ids = SUMMARIES.map((s) => s.id);
   if (new Set(ids).size !== ids.length) errors.push('js/summary-list.js: duplicate id');
   for (const s of SUMMARIES) {
@@ -108,7 +110,8 @@ export async function checkSummaries(subjectIds, dir = SUMMARY_DIR, cssFile = SU
   }
 
   const files = (await readdir(dir)).filter((f) => f.endsWith('.html'));
-  const listed = new Set(ids.map(summaryFile));
+  const toolEntries = SUMMARIES.filter((s) => s.tool);
+  const listed = new Set(SUMMARIES.filter((s) => !s.tool).map((s) => summaryFile(s.id)));
   for (const file of files) {
     if (!SUPPORT_PAGES.has(file) && !listed.has(file)) {
       errors.push(`summaries/${file}: not listed in js/summary-list.js`);
@@ -122,6 +125,12 @@ export async function checkSummaries(subjectIds, dir = SUMMARY_DIR, cssFile = SU
     const html = await readFile(path.join(dir, file), 'utf8');
     const id = file.replace(/\.html$/, '');
     for (const e of pageErrors(html, { id, isSummary: listed.has(file) })) errors.push(`summaries/${file}: ${e}`);
+  }
+
+  // Interactive summaries live in tools/<name>.html (page rules are checked by checkTools).
+  for (const s of toolEntries) {
+    if (!/^[a-z0-9-]+$/.test(s.tool)) errors.push(`js/summary-list.js: ${s.id} has a bad tool name "${s.tool}"`);
+    else if (!toolFiles.includes(`${s.tool}.html`)) errors.push(`js/summary-list.js: ${s.id} points to tools/${s.tool}.html, which is missing`);
   }
 
   // Interactive study pages: one per summary that declares `study`, and no strays.
@@ -141,7 +150,7 @@ export async function checkSummaries(subjectIds, dir = SUMMARY_DIR, cssFile = SU
   }
 
   const css = await readFile(cssFile, 'utf8');
-  for (const id of ids) {
+  for (const id of SUMMARIES.filter((s) => !s.tool).map((s) => s.id)) {
     if (!css.includes(`[data-system="${id}"]`)) errors.push(`css/summary.css: no accent colors for "${id}"`);
   }
   return errors;
