@@ -435,3 +435,19 @@
 
 /* link from a hub card to the interactive study page */
 .study-link { display: inline-block; margin-block-start: 0.35rem; padding-inline: 0.25rem; font-weight: 600; color: var(--accent-ink); }
+
+/* ---------- interactive summaries (tools/) rebuilt for the combined print page ---------- */
+
+.tool-print .tool-section { margin-block: 1.2rem; }
+.tool-print .tab-title { margin-block: 0.8rem 0.3rem; font-size: 1.05rem; }
+.tool-print .badges { display: grid; gap: 0.3rem; }
+.tool-print .bdg { display: flex; gap: 0.6rem; align-items: baseline; }
+.tool-print .bdg > span:first-child { font-weight: 700; flex: 0 0 6.5rem; }
+.tool-print .chain { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+.tool-print .chain span { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0.2rem 0.5rem; }
+.tool-print .tool-table { inline-size: 100%; border-collapse: collapse; }
+.tool-print .tool-table th, .tool-print .tool-table td { border: 1px solid var(--line); padding: 0.3rem 0.5rem; text-align: start; }
+.tool-print .tip, .tool-print .trap { border-inline-start: 4px solid var(--accent); padding: 0.4rem 0.7rem; margin-block: 0.5rem; }
+.tool-print .flips { display: grid; gap: 0.4rem; }
+.tool-print .flip { display: block; text-align: start; background: none; border: 0; padding: 0; color: inherit; font: inherit; }
+.tool-print .flip-detail { display: block; }
