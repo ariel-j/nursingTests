@@ -4,10 +4,10 @@ import path from 'node:path';
 import { MANIFEST_FILE, QUIZ_DIR, buildManifest, loadAll, serializeManifest } from './quizzes.mjs';
 import { checkSummaries, loadSummaryList } from './summaries.mjs';
 
-let { failures, catalog, entries } = await loadAll();
+let { failures, catalog, entries, deckEntries } = await loadAll();
 
 if (failures === 0) {
-  const expected = serializeManifest(buildManifest(entries.map((e) => e.quiz), catalog));
+  const expected = serializeManifest(buildManifest(entries.map((e) => e.quiz), catalog, deckEntries.map((e) => e.deck)));
   let actual = null;
   try {
     actual = await readFile(path.join(QUIZ_DIR, MANIFEST_FILE), 'utf8');
@@ -29,4 +29,4 @@ if (failures > 0) {
   process.exit(1);
 }
 const questions = entries.reduce((n, e) => n + e.quiz.questions.length, 0);
-console.log(`OK: ${entries.length} quiz(zes), ${questions} question(s), manifest up to date, ${(await loadSummaryList()).length} summaries.`);
+console.log(`OK: ${entries.length} quiz(zes), ${questions} question(s), ${deckEntries.length} deck(s), manifest up to date, ${(await loadSummaryList()).length} summaries.`);

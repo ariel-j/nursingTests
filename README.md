@@ -108,6 +108,35 @@ To add a summary:
 3. Give it accent colors in `css/summary.css` (a `[data-system="<id>"]` rule with light and dark values).
 4. `npm run validate` checks it: listed, self-hosted only, no inline styles or handlers, toolbar and footer present.
 
+## Flashcards (כרטיסיות)
+
+A deck is one JSON file, `flashcards/<id>.json`, shown on the home page next to the quizzes of its subject/unit and studied at `cards.html?id=<id>`. Text only (HTML in a card is shown as plain text). Upload it in the admin panel (tab "כרטיסיות"), or add the file and run `npm run manifest` and `npm run validate`.
+
+```json
+{
+  "id": "heart-cards-1",
+  "subject": "אנטומיה ופיזיולוגיה",
+  "unit": "הלב",
+  "title": "כרטיסיות: הלב",
+  "description": "מושגי יסוד",
+  "cards": [
+    { "id": "c001", "front": "מהי תפוקת הלב?", "back": "נפח הדם שהלב מזרים בדקה.", "topic": "המודינמיקה" }
+  ]
+}
+```
+
+| Field | Rule |
+|---|---|
+| `id` | lowercase letters, digits, single hyphens; equals the file name |
+| `subject`, `unit` | placed like a quiz: the subject is in `quizzes/subjects.json`, `unit` required iff the subject has units |
+| `title` | required; `description` optional |
+| `cards[]` | at least one; unknown fields are rejected |
+| `cards[].id` | unique within the deck |
+| `cards[].front` / `back` | required, at most 500 / 2000 characters |
+| `cards[].topic` | optional, at most 100 characters; cards without one are grouped as "כללי" |
+
+Studying follows the quiz rules: flip the card, then "ידעתי" or "לא ידעתי". Known on the first try = mastered; after a miss the card returns 2-5 cards later and needs two "ידעתי" in a row. Modes: whole deck, chosen topics, only the cards that came back. Only whole-deck runs update the best score. Keyboard: Space reveals, `1` = ידעתי, `2` = לא ידעתי. A ready-made example is `templates/flashcards.json`; see also [docs/flashcards-authoring.md](docs/flashcards-authoring.md).
+
 ## Development
 
 ```sh
@@ -122,7 +151,9 @@ npm run serve     # http://localhost:8000 (fetch() does not work over file://)
 | `js/core.js` | pure logic: queue, scoring, stats, validation. No DOM, no storage |
 | `js/ecg.js` | pure SVG path for the ECG progress strip |
 | `js/storage.js` | guarded `localStorage` wrapper (prefix `anatomy-quizzes:v1:`) |
-| `js/index.js`, `js/quiz.js` | page UI |
+| `js/index.js`, `js/quiz.js`, `js/cards.js` | page UI (home, quiz, flashcards) |
+| `js/cards-core.js` | pure flashcard logic (validation, session, summary); reuses the quiz engine in `js/core.js` |
+| `flashcards/` | one JSON file per deck |
 | `summaries/`, `css/summary.css` | short summaries, the hub and the combined print page |
 | `summaries/list.json` | the list of summaries; `js/summary-list.js` validates/loads it, `js/summaries.js`, `js/summary.js`, `js/summaries-all.js` drive the pages |
 | `admin/`, `js/admin/` | the admin panel (see below) |
@@ -143,10 +174,11 @@ What you can manage (every action previews the exact files first and publishes a
 
 | | Add | Edit | Delete |
 |---|---|---|---|
-| Subjects / units | yes | rename (cascades into their quizzes), reorder | only when they hold no quizzes |
+| Subjects / units | yes | rename (cascades into their quizzes and decks), reorder | only when they hold no quizzes or decks |
 | Quizzes | upload (site or authoring format) | title, description, move to another subject/unit; to fix questions re-upload with "החלפה" | yes (type the id to confirm) |
+| Flashcard decks | upload JSON | title, description, move to another subject/unit; to fix cards re-upload with "החלפה" | yes (type the id to confirm) |
 | Summaries | upload HTML | title, blurb, accent hue, order; to change the page re-upload with "החלפה" | yes (page, list entry and accent together; type the id to confirm) |
 
-A quiz's id is fixed: learners' saved progress in their browsers is keyed by it.
+A quiz's or deck's id is fixed: learners' saved progress in their browsers is keyed by it.
 
-The password protects a lost or shared device, not a compromised one; the real gate is the token (revoke it at GitHub if it leaks). Every upload is checked with the same validators as `npm run validate`, summary HTML is held to a strict allowlist, and `.github/workflows/check.yml` re-checks each push. Planned next: flashcards, then videos.
+The password protects a lost or shared device, not a compromised one; the real gate is the token (revoke it at GitHub if it leaks). Every upload is checked with the same validators as `npm run validate`, summary HTML is held to a strict allowlist, and `.github/workflows/check.yml` re-checks each push. Planned next: videos.

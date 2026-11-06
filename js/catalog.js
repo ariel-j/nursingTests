@@ -1,3 +1,5 @@
+import { topicOf } from './cards-core.js';
+
 // Pure catalog / manifest logic, shared by the Node scripts and the admin panel.
 export const MANIFEST_FILE = 'manifest.json';
 export const CATALOG_FILE = 'subjects.json';
@@ -54,31 +56,49 @@ function entry(q) {
   };
 }
 
+function deckEntry(d) {
+  return {
+    id: d.id,
+    title: d.title,
+    description: d.description ?? '',
+    cardCount: d.cards.length,
+    topicCount: new Set(d.cards.map(topicOf)).size,
+  };
+}
+
 const byTitle = (a, b) => collator.compare(a.title, b.title) || a.id.localeCompare(b.id);
 
 /**
- * The home page tree, in catalog order: subjects → units → quizzes (by title).
- * Units without quizzes are kept so the page can show them as coming soon.
+ * The home page tree, in catalog order: subjects → units → quizzes and flashcard decks (each by title).
+ * Units without either are kept so the page can show them as coming soon.
  */
-export function buildManifest(quizzes, catalog) {
+export function buildManifest(quizzes, catalog, decks = []) {
+  const pick = (items, subject, unit, make) =>
+    items.filter((x) => x.subject === subject && x.unit === unit).map(make).sort(byTitle);
   return {
-    subjects: catalog.subjects.map((s) => {
-      const own = quizzes.filter((q) => q.subject === s.name);
-      return {
-        name: s.name,
-        units: (s.units ?? []).map((unit) => ({
-          name: unit,
-          quizzes: own.filter((q) => q.unit === unit).map(entry).sort(byTitle),
-        })),
-        quizzes: own.filter((q) => q.unit === undefined).map(entry).sort(byTitle),
-      };
-    }),
+    subjects: catalog.subjects.map((s) => ({
+      name: s.name,
+      units: (s.units ?? []).map((unit) => ({
+        name: unit,
+        quizzes: pick(quizzes, s.name, unit, entry),
+        flashcards: pick(decks, s.name, unit, deckEntry),
+      })),
+      quizzes: pick(quizzes, s.name, undefined, entry),
+      flashcards: pick(decks, s.name, undefined, deckEntry),
+    })),
   };
 }
 
 export function countQuizzes(manifest) {
   return manifest.subjects.reduce(
     (n, s) => n + s.quizzes.length + s.units.reduce((m, u) => m + u.quizzes.length, 0),
+    0,
+  );
+}
+
+export function countDecks(manifest) {
+  return manifest.subjects.reduce(
+    (n, s) => n + (s.flashcards?.length ?? 0) + s.units.reduce((m, u) => m + (u.flashcards?.length ?? 0), 0),
     0,
   );
 }

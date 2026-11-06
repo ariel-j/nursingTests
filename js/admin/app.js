@@ -6,8 +6,8 @@ import { backoffMs, looksLikeToken, open, passwordProblems, seal } from './vault
 import { createGithub } from './github.js';
 import { checkUpload, readSummaryHue } from './uploads.js';
 import {
-  planQuiz, planQuizDelete, planQuizEdit, planStructure, planSummary, planSummaryDelete, planSummaryEdit,
-  planSummaryOrder, readQuizzes,
+  planDeck, planDeckDelete, planDeckEdit, planQuiz, planQuizDelete, planQuizEdit, planStructure, planSummary,
+  planSummaryDelete, planSummaryEdit, planSummaryOrder, readDecks, readQuizzes,
 } from './actions.js';
 
 const VAULT_KEY = 'admin-vault';
@@ -178,13 +178,14 @@ function renderUnlock(vault) {
 
 // ---------- repo state + the shared review/publish flow ----------
 async function loadState(snap) {
-  const [catalog, list, css, quizzes] = await Promise.all([
+  const [catalog, list, css, quizzes, decks] = await Promise.all([
     snap.readText('quizzes/subjects.json').then(JSON.parse),
     snap.readText('summaries/list.json').then(JSON.parse),
     snap.readText('css/summary.css'),
     readQuizzes(snap),
+    readDecks(snap),
   ]);
-  return { catalog, list, css, quizzes };
+  return { catalog, list, css, quizzes, decks };
 }
 
 function publishedBanner(text, sha) {
@@ -277,10 +278,11 @@ async function tabOverview(host) {
   say('טוען…');
   const state = await loadState(await session.gh.snapshot());
   say('');
-  const count = (q) => state.quizzes.filter(q).length;
+  const count = (match) => state.quizzes.filter(match).length + state.decks.filter(match).length;
   host.replaceChildren(
     el('div', { class: 'admin-grid' },
       el('div', { class: 'admin-card' }, el('h3', { text: 'מבחנים' }), el('p', { text: String(state.quizzes.length) })),
+      el('div', { class: 'admin-card' }, el('h3', { text: 'חפיסות כרטיסיות' }), el('p', { text: String(state.decks.length) })),
       el('div', { class: 'admin-card' }, el('h3', { text: 'סיכומים' }), el('p', { text: String(state.list.summaries.length) })),
       el('div', { class: 'admin-card' }, el('h3', { text: 'נושאים' }), el('p', { text: String(state.catalog.subjects.length) }))),
     el('section', { class: 'admin-card' },
@@ -289,11 +291,11 @@ async function tabOverview(host) {
         el('h3', { text: s.name }),
         el('ul', {}, (s.units ?? []).map((u) => {
           const n = count((q) => q.subject === s.name && q.unit === u);
-          return el('li', { text: n === 0 ? `${u} · בקרוב` : `${u} · ${n} מבחנים` });
+          return el('li', { text: n === 0 ? `${u} · בקרוב` : `${u} · ${n} פריטים` });
         }))))),
     el('section', { class: 'admin-card' },
       el('h2', { text: 'בקרוב' }),
-      el('p', { class: 'admin-note', text: 'כרטיסיות (פלאשקארדס) וסרטונים יתווספו בשלבים הבאים, אחרי שיהיו להם דפי תצוגה באתר.' })));
+      el('p', { class: 'admin-note', text: 'סרטונים יתווספו בשלב הבא, אחרי שיהיה להם דף תצוגה באתר.' })));
 }
 
 async function tabStructure(host) {
@@ -307,11 +309,12 @@ async function tabStructure(host) {
     units: (s.units ?? []).map((u) => ({ name: u, from: u })),
   }));
   const area = el('div');
-  const countIn = (subject, unit) => state.quizzes.filter((q) => q.subject === subject && (unit === undefined || q.unit === unit)).length;
+  const countIn = (subject, unit) => [...state.quizzes, ...state.decks]
+    .filter((x) => x.subject === subject && (unit === undefined || x.unit === unit)).length;
   const move = (arr, i, d) => { const j = i + d; if (j >= 0 && j < arr.length) [arr[i], arr[j]] = [arr[j], arr[i]]; };
   const note = (from, unit) => {
     const n = from === null ? 0 : countIn(from, unit);
-    return n > 0 ? el('span', { class: 'admin-note', text: `${n} מבחנים` }) : null;
+    return n > 0 ? el('span', { class: 'admin-note', text: `${n} פריטים` }) : null;
   };
 
   const draw = () => {
@@ -352,62 +355,92 @@ async function tabStructure(host) {
     return { catalog, renames };
   };
 
-  const flow = reviewFlow((st) => planStructure({ ...build(), quizzes: st.quizzes }), 'ניהול: עדכון נושאים', { needsOwnContentConfirm: false });
+  const flow = reviewFlow((st) => planStructure({ ...build(), quizzes: st.quizzes, decks: st.decks }), 'ניהול: עדכון נושאים', { needsOwnContentConfirm: false });
   host.replaceChildren(
-    el('p', { class: 'admin-note', text: 'שינוי שם של נושא או יחידה מתעדכן אוטומטית בכל המבחנים שבהם, באותו commit. אי אפשר להסיר נושא או יחידה שיש בהם מבחנים: העבירו או מחקו אותם קודם בלשונית "מבחנים". מתחת לכל שם מופיע מספר המבחנים שבו.' }),
+    el('p', { class: 'admin-note', text: 'שינוי שם של נושא או יחידה מתעדכן אוטומטית בכל המבחנים והחפיסות שבהם, באותו commit. אי אפשר להסיר נושא או יחידה שיש בהם מבחנים או חפיסות: העבירו או מחקו אותם קודם. ליד כל שם מופיע מספר הפריטים שבו.' }),
     area, el('div', { class: 'admin-row' }, flow.reviewBtn), flow.out);
 }
 
-function quizEditForm(q, state) {
-  const k = `qe-${q.id}`;
-  const title = el('input', { type: 'text', id: `${k}-title`, value: q.title, autocomplete: 'off' });
-  const description = el('input', { type: 'text', id: `${k}-desc`, value: q.description ?? '', autocomplete: 'off' });
+// What differs between the two kinds of item (quizzes and flashcard decks) that live in a subject/unit.
+const ITEM_UI = {
+  quiz: {
+    p: 'q', noun: 'מבחן', addTitle: 'הוספת מבחן', listTitle: 'מבחנים קיימים', fileLabel: 'קובץ מבחן (JSON)',
+    addNote: 'קובץ JSON בפורמט האתר או בפורמט הכתיבה (correctIndex + wrongExplanations). בלשונית "תבניות" יש קבצים מוכנים.',
+    idHint: 'למשל heart-2. זה גם שם הקובץ.',
+    replaceLabel: 'החלפה של מבחן קיים עם אותו מזהה',
+    editNote: 'המזהה קבוע (ההתקדמות של לומדים שמורה לפיו). לתיקון השאלות עצמן: הורידו את הקובץ, תקנו והעלו שוב עם "החלפה". שינוי כותרת משנה את מקום המבחן ברשימה, כי היא ממוינת לפי כותרת.',
+    items: (st) => st.quizzes,
+    size: (x) => `${x.questions.length} שאלות`,
+    sourceSize: (src) => `${src.questions?.length ?? 0} שאלות`,
+    add: planQuiz, edit: planQuizEdit, remove: planQuizDelete,
+    deletePrompt: (x) => `מחיקת המבחן "${x.title}" היא סופית (ההתקדמות של לומדים בדפדפנים שלהם תישאר אבל לא תהיה מקושרת לכלום).`,
+  },
+  deck: {
+    p: 'd', noun: 'חפיסה', addTitle: 'הוספת חפיסת כרטיסיות', listTitle: 'חפיסות קיימות', fileLabel: 'קובץ חפיסה (JSON)',
+    addNote: 'קובץ JSON בפורמט הכרטיסיות: id, subject, unit, title ו‑cards (לכל כרטיס id, front, back ואופציונלית topic). בלשונית "תבניות" יש קובץ מוכן.',
+    idHint: 'למשל heart-cards-1. זה גם שם הקובץ.',
+    replaceLabel: 'החלפה של חפיסה קיימת עם אותו מזהה',
+    editNote: 'המזהה קבוע (ההתקדמות של לומדים שמורה לפיו). לתיקון הכרטיסיות עצמן: הורידו את הקובץ, תקנו והעלו שוב עם "החלפה". שינוי כותרת משנה את מקום החפיסה ברשימה, כי היא ממוינת לפי כותרת.',
+    items: (st) => st.decks,
+    size: (x) => `${x.cards.length} כרטיסיות`,
+    sourceSize: (src) => `${src.cards?.length ?? 0} כרטיסיות`,
+    add: planDeck, edit: planDeckEdit, remove: planDeckDelete,
+    deletePrompt: (x) => `מחיקת החפיסה "${x.title}" היא סופית (ההתקדמות של לומדים בדפדפנים שלהם תישאר אבל לא תהיה מקושרת לכלום).`,
+  },
+};
+
+function itemEditForm(kind, item, state) {
+  const u = ITEM_UI[kind];
+  const k = `${u.p}e-${item.id}`;
+  const title = el('input', { type: 'text', id: `${k}-title`, value: item.title, autocomplete: 'off' });
+  const description = el('input', { type: 'text', id: `${k}-desc`, value: item.description ?? '', autocomplete: 'off' });
   const subject = el('select', { id: `${k}-subject` }, state.catalog.subjects.map((s) => el('option', { value: s.name, text: s.name })));
   const unit = el('select', { id: `${k}-unit` });
-  subject.value = q.subject;
+  subject.value = item.subject;
   const fillUnits = (selected) => {
     const units = state.catalog.subjects.find((s) => s.name === subject.value)?.units ?? [];
-    unit.replaceChildren(...(units.length ? units : ['']).map((u) => el('option', { value: u, text: u || '— אין יחידות —' })));
+    unit.replaceChildren(...(units.length ? units : ['']).map((x) => el('option', { value: x, text: x || '— אין יחידות —' })));
     unit.disabled = units.length === 0;
     if (selected && units.includes(selected)) unit.value = selected;
   };
   subject.addEventListener('change', () => fillUnits());
-  fillUnits(q.unit);
-  const flow = reviewFlow((st) => planQuizEdit({
-    id: q.id,
+  fillUnits(item.unit);
+  const flow = reviewFlow((st) => u.edit({
+    id: item.id,
     patch: { title: title.value, description: description.value, subject: subject.value, unit: unit.value },
-    catalog: st.catalog,
-    quizzes: st.quizzes,
-  }), `ניהול: עריכת מבחן ${q.id}`, { needsOwnContentConfirm: false });
+    catalog: st.catalog, quizzes: st.quizzes, decks: st.decks,
+  }), `ניהול: עריכת ${u.noun} ${item.id}`, { needsOwnContentConfirm: false });
   return el('div', { class: 'admin-card' },
-    el('p', { class: 'admin-note', text: 'המזהה קבוע (ההתקדמות של לומדים שמורה לפיו). לתיקון השאלות עצמן: הורידו את הקובץ, תקנו והעלו שוב עם "החלפה". שינוי כותרת משנה את מקום המבחן ברשימה, כי היא ממוינת לפי כותרת.' }),
+    el('p', { class: 'admin-note', text: u.editNote }),
     field(`${k}-title`, 'כותרת', title), field(`${k}-desc`, 'תיאור (אופציונלי)', description),
     field(`${k}-subject`, 'נושא', subject), field(`${k}-unit`, 'יחידה', unit),
     el('div', { class: 'admin-row' }, flow.reviewBtn), flow.out);
 }
 
-async function tabQuizzes(host) {
+/** The tab for one kind of item: upload form, then the existing items with edit and delete. */
+const itemTab = (kind) => async function render(host) {
+  const u = ITEM_UI[kind];
+  const p = u.p;
   say('טוען…');
   const state = await loadState(await session.gh.snapshot());
   say('');
   let source = null;
   const f = {};
   const inputOut = el('div');
-  const mk = (id, label, hint) => { f[id] = el('input', { type: 'text', id: `q-${id}`, autocomplete: 'off' }); return field(`q-${id}`, label, f[id], hint); };
-  f.subject = el('select', { id: 'q-subject' }, state.catalog.subjects.map((s) => el('option', { value: s.name, text: s.name })));
-  f.unit = el('select', { id: 'q-unit' });
-  f.replace = el('input', { type: 'checkbox', id: 'q-replace' });
+  const mk = (id, label, hint) => { f[id] = el('input', { type: 'text', id: `${p}-${id}`, autocomplete: 'off' }); return field(`${p}-${id}`, label, f[id], hint); };
+  f.subject = el('select', { id: `${p}-subject` }, state.catalog.subjects.map((s) => el('option', { value: s.name, text: s.name })));
+  f.unit = el('select', { id: `${p}-unit` });
+  f.replace = el('input', { type: 'checkbox', id: `${p}-replace` });
   const fillUnits = (selected) => {
-    const subj = state.catalog.subjects.find((s) => s.name === f.subject.value);
-    const units = subj?.units ?? [];
-    f.unit.replaceChildren(...(units.length ? units : ['']).map((u) => el('option', { value: u, text: u || '— אין יחידות —' })));
+    const units = state.catalog.subjects.find((s) => s.name === f.subject.value)?.units ?? [];
+    f.unit.replaceChildren(...(units.length ? units : ['']).map((x) => el('option', { value: x, text: x || '— אין יחידות —' })));
     f.unit.disabled = units.length === 0;
     if (selected && units.includes(selected)) f.unit.value = selected;
   };
   f.subject.addEventListener('change', () => fillUnits());
   fillUnits();
 
-  const fileInput = el('input', { type: 'file', id: 'q-file', accept: '.json,application/json' });
+  const fileInput = el('input', { type: 'file', id: `${p}-file`, accept: '.json,application/json' });
   fileInput.addEventListener('change', () => guarded(async () => {
     inputOut.replaceChildren();
     source = null;
@@ -422,36 +455,35 @@ async function tabQuizzes(host) {
     f.description.value = source.description ?? '';
     if (state.catalog.subjects.some((s) => s.name === source.subject)) f.subject.value = source.subject;
     fillUnits(source.unit);
-    inputOut.replaceChildren(el('p', { class: 'admin-ok', text: `נטען: ${source.questions?.length ?? 0} שאלות. אפשר לתקן את השדות לפני הבדיקה.` }));
+    inputOut.replaceChildren(el('p', { class: 'admin-ok', text: `נטען: ${u.sourceSize(source)}. אפשר לתקן את השדות לפני הבדיקה.` }));
   }, inputOut));
 
   const flow = reviewFlow((st) => {
     if (!source) return { files: [], errors: ['לא נבחר קובץ'] };
-    return planQuiz({
+    return u.add({
       source,
       overrides: { id: f.id.value.trim(), title: f.title.value.trim(), description: f.description.value.trim(), subject: f.subject.value, unit: f.unit.value },
-      catalog: st.catalog,
-      quizzes: st.quizzes,
+      catalog: st.catalog, quizzes: st.quizzes, decks: st.decks,
       replace: f.replace.checked,
     });
-  }, 'ניהול: הוספת מבחן');
+  }, `ניהול: הוספת ${u.noun}`);
 
   const listOut = el('div');
-  const list = el('ul', { class: 'admin-list' }, state.quizzes.map((q) => {
+  const list = el('ul', { class: 'admin-list' }, u.items(state).map((x) => {
     const editHost = el('div', { hidden: true });
     const editBtn = button('עריכה', () => {
-      if (editHost.hidden && editHost.childElementCount === 0) editHost.append(quizEditForm(q, state));
+      if (editHost.hidden && editHost.childElementCount === 0) editHost.append(itemEditForm(kind, x, state));
       editHost.hidden = !editHost.hidden;
       editBtn.setAttribute('aria-expanded', String(!editHost.hidden));
     }, { class: 'secondary', 'aria-expanded': 'false' });
     return el('li', {},
-      `${q.title} (${q.id}) · ${q.subject}${q.unit ? ` › ${q.unit}` : ''} · ${q.questions.length} שאלות `,
+      `${x.title} (${x.id}) · ${x.subject}${x.unit ? ` › ${x.unit}` : ''} · ${u.size(x)} `,
       el('span', { class: 'admin-row' }, editBtn,
         button('מחיקה', () => confirmedChange({
-          word: q.id,
-          prompt: `מחיקת המבחן "${q.title}" היא סופית (ההתקדמות של לומדים בדפדפנים שלהם תישאר אבל לא תהיה מקושרת לכלום).`,
-          makePlan: (st) => planQuizDelete({ id: q.id, catalog: st.catalog, quizzes: st.quizzes }),
-          message: `ניהול: מחיקת מבחן ${q.id}`,
+          word: x.id,
+          prompt: u.deletePrompt(x),
+          makePlan: (st) => u.remove({ id: x.id, catalog: st.catalog, quizzes: st.quizzes, decks: st.decks }),
+          message: `ניהול: מחיקת ${u.noun} ${x.id}`,
           out: listOut,
         }), { class: 'secondary' })),
       editHost);
@@ -459,16 +491,16 @@ async function tabQuizzes(host) {
 
   host.replaceChildren(
     el('section', { class: 'admin-card' },
-      el('h2', { text: 'הוספת מבחן' }),
-      el('p', { class: 'admin-note', text: 'קובץ JSON בפורמט האתר או בפורמט הכתיבה (correctIndex + wrongExplanations). בלשונית "תבניות" יש קבצים מוכנים.' }),
-      field('q-file', 'קובץ מבחן (JSON)', fileInput), inputOut,
-      mk('id', 'מזהה (אנגלית קטנה, ספרות ומקפים)', 'למשל heart-2. זה גם שם הקובץ.'),
+      el('h2', { text: u.addTitle }),
+      el('p', { class: 'admin-note', text: u.addNote }),
+      field(`${p}-file`, u.fileLabel, fileInput), inputOut,
+      mk('id', 'מזהה (אנגלית קטנה, ספרות ומקפים)', u.idHint),
       mk('title', 'כותרת'), mk('description', 'תיאור (אופציונלי)'),
-      field('q-subject', 'נושא', f.subject), field('q-unit', 'יחידה', f.unit),
-      el('div', { class: 'admin-check' }, f.replace, el('label', { for: 'q-replace', text: 'החלפה של מבחן קיים עם אותו מזהה' })),
+      field(`${p}-subject`, 'נושא', f.subject), field(`${p}-unit`, 'יחידה', f.unit),
+      el('div', { class: 'admin-check' }, f.replace, el('label', { for: `${p}-replace`, text: u.replaceLabel })),
       el('div', { class: 'admin-row' }, flow.reviewBtn), flow.out),
-    el('section', { class: 'admin-card' }, el('h2', { text: 'מבחנים קיימים' }), list, listOut));
-}
+    el('section', { class: 'admin-card' }, el('h2', { text: u.listTitle }), list, listOut));
+};
 
 async function tabSummaries(host) {
   say('טוען…');
@@ -578,6 +610,7 @@ function summaryEditForm(sm, state) {
 const TEMPLATES = [
   { file: 'quiz-authoring.json', title: 'מבחן — פורמט כתיבה', note: 'אפשרויות כמחרוזות + correctIndex + wrongExplanations. הכי נוח לכתיבה/יצירה חיצונית.' },
   { file: 'quiz-site.json', title: 'מבחן — פורמט האתר', note: 'אפשרויות כאובייקטים {text, note} ו‑correct (0–3).' },
+  { file: 'flashcards.json', title: 'חפיסת כרטיסיות — JSON', note: 'id, subject, unit, title ו‑cards: לכל כרטיס front, back ואופציונלית topic. טקסט בלבד.' },
   { file: 'summary.html', title: 'סיכום — דף HTML', note: 'מבנה הסיכומים הקיימים (rel, def, exam…). data-system מותאם אוטומטית.' },
   { file: 'subjects.json', title: 'נושאים ויחידות — דוגמה', note: 'המבנה של קטלוג הנושאים. לעריכה יש להשתמש בלשונית "מבנה".' },
 ];
@@ -608,7 +641,8 @@ function tabTemplates(host) {
 const TABS = [
   { id: 'overview', label: 'סקירה', render: tabOverview },
   { id: 'structure', label: 'מבנה', render: tabStructure },
-  { id: 'quizzes', label: 'מבחנים', render: tabQuizzes },
+  { id: 'quizzes', label: 'מבחנים', render: itemTab('quiz') },
+  { id: 'decks', label: 'כרטיסיות', render: itemTab('deck') },
   { id: 'summaries', label: 'סיכומים', render: tabSummaries },
   { id: 'templates', label: 'תבניות', render: tabTemplates },
 ];

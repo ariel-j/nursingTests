@@ -64,10 +64,10 @@ export function isValidQuizId(id) {
   return typeof id === 'string' && ID_PATTERN.test(id);
 }
 
-const isText = (v) => typeof v === 'string' && v.trim() !== '';
-const isPlainObject = (v) => typeof v === 'object' && v !== null && !Array.isArray(v);
+export const isText = (v) => typeof v === 'string' && v.trim() !== '';
+export const isPlainObject = (v) => typeof v === 'object' && v !== null && !Array.isArray(v);
 
-function unknownKeys(obj, allowed, where, errors) {
+export function unknownKeys(obj, allowed, where, errors) {
   for (const key of Object.keys(obj)) {
     if (!allowed.has(key)) errors.push(`${where}: unknown field "${key}"`);
   }
@@ -144,7 +144,7 @@ export function validateQuiz(quiz) {
 
 // ---------- session ----------
 
-function blankProgress() {
+export function blankProgress() {
   return { attempts: 0, firstTry: null, misses: 0, streak: 0, mastered: false };
 }
 
@@ -229,7 +229,7 @@ export function requeue(queue, id, rng = Math.random) {
   return [...queue.slice(0, index), id, ...queue.slice(index)];
 }
 
-function advance(state, outcome, rng) {
+export function advance(state, outcome, rng) {
   if (state.queue.length === 0) throw new Error('session is already complete');
   const next = structuredClone(state);
   const id = next.queue.shift();

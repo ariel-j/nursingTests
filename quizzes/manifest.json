@@ -20,22 +20,27 @@
               "questionCount": 200,
               "topicCount": 14
             }
-          ]
+          ],
+          "flashcards": []
         },
         {
           "name": "מערכת הנשימה",
-          "quizzes": []
+          "quizzes": [],
+          "flashcards": []
         },
         {
           "name": "מערכת ההפרשה",
-          "quizzes": []
+          "quizzes": [],
+          "flashcards": []
         },
         {
           "name": "מערכת האנדוקרינולוגיה",
-          "quizzes": []
+          "quizzes": [],
+          "flashcards": []
         }
       ],
-      "quizzes": []
+      "quizzes": [],
+      "flashcards": []
     }
   ]
 }

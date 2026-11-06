@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>כרטיסיות</title>
+  <link rel="preload" href="fonts/assistant-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/cards.js"></script>
+  <script type="module" src="js/a11y.js"></script>
+</head>
+<body>
+  <main class="page">
+    <nav class="top-nav">
+      <a href="./">→ כל הבחנים</a>
+      <button id="to-start" class="link-button" type="button" hidden>תרגול חדש</button>
+    </nav>
+
+    <header class="quiz-header">
+      <p id="subject" class="kicker"></p>
+      <h1 id="deck-title">כרטיסיות</h1>
+    </header>
+    <p id="status" class="status" role="status">טוען…</p>
+
+    <!-- Start: resume or choose what to practice -->
+    <section id="start" hidden>
+      <p id="description" class="lede"></p>
+
+      <div id="resume-box" class="card resume" hidden>
+        <p id="resume-text"></p>
+        <button id="resume" class="primary" type="button">המשך מאיפה שעצרת</button>
+      </div>
+
+      <form id="new-session" class="card">
+        <h2>תרגול חדש</h2>
+        <fieldset class="topics">
+          <legend>נושאים</legend>
+          <div class="topic-actions">
+            <button id="all-topics" class="chip" type="button">בחר הכל</button>
+            <button id="no-topics" class="chip" type="button">נקה</button>
+          </div>
+          <ul id="topic-list" class="topic-list"></ul>
+        </fieldset>
+        <button id="start-button" class="primary" type="submit">התחל</button>
+      </form>
+
+      <div class="card rules">
+        <p>כרטיס אחד בכל פעם: קוראים את החזית, מנסים להיזכר, מציגים את התשובה ומסמנים אם ידעתם. כרטיס שלא ידעתם חוזר בהמשך, והוא נחשב נשלט רק אחרי שתי פעמים ברצף שידעתם.</p>
+        <p>ההתקדמות נשמרת בדפדפן, אפשר לסגור ולחזור.</p>
+        <p class="keys-hint">מקלדת: <kbd>רווח</kbd> להצגת התשובה, <kbd>1</kbd> ידעתי, <kbd>2</kbd> לא ידעתי.</p>
+      </div>
+      <p id="best" class="muted" hidden></p>
+    </section>
+
+    <!-- Play -->
+    <section id="play" hidden>
+      <div class="card strip">
+        <svg class="ecg" viewBox="0 0 1000 64" preserveAspectRatio="none" aria-hidden="true">
+          <line x1="0" y1="40" x2="1000" y2="40" class="ecg-baseline"/>
+          <path id="trace" class="ecg-trace" d="M0 40"/>
+        </svg>
+        <p id="progress-text" class="stats"></p>
+      </div>
+
+      <article class="card">
+        <p id="last-rating" class="muted" role="status"></p>
+        <div class="question-meta">
+          <span id="topic"></span>
+          <span id="retry-label" class="retry" hidden></span>
+        </div>
+        <h2 id="card-front" class="question" tabindex="-1"></h2>
+        <div id="back-box" class="card-back" hidden>
+          <p class="muted">התשובה</p>
+          <p id="card-back" class="card-back-text" tabindex="-1"></p>
+        </div>
+        <div class="actions">
+          <button id="reveal" class="primary" type="button">הצג תשובה <kbd>רווח</kbd></button>
+        </div>
+        <div id="rating" class="actions rating" hidden>
+          <button id="known" class="primary" type="button">ידעתי <kbd>1</kbd></button>
+          <button id="unknown" class="secondary" type="button">לא ידעתי <kbd>2</kbd></button>
+        </div>
+      </article>
+    </section>
+
+    <!-- End -->
+    <section id="done" hidden>
+      <div class="card">
+        <h2>סיימת!</h2>
+        <p class="muted">ידעתי בניסיון ראשון</p>
+        <p id="score-percent" class="score"></p>
+        <p id="score"></p>
+
+        <div class="actions">
+          <button id="retry-missed" class="primary" type="button" hidden></button>
+          <button id="new-practice" class="secondary" type="button">תרגול חדש</button>
+          <a class="button secondary" href="./">כל הבחנים</a>
+        </div>
+
+        <h3>נושאים לחיזוק</h3>
+        <p id="no-weak" class="muted" hidden>אין, כל הכבוד!</p>
+        <ul id="weak-topics" class="weak-topics"></ul>
+
+        <h3 id="retried-title">כרטיסיות שחזרו</h3>
+        <p id="no-retried" class="muted" hidden>כל הכרטיסיות נענו נכון בפעם הראשונה.</p>
+        <div id="retried"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer page">
+    <nav>
+      <a href="accessibility.html">הצהרת נגישות</a>
+      <a href="privacy.html">מדיניות פרטיות</a>
+    </nav>
+    <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+  </footer>
+</body>
+</html>

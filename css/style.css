@@ -533,3 +533,25 @@ kbd {
 .admin-tab span { display: block; padding: 0.55rem 0.5rem; writing-mode: vertical-rl; }
 .admin-tab:hover, .admin-tab:focus-visible { background: var(--trace); color: #fff; }
 @media print { .admin-tab { display: none; } }
+
+/* ---------- flashcards ---------- */
+
+.card-back {
+  margin-block: var(--gap);
+  padding: 0.9rem 1rem;
+  border-inline-start: 4px solid var(--ok);
+  background: var(--ok-bg);
+  border-radius: 4px;
+}
+.card-back p { margin-block: 0 0.4rem; }
+.card-back-text { white-space: pre-line; font-size: 1.2rem; }
+.card-back-text:focus, .question:focus { outline: 3px solid var(--focus); outline-offset: 2px; }
+.rating { gap: 0.75rem; }
+/* The kind of a home-page card is stated in text, not only in color. */
+.kind {
+  padding-inline: 0.6rem;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  font-weight: 600;
+}
+.quiz-card.deck-card { border-inline-start-color: var(--ink); }

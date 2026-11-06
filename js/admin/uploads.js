@@ -18,6 +18,7 @@ export const isValidId = (id) =>
 const WRITABLE = [
   /^quizzes\/(?:subjects|manifest)\.json$/,
   /^quizzes\/[a-z0-9]+(?:-[a-z0-9]+)*\.json$/,
+  /^flashcards\/[a-z0-9]+(?:-[a-z0-9]+)*\.json$/,
   /^summaries\/list\.json$/,
   /^summaries\/[a-z0-9]+(?:-[a-z0-9]+)*\.html$/,
   /^css\/summary\.css$/,
@@ -33,6 +34,7 @@ export function isWritablePath(p) {
 }
 
 export const quizPath = (id) => `quizzes/${id}.json`;
+export const deckPath = (id) => `flashcards/${id}.json`;
 export const summaryPath = (id) => `summaries/${id}.html`;
 
 const ext = (name) => /\.([a-z0-9]+)$/i.exec(name)?.[1]?.toLowerCase() ?? '';

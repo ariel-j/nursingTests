@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { seal, open, passwordProblems, backoffMs, looksLikeToken } from '../js/admin/vault.js';
 import { checkUpload, checkVideo, isWritablePath, isValidId, withSummaryAccent, setSummaryAccent, withoutSummaryAccent, readSummaryHue } from '../js/admin/uploads.js';
 import { createGithub, ConflictError } from '../js/admin/github.js';
-import { planQuiz, planSummary, planStructure, planQuizDelete, detectQuizFormat, planQuizEdit, planSummaryDelete, planSummaryEdit, planSummaryOrder } from '../js/admin/actions.js';
+import { planQuiz, planSummary, planStructure, planQuizDelete, detectQuizFormat, planQuizEdit, planSummaryDelete, planSummaryEdit, planSummaryOrder, planDeck, planDeckEdit, planDeckDelete, manifestFile } from '../js/admin/actions.js';
 import { pageErrors } from '../js/summary-check.js';
 import { validateCatalog } from '../js/catalog.js';
 
@@ -395,4 +395,135 @@ test('every Phase 1.5 plan writes only allowlisted paths and commits once withou
     assert.equal(log.filter((r) => r.path.endsWith('/git/commits') && r.method === 'POST').length, 1);
     assert.equal(JSON.parse(log.at(-1).body).force, false);
   }
+});
+
+// ---------- Phase 2: flashcard decks in the panel ----------
+const deckCat = { subjects: [{ name: 'מקצוע', units: ['יחידה', 'אחרת'] }] };
+const deckSrc = (id = 'new-deck', extra = {}) => ({
+  id, subject: 'מקצוע', unit: 'יחידה', title: 'חפיסה חדשה',
+  cards: [{ id: 'c1', front: 'חזית מדומה', back: 'גב מדומה', topic: 'נושא' }, { id: 'c2', front: 'עוד חזית', back: 'עוד גב' }],
+  ...extra,
+});
+const makeDeck = (id = 'new-deck', extra = {}) => JSON.parse(planDeck({ source: deckSrc(id, extra), catalog: deckCat, decks: [] }).files[0].text);
+
+test('deck paths are allowlisted like quizzes, with the same id rules', () => {
+  assert.ok(isWritablePath('flashcards/my-deck.json'));
+  for (const bad of ['flashcards/../x.json', 'flashcards/A.json', 'flashcards/a/b.json', 'flashcards/manifest.json', 'flashcards/list.json', 'flashcards/x.html', 'flashcards/.json', '/flashcards/a.json']) {
+    assert.ok(!isWritablePath(bad), bad);
+  }
+});
+
+test('plan deck: add, manifest has it, duplicates / bad placement / unknown keys / bad ids refused', () => {
+  const plan = planDeck({ source: deckSrc(), catalog: deckCat, decks: [] });
+  assert.deepEqual(plan.errors, []);
+  assert.deepEqual(plan.files.map((f) => f.path), ['flashcards/new-deck.json', 'quizzes/manifest.json']);
+  const m = JSON.parse(plan.files[1].text);
+  assert.deepEqual(m.subjects[0].units[0].flashcards, [{ id: 'new-deck', title: 'חפיסה חדשה', description: '', cardCount: 2, topicCount: 2 }]);
+  assert.match(plan.summary, /חפיסה "חפיסה חדשה" \(2 כרטיסיות\)/);
+  const stored = JSON.parse(plan.files[0].text);
+
+  assert.ok(planDeck({ source: deckSrc(), catalog: deckCat, decks: [stored] }).errors.some((e) => /כבר קיים/.test(e)));
+  assert.deepEqual(planDeck({ source: deckSrc(), catalog: deckCat, decks: [stored], replace: true }).errors, []);
+  assert.ok(planDeck({ source: deckSrc(), overrides: { unit: 'אין' }, catalog: deckCat, decks: [] }).errors.length > 0);
+  assert.ok(planDeck({ source: deckSrc('../evil'), catalog: deckCat, decks: [] }).errors.length > 0);
+  assert.ok(planDeck({ source: { ...deckSrc(), isAdmin: true }, catalog: deckCat, decks: [] }).errors.length > 0);
+  assert.ok(planDeck({ source: deckSrc('manifest'), catalog: deckCat, decks: [] }).errors.length > 0, 'reserved id');
+  assert.ok(planDeck({ source: { ...deckSrc(), cards: [] }, catalog: deckCat, decks: [] }).errors.length > 0);
+  assert.ok(planDeck({ source: { questions: [] }, catalog: deckCat, decks: [] }).errors.length > 0, 'a quiz file is not a deck');
+  const html = planDeck({ source: deckSrc('html-deck', { cards: [{ id: 'c1', front: '<script>alert(1)</script>', back: '<img src=x onerror=1>' }] }), catalog: deckCat, decks: [] });
+  assert.deepEqual(html.errors, [], 'markup in card text is allowed: the player renders it as plain text');
+});
+
+test('plan deck edit / delete: details and move; id immutable; manifest stays right', () => {
+  const d = makeDeck();
+  const edit = planDeckEdit({ id: 'new-deck', patch: { title: ' חדש ', description: 'תיאור', unit: 'אחרת' }, catalog: deckCat, decks: [d] });
+  assert.deepEqual(edit.errors, []);
+  const out = JSON.parse(edit.files[0].text);
+  assert.equal(out.title, 'חדש'); assert.equal(out.unit, 'אחרת'); assert.equal(out.cards.length, 2, 'cards untouched');
+  assert.equal(JSON.parse(edit.files[1].text).subjects[0].units[1].flashcards[0].title, 'חדש');
+  assert.ok(planDeckEdit({ id: 'new-deck', patch: { id: 'x' }, catalog: deckCat, decks: [d] }).errors.some((e) => /קבוע/.test(e)));
+  assert.ok(planDeckEdit({ id: 'new-deck', patch: { cards: [] }, catalog: deckCat, decks: [d] }).errors.length > 0);
+  assert.ok(planDeckEdit({ id: 'new-deck', patch: { title: d.title }, catalog: deckCat, decks: [d] }).errors.some((e) => /שינוי/.test(e)));
+  assert.ok(planDeckEdit({ id: 'nope', patch: { title: 'x' }, catalog: deckCat, decks: [d] }).errors.length > 0);
+
+  const del = planDeckDelete({ id: 'new-deck', catalog: deckCat, decks: [d] });
+  assert.deepEqual(del.deletes, ['flashcards/new-deck.json']);
+  assert.deepEqual(JSON.parse(del.files[0].text).subjects[0].units[0].flashcards, []);
+  assert.ok(planDeckDelete({ id: 'nope', catalog: deckCat, decks: [d] }).errors.length > 0);
+});
+
+test('a deck and a quiz can share an id (separate folders)', () => {
+  const q = JSON.parse(planQuiz({ source: authoring('same-id'), catalog: { subjects: [{ name: 'מקצוע', units: ['יחידה'] }] }, quizzes: [] }).files[0].text);
+  const d = makeDeck('same-id');
+  assert.deepEqual(planDeck({ source: deckSrc('same-id', { title: 'אחר' }), catalog: deckCat, decks: [], quizzes: [q] }).errors, []);
+  assert.deepEqual(planQuiz({ source: authoring('same-id'), catalog: deckCat, quizzes: [], decks: [d] }).errors, []);
+});
+
+test('structure: renames cascade into decks too; removing a unit that holds only a deck is blocked', () => {
+  const q = JSON.parse(planQuiz({ source: authoring('q-one'), catalog: deckCat, quizzes: [] }).files[0].text);
+  const d = makeDeck();
+  const after = { subjects: [{ name: 'מקצוע 2', units: ['יחידה חדשה', 'אחרת'] }] };
+  const plan = planStructure({ catalog: after, renames: { subjects: { מקצוע: 'מקצוע 2' }, units: { מקצוע: { יחידה: 'יחידה חדשה' } } }, quizzes: [q], decks: [d] });
+  assert.deepEqual(plan.errors, []);
+  assert.deepEqual(plan.files.map((f) => f.path), ['quizzes/subjects.json', 'quizzes/q-one.json', 'flashcards/new-deck.json', 'quizzes/manifest.json']);
+  const movedDeck = JSON.parse(plan.files[2].text);
+  assert.equal(movedDeck.subject, 'מקצוע 2'); assert.equal(movedDeck.unit, 'יחידה חדשה');
+  assert.equal(JSON.parse(plan.files[3].text).subjects[0].units[0].flashcards[0].id, 'new-deck');
+  assert.match(plan.summary, /1 מבחנים ו1 חפיסות/);
+
+  const blocked = planStructure({ catalog: { subjects: [{ name: 'מקצוע', units: ['אחרת'] }] }, quizzes: [], decks: [d] });
+  assert.ok(blocked.errors.some((e) => e.includes('חפיסה חדשה') && e.includes('new-deck')), 'names the deck that blocks the removal');
+  const rmSubject = planStructure({ catalog: { subjects: [{ name: 'אחר' }] }, quizzes: [], decks: [d] });
+  assert.ok(rmSubject.errors.length > 0);
+});
+
+test('EVERY plan that writes the manifest keeps the decks in it', async () => {
+  const q = JSON.parse(planQuiz({ source: authoring('q-one'), catalog: deckCat, quizzes: [] }).files[0].text);
+  const d = makeDeck();
+  const withDeck = (plan) => {
+    const m = plan.files.find((f) => f.path === 'quizzes/manifest.json');
+    assert.ok(m, 'plan writes a manifest');
+    assert.ok(JSON.parse(m.text).subjects[0].units.flatMap((u) => u.flashcards).some((x) => x.id === 'new-deck'), 'the deck is still in the manifest');
+  };
+  withDeck(planQuiz({ source: authoring('q-two'), catalog: deckCat, quizzes: [q], decks: [d] }));
+  withDeck(planQuiz({ source: authoring('q-one'), catalog: deckCat, quizzes: [q], decks: [d], replace: true }));
+  withDeck(planQuizEdit({ id: 'q-one', patch: { title: 'שונה' }, catalog: deckCat, quizzes: [q], decks: [d] }));
+  withDeck(planQuizDelete({ id: 'q-one', catalog: deckCat, quizzes: [q], decks: [d] }));
+  withDeck(planStructure({ catalog: { subjects: [{ name: 'מקצוע', units: ['יחידה', 'אחרת', 'שלישית'] }] }, quizzes: [q], decks: [d] }));
+  withDeck(planDeck({ source: deckSrc('another'), catalog: deckCat, decks: [d], quizzes: [q] }));
+  withDeck(planDeckEdit({ id: 'new-deck', patch: { title: 'שונה' }, catalog: deckCat, decks: [d], quizzes: [q] }));
+  // and a quiz kept when a deck is deleted
+  const del = planDeckDelete({ id: 'new-deck', catalog: deckCat, decks: [d], quizzes: [q] });
+  assert.equal(JSON.parse(del.files[0].text).subjects[0].units[0].quizzes.length, 1);
+  // the helper is the single source of manifest text
+  assert.equal(manifestFile([q], [d], deckCat).text, planQuizEdit({ id: 'q-one', patch: { title: q.title + 'x' }, catalog: deckCat, quizzes: [q], decks: [d] }).files[1].text.replace(/"title": "[^"]*x"/, `"title": "${q.title}"`));
+  // none of them can ever be asked to build one without decks by accident: old callers get decks = []
+  assert.equal(JSON.parse(planQuiz({ source: authoring('q-three'), catalog: deckCat, quizzes: [] }).files[1].text).subjects[0].units[0].flashcards.length, 0);
+});
+
+test('deck plans only write allowlisted paths in one non-forced commit', async () => {
+  const d = makeDeck();
+  const plans = [
+    planDeck({ source: deckSrc('second'), catalog: deckCat, decks: [d] }),
+    planDeckEdit({ id: 'new-deck', patch: { unit: 'אחרת' }, catalog: deckCat, decks: [d] }),
+    planDeckDelete({ id: 'new-deck', catalog: deckCat, decks: [d] }),
+  ];
+  for (const plan of plans) {
+    assert.deepEqual(plan.errors, []);
+    for (const p of [...plan.files.map((f) => f.path), ...(plan.deletes ?? [])]) assert.ok(isWritablePath(p), p);
+    const { fetchImpl, log } = fakeGithub();
+    await createGithub({ token: 't', owner: 'o', repo: 'r', fetchImpl }).change(async () => plan, 'm');
+    assert.equal(log.filter((r) => r.path.endsWith('/git/commits') && r.method === 'POST').length, 1);
+    assert.equal(JSON.parse(log.at(-1).body).force, false);
+  }
+});
+
+test('the flashcards template is a valid, placeable deck and uploads cleanly', async () => {
+  const read = (f) => readFile(new URL(`../templates/${f}`, import.meta.url), 'utf8');
+  const catalog = JSON.parse(await read('subjects.json'));
+  const source = JSON.parse(await read('flashcards.json'));
+  const plan = planDeck({ source, catalog, decks: [] });
+  assert.deepEqual(plan.errors, []);
+  assert.equal(JSON.parse(plan.files[0].text).cards.length, 3);
+  assert.ok(checkUpload({ name: 'flashcards.json', size: 900, bytes: bytes(await read('flashcards.json')) }).errors.length === 0);
 });
