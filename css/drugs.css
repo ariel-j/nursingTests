@@ -1,0 +1,315 @@
+/* כרטיסיות תרופות (drugs.html): browse cards, the matching game. Tokens from style.css. */
+
+.visually-hidden { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.drug-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.2rem; margin-block: 1rem 0.5rem; }
+.drug-search { flex: 1 1 18rem; min-inline-size: 0; }
+.drug-search input,
+.drug-select select {
+  inline-size: 100%;
+  padding: 0.55rem 0.8rem;
+  font: inherit;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.drug-select { display: flex; align-items: center; gap: 0.5rem; flex: 1 1 14rem; min-inline-size: 0; }
+.drug-select span { flex: none; font-size: 0.9rem; color: var(--muted); }
+.drug-check { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; }
+.drug-fields { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; margin: 0; padding: 0; border: 0; font-size: 0.9rem; }
+.drug-fields legend { float: inline-start; margin-inline-end: 0.6rem; padding: 0; color: var(--muted); }
+.drug-fields label { display: inline-flex; align-items: center; gap: 0.3rem; }
+.drug-count { margin-block: 0.25rem 0.75rem; font-size: 0.875rem; }
+
+.drug-family { margin-block-end: 1.5rem; }
+.drug-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: 10px; }
+.drug-card { padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+.drug-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.6rem; }
+.drug-name { margin: 0; font-size: 1.0625rem; font-weight: 600; line-height: 1.35; overflow-wrap: anywhere; }
+.drug-badge { padding: 0 0.5rem; font-size: 0.75rem; font-weight: 600; color: var(--accent); background: var(--accent-soft); border-radius: 999px; }
+.drug-also { margin: 0.15rem 0 0; font-size: 0.8125rem; color: var(--muted); }
+.drug-rows { display: grid; grid-template-columns: auto 1fr; gap: 0.3rem 0.75rem; margin: 0.6rem 0 0; font-size: 0.9rem; }
+.drug-rows[hidden] { display: none; }
+.drug-rows dt { color: var(--muted); font-size: 0.8125rem; padding-block-start: 0.1rem; }
+.drug-rows dd { margin: 0; overflow-wrap: anywhere; }
+.drug-rows dd.is-empty { color: var(--muted); }
+.drug-reveal { margin-block-start: 0.6rem; padding-block: 0.3rem; font-size: 0.875rem; }
+
+/* ---------- matching game ---------- */
+
+.match-status { min-block-size: 1.5em; margin-block: 0.75rem; font-weight: 500; }
+.match-board { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 12px; align-items: start; }
+.match-col { display: grid; gap: 8px; }
+.match-head { margin: 0; font-size: 0.875rem; font-weight: 500; color: var(--muted); }
+.match-item {
+  inline-size: 100%;
+  padding: 0.6rem 0.8rem;
+  font: inherit;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  text-align: start;
+  color: var(--ink);
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.match-item.is-name { font-weight: 600; }
+.match-item:hover:not(:disabled) { border-color: var(--accent); }
+.match-item[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.match-item.is-done { border-color: var(--ok); background: var(--ok-soft); color: var(--ink); cursor: default; }
+.match-item.is-wrong { border-color: var(--bad); background: var(--bad-soft); }
+@media (prefers-reduced-motion: no-preference) {
+  .match-item.is-wrong { animation: match-shake 0.35s; }
+}
+@keyframes match-shake {
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+@media (max-width: 34rem) {
+  .match-board { grid-template-columns: minmax(0, 1fr); }
+}
+
+:root[data-contrast="high"] .drug-card,
+:root[data-contrast="high"] .match-item { border-color: var(--ink); }
+:root[data-contrast="high"] .match-item.is-done { outline: 2px solid var(--ok); }
+
+/* ---------- printing: study sheet (default) and cut-out flashcards ---------- */
+
+.drug-print { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-block: 0.25rem 0.5rem; }
+.drug-print button { padding-block: 0.35rem; font-size: 0.9rem; }
+.drug-print p { flex: 1 1 100%; margin: 0; font-size: 0.8125rem; }
+.print-only, .flashcards { display: none; }
+
+@page cards { margin: 10mm 12mm; }
+
+@media print {
+  /* Light ink on white whatever the theme (beats the dark-theme token rules). */
+  html:root:not(#_) {
+    --surface: #fff; --ink: #000; --muted: #555; --line: #bbb; --bg: #fff;
+    --accent: #7a2d5c; --accent-soft: #f4e3ee;
+  }
+  .top-nav, .lede, #deck-stats, #status, .tab-list, .drug-controls, .drug-print, .drug-count,
+  .drug-reveal, #panel-review, #panel-games, #panel-test { display: none !important; }
+  /* The cards print from any tab, and with their details even in "מצב שינון". */
+  #panel-browse[hidden] { display: block !important; }
+  .drug-rows[hidden] { display: grid !important; }
+  .print-only { display: block; }
+
+  .drugs-page .site-header { margin-block-end: 4mm; }
+  .drugs-page h1 { margin-block: 0 1mm; font-size: 16pt; }
+  #print-scope { margin: 0; font-size: 9pt; }
+  .drug-family { margin-block-end: 3mm; }
+  .drug-family .group-title { margin-block: 3mm 1.5mm; font-size: 11pt; break-after: avoid; }
+  .drug-grid { grid-template-columns: 1fr 1fr; gap: 2mm; }
+  .drug-card { padding: 2mm 3mm; border-radius: 2mm; break-inside: avoid; font-size: 8.5pt; line-height: 1.35; }
+  .drug-name { font-size: 10pt; }
+  .drug-badge { font-size: 7.5pt; }
+  .drug-also { font-size: 7.5pt; }
+  .drug-rows { margin-block-start: 1mm; gap: 0.4mm 2.5mm; font-size: inherit; }
+  .drug-rows dt { font-size: 7.5pt; padding: 0; }
+
+  /* Flashcards: only the card pages print. */
+  :root[data-print="cards"] .drugs-page > :not(.flashcards) { display: none !important; }
+  :root[data-print="cards"] .flashcards { display: block; }
+  .flashcard-page {
+    page: cards;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(4, 68mm);
+    break-after: page;
+  }
+  .flashcard-page:last-child { break-after: auto; }
+  .flashcard {
+    display: flex;
+    flex-direction: column;
+    padding: 4mm 5mm;
+    overflow: hidden;
+    border: 0.3mm dashed #999; /* cut lines */
+    margin: -0.15mm; /* neighbours share one line */
+  }
+  .flashcard:empty { border-color: transparent; }
+  .flashcard.is-front { justify-content: center; align-items: center; text-align: center; gap: 2mm; }
+  .flashcard p { margin: 0; }
+  .flashcard-name { font-size: 17pt; font-weight: 700; line-height: 1.2; overflow-wrap: anywhere; }
+  .flashcard-family { font-size: 9pt; color: #555; }
+  .flashcard-exam { font-size: 8.5pt; font-weight: 600; }
+  .flashcard-title { font-size: 10.5pt; font-weight: 700; padding-block-end: 1mm; border-block-end: 0.2mm solid #ccc; }
+  .flashcard .drug-rows { font-size: 10pt; line-height: 1.35; }
+  .flashcard.is-long .drug-rows { font-size: 8.5pt; line-height: 1.3; }
+}
+
+/* ---------- games picker, suffixes, odd one out ---------- */
+
+.game-picker { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0 0.5rem; padding: 0; border: 0; }
+.game-picker label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.9rem;
+  font-weight: 500;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  cursor: pointer;
+}
+.game-picker label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.game-picker label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.game-area { margin-block-start: 0.5rem; }
+.match-item:disabled { cursor: default; }
+.stems-list { margin-block-start: 1.5rem; }
+.stems-list summary { cursor: pointer; font-weight: 600; }
+.stems-table { display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 1rem; margin-block-start: 0.75rem; font-size: 0.9rem; }
+.stems-table dt { font-weight: 600; direction: ltr; text-align: end; }
+.stems-table dd { margin: 0; overflow-wrap: anywhere; }
+
+/* ---------- topics (daily review and games) ---------- */
+
+.topics { margin-block: 0 0.75rem; padding: 0.5rem 0.9rem; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.topics summary { cursor: pointer; font-weight: 600; padding-block: 0.2rem; }
+.topics-body { margin: 0; padding: 0; border: 0; }
+.topics-actions { display: flex; gap: 1rem; margin-block: 0.5rem; }
+.topics-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: 0.35rem 1rem; }
+.topics-list .drug-check { align-items: start; }
+.topics-list input { margin-block-start: 0.25rem; }
+.games-topics .topics { margin-block-start: 1rem; }
+
+/* ---------- daily review ---------- */
+
+.review-area { margin-block-start: 0.75rem; }
+.review-card { max-inline-size: 36rem; }
+.review-progress { margin: 0 0 0.25rem; font-size: 0.8125rem; color: var(--muted); }
+.review-name { font-size: 1.35rem; }
+.review-done { padding: 0.75rem 1rem; background: var(--ok-soft); border-radius: 12px; }
+.review-card .actions { margin-block-start: 0.9rem; }
+
+/* ---------- game shell (drugs-shell.js): HUD, card, feedback, end screen ---------- */
+
+:root {
+  --pair-1: #2E6E6A; --pair-1-soft: #DCEEEC;
+  --pair-2: #8A4B00; --pair-2-soft: #F7E7D2;
+  --pair-3: #3A4FA8; --pair-3-soft: #E1E6F8;
+  --pair-4: #8E2C6E; --pair-4-soft: #F4E0EE;
+  --pair-5: #4E6B12; --pair-5-soft: #E7F0D3;
+  --gold: #B7791F;
+  --gold-ink: #8A5A10;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --pair-1: #6FC2BB; --pair-1-soft: #1D3533;
+    --pair-2: #F0B068; --pair-2-soft: #3A2A15;
+    --pair-3: #9FB0F5; --pair-3-soft: #222A4A;
+    --pair-4: #E59ACB; --pair-4-soft: #3B2234;
+    --pair-5: #B5D67A; --pair-5-soft: #27311A;
+    --gold: #F2C14E;
+    --gold-ink: #F2C14E;
+  }
+}
+:root[data-theme="dark"] {
+  --pair-1: #6FC2BB; --pair-1-soft: #1D3533;
+  --pair-2: #F0B068; --pair-2-soft: #3A2A15;
+  --pair-3: #9FB0F5; --pair-3-soft: #222A4A;
+  --pair-4: #E59ACB; --pair-4-soft: #3B2234;
+  --pair-5: #B5D67A; --pair-5-soft: #27311A;
+  --gold: #F2C14E;
+  --gold-ink: #F2C14E;
+}
+
+.game-hud { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; margin-block: 0.75rem; }
+.game-hud-stats { display: flex; gap: 0.75rem; align-items: center; }
+.game-score { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--accent); }
+.game-streak { font-weight: 600; color: var(--gold-ink); min-inline-size: 4.5rem; }
+.game-dots { display: flex; gap: 6px; }
+.game-dot { inline-size: 12px; block-size: 12px; border-radius: 50%; background: var(--line); }
+.game-dot.is-ok { background: var(--ok); }
+.game-dot.is-bad { background: var(--bad); }
+.game-dot.is-now { outline: 2px solid var(--accent); outline-offset: 2px; }
+.game-timer { position: relative; flex: 1 1 12rem; block-size: 1.6rem; border-radius: 999px; background: var(--loop-track); overflow: hidden; }
+.game-timer-fill { position: absolute; inset-block: 0; inset-inline-start: 0; background: var(--loop); border-radius: 999px; transition: inline-size 0.2s linear; }
+.game-timer.is-low .game-timer-fill { background: var(--bad); }
+.game-timer-text { position: relative; display: block; padding-inline: 0.75rem; line-height: 1.6rem; font-size: 0.85rem; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ink); }
+
+.game-card {
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.05);
+}
+.game-kicker { margin: 0 0 0.35rem; font-size: 0.85rem; font-weight: 500; color: var(--muted); }
+.game-prompt { margin: 0 0 1rem; font-size: 1.5rem; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
+.game-prompt .game-prompt-text { font-size: 1.15rem; }
+.game-options { margin: 0; }
+.game-options .option { position: relative; }
+.game-family { display: block; margin-block-start: 0.3rem; padding: 0.1rem 0.5rem; inline-size: fit-content; font-size: 0.8125rem; font-weight: 500; border-radius: 999px; }
+.game-family.is-group { color: var(--loop); background: var(--loop-track); }
+.game-family.is-odd { color: var(--accent); background: var(--accent-soft); }
+.game-feedback { margin-block-start: 0.9rem; }
+.game-feedback:empty { display: none; }
+.game-feedback p { margin-block: 0.3rem; }
+.game-feedback .is-ok { color: var(--ok); font-weight: 600; }
+.game-feedback .is-bad { color: var(--bad); font-weight: 600; }
+.game-next { margin-block-start: 0.6rem; }
+.stem-word { display: inline-block; unicode-bidi: isolate; }
+.stem-mark { color: var(--accent); background: var(--accent-soft); border-radius: 4px; padding-inline: 1px; }
+
+.game-end, .game-intro { text-align: center; }
+.game-end .game-end-stats, .game-intro .meta { justify-content: center; }
+.game-stars { margin: 0.25rem 0; font-size: 2.6rem; letter-spacing: 0.1em; color: var(--gold); line-height: 1; }
+.game-end-score { margin: 0.3rem 0; font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.game-new-best { display: inline-block; margin: 0.2rem 0 0.5rem; padding: 0.15rem 0.8rem; font-weight: 700; color: var(--surface); background: var(--gold); border-radius: 999px; }
+.game-start { min-inline-size: 10rem; font-size: 1.1rem; }
+
+.game-float {
+  position: absolute;
+  inset-block-start: -0.4rem;
+  inset-inline-end: 0.8rem;
+  font-weight: 700;
+  color: var(--ok);
+  pointer-events: none;
+  animation: game-float 0.9s ease-out forwards;
+}
+@keyframes game-float { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-1.6rem); } }
+
+@media (prefers-reduced-motion: no-preference) {
+  .game-card.is-pop { animation: game-pop 0.3s ease-out; }
+  .game-card.is-shake { animation: match-shake 0.35s; }
+  .game-family { animation: game-flip 0.45s ease-out both; transform-origin: center top; }
+  .game-options .option:nth-child(2) .game-family { animation-delay: 0.08s; }
+  .game-options .option:nth-child(3) .game-family { animation-delay: 0.16s; }
+  .game-options .option:nth-child(4) .game-family { animation-delay: 0.24s; }
+  .game-end .game-stars { animation: game-pop 0.5s ease-out; }
+  .game-options .option:not(:disabled):active { transform: scale(0.98); }
+}
+@keyframes game-pop { 0% { transform: scale(1); } 40% { transform: scale(1.02); } 100% { transform: scale(1); } }
+@keyframes game-flip { from { opacity: 0; transform: rotateX(90deg); } to { opacity: 1; transform: rotateX(0); } }
+
+/* Matching: each matched pair has its colour and a number badge. */
+.pair-badge {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 1.4rem;
+  block-size: 1.4rem;
+  margin-inline-end: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--surface);
+  background: var(--pair-color, var(--ok));
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.match-item.pair-1 { --pair-color: var(--pair-1); border-color: var(--pair-1); background: var(--pair-1-soft); }
+.match-item.pair-2 { --pair-color: var(--pair-2); border-color: var(--pair-2); background: var(--pair-2-soft); }
+.match-item.pair-3 { --pair-color: var(--pair-3); border-color: var(--pair-3); background: var(--pair-3-soft); }
+.match-item.pair-4 { --pair-color: var(--pair-4); border-color: var(--pair-4); background: var(--pair-4-soft); }
+.match-item.pair-5 { --pair-color: var(--pair-5); border-color: var(--pair-5); background: var(--pair-5-soft); }
+.match-board > .game-end { grid-column: 1 / -1; }
+@media (prefers-reduced-motion: no-preference) {
+  .match-item.is-done { animation: game-pop 0.3s ease-out; }
+}
+
+:root[data-contrast="high"] { --gold-ink: #000; }
+:root[data-contrast="high"] .game-card { border: 2px solid var(--ink); box-shadow: none; }
+:root[data-contrast="high"] .stem-mark { text-decoration: underline; }
