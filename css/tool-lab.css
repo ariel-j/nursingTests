@@ -53,3 +53,8 @@ ul.clean { margin: 0; padding-inline-start: 1.25rem; display: grid; gap: 0.25rem
 .b-care { background: var(--accent-soft); color: var(--accent-ink); }
 :root[data-contrast="high"] .bdg span:first-child { border: 1px solid #000; color: #000; }
 @media (max-width: 30rem) { .bdg { grid-template-columns: 1fr; gap: 0.2rem; } .bdg span:first-child { justify-self: start; } }
+
+/* ---------- flip cards: the question, then the answer on press ---------- */
+
+.lab-flip[aria-expanded="false"]::after { content: "הצגת התשובה"; }
+.lab-flip[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent); }

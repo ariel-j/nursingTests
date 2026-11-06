@@ -1,5 +1,6 @@
-// Shared behaviour of the pharmacology labs (tools/hypertension.html, diuretics.html, ischemia.html):
-// the step ladder, the drug tabs and the sorting drill. The content is static HTML; the sorter reads
+// Shared behaviour of the pharmacology labs (tools/hypertension.html, diuretics.html, ischemia.html,
+// oncology.html, chemo.html, antibiotics-wall.html, antibiotics-dna.html, tb-viruses.html):
+// the step ladder, the drug tabs, the flip cards and the sorting drill. The content is static HTML; the sorter reads
 // its items from data-s = { labels, items: [[text, labelIndex, why?], …] } and runs on mountDrill.
 import { mountDrill, uid } from './tool-ui.js';
 
@@ -45,6 +46,19 @@ function initTabs() {
   }
 }
 
+// Flip cards (.lab-flip): a question, and its answer shown on press. Without JS the answer is just text.
+function initFlips() {
+  for (const flip of document.querySelectorAll('.lab-flip')) {
+    const detail = flip.querySelector('.flip-detail');
+    const set = (open) => {
+      flip.setAttribute('aria-expanded', String(open));
+      detail.hidden = !open;
+    };
+    set(false);
+    flip.addEventListener('click', () => set(flip.getAttribute('aria-expanded') !== 'true'));
+  }
+}
+
 function initSorters() {
   for (const root of document.querySelectorAll('.sorter')) {
     const { labels, items } = JSON.parse(root.dataset.s);
@@ -58,5 +72,6 @@ function initSorters() {
 export function initLab() {
   initLadder();
   initTabs();
+  initFlips();
   initSorters();
 }

@@ -577,3 +577,17 @@
 - [ ] Tacrolimus: נוירוטוקסיות (רעד, כאב ראש, פרכוסים) והיפרקלמיה. מהבוחן, לא בטיוטה.
 - [ ] Mycophenolate: אינטראקציה עם סופחי מלחי מרה ונוגדי חומצה. מהבוחן, לא בטיוטה.
 - [ ] Prednisone הוא פרו-תרופה שמומרת ל-Prednisolone. מהבוחן, לא בטיוטה.
+
+---
+
+## פרמקולוגיה ב': אונקולוגיה, אנטיביוטיקה ושחפת
+
+קבצים: `quizzes/oncology-principles-1.json`, `oncology-drug-families-1.json`, `antibiotics-wall-1.json`, `antibiotics-protein-dna-1.json`, `antivirals-tb-1.json` ומעבדות `tools/oncology.html`, `chemo.html`, `antibiotics-wall.html`, `antibiotics-dna.html`, `tb-viruses.html`.
+
+שמות המקורות הוסרו מההסברים. אלה הפריטים שבטיוטה סומנו בהם כהרחבה מעבר לשקפים או כחזרה על חומר, ולכן כדאי לבדוק אותם מול חומרי הקורס:
+
+- [ ] `antivirals-tb-1`: q051-q054 (מעבר לשקפים) ומחזור החיים של HIV במעבדת השחפת והנגיפים.
+- [ ] `oncology-drug-families-1`: q078 (הנחיה מעבר לשקף).
+- [ ] `oncology-principles-1`: q049 (מחזור התא) ו‑q053 (שילוב תרופות), שנכתבו על סמך השקפים.
+- [ ] `oncology-drug-families-1`: q044, בתשובה השגויה הוחלף "שחזור DNA" ב"הכפלת DNA".
+

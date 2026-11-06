@@ -20,6 +20,10 @@
   --warn-bg: #ffffff;
 }
 
+/* style.css lays .quiz-header out as a row (quiz title next to its stats); on a tool page the header
+   is a stack: kicker, title, intro, then the step ladder. */
+.quiz-header { display: block; }
+
 .sr-only {
   position: absolute;
   inline-size: 1px;
