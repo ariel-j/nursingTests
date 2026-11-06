@@ -23,7 +23,8 @@ async function loadArticle(id) {
 async function main() {
   printBtn.disabled = true;
   const subjectId = new URLSearchParams(location.search).get('subject');
-  const chosen = subjectId === null ? SUMMARIES : summariesFor(subjectId);
+  // Interactive summaries (tools/) have no article to print.
+  const chosen = (subjectId === null ? SUMMARIES : summariesFor(subjectId)).filter((s) => !s.tool);
   if (subjectId !== null) document.getElementById('back-link').href = `./?subject=${encodeURIComponent(subjectId)}`;
   if (chosen.length === 0) {
     statusEl.textContent = 'אין סיכומים להדפסה.';

@@ -3,6 +3,9 @@
 // `subject` is the id of its subject in quizzes/subjects.json.
 // `unit` (optional) is the catalog unit the summary belongs to, shown on its hub card.
 // `study: true` means study/<id>.html (interactive practice) exists too.
+// `tool: '<name>'` is an interactive summary that lives at tools/<name>.html instead of a static
+// summaries/<id>.html page: it is listed and linked like a summary, but it is not part of the
+// combined print page (all.html) and has no summary.css accent.
 // No DOM here, so the Node tests can check it against the files.
 
 export const SUMMARIES = [
@@ -142,43 +145,131 @@ export const SUMMARIES = [
     subject: 'pharmacology-b',
     id: 'pharma-b-pituitary',
     unit: 'מבוא אנדוקרינולוגיה ויותרת המוח',
-    title: 'מעבדת ההיפופיזה',
+    title: 'סיכום ההיפופיזה',
     blurb: 'הורמונים הם שליחים כימיים. כאן עוברים על סוגי ההורמונים, על לולאות המשוב ועל הציר של ההיפותלמוס וההיפופיזה, ואחר כך על כל תרופה לפי משפחה, מנגנון ותופעות לוואי.',
   },
   {
     subject: 'pharmacology-b',
     id: 'pharma-b-thyroid',
     unit: 'בלוטת התריס',
-    title: 'מעבדת התריס',
+    title: 'סיכום התריס',
     blurb: 'בלוטת התריס קובעת את קצב המטבוליזם של הגוף. כאן עוברים על הסינתזה של T3 ו-T4, על הבקרה של TSH, ועל התרופות להיפו והיפר-תירואידיזם.',
   },
   {
     subject: 'pharmacology-b',
     id: 'pharma-b-sex-hormones',
     unit: 'הורמוני מין ואמצעי מניעה',
-    title: 'מעבדת הורמוני המין',
+    title: 'סיכום הורמוני המין',
     blurb: 'אסטרוגנים, פרוגסטרון ואנדרוגנים מיוצרים מכולסטרול ופועלים דרך קולטן בגרעין. כאן עוברים על התרופות לפי משפחה: טיפול הורמונלי, SERMs, אמצעי מניעה ואנטי אנדרוגנים.',
   },
   {
     subject: 'pharmacology-b',
     id: 'pharma-b-adrenal',
     unit: 'אדרנל וסטרואידים',
-    title: 'מעבדת האדרנל',
+    title: 'סיכום האדרנל',
     blurb: 'קורטקס האדרנל מייצר שלוש משפחות הורמונים. כאן עוברים על המבנה, על הגלוקוקורטיקואידים, על אלדוסטרון, על המחלות שבהן משתמשים בסטרואידים ועל תופעות הלוואי של טיפול ארוך.',
   },
   {
     subject: 'pharmacology-b',
     id: 'pharma-b-insulin',
     unit: 'סוכרת א׳: פיזיולוגיה ואינסולין',
-    title: 'מעבדת הסוכרת: אינסולין',
+    title: 'סיכום הסוכרת: אינסולין',
     blurb: 'איך הגוף מווסת גלוקוז, מה משתבש בסוכרת, ואילו אינסולינים ותרופות הזרקה קיימות: אינסולין, אמילין ואינקרטינים.',
   },
   {
     subject: 'pharmacology-b',
     id: 'pharma-b-oral-diabetes',
     unit: 'סוכרת ב׳: תרופות לא-אינסוליניות',
-    title: 'מעבדת הסוכרת: תרופות פומיות',
+    title: 'סיכום הסוכרת: תרופות פומיות',
     blurb: 'שבע משפחות של תרופות פומיות לסוכרת מסוג 2. לכל משפחה מנגנון אחר, ותופעות לוואי אחרות.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'tool-hypertension',
+    tool: 'hypertension',
+    unit: 'יתר לחץ דם: ACE, ARB, אלפא, בטא, CCB',
+    title: 'סיכום לחץ הדם',
+    blurb: 'תרופות ליתר לחץ דם לפי קבוצות: מעכבי ACE, חוסמי ARB, חוסמי אלפא ובטא וחוסמי תעלות סידן. לכל קבוצה יש מנגנון, תופעה אופיינית והתווית נגד.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'tool-diuretics',
+    tool: 'diuretics',
+    unit: 'משתנים',
+    title: 'סיכום המשתנים',
+    blurb: 'חמש קבוצות משתנים לפי מקום הפעולה בנפרון: תיאזידים, לולאה, חוסכי אשלגן, מעכבי קרבוניק אנהידרז ואוסמוטיים. מה פועל איפה ומה קורה לאשלגן ולסידן.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'tool-ischemia',
+    tool: 'ischemia',
+    unit: 'איסכמיה, אי-ספיקת לב והפרעות קצב',
+    title: 'סיכום הלב',
+    blurb: 'תעוקת חזה ותסמונת כלילית חריפה, אי ספיקת לב ותרופות יונוטרופיות, והפרעות קצב לפי ארבע המחלקות.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'tool-oncology',
+    tool: 'oncology',
+    unit: 'אונקולוגיה: עקרונות ועמידות',
+    title: 'סיכום האונקולוגיה: עקרונות',
+    blurb: 'איך כימותרפיה עובדת, למה היא פוגעת גם בתאים בריאים, ולמה גידולים נעשים עמידים.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'tool-chemo',
+    tool: 'chemo',
+    unit: 'אונקולוגיה: משפחות התרופות',
+    title: 'סיכום הכימותרפיה: משפחות התרופות',
+    blurb: 'כל משפחה כימותרפית עם המנגנון, הרעילות הייחודית וההגנה שלה.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'tool-antibiotics-wall',
+    tool: 'antibiotics-wall',
+    unit: 'אנטיביוטיקה א׳: עקרונות ודופן התא',
+    title: 'סיכום האנטיביוטיקה: עקרונות ודופן התא',
+    blurb: 'מהעקרונות של טיפול אנטיביוטי ועד תרופות שפוגעות בדופן התא החיידקית.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'tool-antibiotics-dna',
+    tool: 'antibiotics-dna',
+    unit: 'אנטיביוטיקה ב׳: סינתזת חלבון וחומצות גרעין',
+    title: 'סיכום האנטיביוטיקה: ריבוזום ו-DNA',
+    blurb: 'תרופות המעכבות את הריבוזום, ה-DNA והחומצה הפולית, ותכשירים ייעודיים לעמידים.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'tool-tb-viruses',
+    tool: 'tb-viruses',
+    unit: 'שחפת ותרופות נגד וירוסים',
+    title: 'סיכום השחפת והנגיפים',
+    blurb: 'ארבע תרופות שחפת, תרופות נגד שפעת, RSV והרפס, והאסטרטגיה נגד HIV.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'tool-fungi',
+    tool: 'fungi',
+    unit: 'פטריות, טפילים ותולעים',
+    title: 'סיכום הפטריות',
+    blurb: 'פוליאנים, אזולים, אקינוקנדינים ותרופות נוספות: מטרה, תופעות לוואי והתאמת תרופה לזיהום.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'tool-routes',
+    tool: 'routes',
+    unit: 'סיעוד: דרכי מתן לא-פרנטרליות',
+    title: 'סיכום דרכי המתן',
+    blurb: 'פומי, תת לשוני, נשימה, נרתיק ורקטום, עור, אף, עין ואוזן: הכנה, טכניקה ומלכודות בטיחות.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'tool-injections',
+    tool: 'injections',
+    unit: 'סיעוד: הזרקות ומתן דרך הווריד',
+    title: 'סיכום ההזרקות והעירוי',
+    blurb: 'ארבעה סוגי הזרקה, אתרים נכונים, מחטים וסיבוכי עירוי.',
   },
   {
     subject: 'nursing-fundamentals',
@@ -190,7 +281,15 @@ export const SUMMARIES = [
     subject: 'nursing-fundamentals',
     id: 'safety',
     title: 'בטיחות ובטחון',
-    blurb: 'נפילות והגבלה פיזית: כלי אומדן, צ\'קליסט, אבחנות סיכון ושעון הנוהל. עם מעבדת בטיחות אינטראקטיבית.',
+    blurb: 'נפילות והגבלה פיזית: כלי אומדן, צ\'קליסט, אבחנות סיכון ושעון הנוהל. יש גם סיכום אינטראקטיבי נפרד.',
+  },
+  {
+    subject: 'nursing-fundamentals',
+    id: 'tool-safety',
+    tool: 'safety',
+    unit: 'בטיחות ובטחון',
+    title: 'סיכום הבטיחות',
+    blurb: 'גורמים ונפילות, מחשבון סיכון, אבחנות סיעוד, שעון ההגבלה הפיזית ויעדי בטיחות.',
   },
   {
     subject: 'nursing-fundamentals',
@@ -248,7 +347,10 @@ export const SUMMARIES = [
 export const summariesFor = (subjectId) => SUMMARIES.filter((s) => s.subject === subjectId);
 
 /** Page file for a summary, relative to the summaries/ folder. */
-export const summaryFile = (id) => `${id}.html`;
+export const summaryFile = (id) => {
+  const entry = SUMMARIES.find((s) => s.id === id);
+  return entry?.tool ? `../tools/${entry.tool}.html` : `${id}.html`;
+};
 
 /** Interactive study page for a summary, relative to the summaries/ folder. */
 export const studyFile = (id) => `../study/${id}.html`;

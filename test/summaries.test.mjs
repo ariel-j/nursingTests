@@ -73,3 +73,12 @@ test('pageErrors needs exactly one correct option per mini-quiz question', () =>
   assert.equal(pageErrors(quiz(opts(0)), { id: 'heart', isSummary: true }).length, 1);
   assert.equal(pageErrors(quiz(opts(2)), { id: 'heart', isSummary: true }).length, 1);
 });
+
+test('interactive summaries point at their tools/ page and stay out of the combined print', async () => {
+  const { SUMMARIES, summaryFile } = await import('../js/summary-list.js');
+  const tools = SUMMARIES.filter((s) => s.tool);
+  assert.ok(tools.length > 0);
+  for (const s of tools) assert.equal(summaryFile(s.id), `../tools/${s.tool}.html`);
+  assert.equal(summaryFile('cardiovascular'), 'cardiovascular.html');
+  assert.ok(!SUMMARIES.some((s) => /^מעבדת /.test(s.title)), 'no title says "מעבדת" any more');
+});
