@@ -1,6 +1,7 @@
 // All summaries on one page (summaries/all.html), for printing them as a single PDF.
 // Each summary page stays the only copy of its content: this fetches the pages and moves their
-// <article> in with the DOM APIs (DOMParser does not run their scripts). Opened with #print, it
+// <article> in with the DOM APIs (DOMParser does not run their scripts, so interactive pieces are
+// dropped or shown open). Opened with #print, it
 // opens the print dialog once everything, fonts included, has loaded.
 import { SUMMARIES, summaryFile } from './summary-list.js';
 
@@ -14,6 +15,10 @@ async function loadArticle(id) {
   const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
   const article = doc.querySelector('article.summary');
   if (!article) throw new Error(`${id}: no article.summary`);
+  // The adopted copy is static (scripts do not run here): drop the parts that only work live
+  // (XP bar, mini quiz) and let the print layout open every card and tab.
+  for (const live of article.querySelectorAll('[data-live]')) live.remove();
+  article.classList.add('static');
   return document.adoptNode(article);
 }
 

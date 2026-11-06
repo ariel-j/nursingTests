@@ -36,6 +36,24 @@
         }
       ],
       "quizzes": []
+    },
+    {
+      "name": "פרמקולוגיה ב",
+      "units": [
+        {
+          "name": "חוזרים והיבטים חוקיים",
+          "quizzes": [
+            {
+              "id": "circulars-1",
+              "title": "מבחן 1",
+              "description": "חוזרים, בטיחות תרופתית וניהול טיפול תרופתי בסיעוד",
+              "questionCount": 128,
+              "topicCount": 12
+            }
+          ]
+        }
+      ],
+      "quizzes": []
     }
   ]
 }

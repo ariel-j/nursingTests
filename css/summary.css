@@ -7,13 +7,30 @@
 [data-system="cardiovascular"] { --a: #96263a; --a-soft: #f4e6e8; --a-ink: #731c2c; --a-d: #ff8496; --a-soft-d: #3d1d24; --a-ink-d: #ffb8c2; }
 [data-system="digestive"]      { --a: #5f6b1f; --a-soft: #eceedc; --a-ink: #474f17; --a-d: #bccb6c; --a-soft-d: #2a2e14; --a-ink-d: #d8e39e; }
 [data-system="endocrine"]      { --a: #a86a1e; --a-soft: #f4e9d6; --a-ink: #7e4e12; --a-d: #e8aa5c; --a-soft-d: #3a2a14; --a-ink-d: #f3cb93; }
+[data-system="circulars"]      { --a: #7a4a22; --a-soft: #f4e9dc; --a-ink: #5c3716; --a-d: #e3b08a; --a-soft-d: #3a2818; --a-ink-d: #f0cdb0; }
 [data-system="excretory"]      { --a: #126e82; --a-soft: #dcedf0; --a-ink: #0c4e5c; --a-d: #5fc4d9; --a-soft-d: #12333a; --a-ink-d: #a2ddea; }
 
 [data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
 @media (prefers-color-scheme: dark) {
   [data-system] { --accent: var(--a-d); --accent-soft: var(--a-soft-d); --accent-ink: var(--a-ink-d); }
 }
+/* An explicit light / dark choice (the circulars summary has a theme button) beats the OS setting. */
+:root[data-theme="light"] [data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
+:root[data-theme="dark"] [data-system] { --accent: var(--a-d); --accent-soft: var(--a-soft-d); --accent-ink: var(--a-ink-d); }
 :root[data-contrast="high"] [data-system] { --accent: #000000; --accent-soft: #ffffff; --accent-ink: #000000; }
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --paper: #fff8f6; --grid: #f6dcd8; --grid-strong: #edbdb7; --ink: #231a1f; --muted: #6e5c62;
+  --trace: #c0263a; --trace-soft: #f3c7cc; --card: #ffffff; --line: #e7d3d0;
+  --ok: #1d7a4b; --ok-bg: #e3f4ea; --bad: #b3261e; --bad-bg: #fbe6e4; --focus: #2b59c3;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #171214; --grid: #261c20; --grid-strong: #35252b; --ink: #f2e9ea; --muted: #b7a4a9;
+  --trace: #ff6477; --trace-soft: #4a2630; --card: #1f181b; --line: #3a2c31;
+  --ok: #5fd39a; --ok-bg: #16372a; --bad: #ff8a80; --bad-bg: #43201e; --focus: #8fb0ff;
+}
 
 /* ---------- page ---------- */
 
@@ -104,7 +121,7 @@
   @page { size: A4; margin: 14mm 14mm 16mm; }
 
   /* Always light on paper, whatever the screen theme. */
-  :root {
+  :root, :root[data-theme="dark"], :root[data-theme="light"] {
     color-scheme: light;
     --paper: #ffffff;
     --ink: #1f2328;
@@ -112,7 +129,7 @@
     --line: #d9d3cc;
     --card: #ffffff;
   }
-  [data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
+  [data-system], :root[data-theme="dark"] [data-system] { --accent: var(--a); --accent-soft: var(--a-soft); --accent-ink: var(--a-ink); }
   .summary { font-size: 10.5pt; line-height: 1.55; }
   :root[data-contrast="high"] [data-system] { --accent: #000000; --accent-soft: #ffffff; --accent-ink: #000000; }
 
