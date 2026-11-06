@@ -4,8 +4,11 @@ import { load, save, remove } from '../storage.js';
 import { ADMIN_SEEN_KEY } from '../admin-link.js';
 import { backoffMs, looksLikeToken, open, passwordProblems, seal } from './vault.js';
 import { createGithub } from './github.js';
-import { checkUpload, isValidId } from './uploads.js';
-import { planCatalog, planQuiz, planQuizDelete, planSummary, readQuizzes } from './actions.js';
+import { checkUpload, readSummaryHue } from './uploads.js';
+import {
+  planQuiz, planQuizDelete, planQuizEdit, planStructure, planSummary, planSummaryDelete, planSummaryEdit,
+  planSummaryOrder, readQuizzes,
+} from './actions.js';
 
 const VAULT_KEY = 'admin-vault';
 const IDLE_MS = 10 * 60 * 1000;
@@ -16,6 +19,8 @@ const titleEl = document.getElementById('admin-title');
 let session = null; // { gh, repo } while unlocked
 let idleTimer = null;
 let failures = 0;
+let activeTab = 'overview';
+let pendingBanner = null; // shown once at the top after a publish, then the tab reloads its lists
 
 // ---------- tiny DOM helpers ----------
 function el(tag, props = {}, ...children) {
@@ -182,6 +187,35 @@ async function loadState(snap) {
   return { catalog, list, css, quizzes };
 }
 
+function publishedBanner(text, sha) {
+  const url = `https://github.com/${session.repo.owner}/${session.repo.name}/commit/${sha}`;
+  return el('div', { class: 'admin-ok', role: 'status', tabindex: '-1', id: 'admin-banner' },
+    `פורסם: ${text}. האתר יתעדכן בעוד דקה‑שתיים. `,
+    el('a', { href: url, target: '_blank', rel: 'noopener noreferrer', text: 'הצגת ה‑commit' }));
+}
+
+/** Reloads the current tab (so its lists show the new state) with a success banner on top. */
+function refresh(banner) {
+  pendingBanner = banner;
+  renderPanel(activeTab);
+}
+
+/** Typed-id confirmation, then one commit built from fresh state. Used for every delete. */
+async function confirmedChange({ word, prompt: text, makePlan, message, out }) {
+  if (prompt(`${text}\nלאישור הקלידו: ${word}`) !== word) return;
+  document.getElementById('admin-banner')?.remove();
+  await guarded(async () => {
+    say('מפרסם…');
+    const { sha, plan } = await session.gh.change(async (api) => {
+      const plan = makePlan(await loadState(api));
+      if (plan.errors.length > 0) throw new Error(plan.errors.join(' · '));
+      return plan;
+    }, message);
+    say('');
+    refresh(publishedBanner(plan.summary ?? message, sha));
+  }, out);
+}
+
 /**
  * Shows what will change and, after the owner confirms, commits it. `makePlan(state)` is called on the
  * state at preview time and again, on fresh state, at commit time (so a push in between cannot be lost).
@@ -198,13 +232,11 @@ function reviewFlow(makePlan, message, { needsOwnContentConfirm = true } = {}) {
       return plan;
     }, message);
     say('');
-    const url = `https://github.com/${session.repo.owner}/${session.repo.name}/commit/${sha}`;
-    out.replaceChildren(el('div', { class: 'admin-ok', role: 'status' },
-      `פורסם: ${plan.summary ?? message}. האתר יתעדכן בעוד דקה‑שתיים. `,
-      el('a', { href: url, target: '_blank', rel: 'noopener noreferrer', text: 'הצגת ה‑commit' })));
+    refresh(publishedBanner(plan.summary ?? message, sha));
   }, out), { disabled: true });
 
   const review = async () => {
+    document.getElementById('admin-banner')?.remove();
     out.replaceChildren();
     say('בודק מול המאגר…');
     const snap = await session.gh.snapshot();
@@ -268,41 +300,91 @@ async function tabStructure(host) {
   say('טוען…');
   const state = await loadState(await session.gh.snapshot());
   say('');
-  const draft = structuredClone(state.catalog);
+  // Every item remembers the name it had (`from`), so a rename can be cascaded into its quizzes.
+  const draft = state.catalog.subjects.map((s) => ({
+    name: s.name,
+    from: s.name,
+    units: (s.units ?? []).map((u) => ({ name: u, from: u })),
+  }));
   const area = el('div');
-  const result = el('div');
+  const countIn = (subject, unit) => state.quizzes.filter((q) => q.subject === subject && (unit === undefined || q.unit === unit)).length;
+  const move = (arr, i, d) => { const j = i + d; if (j >= 0 && j < arr.length) [arr[i], arr[j]] = [arr[j], arr[i]]; };
+  const note = (from, unit) => {
+    const n = from === null ? 0 : countIn(from, unit);
+    return n > 0 ? el('span', { class: 'admin-note', text: `${n} מבחנים` }) : null;
+  };
 
   const draw = () => {
-    area.replaceChildren(...draft.subjects.map((s, si) => el('section', { class: 'admin-card' },
+    area.replaceChildren(...draft.map((s, si) => el('section', { class: 'admin-card' },
       el('div', { class: 'admin-row' },
         el('input', { type: 'text', value: s.name, 'aria-label': 'שם נושא', oninput: (e) => { s.name = e.target.value; } }),
-        button('↑', () => { move(draft.subjects, si, -1); draw(); }, { 'aria-label': 'העלאת נושא', class: 'secondary' }),
-        button('↓', () => { move(draft.subjects, si, 1); draw(); }, { 'aria-label': 'הורדת נושא', class: 'secondary' }),
-        button('מחיקת נושא', () => { draft.subjects.splice(si, 1); draw(); }, { class: 'secondary' })),
+        note(s.from),
+        button('↑', () => { move(draft, si, -1); draw(); }, { 'aria-label': 'העלאת נושא', class: 'secondary' }),
+        button('↓', () => { move(draft, si, 1); draw(); }, { 'aria-label': 'הורדת נושא', class: 'secondary' }),
+        button('הסרת נושא', () => { draft.splice(si, 1); draw(); }, { class: 'secondary' })),
       el('div', { class: 'admin-units' },
-        (s.units ?? []).map((u, ui) => el('div', { class: 'admin-row' },
-          el('input', { type: 'text', value: u, 'aria-label': 'שם יחידה', oninput: (e) => { s.units[ui] = e.target.value; } }),
+        s.units.map((u, ui) => el('div', { class: 'admin-row' },
+          el('input', { type: 'text', value: u.name, 'aria-label': 'שם יחידה', oninput: (e) => { u.name = e.target.value; } }),
+          note(s.from, u.from),
           button('↑', () => { move(s.units, ui, -1); draw(); }, { 'aria-label': 'העלאת יחידה', class: 'secondary' }),
           button('↓', () => { move(s.units, ui, 1); draw(); }, { 'aria-label': 'הורדת יחידה', class: 'secondary' }),
-          button('מחיקה', () => { s.units.splice(ui, 1); if (s.units.length === 0) delete s.units; draw(); }, { class: 'secondary' }))),
-        button('+ יחידה', () => { (s.units ??= []).push('יחידה חדשה'); draw(); }, { class: 'secondary' })))),
-    button('+ נושא', () => { draft.subjects.push({ name: 'נושא חדש' }); draw(); }, { class: 'secondary' }));
+          button('הסרה', () => { s.units.splice(ui, 1); draw(); }, { class: 'secondary' }))),
+        button('+ יחידה', () => { s.units.push({ name: 'יחידה חדשה', from: null }); draw(); }, { class: 'secondary' })))),
+    button('+ נושא', () => { draft.push({ name: 'נושא חדש', from: null, units: [] }); draw(); }, { class: 'secondary' }));
   };
-  const move = (arr, i, d) => { const j = i + d; if (j >= 0 && j < arr.length) [arr[i], arr[j]] = [arr[j], arr[i]]; };
   draw();
 
-  const flow = reviewFlow((st) => planCatalog({ catalog: sanitize(draft), quizzes: st.quizzes }), 'ניהול: עדכון נושאים', { needsOwnContentConfirm: false });
+  // The catalog to publish, and the renames to cascade into quizzes (units keyed by the OLD subject name).
+  const build = () => {
+    const renames = { subjects: {}, units: {} };
+    const catalog = {
+      subjects: draft.map((s) => {
+        const name = s.name.trim();
+        if (s.from !== null && name !== s.from) renames.subjects[s.from] = name;
+        const units = s.units.map((u) => {
+          const unit = u.name.trim();
+          if (s.from !== null && u.from !== null && unit !== u.from) (renames.units[s.from] ??= {})[u.from] = unit;
+          return unit;
+        });
+        return units.length > 0 ? { name, units } : { name };
+      }),
+    };
+    return { catalog, renames };
+  };
+
+  const flow = reviewFlow((st) => planStructure({ ...build(), quizzes: st.quizzes }), 'ניהול: עדכון נושאים', { needsOwnContentConfirm: false });
   host.replaceChildren(
-    el('p', { class: 'admin-note', text: 'שינוי שם של נושא או יחידה שיש בהם מבחנים נחסם, כדי לא לנתק מבחנים. מחיקה וצירוף מבחנים מחדש נעשים בלשונית "מבחנים".' }),
-    area, el('div', { class: 'admin-row' }, flow.reviewBtn), flow.out, result);
+    el('p', { class: 'admin-note', text: 'שינוי שם של נושא או יחידה מתעדכן אוטומטית בכל המבחנים שבהם, באותו commit. אי אפשר להסיר נושא או יחידה שיש בהם מבחנים: העבירו או מחקו אותם קודם בלשונית "מבחנים". מתחת לכל שם מופיע מספר המבחנים שבו.' }),
+    area, el('div', { class: 'admin-row' }, flow.reviewBtn), flow.out);
 }
-const sanitize = (c) => ({
-  subjects: c.subjects.map((s) => {
-    const name = s.name.trim();
-    const units = (s.units ?? []).map((u) => u.trim());
-    return units.length > 0 ? { name, units } : { name };
-  }),
-});
+
+function quizEditForm(q, state) {
+  const k = `qe-${q.id}`;
+  const title = el('input', { type: 'text', id: `${k}-title`, value: q.title, autocomplete: 'off' });
+  const description = el('input', { type: 'text', id: `${k}-desc`, value: q.description ?? '', autocomplete: 'off' });
+  const subject = el('select', { id: `${k}-subject` }, state.catalog.subjects.map((s) => el('option', { value: s.name, text: s.name })));
+  const unit = el('select', { id: `${k}-unit` });
+  subject.value = q.subject;
+  const fillUnits = (selected) => {
+    const units = state.catalog.subjects.find((s) => s.name === subject.value)?.units ?? [];
+    unit.replaceChildren(...(units.length ? units : ['']).map((u) => el('option', { value: u, text: u || '— אין יחידות —' })));
+    unit.disabled = units.length === 0;
+    if (selected && units.includes(selected)) unit.value = selected;
+  };
+  subject.addEventListener('change', () => fillUnits());
+  fillUnits(q.unit);
+  const flow = reviewFlow((st) => planQuizEdit({
+    id: q.id,
+    patch: { title: title.value, description: description.value, subject: subject.value, unit: unit.value },
+    catalog: st.catalog,
+    quizzes: st.quizzes,
+  }), `ניהול: עריכת מבחן ${q.id}`, { needsOwnContentConfirm: false });
+  return el('div', { class: 'admin-card' },
+    el('p', { class: 'admin-note', text: 'המזהה קבוע (ההתקדמות של לומדים שמורה לפיו). לתיקון השאלות עצמן: הורידו את הקובץ, תקנו והעלו שוב עם "החלפה". שינוי כותרת משנה את מקום המבחן ברשימה, כי היא ממוינת לפי כותרת.' }),
+    field(`${k}-title`, 'כותרת', title), field(`${k}-desc`, 'תיאור (אופציונלי)', description),
+    field(`${k}-subject`, 'נושא', subject), field(`${k}-unit`, 'יחידה', unit),
+    el('div', { class: 'admin-row' }, flow.reviewBtn), flow.out);
+}
 
 async function tabQuizzes(host) {
   say('טוען…');
@@ -354,24 +436,26 @@ async function tabQuizzes(host) {
     });
   }, 'ניהול: הוספת מבחן');
 
-  const deleteOut = el('div');
-  const list = el('ul', {}, state.quizzes.map((q) => el('li', {},
-    `${q.title} (${q.id}) · ${q.subject}${q.unit ? ` › ${q.unit}` : ''} · ${q.questions.length} שאלות `,
-    button('מחיקה', () => {
-      const typed = prompt(`למחיקת המבחן הקלידו את המזהה: ${q.id}`);
-      if (typed !== q.id) return;
-      guarded(async () => {
-        say('מוחק…');
-        await session.gh.change(async (api) => {
-          const st = await loadState(api);
-          const plan = planQuizDelete({ id: q.id, catalog: st.catalog, quizzes: st.quizzes });
-          if (plan.errors.length > 0) throw new Error(plan.errors.join(' · '));
-          return plan;
-        }, `ניהול: מחיקת מבחן ${q.id}`);
-        say('');
-        deleteOut.replaceChildren(el('div', { class: 'admin-ok', role: 'status', text: 'המבחן נמחק.' }));
-      }, deleteOut);
-    }, { class: 'secondary' }))));
+  const listOut = el('div');
+  const list = el('ul', { class: 'admin-list' }, state.quizzes.map((q) => {
+    const editHost = el('div', { hidden: true });
+    const editBtn = button('עריכה', () => {
+      if (editHost.hidden && editHost.childElementCount === 0) editHost.append(quizEditForm(q, state));
+      editHost.hidden = !editHost.hidden;
+      editBtn.setAttribute('aria-expanded', String(!editHost.hidden));
+    }, { class: 'secondary', 'aria-expanded': 'false' });
+    return el('li', {},
+      `${q.title} (${q.id}) · ${q.subject}${q.unit ? ` › ${q.unit}` : ''} · ${q.questions.length} שאלות `,
+      el('span', { class: 'admin-row' }, editBtn,
+        button('מחיקה', () => confirmedChange({
+          word: q.id,
+          prompt: `מחיקת המבחן "${q.title}" היא סופית (ההתקדמות של לומדים בדפדפנים שלהם תישאר אבל לא תהיה מקושרת לכלום).`,
+          makePlan: (st) => planQuizDelete({ id: q.id, catalog: st.catalog, quizzes: st.quizzes }),
+          message: `ניהול: מחיקת מבחן ${q.id}`,
+          out: listOut,
+        }), { class: 'secondary' })),
+      editHost);
+  }));
 
   host.replaceChildren(
     el('section', { class: 'admin-card' },
@@ -383,7 +467,7 @@ async function tabQuizzes(host) {
       field('q-subject', 'נושא', f.subject), field('q-unit', 'יחידה', f.unit),
       el('div', { class: 'admin-check' }, f.replace, el('label', { for: 'q-replace', text: 'החלפה של מבחן קיים עם אותו מזהה' })),
       el('div', { class: 'admin-row' }, flow.reviewBtn), flow.out),
-    el('section', { class: 'admin-card' }, el('h2', { text: 'מבחנים קיימים' }), list, deleteOut));
+    el('section', { class: 'admin-card' }, el('h2', { text: 'מבחנים קיימים' }), list, listOut));
 }
 
 async function tabSummaries(host) {
@@ -432,8 +516,63 @@ async function tabSummaries(host) {
       field('su-hue', 'גוון מבטא (0–359)', f.hue),
       el('div', { class: 'admin-check' }, f.replace, el('label', { for: 'su-replace', text: 'החלפה של סיכום קיים עם אותו מזהה' })),
       el('div', { class: 'admin-row' }, flow.reviewBtn), flow.out),
-    el('section', { class: 'admin-card' }, el('h2', { text: 'סיכומים קיימים' }),
-      el('ul', {}, state.list.summaries.map((s) => el('li', { text: `${s.title} (${s.id})` })))));
+    manageSummaries(state));
+}
+
+function manageSummaries(state) {
+  const order = state.list.summaries.map((x) => x.id);
+  const byId = new Map(state.list.summaries.map((x) => [x.id, x]));
+  const listEl = el('ul', { class: 'admin-list' });
+  const out = el('div');
+  const orderFlow = reviewFlow((st) => planSummaryOrder({ order, list: st.list }), 'ניהול: סדר הסיכומים', { needsOwnContentConfirm: false });
+  const move = (i, d) => { const j = i + d; if (j >= 0 && j < order.length) [order[i], order[j]] = [order[j], order[i]]; };
+
+  const draw = () => listEl.replaceChildren(...order.map((id, i) => {
+    const sm = byId.get(id);
+    const editHost = el('div', { hidden: true });
+    const editBtn = button('עריכה', () => {
+      if (editHost.hidden && editHost.childElementCount === 0) editHost.append(summaryEditForm(sm, state));
+      editHost.hidden = !editHost.hidden;
+      editBtn.setAttribute('aria-expanded', String(!editHost.hidden));
+    }, { class: 'secondary', 'aria-expanded': 'false' });
+    return el('li', {},
+      `${sm.title} (${sm.id}) `,
+      el('span', { class: 'admin-row' },
+        button('↑', () => { move(i, -1); draw(); }, { 'aria-label': `העלאת ${sm.title}`, class: 'secondary' }),
+        button('↓', () => { move(i, 1); draw(); }, { 'aria-label': `הורדת ${sm.title}`, class: 'secondary' }),
+        editBtn,
+        button('מחיקה', () => confirmedChange({
+          word: sm.id,
+          prompt: `מחיקת הסיכום "${sm.title}" מסירה את הדף שלו מהאתר (קישורים ששמורים אצל אנשים יפסיקו לעבוד).`,
+          makePlan: (st) => planSummaryDelete({ id: sm.id, list: st.list, css: st.css }),
+          message: `ניהול: מחיקת סיכום ${sm.id}`,
+          out,
+        }), { class: 'secondary' })),
+      editHost);
+  }));
+  draw();
+  return el('section', { class: 'admin-card' },
+    el('h2', { text: 'סיכומים קיימים' }),
+    el('p', { class: 'admin-note', text: 'הסדר כאן קובע את הסדר בדף הסיכומים ובקובץ ה‑PDF המאוחד. לשינוי תוכן הדף: העלו אותו שוב עם "החלפה" בטופס שלמעלה.' }),
+    listEl,
+    el('div', { class: 'admin-row' }, orderFlow.reviewBtn), orderFlow.out, out);
+}
+
+function summaryEditForm(sm, state) {
+  const k = `se-${sm.id}`;
+  const hueNow = readSummaryHue(state.css, sm.id);
+  const title = el('input', { type: 'text', id: `${k}-title`, value: sm.title, autocomplete: 'off' });
+  const blurb = el('input', { type: 'text', id: `${k}-blurb`, value: sm.blurb, autocomplete: 'off' });
+  const hue = el('input', { type: 'number', id: `${k}-hue`, min: '0', max: '359', value: hueNow === null ? '' : String(hueNow) });
+  const flow = reviewFlow((st) => planSummaryEdit({
+    id: sm.id, title: title.value, blurb: blurb.value,
+    hue: hue.value === '' || Number(hue.value) === hueNow ? undefined : hue.value,
+    list: st.list, css: st.css,
+  }), `ניהול: עריכת סיכום ${sm.id}`, { needsOwnContentConfirm: false });
+  return el('div', { class: 'admin-card' },
+    field(`${k}-title`, 'כותרת', title), field(`${k}-blurb`, 'תיאור קצר', blurb),
+    field(`${k}-hue`, 'גוון מבטא (0–359)', hue, hueNow === null ? 'לסיכום הזה יש צבע שנקבע ידנית. השאירו ריק כדי לא לשנות אותו.' : undefined),
+    el('div', { class: 'admin-row' }, flow.reviewBtn), flow.out);
 }
 
 const TEMPLATES = [
@@ -475,6 +614,7 @@ const TABS = [
 ];
 
 function renderPanel(active = 'overview') {
+  activeTab = active;
   titleEl.textContent = 'ניהול האתר';
   const host = el('div');
   const nav = el('ul', { class: 'admin-tabs' }, TABS.map((t) => el('li', {},
@@ -483,7 +623,8 @@ function renderPanel(active = 'overview') {
     el('div', { class: 'admin-row' },
       el('span', { class: 'admin-note', text: `מחובר ל‑${session.repo.owner}/${session.repo.name} (${session.repo.branch})` }),
       button('נעילה', () => lock(), { class: 'secondary' })),
-    el('nav', { 'aria-label': 'אזורי ניהול' }, nav), host);
+    el('nav', { 'aria-label': 'אזורי ניהול' }, nav), pendingBanner, host);
+  if (pendingBanner) { say(''); pendingBanner.focus(); pendingBanner = null; }
   guarded(() => TABS.find((t) => t.id === active).render(host), host);
 }
 

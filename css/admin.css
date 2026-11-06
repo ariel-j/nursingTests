@@ -35,3 +35,9 @@
 .admin-meter > span { display: block; block-size: 100%; background: var(--bad); }
 .admin-meter[data-level="ok"] > span { background: var(--ok); }
 .admin-note { color: var(--muted); font-size: 0.95rem; }
+
+.admin-list { list-style: none; margin: 0; padding: 0; }
+.admin-list > li { padding-block: 0.6rem; border-block-end: 1px solid var(--line); }
+.admin-list > li:last-child { border-block-end: 0; }
+.admin-list .admin-row { margin-block: 0.4rem 0; }
+#admin-banner:focus { outline: 3px solid var(--focus); outline-offset: 2px; }

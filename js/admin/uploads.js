@@ -75,19 +75,45 @@ export function checkVideo({ name, size, bytes }) {
   return errors;
 }
 
-/**
- * Adds the per-summary accent line to summary.css (before the generic [data-system] rule) when it is
- * not there yet. Only a validated id and a clamped integer hue ever reach the CSS text.
- */
+// The per-summary accent line in summary.css. Only a validated id and a clamped integer hue ever reach it.
+const accentRe = (id) => new RegExp(`^\\[data-system="${id}"\\][^\\n]*\\n?`, 'm');
+const clampHue = (hue) => Math.max(0, Math.min(359, Math.trunc(Number(hue)) || 0));
+const accentLine = (id, h) =>
+  `[data-system="${id}"] { --a: hsl(${h} 55% 30%); --a-soft: hsl(${h} 40% 92%); --a-ink: hsl(${h} 55% 22%); ` +
+  `--a-d: hsl(${h} 65% 70%); --a-soft-d: hsl(${h} 35% 15%); --a-ink-d: hsl(${h} 65% 80%); }\n`;
+const ACCENT_MARKER = '\n[data-system] { --accent: var(--a);';
+
+function insertAccent(css, id, hue) {
+  const at = css.indexOf(ACCENT_MARKER);
+  if (at === -1) throw new Error('summary.css has an unexpected layout');
+  return `${css.slice(0, at)}\n${accentLine(id, clampHue(hue)).trimEnd()}${css.slice(at)}`;
+}
+
+/** Adds the accent line when it is not there yet; an existing line is kept as it is. */
 export function withSummaryAccent(css, id, hue = 200) {
   if (!isValidId(id)) throw new Error('bad summary id');
   if (css.includes(`[data-system="${id}"]`)) return css;
-  const h = Math.max(0, Math.min(359, Math.trunc(Number(hue)) || 0));
-  const line =
-    `[data-system="${id}"] { --a: hsl(${h} 55% 30%); --a-soft: hsl(${h} 40% 92%); --a-ink: hsl(${h} 55% 22%); ` +
-    `--a-d: hsl(${h} 65% 70%); --a-soft-d: hsl(${h} 35% 15%); --a-ink-d: hsl(${h} 65% 80%); }\n`;
-  const marker = '\n[data-system] { --accent: var(--a);';
-  const at = css.indexOf(marker);
-  if (at === -1) throw new Error('summary.css has an unexpected layout');
-  return `${css.slice(0, at)}\n${line.trimEnd()}${css.slice(at)}`;
+  return insertAccent(css, id, hue);
+}
+
+/** Sets the accent hue: replaces the id's line, or adds it when missing. */
+export function setSummaryAccent(css, id, hue) {
+  if (!isValidId(id)) throw new Error('bad summary id');
+  const re = accentRe(id);
+  if (!re.test(css)) return insertAccent(css, id, hue);
+  return css.replace(re, accentLine(id, clampHue(hue)));
+}
+
+/** Removes the id's accent line (nothing else); unchanged when it has none. */
+export function withoutSummaryAccent(css, id) {
+  if (!isValidId(id)) throw new Error('bad summary id');
+  return css.replace(accentRe(id), '');
+}
+
+/** The hue of an accent written by the panel; null for hand-written (hex) accents or none. */
+export function readSummaryHue(css, id) {
+  if (!isValidId(id)) return null;
+  const line = accentRe(id).exec(css)?.[0];
+  const m = line && /--a: hsl\((\d{1,3}) /.exec(line);
+  return m ? Number(m[1]) : null;
 }

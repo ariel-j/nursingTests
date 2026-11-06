@@ -139,4 +139,14 @@ Adds subjects/units, quizzes and summaries from the browser and commits them to 
 2. Open `/admin/`, paste the token and choose a password (12+ characters). The token is encrypted with the password (PBKDF2 + AES-GCM) and stored only in that browser; it is never sent anywhere but `api.github.com`. After the first unlock a side "ניהול" tab appears on that browser.
 3. Use the "תבניות" tab for ready-to-upload example files (quiz in authoring or site format, summary page, subjects).
 
+What you can manage (every action previews the exact files first and publishes as one commit):
+
+| | Add | Edit | Delete |
+|---|---|---|---|
+| Subjects / units | yes | rename (cascades into their quizzes), reorder | only when they hold no quizzes |
+| Quizzes | upload (site or authoring format) | title, description, move to another subject/unit; to fix questions re-upload with "החלפה" | yes (type the id to confirm) |
+| Summaries | upload HTML | title, blurb, accent hue, order; to change the page re-upload with "החלפה" | yes (page, list entry and accent together; type the id to confirm) |
+
+A quiz's id is fixed: learners' saved progress in their browsers is keyed by it.
+
 The password protects a lost or shared device, not a compromised one; the real gate is the token (revoke it at GitHub if it leaks). Every upload is checked with the same validators as `npm run validate`, summary HTML is held to a strict allowlist, and `.github/workflows/check.yml` re-checks each push. Planned next: flashcards, then videos.

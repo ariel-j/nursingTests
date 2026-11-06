@@ -2,9 +2,9 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { seal, open, passwordProblems, backoffMs, looksLikeToken } from '../js/admin/vault.js';
-import { checkUpload, checkVideo, isWritablePath, isValidId, withSummaryAccent } from '../js/admin/uploads.js';
+import { checkUpload, checkVideo, isWritablePath, isValidId, withSummaryAccent, setSummaryAccent, withoutSummaryAccent, readSummaryHue } from '../js/admin/uploads.js';
 import { createGithub, ConflictError } from '../js/admin/github.js';
-import { planQuiz, planSummary, planCatalog, planQuizDelete, detectQuizFormat } from '../js/admin/actions.js';
+import { planQuiz, planSummary, planStructure, planQuizDelete, detectQuizFormat, planQuizEdit, planSummaryDelete, planSummaryEdit, planSummaryOrder } from '../js/admin/actions.js';
 import { pageErrors } from '../js/summary-check.js';
 import { validateCatalog } from '../js/catalog.js';
 
@@ -217,10 +217,10 @@ test('plan quiz: authoring format converted, manifest refreshed, duplicates and 
 
 test('plan catalog: cannot orphan a quiz; delete refreshes the manifest', () => {
   const quiz = JSON.parse(planQuiz({ source: authoring(), catalog, quizzes: [] }).files[0].text);
-  assert.ok(planCatalog({ catalog: { subjects: [{ name: 'מקצוע', units: ['אחרת'] }] }, quizzes: [quiz] }).errors.length > 0);
-  const ok = planCatalog({ catalog: { subjects: [{ name: 'מקצוע', units: ['יחידה', 'חדשה'] }] }, quizzes: [quiz] });
+  assert.ok(planStructure({ catalog: { subjects: [{ name: 'מקצוע', units: ['אחרת'] }] }, quizzes: [quiz] }).errors.length > 0);
+  const ok = planStructure({ catalog: { subjects: [{ name: 'מקצוע', units: ['יחידה', 'חדשה'] }] }, quizzes: [quiz] });
   assert.deepEqual(ok.errors, []);
-  assert.ok(planCatalog({ catalog: { subjects: [] }, quizzes: [] }).errors.length > 0);
+  assert.ok(planStructure({ catalog: { subjects: [] }, quizzes: [] }).errors.length > 0);
   const del = planQuizDelete({ id: 'new-quiz', catalog, quizzes: [quiz] });
   assert.deepEqual(del.deletes, ['quizzes/new-quiz.json']);
   assert.ok(planQuizDelete({ id: 'nope', catalog, quizzes: [quiz] }).errors.length > 0);
@@ -264,5 +264,135 @@ test('reserved ids cannot be taken by quizzes or summaries', () => {
   for (const id of ['manifest', 'subjects', 'index', 'all', 'list']) {
     assert.ok(!isValidId(id), id);
     assert.ok(planQuiz({ source: authoring(id), catalog, quizzes: [] }).errors.length > 0, id);
+  }
+});
+
+// ---------- Phase 1.5: edit / delete / reorder ----------
+const readRepo = (f) => readFile(new URL(`../${f}`, import.meta.url), 'utf8');
+const quizIn = (id, subject, unit, title) => JSON.parse(planQuiz({ source: { ...authoring(id), subject, unit, title }, catalog: { subjects: [{ name: subject, units: [unit] }] }, quizzes: [] }).files[0].text);
+
+test('accent helpers: set replaces only that line, remove deletes it, hue is read back and coerced', async () => {
+  const css = await readRepo('css/summary.css');
+  const added = withSummaryAccent(css, 'abc', 100);
+  assert.equal(readSummaryHue(added, 'abc'), 100);
+  const changed = setSummaryAccent(added, 'abc', 250);
+  assert.equal(readSummaryHue(changed, 'abc'), 250);
+  assert.equal(changed.split('\n').length, added.split('\n').length, 'replaced in place, no extra line');
+  assert.equal(withoutSummaryAccent(changed, 'abc'), css, 'removing restores the original file exactly');
+  assert.equal(withoutSummaryAccent(css, 'nope'), css);
+  assert.equal(readSummaryHue(css, 'cardiovascular'), null, 'hand-written hex accents have no panel hue');
+  const injected = setSummaryAccent(css, 'abc', '10; } body { display:none');
+  assert.ok(injected.includes('hsl(0 ') && !injected.includes('display:none'), 'non-numeric hue becomes 0, text never reaches the css');
+  assert.ok(!setSummaryAccent(css, 'abc', 'x; evil').includes('evil'));
+  assert.throws(() => setSummaryAccent(css, '"] x', 1));
+  assert.throws(() => withoutSummaryAccent(css, '../x'));
+  // other summaries' lines are untouched by a neighbour with a shared prefix
+  const two = withSummaryAccent(withSummaryAccent(css, 'abc', 1), 'abc-two', 2);
+  assert.ok(withoutSummaryAccent(two, 'abc').includes('[data-system="abc-two"]'));
+});
+
+test('plan structure: rename cascades into quizzes and the manifest in one plan', () => {
+  const cat = { subjects: [{ name: 'מקצוע', units: ['יחידה', 'אחרת'] }] };
+  const q1 = { ...quizIn('q-one', 'מקצוע', 'יחידה', 'א') };
+  const after = { subjects: [{ name: 'מקצוע חדש', units: ['יחידה חדשה', 'אחרת'] }] };
+  const plan = planStructure({ catalog: after, quizzes: [q1], renames: { subjects: { מקצוע: 'מקצוע חדש' }, units: { מקצוע: { יחידה: 'יחידה חדשה' } } } });
+  assert.deepEqual(plan.errors, []);
+  assert.deepEqual(plan.files.map((f) => f.path), ['quizzes/subjects.json', 'quizzes/q-one.json', 'quizzes/manifest.json']);
+  const moved = JSON.parse(plan.files[1].text);
+  assert.equal(moved.subject, 'מקצוע חדש'); assert.equal(moved.unit, 'יחידה חדשה');
+  assert.equal(JSON.parse(plan.files[2].text).subjects[0].units[0].quizzes[0].id, 'q-one');
+  assert.ok(/1 מבחנים/.test(plan.summary));
+  // swapping two names at once works (mapping is simultaneous)
+  const q2 = { ...quizIn('q-two', 'מקצוע', 'אחרת', 'ב') };
+  const swap = planStructure({ catalog: { subjects: [{ name: 'מקצוע', units: ['אחרת', 'יחידה'] }] }, quizzes: [q1, q2], renames: { units: { מקצוע: { יחידה: 'אחרת', אחרת: 'יחידה' } } } });
+  assert.deepEqual(swap.errors, []);
+  assert.equal(JSON.parse(swap.files.find((f) => f.path === 'quizzes/q-one.json').text).unit, 'אחרת');
+  void cat;
+});
+
+test('plan structure: rename onto an existing name, or removing a non-empty unit/subject, is refused with the quiz titles', () => {
+  const q1 = { ...quizIn('q-one', 'מקצוע', 'יחידה', 'מבחן ראשון') };
+  const dupe = planStructure({ catalog: { subjects: [{ name: 'מקצוע', units: ['x', 'x'] }] }, quizzes: [q1], renames: { units: { מקצוע: { יחידה: 'x' } } } });
+  assert.ok(dupe.errors.length > 0 && dupe.files.length === 0);
+  const rm = planStructure({ catalog: { subjects: [{ name: 'מקצוע', units: ['אחרת'] }] }, quizzes: [q1] });
+  assert.ok(rm.errors.some((e) => e.includes('מבחן ראשון') && e.includes('q-one')));
+  const rmSubject = planStructure({ catalog: { subjects: [{ name: 'אחר' }] }, quizzes: [q1] });
+  assert.ok(rmSubject.errors.some((e) => e.includes('מבחן ראשון')));
+  const empty = planStructure({ catalog: { subjects: [{ name: 'מקצוע', units: ['יחידה', 'ריקה'] }] }, quizzes: [q1] });
+  const ok = planStructure({ catalog: { subjects: [{ name: 'מקצוע', units: ['יחידה'] }] }, quizzes: [q1] });
+  assert.deepEqual(empty.errors, []); assert.deepEqual(ok.errors, [], 'removing an empty unit is allowed');
+});
+
+test('plan quiz edit: details and move; id and unknown keys refused; no-op refused', () => {
+  const catalog2 = { subjects: [{ name: 'מקצוע', units: ['יחידה', 'אחרת'] }] };
+  const q = { ...quizIn('q-one', 'מקצוע', 'יחידה', 'ישן') };
+  const plan = planQuizEdit({ id: 'q-one', patch: { title: ' חדש ', description: 'תיאור', unit: 'אחרת' }, catalog: catalog2, quizzes: [q] });
+  assert.deepEqual(plan.errors, []);
+  const out = JSON.parse(plan.files[0].text);
+  assert.equal(out.title, 'חדש'); assert.equal(out.unit, 'אחרת'); assert.equal(out.id, 'q-one');
+  assert.equal(out.questions.length, q.questions.length, 'questions untouched');
+  assert.equal(JSON.parse(plan.files[1].text).subjects[0].units[1].quizzes[0].title, 'חדש');
+  assert.ok(planQuizEdit({ id: 'q-one', patch: { id: 'renamed' }, catalog: catalog2, quizzes: [q] }).errors.some((e) => /קבוע/.test(e)));
+  assert.ok(planQuizEdit({ id: 'q-one', patch: { questions: [] }, catalog: catalog2, quizzes: [q] }).errors.length > 0);
+  assert.ok(planQuizEdit({ id: 'q-one', patch: { unit: 'אין' }, catalog: catalog2, quizzes: [q] }).errors.length > 0);
+  assert.ok(planQuizEdit({ id: 'q-one', patch: { title: '' }, catalog: catalog2, quizzes: [q] }).errors.length > 0, 'title is required');
+  assert.ok(planQuizEdit({ id: 'q-one', patch: { title: 'ישן' }, catalog: catalog2, quizzes: [q] }).errors.some((e) => /שינוי/.test(e)));
+  assert.ok(planQuizEdit({ id: 'nope', patch: { title: 'x' }, catalog: catalog2, quizzes: [q] }).errors.length > 0);
+  const noDesc = planQuizEdit({ id: 'q-one', patch: { description: '' }, catalog: catalog2, quizzes: [{ ...q, description: 'ישן' }] });
+  assert.ok(!('description' in JSON.parse(noDesc.files[0].text)), 'empty description is removed');
+});
+
+test('plan summary delete / edit / order', async () => {
+  const css = await readRepo('css/summary.css');
+  const list = JSON.parse(await readRepo('summaries/list.json'));
+  const withNew = planSummary({ html: page('<p>x</p>').replace('data-system="t"', 'data-system="tmp-one"'), id: 'tmp-one', title: 'זמני', blurb: 'ב', hue: 40, list, css });
+  const list2 = JSON.parse(withNew.files[1].text); const css2 = withNew.files[2].text;
+
+  const del = planSummaryDelete({ id: 'tmp-one', list: list2, css: css2 });
+  assert.deepEqual(del.errors, []);
+  assert.deepEqual(del.deletes, ['summaries/tmp-one.html']);
+  assert.deepEqual(JSON.parse(del.files[0].text), list, 'list back to the original');
+  assert.equal(del.files[1].text, css, 'accent removed, css back to the original');
+  assert.ok(planSummaryDelete({ id: 'nope', list, css }).errors.length > 0);
+  assert.ok(planSummaryDelete({ id: '../x', list, css }).errors.length > 0);
+  const legacy = planSummaryDelete({ id: 'digestive', list, css });
+  assert.ok(!legacy.files.find((f) => f.path === 'css/summary.css').text.includes('data-system="digestive"]  '), 'hand-written accent line removed too');
+
+  const edit = planSummaryEdit({ id: 'tmp-one', title: 'כותרת חדשה', blurb: 'תיאור חדש', hue: 300, list: list2, css: css2 });
+  assert.deepEqual(edit.errors, []);
+  assert.equal(JSON.parse(edit.files[0].text).summaries.at(-1).title, 'כותרת חדשה');
+  assert.equal(readSummaryHue(edit.files[1].text, 'tmp-one'), 300);
+  const noHue = planSummaryEdit({ id: 'cardiovascular', title: 'כותרת', blurb: 'תיאור', list, css });
+  assert.deepEqual(noHue.files.map((f) => f.path), ['summaries/list.json'], 'no hue chosen: css untouched');
+  assert.ok(planSummaryEdit({ id: 'cardiovascular', title: list.summaries[0].title, blurb: list.summaries[0].blurb, list, css }).errors.some((e) => /שינוי/.test(e)));
+  assert.ok(planSummaryEdit({ id: 'cardiovascular', title: ' ', blurb: 'x', list, css }).errors.length > 0);
+
+  const ids = list.summaries.map((s) => s.id);
+  const rev = planSummaryOrder({ order: [...ids].reverse(), list });
+  assert.deepEqual(JSON.parse(rev.files[0].text).summaries.map((s) => s.id), [...ids].reverse());
+  for (const bad of [ids.slice(1), [...ids, 'extra'], [ids[0], ids[0], ...ids.slice(2)], ids, 'x', null]) {
+    assert.ok(planSummaryOrder({ order: bad, list }).errors.length > 0, JSON.stringify(bad));
+  }
+});
+
+test('every Phase 1.5 plan writes only allowlisted paths and commits once without force', async () => {
+  const css = await readRepo('css/summary.css');
+  const list = JSON.parse(await readRepo('summaries/list.json'));
+  const q = { ...quizIn('q-one', 'מקצוע', 'יחידה', 'א') };
+  const cat = { subjects: [{ name: 'מקצוע', units: ['יחידה', 'אחרת'] }] };
+  const plans = [
+    planQuizEdit({ id: 'q-one', patch: { unit: 'אחרת' }, catalog: cat, quizzes: [q] }),
+    planStructure({ catalog: { subjects: [{ name: 'מקצוע 2', units: ['יחידה', 'אחרת'] }] }, renames: { subjects: { מקצוע: 'מקצוע 2' } }, quizzes: [q] }),
+    planSummaryDelete({ id: 'digestive', list, css }),
+    planSummaryEdit({ id: 'endocrine', title: 'ט', blurb: 'ב', hue: 5, list, css }),
+    planSummaryOrder({ order: list.summaries.map((s) => s.id).reverse(), list }),
+  ];
+  for (const plan of plans) {
+    assert.deepEqual(plan.errors, []);
+    for (const p of [...plan.files.map((f) => f.path), ...(plan.deletes ?? [])]) assert.ok(isWritablePath(p), p);
+    const { fetchImpl, log } = fakeGithub();
+    await createGithub({ token: 't', owner: 'o', repo: 'r', fetchImpl }).change(async () => plan, 'm');
+    assert.equal(log.filter((r) => r.path.endsWith('/git/commits') && r.method === 'POST').length, 1);
+    assert.equal(JSON.parse(log.at(-1).body).force, false);
   }
 });
