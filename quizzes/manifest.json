@@ -592,6 +592,65 @@
               "topicCount": 12
             }
           ]
+        },
+        {
+          "name": "שאלות שהופיעו בעבר",
+          "quizzes": [
+            {
+              "id": "recall-1",
+              "title": "שאלות שהופיעו בעבר 1",
+              "description": "שאלות שהופיעו במבחנים קודמים, בניסוח מותאם.",
+              "questionCount": 59,
+              "topicCount": 10
+            },
+            {
+              "id": "recall-2",
+              "title": "שאלות שהופיעו בעבר 2",
+              "description": "שאלות שהופיעו במבחנים קודמים, בניסוח מותאם.",
+              "questionCount": 51,
+              "topicCount": 10
+            },
+            {
+              "id": "recall-3",
+              "title": "שאלות שהופיעו בעבר 3",
+              "description": "שאלות שהופיעו במבחנים קודמים, בניסוח מותאם.",
+              "questionCount": 45,
+              "topicCount": 9
+            }
+          ]
+        },
+        {
+          "name": "מבחנים מסכמים",
+          "quizzes": [
+            {
+              "id": "summary-1",
+              "title": "מבחן מסכם 1",
+              "description": "מבחן סיכומי מלא המכסה את כל יחידות הקורס",
+              "questionCount": 200,
+              "topicCount": 15
+            },
+            {
+              "id": "summary-2",
+              "title": "מבחן מסכם 2",
+              "description": "מבחן סיכומי מלא המכסה את כל יחידות הקורס",
+              "questionCount": 166,
+              "topicCount": 15
+            },
+            {
+              "id": "summary-3",
+              "title": "מבחן מסכם 3",
+              "description": "מבחן סיכומי מלא המכסה את כל יחידות הקורס",
+              "questionCount": 154,
+              "topicCount": 15
+            },
+            {
+              "id": "summary-4",
+              "title": "מבחן מסכם 4",
+              "description": "מבחן סיכומי מלא המכסה את כל יחידות הקורס",
+              "questionCount": 151,
+              "topicCount": 15
+            }
+          ]
         }
       ],
       "quizzes": [],
