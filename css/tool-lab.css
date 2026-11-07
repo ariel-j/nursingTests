@@ -58,3 +58,14 @@ ul.clean { margin: 0; padding-inline-start: 1.25rem; display: grid; gap: 0.25rem
 
 .lab-flip[aria-expanded="false"]::after { content: "הצגת התשובה"; }
 .lab-flip[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent); }
+
+/* ---------- printing a lab page: everything open, nothing that needs a click ---------- */
+
+@media print {
+  .top-nav, .tool-nav, .ladder, .sorter, #quiz, .site-footer { display: none !important; }
+  .drug[hidden] { display: grid !important; }
+  .flip-detail[hidden] { display: block !important; }
+  .lab-flip::after { content: none !important; }
+  .tool-section, .card, .tool-table tr { break-inside: avoid; }
+  .tool-section > h2 { break-after: avoid; }
+}
