@@ -4,8 +4,8 @@
 // `unit` (optional) is the catalog unit the summary belongs to, shown on its hub card.
 // `study: true` means study/<id>.html (interactive practice) exists too.
 // `tool: '<name>'` is an interactive summary that lives at tools/<name>.html instead of a static
-// summaries/<id>.html page: it is listed and linked like a summary, but it is not part of the
-// combined print page (all.html) and has no summary.css accent.
+// summaries/<id>.html page: it is listed and linked like a summary and is included in the
+// combined print page (all.html, rebuilt as a plain article by tool-print.js), but has no summary.css accent.
 // No DOM here, so the Node tests can check it against the files.
 
 export const SUMMARIES = [
@@ -270,6 +270,14 @@ export const SUMMARIES = [
     unit: 'סיעוד: הזרקות ומתן דרך הווריד',
     title: 'סיכום ההזרקות והעירוי',
     blurb: 'ארבעה סוגי הזרקה, אתרים נכונים, מחטים וסיבוכי עירוי.',
+  },
+  {
+    subject: 'pharmacology-b',
+    id: 'tool-pharma-circulars',
+    tool: 'pharma-circulars',
+    unit: 'סיעוד: חוזרים והיבטים חוקיים',
+    title: 'סיכום החוזרים והבטיחות התרופתית',
+    blurb: 'מושגי יסוד, חוזרי משרד הבריאות, הוראות רפואיות, ששת הזכויות, מניעת טעויות וסמים מסוכנים.',
   },
   {
     subject: 'nursing-fundamentals',
