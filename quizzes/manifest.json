@@ -70,6 +70,20 @@
           "name": "מבחן סיכומי",
           "quizzes": [
             {
+              "id": "summary-1",
+              "title": "מבחן סיכומי 1",
+              "description": "מבחן סיכומי מלא המכסה את כל יחידות הקורס",
+              "questionCount": 200,
+              "topicCount": 15
+            },
+            {
+              "id": "summary-2",
+              "title": "מבחן סיכומי 2",
+              "description": "מבחן סיכומי מלא המכסה את כל יחידות הקורס",
+              "questionCount": 166,
+              "topicCount": 15
+            },
+            {
               "id": "summary-3",
               "title": "מבחן סיכומי 3",
               "description": "מבחן סיכומי מלא המכסה את כל יחידות הקורס",
