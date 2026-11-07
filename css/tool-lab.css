@@ -1,0 +1,71 @@
+/* The pharmacology labs (tools/hypertension.html, diuretics.html, ischemia.html), on top of
+   style.css and tool.css. Logical properties only; colors come from the site tokens, so dark mode
+   and high contrast follow. */
+
+.lab-note { color: var(--muted); }
+
+/* ---------- step ladder ---------- */
+
+.ladder { display: grid; gap: 0.4rem; margin-block-start: 1rem; }
+.rung {
+  display: grid; grid-template-columns: 2rem 1fr; gap: 0.6rem; align-items: start; text-align: start;
+  background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: 0.6rem 0.75rem; font: inherit; cursor: pointer;
+}
+.rung .n { inline-size: 1.9rem; block-size: 1.9rem; border-radius: 50%; display: grid; place-items: center; background: var(--bg); font-weight: 700; }
+.rung .t { font-weight: 700; }
+.rung .d { grid-column: 2; display: none; color: var(--muted); font-size: 0.95rem; }
+.rung[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent); }
+.rung[aria-expanded="true"] .n { background: var(--accent); color: var(--surface); }
+.rung[aria-expanded="true"] .d { display: block; color: var(--ink); }
+.down { text-align: center; color: var(--accent); line-height: 1; }
+
+/* ---------- tips, traps, chains ---------- */
+
+.tip, .trap { border-radius: var(--radius-sm); padding: 0.7rem 0.9rem; margin-block: 0.5rem 0; }
+.tip { background: var(--accent-soft); color: var(--ink); }
+.trap { background: var(--warn-bg); color: var(--ink); border-inline-start: 4px solid var(--warn); }
+.trap strong { color: var(--warn); display: block; font-size: 0.85rem; }
+:root[data-contrast="high"] .tip, :root[data-contrast="high"] .trap { border: 2px solid #000; }
+.chain { display: grid; gap: 0.25rem; justify-items: center; text-align: center; margin-block: 0.75rem; }
+.chain span { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0.35rem 0.8rem; font-weight: 600; max-inline-size: 100%; }
+.chain i { font-style: normal; color: var(--accent); }
+.en { direction: ltr; unicode-bidi: isolate; }
+ul.clean { margin: 0; padding-inline-start: 1.25rem; display: grid; gap: 0.25rem; }
+
+/* ---------- drug tabs ---------- */
+
+.tabbox { gap: 0.7rem; }
+.tabbox .tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tabbox .tabs button {
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px;
+  padding: 0.3rem 0.9rem; font: inherit; font-weight: 600; cursor: pointer;
+}
+.tabbox .tabs button[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.drug { display: grid; gap: 0.6rem; }
+.drug[hidden] { display: none; }
+.badges { display: grid; gap: 0.45rem; }
+.bdg { display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.6rem; align-items: start; }
+.bdg span:first-child { font-size: 0.78rem; font-weight: 700; border-radius: 999px; padding: 0.1rem 0.5rem; text-align: center; }
+.b-ind { background: var(--ok-soft); color: var(--ok); }
+.b-side { background: var(--warn-bg); color: var(--warn); }
+.b-no { background: var(--bad-soft); color: var(--bad); }
+.b-care { background: var(--accent-soft); color: var(--accent-ink); }
+:root[data-contrast="high"] .bdg span:first-child { border: 1px solid #000; color: #000; }
+@media (max-width: 30rem) { .bdg { grid-template-columns: 1fr; gap: 0.2rem; } .bdg span:first-child { justify-self: start; } }
+
+/* ---------- flip cards: the question, then the answer on press ---------- */
+
+.lab-flip[aria-expanded="false"]::after { content: "הצגת התשובה"; }
+.lab-flip[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent); }
+
+/* ---------- printing a lab page: everything open, nothing that needs a click ---------- */
+
+@media print {
+  .top-nav, .tool-nav, .ladder, .sorter, #quiz, .site-footer { display: none !important; }
+  .drug[hidden] { display: grid !important; }
+  .flip-detail[hidden] { display: block !important; }
+  .lab-flip::after { content: none !important; }
+  .tool-section, .card, .tool-table tr { break-inside: avoid; }
+  .tool-section > h2 { break-after: avoid; }
+}
