@@ -36,6 +36,57 @@
         }
       ],
       "quizzes": []
+    },
+    {
+      "name": "פרמקולוגיה ב",
+      "units": [
+        {
+          "name": "שחזורים",
+          "quizzes": [
+            {
+              "id": "recall-1",
+              "title": "מבחן שחזורים 1 (פיילוט)",
+              "description": "שאלות משוחזרות ממבחן הסבה שערי צדק מועד א, בניסוח מותאם",
+              "questionCount": 59,
+              "topicCount": 10
+            },
+            {
+              "id": "recall-3",
+              "title": "שחזור 3",
+              "description": "שאלות מתוך שחזורי מבחנים נוספים ומבחן מתכונת",
+              "questionCount": 45,
+              "topicCount": 9
+            },
+            {
+              "id": "recall-2",
+              "title": "שחזור שערי צדק מועד ב",
+              "description": "שאלות משחזור מבחן פרמקולוגיה ב שערי צדק מועד ב",
+              "questionCount": 51,
+              "topicCount": 10
+            }
+          ]
+        },
+        {
+          "name": "מבחן סיכומי",
+          "quizzes": [
+            {
+              "id": "summary-3",
+              "title": "מבחן סיכומי 3",
+              "description": "מבחן סיכומי מלא המכסה את כל יחידות הקורס",
+              "questionCount": 154,
+              "topicCount": 15
+            },
+            {
+              "id": "summary-4",
+              "title": "מבחן סיכומי 4",
+              "description": "מבחן סיכומי מלא המכסה את כל יחידות הקורס",
+              "questionCount": 151,
+              "topicCount": 15
+            }
+          ]
+        }
+      ],
+      "quizzes": []
     }
   ]
 }
