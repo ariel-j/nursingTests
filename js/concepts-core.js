@@ -21,7 +21,13 @@ const isPlainObject = (v) => typeof v === 'object' && v !== null && !Array.isArr
 const ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 /** Where a subject's concept cards live, relative to the site root. */
-export const conceptsUrl = (subjectId) => `data/${encodeURIComponent(subjectId)}/concepts.json`;
+export const conceptsUrl = (subjectId, deck = null) => `data/${encodeURIComponent(subjectId)}/concepts${deck ? `-${deck}` : ''}.json`;
+
+/** A subject may have extra decks beside the main one: `concepts-<deck>.json`, opened with `&deck=<deck>`. */
+export const isValidDeckId = (deck) => typeof deck === 'string' && ID_PATTERN.test(deck);
+
+/** Storage key part for one deck: the subject id, plus the deck when it is not the main one. */
+export const deckKey = (subjectId, deck = null) => (deck ? `${subjectId}:${deck}` : subjectId);
 
 // ---------- validation ----------
 
@@ -29,8 +35,8 @@ export const conceptsUrl = (subjectId) => `data/${encodeURIComponent(subjectId)}
 const ITEM_FIELDS = {
   concepts: { required: ['term', 'def'], optional: ['en'] },
   numbers: { required: ['q', 'a'], optional: [] },
-  tests: { required: ['name', 'purpose'], optional: ['en', 'normal', 'nursing'] },
-  medications: { required: ['name', 'group', 'action'], optional: ['en', 'nursing'] },
+  tests: { required: ['name', 'purpose'], optional: ['en', 'normal', 'status', 'nursing'] },
+  medications: { required: ['name', 'action'], optional: ['en', 'group', 'nursing'] },
   cards: { required: ['q', 'a'], optional: [] },
 };
 const LISTS = [...Object.keys(ITEM_FIELDS), 'sequences', 'matches'];
@@ -40,6 +46,7 @@ export function validateConceptDeck(deck) {
   if (!isPlainObject(deck)) return ['concept deck must be a JSON object'];
   if (!Array.isArray(deck.topics) || deck.topics.length === 0) return ['topics must be a non-empty array'];
   const errors = [];
+  if (deck.title !== undefined && !isText(deck.title)) errors.push('title must be a non-empty string');
   const ids = new Set();
   const topicIds = new Set();
   const claim = (where, id) => {
@@ -149,7 +156,7 @@ export function buildCards(deck) {
         kind: 'test',
         front: x.name,
         en: x.en ?? '',
-        rows: [...row('מטרה', x.purpose), ...row('ערכים תקינים', x.normal), ...row('תפקיד האחות', x.nursing)],
+        rows: [...row('מטרה', x.purpose), ...row('ערכים תקינים', x.normal), ...row('סיווג', x.status), ...row('תפקיד האחות', x.nursing)],
       });
     }
     for (const m of t.medications ?? []) {
@@ -407,9 +414,10 @@ function testQuestion(t, bank, rng) {
 
 /** `byGroup` true = which group the item belongs to; false = which item the action describes. */
 function medQuestion(m, bank, rng, byGroup) {
-  const explanation = `${withTerm(m, m.name)} (${m.group}): ${trimDot(m.action)}.${isText(m.nursing) ? ` תפקיד האחות: ${trimDot(m.nursing)}.` : ''}`;
+  const explanation = `${withTerm(m, m.name)}${isText(m.group) ? ` (${m.group})` : ''}: ${trimDot(m.action)}.${isText(m.nursing) ? ` תפקיד האחות: ${trimDot(m.nursing)}.` : ''}`;
   if (byGroup) {
-    const wrong = pickWrong(m, bank.meds, (x) => x.group, rng, { rank: sameTopic(m) });
+    if (!isText(m.group)) return null;
+    const wrong = pickWrong(m, bank.meds.filter((x) => isText(x.group)), (x) => x.group, rng, { rank: sameTopic(m) });
     if (!wrong) return null;
     return question({
       id: `${m.id}-g`,
@@ -506,7 +514,7 @@ function itemsOf(kind, bank) {
     case 'conceptTerm': return bank.concepts.filter((c) => c.def.length <= MAX_DEF_AS_OPTION);
     case 'number': return bank.numbers;
     case 'test': return bank.tests;
-    case 'medGroup': return bank.meds;
+    case 'medGroup': return bank.meds.filter((m) => isText(m.group));
     case 'medAction': return bank.meds;
     case 'qa': return bank.cards.filter((c) => c.a.length <= MAX_ANSWER_AS_OPTION);
     case 'after': return bank.sequences.flatMap((s) => s.steps.slice(0, -1).map((_, i) => ({ seq: s, i, topic: s.topic })));

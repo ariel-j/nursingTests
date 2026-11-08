@@ -105,16 +105,18 @@ export function mergeCardTopics(deck, fileId, topics, units) {
  * learning content and the unit. Where the material came from (`source`, `course`, `notes`) is
  * never published. Fields the validator doesn't know are dropped, empty lists too.
  */
-export function buildConceptDeck(source, unitByTopic = UNIT_BY_TOPIC) {
+export function buildConceptDeck(source, unitByTopic = UNIT_BY_TOPIC, { title, statusForNormal = false } = {}) {
   if (!Array.isArray(source?.topics)) throw new Error('the authoring file needs a topics array');
   const topics = [...source.topics]
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
     .map((t) => {
       const topic = { id: t.id, title: t.title, ...(unitByTopic[t.id] ? { unit: unitByTopic[t.id] } : {}) };
       for (const list of COPIED) if (Array.isArray(t[list]) && t[list].length > 0) topic[list] = t[list];
+      // For rules rather than lab values, a test's "normal" is how the circular classifies it.
+      if (statusForNormal && topic.tests) topic.tests = topic.tests.map(({ normal, ...rest }) => (normal === undefined ? rest : { ...rest, status: normal }));
       return topic;
     });
-  return { topics };
+  return { ...(title ? { title } : {}), topics };
 }
 
 /** Problems with one deck: its structure, its units against the subject, and the quiz made from it. */
@@ -147,19 +149,23 @@ export async function checkConcepts(catalog, dir = ROOT_DIR) {
   }
   for (const id of folders) {
     const subject = catalog.subjects.find((s) => s.id === id);
-    const file = conceptsUrl(id);
-    let deck;
-    try {
-      deck = JSON.parse(await readFile(path.join(dir, file), 'utf8'));
-    } catch (err) {
-      if (err.code !== 'ENOENT') errors.push(`${file}: cannot parse: ${err.message}`);
-      continue; // a subject may have drug cards only
-    }
     if (!subject) {
       errors.push(`data/${id}: not a subject id in quizzes/subjects.json`);
       continue;
     }
-    for (const e of conceptDeckErrors(deck, subject)) errors.push(`${file}: ${e}`);
+    // concepts.json, and concepts-<deck>.json for each extra deck.
+    const names = (await readdir(path.join(dir, 'data', id))).filter((n) => /^concepts(-[a-z0-9]+(-[a-z0-9]+)*)?\.json$/.test(n)).sort();
+    for (const name of names) {
+      const file = `data/${id}/${name}`;
+      let deck;
+      try {
+        deck = JSON.parse(await readFile(path.join(dir, file), 'utf8'));
+      } catch (err) {
+        errors.push(`${file}: cannot parse: ${err.message}`);
+        continue;
+      }
+      for (const e of conceptDeckErrors(deck, subject)) errors.push(`${file}: ${e}`);
+    }
   }
   return errors;
 }
