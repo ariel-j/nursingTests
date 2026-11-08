@@ -13,8 +13,10 @@ import {
   cardReviewStats,
   conceptsUrl,
   dailyCards,
+  deckKey,
   filterCards,
   gradeReview,
+  isValidDeckId,
   randomQuestion,
   sanitizeTopics,
   topicGroups,
@@ -388,4 +390,62 @@ test('the pharmacology-b deck is valid, every card file has its unit, and it car
   for (const unit of Object.values(UNIT_BY_CARD_FILE)) assert.ok(subject.units.includes(unit), unit);
   assert.ok(!/"source"|"front"|"back"|"description"/.test(raw));
   assert.ok(subject.tools.some((tool) => tool.href === 'concepts.html?subject=pharmacology-b'));
+});
+
+// ---------- extra decks (concepts-<deck>.json) ----------
+
+test('an extra deck has its own file and storage key', () => {
+  assert.equal(conceptsUrl('a', 'circulars'), 'data/a/concepts-circulars.json');
+  assert.equal(conceptsUrl('a', null), 'data/a/concepts.json');
+  assert.equal(deckKey('a', 'circulars'), 'a:circulars');
+  assert.equal(deckKey('a'), 'a');
+  assert.ok(isValidDeckId('circulars') && !isValidDeckId('../x') && !isValidDeckId(null));
+});
+
+test('a deck may have a title, medications without a group, and a test classification', () => {
+  const t = {
+    id: 'rules',
+    title: 'כללים',
+    medications: [
+      { id: 'rules-m1', name: 'כלל אלף', action: 'פעולה אלף' },
+      { id: 'rules-m2', name: 'כלל בית', action: 'פעולה בית' },
+      { id: 'rules-m3', name: 'כלל גימל', action: 'פעולה גימל' },
+      { id: 'rules-m4', name: 'כלל דלת', action: 'פעולה דלת' },
+    ],
+    tests: [{ id: 'rules-t1', name: 'בדיקה', purpose: 'מטרה', status: 'סיווג כלשהו' }],
+  };
+  const grouped = { title: 'חבילה', topics: [t] };
+  assert.deepEqual(validateConceptDeck(grouped), []);
+  assert.ok(validateConceptDeck({ ...grouped, title: '' })[0].includes('title'));
+  const cards = buildCards(grouped);
+  assert.deepEqual(cards.find((c) => c.id === 'rules-t1').rows.map((r) => r.label), ['מטרה', 'סיווג']);
+  assert.deepEqual(cards.find((c) => c.id === 'rules-m1').rows.map((r) => r.label), ['פעולה']);
+  const bank = buildBank(grouped);
+  // No group: nothing to ask "which group", but "which one fits this action" still works.
+  assert.equal(askAbout('medGroup', bank.meds[0], bank, () => 0.5), null);
+  const q = askAbout('medAction', bank.meds[0], bank, () => 0.5);
+  assert.equal(q.options.length, 4);
+  assert.ok(!q.explanation.includes('undefined'));
+});
+
+test('buildConceptDeck for an extra deck keeps the title and turns a test\'s "normal" into its classification', () => {
+  const source = { topics: [{ id: 'x', order: 1, title: 'ט', source: 'חוזר', tests: [{ id: 'x-t1', name: 'ב', purpose: 'מ', normal: 'פעולת סיעוד' }] }] };
+  const deck = buildConceptDeck(source, { x: 'יחידה' }, { title: 'חבילה', statusForNormal: true });
+  assert.deepEqual(deck, { title: 'חבילה', topics: [{ id: 'x', title: 'ט', unit: 'יחידה', tests: [{ id: 'x-t1', name: 'ב', purpose: 'מ', status: 'פעולת סיעוד' }] }] });
+});
+
+test('the circulars deck is valid, sits under a catalog unit and is the first tool of its subject', async () => {
+  const catalog = JSON.parse(await readFile(new URL('../quizzes/subjects.json', import.meta.url), 'utf8'));
+  const subject = catalog.subjects.find((s) => s.id === 'nursing-fundamentals');
+  const raw = await readFile(new URL('../data/nursing-fundamentals/concepts-circulars.json', import.meta.url), 'utf8');
+  assert.deepEqual(conceptDeckErrors(JSON.parse(raw), subject), []);
+  assert.ok(!/"source"|"notes"|שחזור/.test(raw));
+  assert.equal(subject.tools[0].href, 'concepts.html?subject=nursing-fundamentals&deck=circulars');
+  assert.equal(subject.tools[1].href, 'concepts.html?subject=nursing-fundamentals');
+});
+
+test('a deck may list quizzes to link to', () => {
+  const ok = { quizzes: ['laws-exam-1'], topics: [{ id: 'a', title: 'א', concepts: [{ id: 'a-1', term: 'ט', def: 'ד' }] }] };
+  assert.deepEqual(validateConceptDeck(ok), []);
+  assert.ok(validateConceptDeck({ ...ok, quizzes: ['Bad Id'] })[0].includes('quizzes'));
 });

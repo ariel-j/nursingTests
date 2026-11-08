@@ -1,7 +1,7 @@
-// כרטיסיות מושגים: concepts.html?subject=<id>. Tabs over the subject's concept cards
-// (data/<id>/concepts.json): browse (search, kind, topic, hide the answers to self-test, print),
+// כרטיסיות מושגים: concepts.html?subject=<id>[&deck=<deck>]. Tabs over the subject's concept cards
+// (data/<id>/concepts.json, or concepts-<deck>.json for an extra deck, kept apart in storage): browse (search, kind, topic, hide the answers to self-test, print),
 // daily review, the games and the generated quiz. Logic in concepts-core.js.
-import { findSubject, loadManifest, subjectPaths } from './catalog.js';
+import { findSubject, loadManifest, subjectPaths, subjectQuizzes } from './catalog.js';
 import {
   BROWSE_KINDS,
   CARD_KINDS,
@@ -11,6 +11,8 @@ import {
   buildCards,
   buildMatchRound,
   conceptsUrl,
+  deckKey,
+  isValidDeckId,
   questionPool,
   topicGroups,
   validateConceptDeck,
@@ -228,13 +230,15 @@ function initBrowse(deck, cards) {
 async function main() {
   const status = $('status');
   const params = new URLSearchParams(location.search);
+  const deckName = params.get('deck');
   let subject;
   let deck;
   try {
     subject = findSubject(await loadManifest(), params.get('subject'));
     if (!subject) throw new Error('המקצוע לא נמצא.');
-    const res = await fetch(conceptsUrl(subject.id), { cache: 'no-cache' });
-    if (!res.ok) throw new Error('למקצוע הזה אין כרטיסיות מושגים.');
+    if (deckName !== null && !isValidDeckId(deckName)) throw new Error('חבילת הכרטיסיות לא נמצאה.');
+    const res = await fetch(conceptsUrl(subject.id, deckName), { cache: 'no-cache' });
+    if (!res.ok) throw new Error(deckName ? 'חבילת הכרטיסיות לא נמצאה.' : 'למקצוע הזה אין כרטיסיות מושגים.');
     deck = await res.json();
     const errors = validateConceptDeck(deck);
     if (errors.length > 0) {
@@ -249,7 +253,10 @@ async function main() {
   }
   status.hidden = true;
 
-  document.title = `כרטיסיות מושגים · ${subject.name}`;
+  const title = deck.title ?? 'כרטיסיות מושגים';
+  const deckId = deckKey(subject.id, deckName); // progress and bests stay apart per deck
+  document.title = `${title} · ${subject.name}`;
+  $('page-title').textContent = title;
   $('subject').textContent = subject.name;
   $('back-link').href = subjectPaths(subject.id).home;
   const cards = buildCards(deck);
@@ -266,24 +273,38 @@ async function main() {
   ];
   stats.append(...sizes.filter(([n]) => n > 0).map(([n, label]) => el('span', null, `${n} ${label}`)));
 
-  const quiz = `concepts=${encodeURIComponent(subject.id)}`;
+  const quiz = `concepts=${encodeURIComponent(subject.id)}${deckName ? `&deck=${encodeURIComponent(deckName)}` : ''}`;
   $('test-all').href = `quiz.html?${quiz}`;
   $('test-print').href = `print.html?${quiz}`;
 
+  // Full quizzes the deck points to (kept in the subject's units too).
+  const linked = subjectQuizzes(subject).filter((q) => (deck.quizzes ?? []).includes(q.id));
+  if (linked.length > 0) {
+    $('deck-quizzes-list').append(...linked.map((q) => {
+      const li = el('li');
+      const a = el('a', 'quiz-card tool-card');
+      a.href = `quiz.html?id=${encodeURIComponent(q.id)}`;
+      a.append(el('h3', 'card-title', q.title), el('p', 'muted', `${q.questionCount} שאלות`));
+      li.append(a);
+      return li;
+    }));
+    $('deck-quizzes').hidden = false;
+  }
+
   initBrowse(deck, cards);
   // One choice of topics for the daily review and the games, with a picker in each tab.
-  const topics = createTopics(deck, cards, subject.id);
+  const topics = createTopics(deck, cards, deckId);
   topics.mount($('games-topics'));
   kindSelect($('review-kind'), CARD_KINDS, cards.length, Object.fromEntries(CARD_KINDS.map((k) => [k.key, cards.filter((c) => c.kind === k.key).length])));
-  const startReview = initReview(topics, subject.id);
-  const bestKey = keys.conceptGames(subject.id);
+  const startReview = initReview(topics, deckId);
+  const bestKey = keys.conceptGames(deckId);
   const { games, sources } = available(bank);
   keepRadios('game', games);
   keepRadios('match-source', sources);
   // One source left: nothing to choose between.
   document.querySelector('input[name="match-source"]')?.closest('fieldset').toggleAttribute('hidden', sources.length < 2);
   const showGame = initGames({
-    match: initMatch(bank, topics, subject.id, bestKey),
+    match: initMatch(bank, topics, deckId, bestKey),
     ...initQuestionGames(bank, topics, bestKey),
   }, topics, games);
   let reviewStarted = false;

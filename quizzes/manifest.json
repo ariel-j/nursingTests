@@ -681,6 +681,27 @@
               "description": "חוקים, חוזרי מנהל הסיעוד והרפואה, וההבחנה בין פעולת סיעוד, פעולה חריגה ופעולה רפואית, לפי הסילבוס וחוזר 234/2025.",
               "questionCount": 100,
               "topicCount": 11
+            },
+            {
+              "id": "laws-exam-1",
+              "title": "מבחן חוזרים 1",
+              "description": "150 שאלות מחוזרי מנהל האחיות, בהתמקדות בנושאים שהופיעו בעבר במבחנים.",
+              "questionCount": 150,
+              "topicCount": 15
+            },
+            {
+              "id": "laws-exam-2",
+              "title": "מבחן חוזרים 2",
+              "description": "150 שאלות מחוזרי מנהל האחיות, בהתמקדות בנושאים שהופיעו בעבר במבחנים.",
+              "questionCount": 150,
+              "topicCount": 15
+            },
+            {
+              "id": "laws-exam-3",
+              "title": "מבחן חוזרים 3",
+              "description": "150 שאלות מחוזרי מנהל האחיות, בהתמקדות בנושאים שהופיעו בעבר במבחנים.",
+              "questionCount": 150,
+              "topicCount": 15
             }
           ]
         },
@@ -850,6 +871,11 @@
       "quizzes": [],
       "upcoming": [],
       "tools": [
+        {
+          "title": "שאלות וכרטיסיות מחוזרים",
+          "href": "concepts.html?subject=nursing-fundamentals&deck=circulars",
+          "description": "חוזרי מנהל האחיות בכרטיסיות: מושגים, מספרים, בדיקות, תרופות וסדרים, עם חזרה יומית, משחקי התאמה ושינון ומבחן שנוצר מהכרטיסיות."
+        },
         {
           "title": "כרטיסיות מושגים",
           "href": "concepts.html?subject=nursing-fundamentals",
