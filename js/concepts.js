@@ -1,7 +1,7 @@
 // כרטיסיות מושגים: concepts.html?subject=<id>[&deck=<deck>]. Tabs over the subject's concept cards
 // (data/<id>/concepts.json, or concepts-<deck>.json for an extra deck, kept apart in storage): browse (search, kind, topic, hide the answers to self-test, print),
 // daily review, the games and the generated quiz. Logic in concepts-core.js.
-import { findSubject, loadManifest, subjectPaths } from './catalog.js';
+import { findSubject, loadManifest, subjectPaths, subjectQuizzes } from './catalog.js';
 import {
   BROWSE_KINDS,
   CARD_KINDS,
@@ -276,6 +276,20 @@ async function main() {
   const quiz = `concepts=${encodeURIComponent(subject.id)}${deckName ? `&deck=${encodeURIComponent(deckName)}` : ''}`;
   $('test-all').href = `quiz.html?${quiz}`;
   $('test-print').href = `print.html?${quiz}`;
+
+  // Full quizzes the deck points to (kept in the subject's units too).
+  const linked = subjectQuizzes(subject).filter((q) => (deck.quizzes ?? []).includes(q.id));
+  if (linked.length > 0) {
+    $('deck-quizzes-list').append(...linked.map((q) => {
+      const li = el('li');
+      const a = el('a', 'quiz-card tool-card');
+      a.href = `quiz.html?id=${encodeURIComponent(q.id)}`;
+      a.append(el('h3', 'card-title', q.title), el('p', 'muted', `${q.questionCount} שאלות`));
+      li.append(a);
+      return li;
+    }));
+    $('deck-quizzes').hidden = false;
+  }
 
   initBrowse(deck, cards);
   // One choice of topics for the daily review and the games, with a picker in each tab.

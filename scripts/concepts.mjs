@@ -165,6 +165,13 @@ export async function checkConcepts(catalog, dir = ROOT_DIR) {
         continue;
       }
       for (const e of conceptDeckErrors(deck, subject)) errors.push(`${file}: ${e}`);
+      for (const q of Array.isArray(deck.quizzes) ? deck.quizzes : []) {
+        try {
+          await readFile(path.join(dir, 'quizzes', `${q}.json`));
+        } catch {
+          errors.push(`${file}: quizzes lists "${q}", which is not a file in quizzes/`);
+        }
+      }
     }
   }
   return errors;

@@ -1,5 +1,10 @@
 {
   "title": "שאלות וכרטיסיות מחוזרים",
+  "quizzes": [
+    "laws-exam-1",
+    "laws-exam-2",
+    "laws-exam-3"
+  ],
   "topics": [
     {
       "id": "meds",

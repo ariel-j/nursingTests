@@ -443,3 +443,9 @@ test('the circulars deck is valid, sits under a catalog unit and is the first to
   assert.equal(subject.tools[0].href, 'concepts.html?subject=nursing-fundamentals&deck=circulars');
   assert.equal(subject.tools[1].href, 'concepts.html?subject=nursing-fundamentals');
 });
+
+test('a deck may list quizzes to link to', () => {
+  const ok = { quizzes: ['laws-exam-1'], topics: [{ id: 'a', title: 'א', concepts: [{ id: 'a-1', term: 'ט', def: 'ד' }] }] };
+  assert.deepEqual(validateConceptDeck(ok), []);
+  assert.ok(validateConceptDeck({ ...ok, quizzes: ['Bad Id'] })[0].includes('quizzes'));
+});

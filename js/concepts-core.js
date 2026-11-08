@@ -47,6 +47,10 @@ export function validateConceptDeck(deck) {
   if (!Array.isArray(deck.topics) || deck.topics.length === 0) return ['topics must be a non-empty array'];
   const errors = [];
   if (deck.title !== undefined && !isText(deck.title)) errors.push('title must be a non-empty string');
+  // Full quizzes of the subject this deck links to from its מבחן tab.
+  if (deck.quizzes !== undefined && (!Array.isArray(deck.quizzes) || !deck.quizzes.every((id) => typeof id === 'string' && ID_PATTERN.test(id)))) {
+    errors.push('quizzes must be an array of quiz ids');
+  }
   const ids = new Set();
   const topicIds = new Set();
   const claim = (where, id) => {
