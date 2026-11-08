@@ -8,6 +8,7 @@ import { checkConcepts } from './concepts.mjs';
 import { checkDrugs } from './drugs.mjs';
 import { checkRootPages, checkSummaries, recollectionMentions } from './summaries.mjs';
 import { checkTools } from './tools.mjs';
+import { lintQuiz } from './quiz-lint.mjs';
 import { drugErrors, loadDrugs } from './memory-drugs.mjs';
 import { SUMMARIES } from '../js/summary-list.js';
 
@@ -37,6 +38,11 @@ const pageErrors = [
 ];
 for (const e of pageErrors) console.error(e);
 failures += pageErrors.length;
+
+// Guessability warnings (never failures): see quiz-lint.mjs and docs/quiz-authoring.md.
+for (const { file, quiz } of entries) {
+  for (const w of lintQuiz(quiz)) console.warn(`warning: ${file}: ${w}`);
+}
 
 const media = await checkMedia(subjectIds);
 for (const w of media.warnings) console.warn(`warning: ${w}`);
