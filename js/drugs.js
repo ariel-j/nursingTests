@@ -401,11 +401,17 @@ async function main() {
   $('subject').textContent = subject.name;
   $('back-link').href = subjectPaths(subject.id).home;
   const stats = $('deck-stats');
+  const examCount = deck.drugs.filter((d) => d.exam).length;
   stats.append(
     el('span', null, `${deck.drugs.length} תרופות`),
     el('span', null, `${deck.families.length} משפחות`),
-    el('span', null, `${deck.drugs.filter((d) => d.exam).length} הופיעו במבחנים (★)`),
+    ...(examCount > 0 ? [el('span', null, `${examCount} הופיעו במבחנים (★)`)] : []),
   );
+  if (examCount === 0) {
+    // No drug is marked ★: an "only what came up in exams" choice would always be empty.
+    for (const id of ['browse-exam', 'review-exam', 'match-exam', 'odd-exam']) $(id).closest('label').hidden = true;
+    $('test-exam').closest('li').hidden = true;
+  }
 
   const quiz = `drugs=${encodeURIComponent(subject.id)}`;
   $('test-all').href = `quiz.html?${quiz}`;
