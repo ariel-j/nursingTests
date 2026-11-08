@@ -41,13 +41,15 @@ Add the subject to `quizzes/subjects.json`, in the order it should appear (the u
   suffix must match at least one name.
 - Concept cards: a subject may have `data/<id>/concepts.json`: `{ topics: [{ id, title, unit?, concepts: [{ id, term,
   en?, def }], numbers: [{ id, q, a }], tests: [{ id, name, en?, purpose, normal?, nursing? }], medications: [{ id,
-  name, en?, group, action, nursing? }], sequences: [{ id, title, steps }], matches: [{ id, title, pairs: [{ a, b }] }] }] }`
+  name, en?, group, action, nursing? }], cards: [{ id, q, a }], sequences: [{ id, title, steps }], matches: [{ id, title, pairs: [{ a, b }] }] }] }`
   (every list optional; ids are unique across the deck and never change, new items go at the end; `unit` must
   be one of the subject's `units`). `concepts.html?subject=<id>` shows them (browse, daily review, games) and
   `quiz.html?concepts=<id>` / `print.html?concepts=<id>` quiz on them. Link the page with a `tools` entry. Convert an
   authoring file with `npm run import-concepts -- <source.json> [--subject <id>]`: it publishes the learning
   content only and drops every `source` (never publish where the material came from). `npm run validate`
-  checks the deck and the generated quiz.
+  checks the deck and the generated quiz. Flashcard files (`{ id, unit, cards: [{ id, topic, front, back }] }`) go in as
+  question/answer cards with `npm run import-cards -- <file.json>... --subject <id> [--unit "<unit>"]`; re-importing a file
+  replaces its cards. Card text must state the fact, not point at the course ("השקופית קובעת…").
 - `units`: optional, in display order. Once a subject has units, every quiz needs one of them as `unit`.
   A subject without units lists its quizzes directly. Choose before the first quiz arrives.
   Prefer a few broad units with topics inside them over many tiny units: in pharmacology a unit is a

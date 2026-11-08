@@ -21,7 +21,7 @@
     <header class="site-header">
       <p id="subject" class="kicker"></p>
       <h1>כרטיסיות מושגים</h1>
-      <p class="lede">מושגים, מספרים, בדיקות, תרופות, סדרים והתאמות במקום אחד: עיון וחיפוש, חזרה יומית שמחזירה כל כרטיסייה בדיוק כשצריך, משחקים לשינון ומבחן שנוצר מהכרטיסיות.</p>
+      <p class="lede">כל הכרטיסיות של המקצוע במקום אחד: עיון וחיפוש, חזרה יומית שמחזירה כל כרטיסייה בדיוק כשצריך, משחקים לשינון ומבחן שנוצר מהכרטיסיות.</p>
       <p id="deck-stats" class="meta"></p>
     </header>
     <p id="status" class="status" role="status">טוען…</p>
@@ -77,6 +77,7 @@
         <label><input type="radio" name="game" value="numbers"> מספרים</label>
         <label><input type="radio" name="game" value="practice"> בדיקות ותרופות</label>
         <label><input type="radio" name="game" value="order"> סדרים וזוגות</label>
+        <label><input type="radio" name="game" value="qa"> שאלות ותשובות</label>
         <label><input type="radio" name="game" value="blitz"> בליץ ⚡</label>
       </fieldset>
 
@@ -87,6 +88,7 @@
             <legend>להתאים</legend>
             <label><input type="radio" name="match-source" value="sets" checked> קבוצות מוכנות</label>
             <label><input type="radio" name="match-source" value="concepts"> מושגים והסבריהם</label>
+            <label><input type="radio" name="match-source" value="cards"> שאלות ותשובות</label>
           </fieldset>
           <button id="match-new" type="button" class="secondary">סבב חדש</button>
         </div>
@@ -115,13 +117,18 @@
         <div id="order-area" class="game-area"></div>
       </div>
 
+      <div id="game-qa" hidden>
+        <p class="muted">שאלה מהכרטיסיות וארבע תשובות. התשובות השגויות הן תשובות לשאלות אחרות מאותו נושא או מאותה יחידה, ותשובה שנבחרה לא נכון מראה לאיזו שאלה היא שייכת.</p>
+        <div id="qa-area" class="game-area"></div>
+      </div>
+
       <div id="game-blitz" hidden>
         <div id="blitz-area" class="game-area"></div>
       </div>
     </section>
 
     <section id="panel-test" class="tab-panel" role="tabpanel" aria-labelledby="tab-test" hidden>
-      <p class="muted">מבחן אמריקאי שנוצר מהכרטיסיות: הגדרות, מספרים, בדיקות, תרופות, סדרים והתאמות. בוחרים נושאים ומספר שאלות. כמו בכל בוחן באתר, שאלה שטעיתם בה חוזרת עד שתענו עליה נכון פעמיים ברצף, וההתקדמות נשמרת.</p>
+      <p class="muted">מבחן אמריקאי שנוצר מהכרטיסיות. בוחרים נושאים ומספר שאלות. כמו בכל בוחן באתר, שאלה שטעיתם בה חוזרת עד שתענו עליה נכון פעמיים ברצף, וההתקדמות נשמרת.</p>
       <ul class="quiz-list tool-list">
         <li><a id="test-all" class="quiz-card mix-card" href="quiz.html"><h3 class="card-title">מבחן מושגים</h3><p class="muted">כל הנושאים, או רק חלק מהם.</p></a></li>
         <li><a id="test-print" class="quiz-card tool-card" href="print.html"><h3 class="card-title">מבחן להדפסה</h3><p class="muted">שאלות מהכרטיסיות עם מפתח תשובות. אפשר לשמור כ‑PDF.</p></a></li>

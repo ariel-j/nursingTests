@@ -44,7 +44,7 @@ function questionSource(bank, kinds, topics) {
   };
 }
 
-/** The question games and the blitz; returns { concepts, numbers, practice, order, blitz } starters. */
+/** The question games and the blitz; returns { concepts, numbers, practice, order, qa, blitz } starters. */
 export function initQuestionGames(bank, topics, bestKey) {
   const starters = {};
   for (const [name, kinds] of Object.entries(QUESTION_GAMES)) {
@@ -63,7 +63,7 @@ export function initQuestionGames(bank, topics, bestKey) {
     bestKey,
     countsBest: topics.all,
     emptyText: EMPTY,
-    intro: 'כמה שיותר תשובות נכונות בדקה אחת: מושגים, מספרים, בדיקות, תרופות, סדרים והתאמות. כל תשובה נכונה ברצף שווה יותר נקודות. מקשים 1–4 עונים.',
+    intro: 'כמה שיותר תשובות נכונות בדקה אחת, מכל סוגי הכרטיסיות. כל תשובה נכונה ברצף שווה יותר נקודות. מקשים 1–4 עונים.',
     next: questionSource(bank, BLITZ_KINDS, topics),
   });
   return starters;
