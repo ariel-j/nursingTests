@@ -175,6 +175,13 @@
 .topics-list .drug-check { align-items: start; }
 .topics-list input { margin-block-start: 0.25rem; }
 .games-topics .topics { margin-block-start: 1rem; }
+/* Topics grouped by unit (a deck with many topics per unit): a unit row, its topics indented under it. */
+.topics-list.is-grouped { display: block; }
+.topics-unit { padding-block: 0.4rem; border-block-end: 1px solid var(--line); }
+.topics-unit:last-child { border-block-end: 0; }
+.topics-unit-title { font-weight: 600; }
+.topics-unit-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: 0.3rem 1rem; padding-inline-start: 1.6rem; margin-block-start: 0.25rem; }
+.topics-unit-list .drug-check { align-items: start; }
 
 /* ---------- daily review ---------- */
 

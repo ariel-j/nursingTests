@@ -655,7 +655,13 @@
       ],
       "quizzes": [],
       "upcoming": [],
-      "tools": []
+      "tools": [
+        {
+          "title": "כרטיסיות חזרה",
+          "href": "concepts.html?subject=pharmacology-b",
+          "description": "כרטיסיות שאלה ותשובה לכל היחידות: עיון וחיפוש, חזרה יומית, משחק התאמה, משחק שאלות ובליץ, ומבחן שנוצר מהכרטיסיות."
+        }
+      ]
     },
     {
       "id": "nursing-fundamentals",

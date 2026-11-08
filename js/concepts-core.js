@@ -1,5 +1,5 @@
 // Pure logic for the concept cards (כרטיסיות מושגים): a subject's concepts, numbers, tests,
-// medications, sequences and matching sets in data/<subject-id>/concepts.json, flattened into
+// medications, question/answer cards, sequences and matching sets in data/<subject-id>/concepts.json, flattened into
 // flashcards, a daily review, the question games and a generated multiple-choice quiz.
 // No DOM and no storage. Randomness is injected as `rng`; the generated quiz is deterministic
 // (seeded per question) so a saved session still matches it after a reload.
@@ -31,6 +31,7 @@ const ITEM_FIELDS = {
   numbers: { required: ['q', 'a'], optional: [] },
   tests: { required: ['name', 'purpose'], optional: ['en', 'normal', 'nursing'] },
   medications: { required: ['name', 'group', 'action'], optional: ['en', 'nursing'] },
+  cards: { required: ['q', 'a'], optional: [] },
 };
 const LISTS = [...Object.keys(ITEM_FIELDS), 'sequences', 'matches'];
 
@@ -120,6 +121,7 @@ export const CARD_KINDS = [
   { key: 'number', label: 'מספרים' },
   { key: 'test', label: 'בדיקות ופעולות' },
   { key: 'med', label: 'תרופות' },
+  { key: 'qa', label: 'שאלות ותשובות' },
 ];
 /** Browse also lists the sequences and the matching sets (they are not flashcards). */
 export const BROWSE_KINDS = [...CARD_KINDS, { key: 'sequence', label: 'סדרים' }, { key: 'match', label: 'התאמות' }];
@@ -159,6 +161,9 @@ export function buildCards(deck) {
         en: m.en ?? '',
         rows: [...row('קבוצה', m.group), ...row('פעולה', m.action), ...row('תפקיד האחות', m.nursing)],
       });
+    }
+    for (const x of t.cards ?? []) {
+      cards.push({ ...base, id: x.id, kind: 'qa', front: x.q, en: '', rows: row('תשובה', x.a) });
     }
   }
   return cards;
@@ -205,6 +210,26 @@ export function buildBrowse(deck, cards, { query = '', kind = null, topics = nul
   return groups;
 }
 
+/**
+ * The deck's topics grouped by unit, in deck order of each unit's first topic:
+ * [{ unit, topics: [{ id, title }] }]. Null when grouping adds nothing (no unit has two topics),
+ * so a deck with one topic per unit keeps its flat list.
+ */
+export function topicGroups(deck) {
+  const groups = [];
+  const byUnit = new Map();
+  for (const t of deck.topics) {
+    const unit = t.unit ?? '';
+    if (!byUnit.has(unit)) {
+      const group = { unit, topics: [] };
+      byUnit.set(unit, group);
+      groups.push(group);
+    }
+    byUnit.get(unit).topics.push({ id: t.id, title: t.title });
+  }
+  return groups.some((g) => g.unit !== '' && g.topics.length > 1) ? groups : null;
+}
+
 /** The chosen topics from storage: those still in the deck, in deck order; malformed → all. */
 export function sanitizeTopics(raw, topicIds) {
   if (!Array.isArray(raw)) return [...topicIds];
@@ -239,18 +264,20 @@ export function cardReviewStats(cards, review, today) {
 // ---------- the bank: everything the questions are made of ----------
 
 /**
- * The deck's items by kind, each with its topic: concepts, numbers, tests, meds, sequences and the
- * pairs of the matching sets (with the set they belong to). Wrong answers are drawn from the whole bank.
+ * The deck's items by kind, each with its topic (and the topic's unit): concepts, numbers, tests,
+ * meds, question/answer cards, sequences and the pairs of the matching sets (with the set they
+ * belong to). Wrong answers are drawn from the whole bank.
  */
 export function buildBank(deck) {
-  const bank = { concepts: [], numbers: [], tests: [], meds: [], sequences: [], pairs: [], sets: [], topics: [] };
+  const bank = { concepts: [], numbers: [], tests: [], meds: [], cards: [], sequences: [], pairs: [], sets: [], topics: [] };
   for (const t of deck.topics) {
-    const at = { topic: t.id, topicTitle: t.title };
+    const at = { topic: t.id, topicTitle: t.title, topicUnit: t.unit ?? '' };
     bank.topics.push({ id: t.id, title: t.title });
     for (const x of t.concepts ?? []) bank.concepts.push({ ...x, ...at });
     for (const x of t.numbers ?? []) bank.numbers.push({ ...x, ...at });
     for (const x of t.tests ?? []) bank.tests.push({ ...x, ...at });
     for (const x of t.medications ?? []) bank.meds.push({ ...x, ...at });
+    for (const x of t.cards ?? []) bank.cards.push({ ...x, ...at });
     for (const x of t.sequences ?? []) bank.sequences.push({ ...x, ...at });
     for (const set of t.matches ?? []) {
       bank.sets.push({ ...set, ...at });
@@ -267,6 +294,8 @@ const withTerm = (x, term) => (x.en ? `${term} (${x.en})` : term);
 // Texts that read badly as one of four answers (or as a question) are kept to cards.
 const MAX_DEF_AS_QUESTION = 150;
 const MAX_DEF_AS_OPTION = 90;
+// A question/answer card's answer is a sentence; longer ones stay on the cards and the review.
+const MAX_ANSWER_AS_OPTION = 160;
 
 /**
  * Up to `count` wrong answers for `correct` from `others`, best `rank` first (random among equals),
@@ -406,6 +435,25 @@ function medQuestion(m, bank, rng, byGroup) {
   });
 }
 
+/**
+ * From a question/answer card's question to its answer. Wrong answers are other cards' answers:
+ * the same topic first, then the same unit (the closer contrast), never one overlapping the answer.
+ */
+function qaQuestion(c, bank, rng) {
+  const rank = (o) => (o.topic === c.topic ? 0 : o.topicUnit !== '' && o.topicUnit === c.topicUnit ? 1 : 2);
+  const wrong = pickWrong(c, bank.cards, (x) => x.a, rng, { rank, skip: (x) => x.a.length > MAX_ANSWER_AS_OPTION });
+  if (!wrong) return null;
+  const q = c.q.trim();
+  return question({
+    id: `${c.id}-q`,
+    topic: c.topicTitle,
+    question: /[?？:]$/.test(q) ? q : `${trimDot(q)}?`,
+    right: c.a,
+    wrong: wrong.map((w) => ({ text: w.a, note: `זו התשובה לשאלה: ${w.q.trim()}` })),
+    explanation: c.a,
+  });
+}
+
 /** Which step comes after (`after` true) or before step `i` of a sequence; wrong answers are its other steps first. */
 function sequenceQuestion(seq, i, after, bank, rng) {
   const target = after ? seq.steps[i + 1] : seq.steps[i - 1];
@@ -447,6 +495,7 @@ export const QUESTION_GAMES = {
   numbers: ['number'],
   practice: ['test', 'medGroup', 'medAction'],
   order: ['after', 'before', 'pair'],
+  qa: ['qa'],
 };
 export const BLITZ_KINDS = Object.values(QUESTION_GAMES).flat();
 
@@ -459,6 +508,7 @@ function itemsOf(kind, bank) {
     case 'test': return bank.tests;
     case 'medGroup': return bank.meds;
     case 'medAction': return bank.meds;
+    case 'qa': return bank.cards.filter((c) => c.a.length <= MAX_ANSWER_AS_OPTION);
     case 'after': return bank.sequences.flatMap((s) => s.steps.slice(0, -1).map((_, i) => ({ seq: s, i, topic: s.topic })));
     case 'before': return bank.sequences.flatMap((s) => s.steps.slice(1).map((_, i) => ({ seq: s, i: i + 1, topic: s.topic })));
     case 'pair': return bank.pairs;
@@ -475,6 +525,7 @@ export function askAbout(kind, item, bank, rng) {
     case 'test': return testQuestion(item, bank, rng);
     case 'medGroup': return medQuestion(item, bank, rng, true);
     case 'medAction': return medQuestion(item, bank, rng, false);
+    case 'qa': return qaQuestion(item, bank, rng);
     case 'after': return sequenceQuestion(item.seq, item.i, true, bank, rng);
     case 'before': return sequenceQuestion(item.seq, item.i, false, bank, rng);
     case 'pair': return pairQuestion(item, bank, rng);
@@ -530,7 +581,7 @@ export function buildConceptQuiz(deck, { id, subject, unit } = {}) {
     subject,
     ...(unit ? { unit } : {}),
     title: 'מבחן מושגים',
-    description: 'שאלות שנוצרות מכרטיסיות המושגים: הגדרות, מספרים, בדיקות, תרופות, סדרים והתאמות. בחרו נושאים ומספר שאלות.',
+    description: 'שאלות שנוצרות מהכרטיסיות: הגדרות, מספרים, בדיקות, תרופות, שאלות ותשובות, סדרים והתאמות. בחרו נושאים ומספר שאלות.',
     questions,
   };
 }
@@ -542,7 +593,8 @@ const MAX_PAIR_TEXT = 80;
 
 /**
  * One round of the matching board: up to `size` pairs, either from one of the matching sets of the
- * chosen topics (`source` 'sets') or short concept/definition pairs (`source` 'concepts').
+ * chosen topics (`source` 'sets'), short concept/definition pairs (`source` 'concepts') or short
+ * question/answer cards (`source` 'cards').
  * `weights` ({ [pair id]: number }, default 1) makes pairs missed before come up more often.
  * Returns { title, pairs: [{ id, a, b }] in a-order, bOrder: ids in shuffled order } or null.
  */
@@ -556,11 +608,17 @@ export function buildMatchRound(bank, { topics = null, source = 'sets', size = M
       title: set.title,
       candidates: bank.pairs.filter((p) => p.set === set.id),
     }))
-    : [{
-      title: 'מושגים והסבריהם',
-      candidates: bank.concepts.filter((c) => inTopics(c) && c.def.length <= MAX_PAIR_TEXT)
-        .map((c) => ({ id: c.id, a: c.term, b: c.def, topic: c.topic })),
-    }];
+    : source === 'cards'
+      ? [{
+        title: 'שאלות ותשובות',
+        candidates: bank.cards.filter((c) => inTopics(c) && c.q.length <= MAX_PAIR_TEXT && c.a.length <= MAX_PAIR_TEXT)
+          .map((c) => ({ id: c.id, a: c.q, b: c.a, topic: c.topic })),
+      }]
+      : [{
+        title: 'מושגים והסבריהם',
+        candidates: bank.concepts.filter((c) => inTopics(c) && c.def.length <= MAX_PAIR_TEXT)
+          .map((c) => ({ id: c.id, a: c.term, b: c.def, topic: c.topic })),
+      }];
   for (const { title, candidates } of sources) {
     const round = boardFrom(candidates, title, size, weights, rng);
     if (round) return round;

@@ -5,10 +5,14 @@ import { findSubject, loadManifest, subjectPaths } from './catalog.js';
 import {
   BROWSE_KINDS,
   CARD_KINDS,
+  QUESTION_GAMES,
   buildBank,
   buildBrowse,
   buildCards,
+  buildMatchRound,
   conceptsUrl,
+  questionPool,
+  topicGroups,
   validateConceptDeck,
 } from './concepts-core.js';
 import { initMatch, initQuestionGames } from './concepts-games.js';
@@ -22,7 +26,31 @@ const $ = (id) => document.getElementById(id);
 // ---------- tabs ----------
 
 const TABS = ['browse', 'review', 'games', 'test'];
-const GAMES = ['match', 'concepts', 'numbers', 'practice', 'order', 'blitz'];
+const GAMES = ['match', 'concepts', 'numbers', 'practice', 'order', 'qa', 'blitz'];
+const MATCH_SOURCES = ['sets', 'concepts', 'cards'];
+
+/**
+ * What this deck can play: the games with something to ask (a deck of one kind of card shows only
+ * its games) and the matching board's sources that make a board. The blitz needs any question game.
+ */
+function available(bank) {
+  const sources = MATCH_SOURCES.filter((source) => buildMatchRound(bank, { source }) !== null);
+  const games = new Set(Object.entries(QUESTION_GAMES).filter(([, kinds]) => questionPool(bank, kinds, null) > 0).map(([g]) => g));
+  if (games.size > 0) games.add('blitz');
+  if (sources.length > 0) games.add('match');
+  return { games: GAMES.filter((g) => games.has(g)), sources };
+}
+
+/** Hides the radio (and its label) of every value not in `keep`, and checks the first kept one if needed. */
+function keepRadios(name, keep) {
+  const radios = [...document.querySelectorAll(`input[name="${name}"]`)];
+  for (const r of radios) r.closest('label').hidden = !keep.includes(r.value);
+  const checked = radios.find((r) => r.checked);
+  if (!checked || !keep.includes(checked.value)) {
+    const first = radios.find((r) => keep.includes(r.value));
+    if (first) first.checked = true;
+  }
+}
 
 function initTabs(onShow) {
   const tabs = TABS.map((name) => $(`tab-${name}`));
@@ -52,8 +80,8 @@ function initTabs(onShow) {
 }
 
 /** The game picker inside the games tab; each game starts the first time it is shown. */
-function initGames(starters, topics) {
-  const radios = [...document.querySelectorAll('input[name="game"]')];
+function initGames(starters, topics, games) {
+  const radios = [...document.querySelectorAll('input[name="game"]')].filter((r) => games.includes(r.value));
   const started = new Set();
   const current = () => radios.find((r) => r.checked).value;
   const show = (name) => {
@@ -66,7 +94,7 @@ function initGames(starters, topics) {
   };
   for (const r of radios) r.addEventListener('change', () => show(r.value));
   const fromHash = location.hash.slice(1);
-  const first = GAMES.includes(fromHash) ? fromHash : 'match';
+  const first = games.includes(fromHash) ? fromHash : games[0];
   radios.find((r) => r.value === first).checked = true;
   // New topics: the game on screen restarts now, the others when next shown.
   topics.onChange(() => {
@@ -81,7 +109,10 @@ function initGames(starters, topics) {
 function kindSelect(select, kinds, all, counts) {
   const first = el('option', null, `הכול (${all})`);
   first.value = '';
-  select.replaceChildren(first, ...kinds.map(({ key, label }) => {
+  // Kinds the deck has none of are left out; with a single kind the choice is pointless.
+  const present = kinds.filter(({ key }) => (counts[key] ?? 0) > 0);
+  select.closest('label').hidden = present.length < 2;
+  select.replaceChildren(first, ...present.map(({ key, label }) => {
     const option = el('option', null, `${label} (${counts[key] ?? 0})`);
     option.value = key;
     return option;
@@ -151,11 +182,20 @@ function initBrowse(deck, cards) {
   kindSelect(kind, BROWSE_KINDS, Object.values(counts).reduce((a, b) => a + b, 0), counts);
   const allTopics = el('option', null, `כל הנושאים (${deck.topics.length})`);
   allTopics.value = '';
-  topic.replaceChildren(allTopics, ...deck.topics.map((t) => {
+  const topicOption = (t) => {
     const option = el('option', null, t.title);
     option.value = t.id;
     return option;
-  }));
+  };
+  const groups = topicGroups(deck);
+  topic.replaceChildren(allTopics, ...(groups
+    ? groups.map((g) => {
+      const group = el('optgroup');
+      group.label = g.unit || 'כללי';
+      group.append(...g.topics.map(topicOption));
+      return group;
+    })
+    : deck.topics.map(topicOption)));
 
   function render() {
     const groups = buildBrowse(deck, cards, {
@@ -220,6 +260,7 @@ async function main() {
     [bank.numbers.length, 'מספרים'],
     [bank.tests.length, 'בדיקות ופעולות'],
     [bank.meds.length, 'תרופות'],
+    [bank.cards.length, 'שאלות ותשובות'],
     [bank.sequences.length, 'סדרים'],
     [bank.sets.length, 'התאמות'],
   ];
@@ -236,10 +277,15 @@ async function main() {
   kindSelect($('review-kind'), CARD_KINDS, cards.length, Object.fromEntries(CARD_KINDS.map((k) => [k.key, cards.filter((c) => c.kind === k.key).length])));
   const startReview = initReview(topics, subject.id);
   const bestKey = keys.conceptGames(subject.id);
+  const { games, sources } = available(bank);
+  keepRadios('game', games);
+  keepRadios('match-source', sources);
+  // One source left: nothing to choose between.
+  document.querySelector('input[name="match-source"]')?.closest('fieldset').toggleAttribute('hidden', sources.length < 2);
   const showGame = initGames({
     match: initMatch(bank, topics, subject.id, bestKey),
     ...initQuestionGames(bank, topics, bestKey),
-  }, topics);
+  }, topics, games);
   let reviewStarted = false;
   initTabs((name) => {
     if (name === 'review' && !reviewStarted) {

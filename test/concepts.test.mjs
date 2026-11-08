@@ -17,9 +17,17 @@ import {
   gradeReview,
   randomQuestion,
   sanitizeTopics,
+  topicGroups,
   validateConceptDeck,
 } from '../js/concepts-core.js';
-import { UNIT_BY_TOPIC, buildConceptDeck, conceptDeckErrors } from '../scripts/concepts.mjs';
+import {
+  UNIT_BY_CARD_FILE,
+  UNIT_BY_TOPIC,
+  buildCardTopics,
+  buildConceptDeck,
+  conceptDeckErrors,
+  mergeCardTopics,
+} from '../scripts/concepts.mjs';
 import { readFile } from 'node:fs/promises';
 
 // Placeholder data only: made-up words, no course content.
@@ -43,6 +51,7 @@ function topic(id, title) {
       group: `קבוצת ${w} ${id}`,
       action: `פעולה של ${w} ${id}`,
     })),
+    cards: WORDS.map((w, i) => ({ id: `${id}-q${i + 1}`, q: `שאלה ${w} ${id}?`, a: `תשובה ייחודית ${w} ${id}` })),
     sequences: [{ id: `${id}-s1`, title: `סדר ${id}`, steps: WORDS.slice(0, 4).map((w) => `שלב ${w} ${id}`) }],
     matches: [{ id: `${id}-p1`, title: `זוגות ${id}`, pairs: WORDS.map((w) => ({ a: `פריט ${w} ${id}`, b: `תשובה ${w} ${id}` })) }],
   };
@@ -79,9 +88,9 @@ test('optional fields may be empty, shared answers are allowed in a matching set
   assert.deepEqual(validateConceptDeck({ topics: [t] }), []);
 });
 
-test('buildCards flattens the four card kinds with their rows', () => {
+test('buildCards flattens the five card kinds with their rows', () => {
   const cards = buildCards(deck);
-  assert.equal(cards.length, 2 * 4 * 6);
+  assert.equal(cards.length, 2 * 5 * 6);
   const concept = cards.find((c) => c.id === 'x-c1');
   assert.deepEqual([concept.kind, concept.topic, concept.topicTitle, concept.front], ['concept', 'x', 'נושא א', 'מושג אלף x']);
   assert.deepEqual(concept.rows, [{ label: 'הסבר', text: 'הסבר של אלף באזור x' }]);
@@ -93,7 +102,7 @@ test('buildCards flattens the four card kinds with their rows', () => {
 test('filterCards matches every word, kind and topics', () => {
   const cards = buildCards(deck);
   assert.equal(filterCards(cards, { kind: 'number' }).length, 12);
-  assert.equal(filterCards(cards, { topics: ['y'] }).length, 24);
+  assert.equal(filterCards(cards, { topics: ['y'] }).length, 30);
   assert.deepEqual(filterCards(cards, { query: 'גימל x', kind: 'concept' }).map((c) => c.id), ['x-c3']);
   assert.equal(filterCards(cards, { query: 'לא קיים' }).length, 0);
   assert.equal(filterCards(cards, { topics: [] }).length, 0);
@@ -103,7 +112,7 @@ test('buildBrowse groups by topic and includes sequences and matching sets', () 
   const cards = buildCards(deck);
   const all = buildBrowse(deck, cards);
   assert.deepEqual(all.map((g) => g.topic.id), ['x', 'y']);
-  assert.equal(all[0].items.length, 24 + 1 + 1);
+  assert.equal(all[0].items.length, 30 + 1 + 1);
   assert.deepEqual(buildBrowse(deck, cards, { kind: 'sequence' }).map((g) => g.items.length), [1, 1]);
   assert.deepEqual(buildBrowse(deck, cards, { kind: 'match', topics: ['y'] })[0].items[0].set.id, 'y-p1');
   // A query narrows cards, sequences and sets alike; empty topics are dropped.
@@ -274,4 +283,109 @@ test('the published deck is valid, matches the catalog and carries no sources', 
   const published = JSON.parse(raw);
   assert.deepEqual(conceptDeckErrors(published, catalog.subjects.find((s) => s.id === 'nursing-fundamentals')), []);
   assert.ok(!/"source"|Kozier|מצגת הקורס/.test(raw));
+});
+
+// ---------- question/answer cards ----------
+
+test('question/answer cards: a card kind, the answer as its row, a question game of their own', () => {
+  const cards = buildCards(deck).filter((c) => c.kind === 'qa');
+  assert.equal(cards.length, 12);
+  assert.deepEqual(cards[0].rows, [{ label: 'תשובה', text: 'תשובה ייחודית אלף x' }]);
+  assert.deepEqual(QUESTION_GAMES.qa, ['qa']);
+  assert.ok(BLITZ_KINDS.includes('qa'));
+  const bad = { topics: [{ id: 'a', title: 'א', cards: [{ id: 'a-1', q: 'ש', a: '', extra: 1 }] }] };
+  const errors = validateConceptDeck(bad);
+  assert.ok(errors.some((e) => e.includes('a must be a non-empty string')));
+  assert.ok(errors.some((e) => e.includes('unknown field "extra"')));
+});
+
+test('qa questions take wrong answers from the same topic first, then the same unit', () => {
+  const bank = buildBank(deck);
+  const item = bank.cards.find((c) => c.id === 'x-q1');
+  const q = askAbout('qa', item, bank, rngOf(2));
+  assert.equal(q.options[0].text, item.a);
+  assert.ok(q.options.slice(1).every((o) => o.text.endsWith(' x')), 'same topic');
+  assert.ok(q.options[1].note.startsWith('זו התשובה לשאלה: '));
+  assert.ok(q.question.endsWith('?'));
+  // Two topics of one unit, one card each in the asked topic: the rest come from its unit.
+  const card = (id, t, n) => ({ id: `${id}`, q: `שאלה ${id}?`, a: `תשובה ${t} ${n}` });
+  const unitDeck = { topics: [
+    { id: 'a', title: 'א', unit: 'u1', cards: [card('a-1', 'a', 1)] },
+    { id: 'b', title: 'ב', unit: 'u1', cards: [1, 2, 3].map((n) => card(`b-${n}`, 'b', n)) },
+    { id: 'c', title: 'ג', unit: 'u2', cards: [1, 2, 3].map((n) => card(`c-${n}`, 'c', n)) },
+  ] };
+  const unitBank = buildBank(unitDeck);
+  for (let seed = 1; seed < 10; seed++) {
+    const asked = askAbout('qa', unitBank.cards[0], unitBank, rngOf(seed));
+    assert.ok(asked.options.slice(1).every((o) => o.text.startsWith('תשובה b')), 'same unit before other units');
+  }
+});
+
+test('long answers stay on the cards, short pairs feed the matching board', () => {
+  const t = clean(topic('x', 'א'));
+  t.cards[0].a = 'ארוך '.repeat(40);
+  const bank = buildBank({ topics: [t] });
+  assert.equal(askAbout('qa', bank.cards[1], bank, rngOf(1)).options.some((o) => o.text === t.cards[0].a), false);
+  assert.equal(randomQuestion(bank, ['qa'], null, rngOf(1)).options.length, 4);
+  const round = buildMatchRound(bank, { source: 'cards', size: 6 }, rngOf(3));
+  assert.equal(round.title, 'שאלות ותשובות');
+  assert.ok(round.pairs.length >= 2 && round.pairs.every((p) => p.b.length <= 80));
+});
+
+test('topicGroups groups by unit only when a unit has several topics', () => {
+  assert.equal(topicGroups(deck), null); // one topic per unit
+  const grouped = topicGroups({ topics: [
+    { id: 'a', title: 'א', unit: 'u1' }, { id: 'b', title: 'ב', unit: 'u2' }, { id: 'c', title: 'ג', unit: 'u1' },
+  ] });
+  assert.deepEqual(grouped.map((g) => [g.unit, g.topics.map((t) => t.id)]), [['u1', ['a', 'c']], ['u2', ['b']]]);
+});
+
+test('buildCardTopics: one topic per card topic, ids from the file, only the card text', () => {
+  const file = {
+    id: 'demo-1', subject: 'x', unit: 'יחידה ב', title: 'כותרת', description: 'תיאור',
+    cards: [
+      { id: 'c001', topic: 'נושא 1', front: 'ש1?', back: 'ת1', source: 'מקור' },
+      { id: 'c002', topic: 'נושא 2', front: 'ש2?', back: 'ת2' },
+      { id: 'c003', topic: 'נושא 1', front: 'ש3?', back: 'ת3' },
+    ],
+  };
+  const units = ['יחידה א', 'יחידה ב'];
+  const topics = buildCardTopics(file, { units });
+  assert.deepEqual(topics.map((t) => [t.id, t.title, t.unit, t.cards.map((c) => c.id)]), [
+    ['demo-1-t1', 'נושא 1', 'יחידה ב', ['demo-1-c001', 'demo-1-c003']],
+    ['demo-1-t2', 'נושא 2', 'יחידה ב', ['demo-1-c002']],
+  ]);
+  assert.deepEqual(topics[0].cards[0], { id: 'demo-1-c001', q: 'ש1?', a: 'ת1' });
+  assert.equal(buildCardTopics(file, { units, unit: 'יחידה א' })[0].unit, 'יחידה א');
+  assert.throws(() => buildCardTopics({ ...file, unit: 'אחרת' }, { units }), /--unit/);
+  assert.throws(() => buildCardTopics({ ...file, id: 'Bad' }, { units }), /id/);
+});
+
+test('mergeCardTopics replaces a re-imported file and orders by unit, then file, then topic', () => {
+  const units = ['u1', 'u2'];
+  const t = (file, n, unit) => ({ id: `${file}-t${n}`, title: `${file} ${n}`, unit, cards: [{ id: `${file}-c${n}`, q: 'ש', a: 'ת' }] });
+  let d = mergeCardTopics({ topics: [] }, 'f-10', [t('f-10', 1, 'u1')], units);
+  d = mergeCardTopics(d, 'g-1', [t('g-1', 1, 'u2'), t('g-1', 2, 'u2')], units);
+  d = mergeCardTopics(d, 'f-2', [t('f-2', 1, 'u1')], units);
+  assert.deepEqual(d.topics.map((x) => x.id), ['f-2-t1', 'f-10-t1', 'g-1-t1', 'g-1-t2']);
+  d = mergeCardTopics(d, 'g-1', [t('g-1', 1, 'u2')], units);
+  assert.deepEqual(d.topics.map((x) => x.id), ['f-2-t1', 'f-10-t1', 'g-1-t1']);
+});
+
+test('conceptDeckErrors rejects cards that point at the course material', () => {
+  const subject = { id: 's', name: 'מקצוע', units: ['יחידה x', 'יחידה y'] };
+  const t = clean(topic('x', 'א'));
+  t.cards[0].a = 'השקופית קובעת שזה כך';
+  assert.ok(conceptDeckErrors({ topics: [t, clean(topic('y', 'ב'))] }, subject).some((e) => e.includes('x-q1')));
+});
+
+test('the pharmacology-b deck is valid, every card file has its unit, and it carries no sources', async () => {
+  const catalog = JSON.parse(await readFile(new URL('../quizzes/subjects.json', import.meta.url), 'utf8'));
+  const subject = catalog.subjects.find((s) => s.id === 'pharmacology-b');
+  const raw = await readFile(new URL('../data/pharmacology-b/concepts.json', import.meta.url), 'utf8');
+  const published = JSON.parse(raw);
+  assert.deepEqual(conceptDeckErrors(published, subject), []);
+  for (const unit of Object.values(UNIT_BY_CARD_FILE)) assert.ok(subject.units.includes(unit), unit);
+  assert.ok(!/"source"|"front"|"back"|"description"/.test(raw));
+  assert.ok(subject.tools.some((tool) => tool.href === 'concepts.html?subject=pharmacology-b'));
 });
