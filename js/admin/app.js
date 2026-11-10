@@ -262,7 +262,7 @@ function reviewFlow(makePlan, message, { needsOwnContentConfirm = true, reviewLa
     publishBtn.disabled = needsOwnContentConfirm;
     out.replaceChildren(
       el('div', { class: 'admin-ok', role: 'status', text: `הבדיקה עברה: ${plan.summary ?? 'שינוי'}. יתבצע commit אחד עם הקבצים:` }),
-      el('ul', { class: 'admin-files' }, rows), confirm, publishBtn);
+      el('ul', { class: 'admin-files' }, rows), ...(confirm ? [confirm] : []), publishBtn);
   };
   return { out, reviewBtn: button(reviewLabel, () => guarded(review, out)) };
 }
@@ -788,7 +788,7 @@ function renderPanel(active = 'overview') {
     el('div', { class: 'admin-row' },
       el('span', { class: 'admin-note', text: `מחובר ל‑${session.repo.owner}/${session.repo.name} (${session.repo.branch})` }),
       button('נעילה', () => lock(), { class: 'secondary' })),
-    el('nav', { 'aria-label': 'אזורי ניהול' }, nav), pendingBanner, host);
+    el('nav', { 'aria-label': 'אזורי ניהול' }, nav), ...(pendingBanner ? [pendingBanner] : []), host);
   if (pendingBanner) { say(''); pendingBanner.focus(); pendingBanner = null; }
   guarded(() => TABS.find((t) => t.id === active).render(host), host);
 }
