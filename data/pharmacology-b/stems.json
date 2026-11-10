@@ -1,0 +1,122 @@
+{
+  "stems": [
+    {
+      "stem": "-pril",
+      "pattern": "pril$",
+      "class": "מעכב ACE"
+    },
+    {
+      "stem": "-sartan",
+      "pattern": "sartan$",
+      "class": "חוסם קולטן אנגיוטנסין AT1"
+    },
+    {
+      "stem": "-olol",
+      "pattern": "olol$",
+      "class": "חוסם בטא"
+    },
+    {
+      "stem": "-dipine",
+      "pattern": "dipine$",
+      "class": "חוסם תעלות סידן דיהידרופירידיני"
+    },
+    {
+      "stem": "-statin",
+      "pattern": "statin$",
+      "class": "מעכב HMG-CoA reductase",
+      "except": [
+        "Nystatin"
+      ]
+    },
+    {
+      "stem": "-azole",
+      "pattern": "azole$",
+      "class": "אנטי-פטרייתי מקבוצת האזולים",
+      "except": [
+        "Metronidazole",
+        "Methimazole",
+        "Sulfamethoxazole"
+      ]
+    },
+    {
+      "stem": "-cillin",
+      "pattern": "cillin$",
+      "class": "פניצילין"
+    },
+    {
+      "stem": "-mycin",
+      "pattern": "(mycin|micin)$",
+      "class": "אנטיביוטיקה מעכבת ריבוזום או דופן (מקרולידים, אמינוגליקוזידים ועוד)"
+    },
+    {
+      "stem": "-floxacin",
+      "pattern": "floxacin$",
+      "class": "קווינולון"
+    },
+    {
+      "stem": "-vir",
+      "pattern": "vir$",
+      "class": "נגד וירוסים"
+    },
+    {
+      "stem": "-mab",
+      "pattern": "mab$",
+      "class": "נוגדן חד-שבטי"
+    },
+    {
+      "stem": "-tinib",
+      "pattern": "tinib$",
+      "class": "מעכב טירוזין קינאז"
+    },
+    {
+      "stem": "-thiazide",
+      "pattern": "thiazide$",
+      "class": "משתן תיאזידי"
+    },
+    {
+      "stem": "-sone",
+      "pattern": "(sone|solone)$",
+      "class": "גלוקוקורטיקואיד או מינרלוקורטיקואיד"
+    },
+    {
+      "stem": "-gliptin",
+      "pattern": "gliptin$",
+      "class": "מעכב DPP-4"
+    },
+    {
+      "stem": "-gliflozin",
+      "pattern": "gliflozin$",
+      "class": "מעכב SGLT2"
+    },
+    {
+      "stem": "-glutide",
+      "pattern": "glutide$",
+      "class": "אגוניסט GLP-1"
+    },
+    {
+      "stem": "-glitazone",
+      "pattern": "glitazone$",
+      "class": "תיאזוליןדיון (PPAR-γ)"
+    },
+    {
+      "stem": "-platin",
+      "pattern": "platin$",
+      "class": "תרכובת פלטינה"
+    },
+    {
+      "stem": "-penem",
+      "pattern": "penem$",
+      "class": "קרבפנם"
+    },
+    {
+      "stem": "-cycline",
+      "pattern": "cycline$",
+      "class": "טטרציקלין"
+    },
+    {
+      "stem": "-parin",
+      "pattern": "parin$",
+      "class": "הפרין"
+    }
+  ]
+}
