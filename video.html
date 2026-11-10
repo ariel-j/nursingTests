@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>סרטון</title>
+  <link rel="preload" href="fonts/assistant-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/video.js"></script>
+  <script type="module" src="js/a11y.js"></script>
+</head>
+<body>
+  <main class="page">
+    <nav class="top-nav">
+      <a href="./">→ כל הבחנים</a>
+    </nav>
+
+    <header class="quiz-header">
+      <p id="subject" class="kicker"></p>
+      <h1 id="video-title">סרטון</h1>
+    </header>
+    <p id="status" class="status" role="status">טוען…</p>
+
+    <section id="watch" hidden>
+      <p id="description" class="lede"></p>
+
+      <div class="card video-box">
+        <video id="player" controls preload="metadata" playsinline>
+          <p>הדפדפן שלכם לא מציג סרטונים. אפשר <a id="fallback-link" href="./">להוריד את הקובץ</a>.</p>
+        </video>
+      </div>
+
+      <p id="resume-note" class="muted" role="status" hidden></p>
+      <p id="info" class="muted"></p>
+    </section>
+  </main>
+
+  <footer class="site-footer page">
+    <nav>
+      <a href="accessibility.html">הצהרת נגישות</a>
+      <a href="privacy.html">מדיניות פרטיות</a>
+    </nav>
+    <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+  </footer>
+</body>
+</html>

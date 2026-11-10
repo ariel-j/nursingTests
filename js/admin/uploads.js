@@ -3,10 +3,11 @@
 // File names from the user are never used as paths. A target path is always built from a validated
 // id and a fixed directory, then checked against the allowlist below before anything is committed.
 
+import { MAX_VTT_BYTES, PANEL_VIDEO_BYTES, isMp4 } from '../video-core.js';
+
 export const ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 export const MAX_JSON_BYTES = 5 * 1024 * 1024;
 export const MAX_HTML_BYTES = 1024 * 1024;
-export const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
 
 // File names the site or the generator owns; no upload may take them as an id.
 export const RESERVED_IDS = new Set(['index', 'all', 'list', 'manifest', 'subjects']);
@@ -19,6 +20,7 @@ const WRITABLE = [
   /^quizzes\/(?:subjects|manifest)\.json$/,
   /^quizzes\/[a-z0-9]+(?:-[a-z0-9]+)*\.json$/,
   /^flashcards\/[a-z0-9]+(?:-[a-z0-9]+)*\.json$/,
+  /^videos\/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:json|mp4|vtt)$/,
   /^summaries\/list\.json$/,
   /^summaries\/[a-z0-9]+(?:-[a-z0-9]+)*\.html$/,
   /^css\/summary\.css$/,
@@ -30,16 +32,17 @@ export function isWritablePath(p) {
   // Generated files are allowed by name; any other file must carry a non-reserved id.
   const generated = ['quizzes/subjects.json', 'quizzes/manifest.json', 'summaries/list.json', 'css/summary.css'];
   if (generated.includes(p)) return true;
-  return isValidId(p.split('/')[1].replace(/\.(?:json|html)$/, ''));
+  return isValidId(p.split('/')[1].replace(/\.(?:json|html|mp4|vtt)$/, ''));
 }
 
 export const quizPath = (id) => `quizzes/${id}.json`;
 export const deckPath = (id) => `flashcards/${id}.json`;
+export const videoMetaPath = (id) => `videos/${id}.json`;
+export const videoMediaPath = (id) => `videos/${id}.mp4`;
+export const captionsPath = (id) => `videos/${id}.vtt`;
 export const summaryPath = (id) => `summaries/${id}.html`;
 
 const ext = (name) => /\.([a-z0-9]+)$/i.exec(name)?.[1]?.toLowerCase() ?? '';
-
-const startsWithText = (bytes, text) => text.split('').every((c, i) => bytes[i] === c.charCodeAt(0));
 
 /**
  * Checks a chosen file by extension AND content. `bytes` is a Uint8Array (at least the first 64 bytes).
@@ -52,7 +55,8 @@ export function checkUpload({ name, size, bytes }) {
   let kind = null;
   if (e === 'json') kind = 'json';
   else if (e === 'html' || e === 'htm') kind = 'html';
-  else errors.push('סוג קובץ לא מורשה (מותר: JSON, HTML)');
+  else if (e === 'vtt') kind = 'vtt';
+  else errors.push('סוג קובץ לא מורשה (מותר: JSON, HTML, VTT)');
 
   const head = bytes.subarray(0, 64);
   if (head.includes(0)) errors.push('הקובץ מכיל בתים בינאריים');
@@ -65,15 +69,19 @@ export function checkUpload({ name, size, bytes }) {
     if (size > MAX_HTML_BYTES) errors.push('קובץ HTML גדול מדי');
     if (!/^\s*<(?:!doctype|html)/i.test(String.fromCharCode(...head))) errors.push('התוכן אינו דף HTML');
   }
+  if (kind === 'vtt') {
+    if (size > MAX_VTT_BYTES) errors.push('קובץ הכתוביות גדול מדי');
+    if (!/^\uFEFF?WEBVTT/.test(new TextDecoder().decode(head))) errors.push('קובץ כתוביות חייב להתחיל ב‑WEBVTT');
+  }
   return { kind, errors };
 }
 
-/** mp4 check for Phase 3: size cap and the `ftyp` box at offset 4. */
+/** mp4 check: the extension, the size cap of the panel (it uploads from the browser) and the `ftyp` signature. */
 export function checkVideo({ name, size, bytes }) {
   const errors = [];
-  if (ext(name) !== 'mp4') errors.push('מותר רק mp4');
-  if (size > MAX_VIDEO_BYTES) errors.push('הסרטון גדול מ-100MB');
-  if (!startsWithText(bytes.subarray(4, 8), 'ftyp')) errors.push('התוכן אינו mp4');
+  if (ext(name) !== 'mp4') errors.push('מותר רק קובץ mp4');
+  if (size > PANEL_VIDEO_BYTES) errors.push(`הסרטון גדול מ‑${PANEL_VIDEO_BYTES / 1024 / 1024}MB (אפשר להוסיף סרטון גדול יותר דרך git)`);
+  if (!isMp4(bytes)) errors.push('התוכן אינו קובץ mp4');
   return errors;
 }
 

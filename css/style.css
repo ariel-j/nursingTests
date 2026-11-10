@@ -555,3 +555,16 @@ kbd {
   font-weight: 600;
 }
 .quiz-card.deck-card { border-inline-start-color: var(--ink); }
+
+/* ---------- videos ---------- */
+
+.video-box { padding: 0.75rem; }
+.video-box video {
+  display: block;
+  inline-size: 100%;
+  max-block-size: 75vh;
+  background: #000;
+  border-radius: 4px;
+}
+.video-box video:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.quiz-card.video-card { border-inline-start-color: var(--focus); }

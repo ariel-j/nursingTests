@@ -4,7 +4,8 @@ import { readFile } from 'node:fs/promises';
 import { seal, open, passwordProblems, backoffMs, looksLikeToken } from '../js/admin/vault.js';
 import { checkUpload, checkVideo, isWritablePath, isValidId, withSummaryAccent, setSummaryAccent, withoutSummaryAccent, readSummaryHue } from '../js/admin/uploads.js';
 import { createGithub, ConflictError } from '../js/admin/github.js';
-import { planQuiz, planSummary, planStructure, planQuizDelete, detectQuizFormat, planQuizEdit, planSummaryDelete, planSummaryEdit, planSummaryOrder, planDeck, planDeckEdit, planDeckDelete, manifestFile } from '../js/admin/actions.js';
+import { planQuiz, planSummary, planStructure, planQuizDelete, detectQuizFormat, planQuizEdit, planSummaryDelete, planSummaryEdit, planSummaryOrder, planDeck, planDeckEdit, planDeckDelete, manifestFile, planVideo, planVideoEdit, planVideoDelete, planVideoCaptions } from '../js/admin/actions.js';
+import { validateVideo, vttErrors } from '../js/video-core.js';
 import { pageErrors } from '../js/summary-check.js';
 import { validateCatalog } from '../js/catalog.js';
 
@@ -496,7 +497,7 @@ test('EVERY plan that writes the manifest keeps the decks in it', async () => {
   const del = planDeckDelete({ id: 'new-deck', catalog: deckCat, decks: [d], quizzes: [q] });
   assert.equal(JSON.parse(del.files[0].text).subjects[0].units[0].quizzes.length, 1);
   // the helper is the single source of manifest text
-  assert.equal(manifestFile([q], [d], deckCat).text, planQuizEdit({ id: 'q-one', patch: { title: q.title + 'x' }, catalog: deckCat, quizzes: [q], decks: [d] }).files[1].text.replace(/"title": "[^"]*x"/, `"title": "${q.title}"`));
+  assert.equal(manifestFile({ quizzes: [q], decks: [d] }, deckCat).text, planQuizEdit({ id: 'q-one', patch: { title: q.title + 'x' }, catalog: deckCat, quizzes: [q], decks: [d] }).files[1].text.replace(/"title": "[^"]*x"/, `"title": "${q.title}"`));
   // none of them can ever be asked to build one without decks by accident: old callers get decks = []
   assert.equal(JSON.parse(planQuiz({ source: authoring('q-three'), catalog: deckCat, quizzes: [] }).files[1].text).subjects[0].units[0].flashcards.length, 0);
 });
@@ -526,4 +527,203 @@ test('the flashcards template is a valid, placeable deck and uploads cleanly', a
   assert.deepEqual(plan.errors, []);
   assert.equal(JSON.parse(plan.files[0].text).cards.length, 3);
   assert.ok(checkUpload({ name: 'flashcards.json', size: 900, bytes: bytes(await read('flashcards.json')) }).errors.length === 0);
+});
+
+// ---------- Phase 3: videos in the panel ----------
+const be32 = (n) => [(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255];
+const vbox = (type, ...payload) => { const body = payload.flat(); return [...be32(8 + body.length), ...[...type].map((c) => c.charCodeAt(0)), ...body]; };
+// A tiny placeholder "mp4": ftyp + moov(mvhd) + mdat of `extra` filler bytes. Never a real recording.
+const tinyMp4 = (seconds = 90, extra = 20) => Uint8Array.from([
+  ...vbox('ftyp', ...[...'isom'].map((c) => c.charCodeAt(0)), ...be32(512)),
+  ...vbox('moov', vbox('mvhd', 0, 0, 0, 0, ...be32(0), ...be32(0), ...be32(1000), ...be32(seconds * 1000), ...new Array(80).fill(0))),
+  ...vbox('mdat', ...new Array(extra).fill(9)),
+]);
+const VTT = 'WEBVTT\n\n00:00.000 --> 00:02.000\nשלום\n';
+const vcat = { subjects: [{ name: 'מקצוע', units: ['יחידה', 'אחרת'] }] };
+const vmeta = (id = 'new-video', extra = {}) => ({ id, subject: 'מקצוע', unit: 'יחידה', title: ' סרטון חדש ', ...extra });
+const makeVideo = (id = 'new-video', extra = {}, opts = {}) => JSON.parse(planVideo({ meta: vmeta(id, extra), mp4: tinyMp4(), catalog: vcat, ...opts }).files.find((f) => f.path === `videos/${id}.json`).text);
+
+test('video paths: three allowlisted extensions, same id rules, nothing else', () => {
+  for (const ok of ['videos/my-video.json', 'videos/my-video.mp4', 'videos/my-video.vtt']) assert.ok(isWritablePath(ok), ok);
+  for (const bad of ['videos/x.mov', 'videos/x.html', 'videos/x.js', 'videos/x.mp4.exe', 'videos/manifest.mp4', 'videos/list.json', 'videos/index.vtt',
+    'videos/A.mp4', 'videos/a/b.mp4', 'videos/../quizzes/x.mp4', 'videos/.mp4', '/videos/a.mp4', 'video/a.mp4', 'videos\\a.mp4']) {
+    assert.ok(!isWritablePath(bad), bad);
+  }
+});
+
+test('uploads: captions need WEBVTT and a small size; mp4 needs the signature and the 50MB panel cap', () => {
+  const v = (name, text, size = text.length) => checkUpload({ name, size, bytes: bytes(text) });
+  assert.deepEqual(v('c.vtt', VTT).errors, []);
+  assert.equal(v('c.vtt', VTT).kind, 'vtt');
+  assert.ok(v('c.vtt', '1\n00:00:00,000 --> 00:00:01,000\nSRT').errors.length > 0, 'SRT is not VTT');
+  assert.ok(v('c.vtt', VTT, 2 * 1024 * 1024).errors.length > 0, 'too big');
+  assert.ok(v('c.srt', VTT).errors.length > 0);
+  assert.deepEqual(checkVideo({ name: 'a.mp4', size: 50 * 1024 * 1024, bytes: tinyMp4() }), []);
+  assert.ok(checkVideo({ name: 'a.mp4', size: 50 * 1024 * 1024 + 1, bytes: tinyMp4() }).some((e) => /50MB/.test(e)));
+  assert.ok(checkVideo({ name: 'a.mp4', size: 10, bytes: bytes('<html>nope</html>') }).length > 0);
+  assert.ok(checkVideo({ name: 'a.exe', size: 10, bytes: tinyMp4() }).length > 0);
+});
+
+test('github: raw bytes are committed unchanged (all 256 values, larger than one base64 chunk)', async () => {
+  const raw = Uint8Array.from({ length: 100_000 }, (_, i) => (i * 7 + (i >> 8)) & 255);
+  const { fetchImpl, log } = fakeGithub();
+  const gh = createGithub({ token: 't', owner: 'o', repo: 'r', fetchImpl });
+  await gh.change(async () => ({ files: [{ path: 'videos/bin-test.mp4', bytes: raw }, { path: 'videos/bin-test.json', text: 'שלום ✓' }] }), 'm');
+  const blobs = log.filter((r) => r.path.endsWith('/git/blobs')).map((r) => JSON.parse(r.body));
+  assert.ok(blobs.every((b) => b.encoding === 'base64'));
+  assert.deepEqual(new Uint8Array(Buffer.from(blobs[0].content, 'base64')), raw, 'binary file is byte-for-byte identical');
+  assert.equal(Buffer.from(blobs[1].content, 'base64').toString('utf8'), 'שלום ✓', 'text file is still UTF-8');
+  assert.equal(log.filter((r) => r.path.endsWith('/git/commits') && r.method === 'POST').length, 1);
+});
+
+test('plan video: files, duration from the header, manifest entry, summary', () => {
+  const plan = planVideo({ meta: vmeta(), mp4: tinyMp4(90), vtt: VTT, catalog: vcat });
+  assert.deepEqual(plan.errors, []);
+  assert.deepEqual(plan.files.map((f) => f.path), ['videos/new-video.mp4', 'videos/new-video.json', 'videos/new-video.vtt', 'quizzes/manifest.json']);
+  assert.ok(plan.files[0].bytes instanceof Uint8Array && !('text' in plan.files[0]));
+  const meta = JSON.parse(plan.files[1].text);
+  assert.deepEqual(meta, { id: 'new-video', subject: 'מקצוע', unit: 'יחידה', title: 'סרטון חדש', file: 'new-video.mp4', captions: 'new-video.vtt', durationSec: 90 });
+  assert.deepEqual(validateVideo(meta), []);
+  const entry = JSON.parse(plan.files[3].text).subjects[0].units[0].videos[0];
+  assert.deepEqual(entry, { id: 'new-video', title: 'סרטון חדש', description: '', durationSec: 90, hasCaptions: true });
+  assert.match(plan.summary, /סרטון "סרטון חדש"/);
+  assert.match(plan.summary, /2 דק'/);
+  assert.match(plan.summary, /עם כתוביות/);
+  const bare = planVideo({ meta: vmeta('bare', { unit: '', description: '  ' }), mp4: tinyMp4(), catalog: vcat });
+  assert.ok(bare.errors.some((e) => /unit/.test(e)), 'a subject that has units requires one');
+  const plain = planVideo({ meta: { id: 'plain', subject: 'כללי', title: 'כותרת' }, mp4: tinyMp4(), catalog: { subjects: [{ name: 'כללי' }] } });
+  assert.deepEqual(plain.errors, []);
+  assert.ok(!('captions' in JSON.parse(plain.files[1].text)) && plain.files.length === 3, 'no captions file when none is given');
+  const noDuration = planVideo({ meta: vmeta('nodur'), mp4: Uint8Array.from(vbox('ftyp', 105, 115, 111, 109, 0, 0, 2, 0)), catalog: vcat });
+  assert.ok(!('durationSec' in JSON.parse(noDuration.files[1].text)), 'unreadable duration is omitted, not guessed');
+});
+
+test('plan video refuses bad input: ids, media, captions, placement, duplicates', () => {
+  const run = (over = {}) => planVideo({ meta: vmeta(), mp4: tinyMp4(), catalog: vcat, ...over });
+  assert.deepEqual(run().errors, []);
+  for (const id of ['../evil', 'Bad', 'manifest', 'index', 'a/b', '', 'x'.repeat(65)]) assert.ok(planVideo({ meta: vmeta(id), mp4: tinyMp4(), catalog: vcat }).errors.length > 0, id);
+  assert.ok(run({ mp4: undefined }).errors.some((e) => /לא נבחר/.test(e)));
+  assert.ok(run({ mp4: bytes('<html>not a video file at all</html>') }).errors.some((e) => /mp4/.test(e)));
+  assert.ok(run({ vtt: '1\n00:00:00,000 --> 00:00:01,000\nSRT' }).errors.some((e) => /כתוביות/.test(e)));
+  assert.ok(run({ meta: vmeta('new-video', { unit: 'אין' }) }).errors.length > 0);
+  assert.ok(run({ meta: vmeta('new-video', { title: '  ' }) }).errors.length > 0);
+  const existing = makeVideo();
+  assert.ok(run({ videos: [existing] }).errors.some((e) => /כבר קיים/.test(e)));
+  assert.deepEqual(run({ videos: [existing], replace: true }).errors, []);
+  assert.ok(run({ meta: { ...vmeta(), file: '../quizzes/manifest.json' } }).files.every((f) => !f.path.includes('..')), 'a smuggled "file" in the form data is ignored: paths come from the id');
+});
+
+test('plan video replace keeps existing captions unless new ones are given', () => {
+  const withCaps = makeVideo('new-video', {}, { vtt: VTT });
+  assert.equal(withCaps.captions, 'new-video.vtt');
+  const kept = planVideo({ meta: vmeta(), mp4: tinyMp4(120), catalog: vcat, videos: [withCaps], replace: true });
+  assert.equal(JSON.parse(kept.files[1].text).captions, 'new-video.vtt');
+  assert.ok(!kept.files.some((f) => f.path === 'videos/new-video.vtt'), 'the old captions file is left as it is');
+  assert.equal(JSON.parse(kept.files[1].text).durationSec, 120, 'duration follows the new media');
+  const fresh = planVideo({ meta: vmeta(), mp4: tinyMp4(), vtt: VTT.replace('שלום', 'עולם'), catalog: vcat, videos: [withCaps], replace: true });
+  assert.ok(fresh.files.some((f) => f.path === 'videos/new-video.vtt' && f.text.includes('עולם')));
+});
+
+test('plan video edit / delete / captions', () => {
+  const v = makeVideo('new-video', {}, { vtt: VTT });
+  const edit = planVideoEdit({ id: 'new-video', patch: { title: 'חדש', description: 'תיאור', unit: 'אחרת' }, catalog: vcat, videos: [v] });
+  assert.deepEqual(edit.errors, []);
+  const out = JSON.parse(edit.files[0].text);
+  assert.equal(out.unit, 'אחרת'); assert.equal(out.captions, 'new-video.vtt'); assert.equal(out.file, 'new-video.mp4');
+  for (const patch of [{ id: 'x' }, { file: 'other.mp4' }, { captions: 'x.vtt' }, { durationSec: 5 }]) {
+    assert.ok(planVideoEdit({ id: 'new-video', patch, catalog: vcat, videos: [v] }).errors.some((e) => /קבוע/.test(e)), JSON.stringify(patch));
+  }
+  assert.ok(planVideoEdit({ id: 'new-video', patch: { title: v.title }, catalog: vcat, videos: [v] }).errors.some((e) => /שינוי/.test(e)));
+
+  const del = planVideoDelete({ id: 'new-video', catalog: vcat, videos: [v] });
+  assert.deepEqual(del.deletes, ['videos/new-video.json', 'videos/new-video.mp4', 'videos/new-video.vtt']);
+  assert.deepEqual(JSON.parse(del.files[0].text).subjects[0].units[0].videos, []);
+  const noCaps = makeVideo('plain-video');
+  assert.deepEqual(planVideoDelete({ id: 'plain-video', catalog: vcat, videos: [noCaps] }).deletes, ['videos/plain-video.json', 'videos/plain-video.mp4']);
+  assert.ok(planVideoDelete({ id: 'nope', catalog: vcat, videos: [v] }).errors.length > 0);
+  assert.ok(planVideoDelete({ id: '../x', catalog: vcat, videos: [v] }).errors.length > 0);
+
+  const add = planVideoCaptions({ id: 'plain-video', vtt: VTT, catalog: vcat, videos: [noCaps] });
+  assert.deepEqual(add.files.map((f) => f.path), ['videos/plain-video.vtt', 'videos/plain-video.json', 'quizzes/manifest.json']);
+  assert.equal(JSON.parse(add.files[1].text).captions, 'plain-video.vtt');
+  assert.equal(JSON.parse(add.files[2].text).subjects[0].units[0].videos[0].hasCaptions, true);
+  const remove = planVideoCaptions({ id: 'new-video', vtt: null, catalog: vcat, videos: [v] });
+  assert.deepEqual(remove.deletes, ['videos/new-video.vtt']);
+  assert.ok(!('captions' in JSON.parse(remove.files[0].text)));
+  assert.equal(JSON.parse(remove.files[1].text).subjects[0].units[0].videos[0].hasCaptions, false);
+  assert.ok(planVideoCaptions({ id: 'plain-video', vtt: null, catalog: vcat, videos: [noCaps] }).errors.length > 0, 'nothing to remove');
+  assert.ok(planVideoCaptions({ id: 'plain-video', vtt: 'not webvtt', catalog: vcat, videos: [noCaps] }).errors.length > 0);
+  assert.ok(planVideoCaptions({ id: 'nope', vtt: VTT, catalog: vcat, videos: [] }).errors.length > 0);
+});
+
+test('structure: renames cascade into videos too (metadata only); removal of a unit holding a video is blocked', () => {
+  const v = makeVideo();
+  const after = { subjects: [{ name: 'מקצוע 2', units: ['יחידה חדשה', 'אחרת'] }] };
+  const plan = planStructure({ catalog: after, renames: { subjects: { מקצוע: 'מקצוע 2' }, units: { מקצוע: { יחידה: 'יחידה חדשה' } } }, videos: [v] });
+  assert.deepEqual(plan.errors, []);
+  assert.deepEqual(plan.files.map((f) => f.path), ['quizzes/subjects.json', 'videos/new-video.json', 'quizzes/manifest.json'], 'only the json: the mp4 is not rewritten');
+  const moved = JSON.parse(plan.files[1].text);
+  assert.equal(moved.subject, 'מקצוע 2'); assert.equal(moved.unit, 'יחידה חדשה'); assert.equal(moved.durationSec, v.durationSec);
+  assert.match(plan.summary, /1 סרטונים/);
+  const blocked = planStructure({ catalog: { subjects: [{ name: 'מקצוע', units: ['אחרת'] }] }, videos: [v] });
+  assert.ok(blocked.errors.some((e) => e.includes('סרטון חדש') && e.includes('new-video')));
+});
+
+test('EVERY plan that writes the manifest keeps the videos (and decks) in it', () => {
+  const v = makeVideo();
+  const d = makeDeck();
+  const q = JSON.parse(planQuiz({ source: authoring('q-one'), catalog: vcat, quizzes: [] }).files[0].text);
+  const all = { quizzes: [q], decks: [d], videos: [v] };
+  const checks = (plan, label, { deckGone = false } = {}) => {
+    const m = plan.files.find((f) => f.path === 'quizzes/manifest.json');
+    assert.ok(m, `${label} writes a manifest`);
+    const man = JSON.parse(m.text);
+    const ids = (key) => man.subjects[0].units.flatMap((u) => u[key]).map((x) => x.id);
+    assert.ok(ids('videos').includes('new-video'), `${label}: video still in the manifest`);
+    if (!deckGone) assert.ok(ids('flashcards').includes('new-deck'), `${label}: deck still in the manifest`);
+    assert.ok(ids('quizzes').includes('q-one') || label.includes('quiz delete'), `${label}: quiz still in the manifest`);
+  };
+  checks(planQuiz({ source: authoring('q-two'), catalog: vcat, ...all }), 'quiz add');
+  checks(planQuizEdit({ id: 'q-one', patch: { title: 'שונה' }, catalog: vcat, ...all }), 'quiz edit');
+  checks(planQuizDelete({ id: 'q-one', catalog: vcat, ...all }), 'quiz delete');
+  checks(planDeck({ source: deckSrc('another'), catalog: vcat, ...all }), 'deck add');
+  checks(planDeckEdit({ id: 'new-deck', patch: { title: 'שונה' }, catalog: vcat, ...all }), 'deck edit');
+  checks(planDeckDelete({ id: 'new-deck', catalog: vcat, ...all, decks: [d, { ...d, id: 'keep-deck' }] }), 'deck delete', { deckGone: true });
+  checks(planVideo({ meta: vmeta('second'), mp4: tinyMp4(), catalog: vcat, ...all }), 'video add');
+  checks(planVideoEdit({ id: 'new-video', patch: { title: 'שונה' }, catalog: vcat, ...all }), 'video edit');
+  checks(planVideoCaptions({ id: 'new-video', vtt: VTT, catalog: vcat, ...all }), 'video captions');
+  checks(planStructure({ catalog: { subjects: [{ name: 'מקצוע', units: ['יחידה', 'אחרת', 'שלישית'] }] }, ...all }), 'structure');
+  const delOne = planVideoDelete({ id: 'new-video', catalog: vcat, ...all, videos: [v, { ...v, id: 'keep-video' }] });
+  assert.deepEqual(JSON.parse(delOne.files[0].text).subjects[0].units[0].videos.map((x) => x.id), ['keep-video']);
+  assert.equal(JSON.parse(delOne.files[0].text).subjects[0].units[0].flashcards.length, 1, 'deleting a video keeps the deck');
+});
+
+test('video plans write only allowlisted paths, in one non-forced commit', async () => {
+  const v = makeVideo('new-video', {}, { vtt: VTT });
+  const plans = [
+    planVideo({ meta: vmeta('second'), mp4: tinyMp4(), vtt: VTT, catalog: vcat, videos: [v] }),
+    planVideoEdit({ id: 'new-video', patch: { unit: 'אחרת' }, catalog: vcat, videos: [v] }),
+    planVideoCaptions({ id: 'new-video', vtt: null, catalog: vcat, videos: [v] }),
+    planVideoDelete({ id: 'new-video', catalog: vcat, videos: [v] }),
+  ];
+  for (const plan of plans) {
+    assert.deepEqual(plan.errors, []);
+    for (const p of [...plan.files.map((f) => f.path), ...(plan.deletes ?? [])]) assert.ok(isWritablePath(p), p);
+    const { fetchImpl, log } = fakeGithub();
+    await createGithub({ token: 't', owner: 'o', repo: 'r', fetchImpl }).change(async () => plan, 'm');
+    assert.equal(log.filter((r) => r.path.endsWith('/git/commits') && r.method === 'POST').length, 1);
+    assert.equal(JSON.parse(log.at(-1).body).force, false);
+  }
+});
+
+test('the video and captions templates are valid', async () => {
+  const read = (f) => readFile(new URL(`../templates/${f}`, import.meta.url), 'utf8');
+  const meta = JSON.parse(await read('video.json'));
+  assert.deepEqual(validateVideo(meta), []);
+  assert.deepEqual(vttErrors(await read('captions.vtt')), []);
+  const catalog = JSON.parse(await read('subjects.json'));
+  const plan = planVideo({ meta, mp4: tinyMp4(120), vtt: await read('captions.vtt'), catalog });
+  assert.deepEqual(plan.errors, []);
+  assert.equal(JSON.parse(plan.files[1].text).durationSec, 120);
+  assert.ok(checkUpload({ name: 'captions.vtt', size: 300, bytes: bytes(await read('captions.vtt')) }).errors.length === 0);
 });

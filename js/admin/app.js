@@ -4,10 +4,12 @@ import { load, save, remove } from '../storage.js';
 import { ADMIN_SEEN_KEY } from '../admin-link.js';
 import { backoffMs, looksLikeToken, open, passwordProblems, seal } from './vault.js';
 import { createGithub } from './github.js';
-import { checkUpload, readSummaryHue } from './uploads.js';
+import { checkUpload, checkVideo, readSummaryHue } from './uploads.js';
+import { PANEL_VIDEO_BYTES, formatDuration, readMp4Duration } from '../video-core.js';
 import {
   planDeck, planDeckDelete, planDeckEdit, planQuiz, planQuizDelete, planQuizEdit, planStructure, planSummary,
-  planSummaryDelete, planSummaryEdit, planSummaryOrder, readDecks, readQuizzes,
+  planSummaryDelete, planSummaryEdit, planSummaryOrder, planVideo, planVideoCaptions, planVideoDelete, planVideoEdit,
+  readDecks, readQuizzes, readVideos,
 } from './actions.js';
 
 const VAULT_KEY = 'admin-vault';
@@ -178,14 +180,15 @@ function renderUnlock(vault) {
 
 // ---------- repo state + the shared review/publish flow ----------
 async function loadState(snap) {
-  const [catalog, list, css, quizzes, decks] = await Promise.all([
+  const [catalog, list, css, quizzes, decks, videos] = await Promise.all([
     snap.readText('quizzes/subjects.json').then(JSON.parse),
     snap.readText('summaries/list.json').then(JSON.parse),
     snap.readText('css/summary.css'),
     readQuizzes(snap),
     readDecks(snap),
+    readVideos(snap),
   ]);
-  return { catalog, list, css, quizzes, decks };
+  return { catalog, list, css, quizzes, decks, videos };
 }
 
 function publishedBanner(text, sha) {
@@ -221,7 +224,7 @@ async function confirmedChange({ word, prompt: text, makePlan, message, out }) {
  * Shows what will change and, after the owner confirms, commits it. `makePlan(state)` is called on the
  * state at preview time and again, on fresh state, at commit time (so a push in between cannot be lost).
  */
-function reviewFlow(makePlan, message, { needsOwnContentConfirm = true } = {}) {
+function reviewFlow(makePlan, message, { needsOwnContentConfirm = true, reviewLabel = 'בדיקה ותצוגה מקדימה' } = {}) {
   const out = el('div');
   const confirmBox = el('input', { type: 'checkbox', id: `own-${Math.random().toString(36).slice(2)}` });
   const publishBtn = button('פרסום באתר', () => guarded(async () => {
@@ -247,7 +250,8 @@ function reviewFlow(makePlan, message, { needsOwnContentConfirm = true } = {}) {
     if (plan.errors.length > 0) return out.replaceChildren(errorsBox(plan.errors));
     const existing = new Set(await snap.listFiles());
     const rows = [
-      ...plan.files.map((f) => el('li', {}, existing.has(f.path) ? 'עדכון: ' : 'חדש: ', el('code', { text: f.path }))),
+      ...plan.files.map((f) => el('li', {}, existing.has(f.path) ? 'עדכון: ' : 'חדש: ', el('code', { text: f.path }),
+        f.bytes ? ` · ${(f.bytes.length / 1024 / 1024).toFixed(1)}MB` : null)),
       ...(plan.deletes ?? []).map((p) => el('li', {}, 'מחיקה: ', el('code', { text: p }))),
     ];
     const confirm = needsOwnContentConfirm
@@ -260,7 +264,7 @@ function reviewFlow(makePlan, message, { needsOwnContentConfirm = true } = {}) {
       el('div', { class: 'admin-ok', role: 'status', text: `הבדיקה עברה: ${plan.summary ?? 'שינוי'}. יתבצע commit אחד עם הקבצים:` }),
       el('ul', { class: 'admin-files' }, rows), confirm, publishBtn);
   };
-  return { out, reviewBtn: button('בדיקה ותצוגה מקדימה', () => guarded(review, out)) };
+  return { out, reviewBtn: button(reviewLabel, () => guarded(review, out)) };
 }
 
 async function readFileChecked(file, out) {
@@ -278,11 +282,12 @@ async function tabOverview(host) {
   say('טוען…');
   const state = await loadState(await session.gh.snapshot());
   say('');
-  const count = (match) => state.quizzes.filter(match).length + state.decks.filter(match).length;
+  const count = (match) => [...state.quizzes, ...state.decks, ...state.videos].filter(match).length;
   host.replaceChildren(
     el('div', { class: 'admin-grid' },
       el('div', { class: 'admin-card' }, el('h3', { text: 'מבחנים' }), el('p', { text: String(state.quizzes.length) })),
       el('div', { class: 'admin-card' }, el('h3', { text: 'חפיסות כרטיסיות' }), el('p', { text: String(state.decks.length) })),
+      el('div', { class: 'admin-card' }, el('h3', { text: 'סרטונים' }), el('p', { text: String(state.videos.length) })),
       el('div', { class: 'admin-card' }, el('h3', { text: 'סיכומים' }), el('p', { text: String(state.list.summaries.length) })),
       el('div', { class: 'admin-card' }, el('h3', { text: 'נושאים' }), el('p', { text: String(state.catalog.subjects.length) }))),
     el('section', { class: 'admin-card' },
@@ -292,10 +297,7 @@ async function tabOverview(host) {
         el('ul', {}, (s.units ?? []).map((u) => {
           const n = count((q) => q.subject === s.name && q.unit === u);
           return el('li', { text: n === 0 ? `${u} · בקרוב` : `${u} · ${n} פריטים` });
-        }))))),
-    el('section', { class: 'admin-card' },
-      el('h2', { text: 'בקרוב' }),
-      el('p', { class: 'admin-note', text: 'סרטונים יתווספו בשלב הבא, אחרי שיהיה להם דף תצוגה באתר.' })));
+        }))))));
 }
 
 async function tabStructure(host) {
@@ -309,7 +311,7 @@ async function tabStructure(host) {
     units: (s.units ?? []).map((u) => ({ name: u, from: u })),
   }));
   const area = el('div');
-  const countIn = (subject, unit) => [...state.quizzes, ...state.decks]
+  const countIn = (subject, unit) => [...state.quizzes, ...state.decks, ...state.videos]
     .filter((x) => x.subject === subject && (unit === undefined || x.unit === unit)).length;
   const move = (arr, i, d) => { const j = i + d; if (j >= 0 && j < arr.length) [arr[i], arr[j]] = [arr[j], arr[i]]; };
   const note = (from, unit) => {
@@ -355,9 +357,9 @@ async function tabStructure(host) {
     return { catalog, renames };
   };
 
-  const flow = reviewFlow((st) => planStructure({ ...build(), quizzes: st.quizzes, decks: st.decks }), 'ניהול: עדכון נושאים', { needsOwnContentConfirm: false });
+  const flow = reviewFlow((st) => planStructure({ ...build(), quizzes: st.quizzes, decks: st.decks, videos: st.videos }), 'ניהול: עדכון נושאים', { needsOwnContentConfirm: false });
   host.replaceChildren(
-    el('p', { class: 'admin-note', text: 'שינוי שם של נושא או יחידה מתעדכן אוטומטית בכל המבחנים והחפיסות שבהם, באותו commit. אי אפשר להסיר נושא או יחידה שיש בהם מבחנים או חפיסות: העבירו או מחקו אותם קודם. ליד כל שם מופיע מספר הפריטים שבו.' }),
+    el('p', { class: 'admin-note', text: 'שינוי שם של נושא או יחידה מתעדכן אוטומטית בכל המבחנים, החפיסות והסרטונים שבהם, באותו commit. אי אפשר להסיר נושא או יחידה שיש בהם מבחנים, חפיסות או סרטונים: העבירו או מחקו אותם קודם. ליד כל שם מופיע מספר הפריטים שבו.' }),
     area, el('div', { class: 'admin-row' }, flow.reviewBtn), flow.out);
 }
 
@@ -387,6 +389,14 @@ const ITEM_UI = {
     add: planDeck, edit: planDeckEdit, remove: planDeckDelete,
     deletePrompt: (x) => `מחיקת החפיסה "${x.title}" היא סופית (ההתקדמות של לומדים בדפדפנים שלהם תישאר אבל לא תהיה מקושרת לכלום).`,
   },
+  video: {
+    p: 'v', noun: 'סרטון', listTitle: 'סרטונים קיימים',
+    editNote: 'המזהה והקבצים קבועים. כאן משנים כותרת, תיאור ומיקום, ומנהלים כתוביות. להחלפת הסרטון עצמו: העלו אותו שוב עם "החלפה" בטופס שלמעלה.',
+    items: (st) => st.videos,
+    size: (x) => `${formatDuration(x.durationSec) || 'סרטון'} · ${x.captions ? 'עם כתוביות' : 'ללא כתוביות'}`,
+    edit: planVideoEdit, remove: planVideoDelete,
+    deletePrompt: (x) => `מחיקת הסרטון "${x.title}" מסירה את הסרטון והכתוביות מהאתר. הקבצים נשארים בהיסטוריית git, כך שהמאגר לא קטן.`,
+  },
 };
 
 function itemEditForm(kind, item, state) {
@@ -408,13 +418,70 @@ function itemEditForm(kind, item, state) {
   const flow = reviewFlow((st) => u.edit({
     id: item.id,
     patch: { title: title.value, description: description.value, subject: subject.value, unit: unit.value },
-    catalog: st.catalog, quizzes: st.quizzes, decks: st.decks,
+    catalog: st.catalog, quizzes: st.quizzes, decks: st.decks, videos: st.videos,
   }), `ניהול: עריכת ${u.noun} ${item.id}`, { needsOwnContentConfirm: false });
   return el('div', { class: 'admin-card' },
     el('p', { class: 'admin-note', text: u.editNote }),
     field(`${k}-title`, 'כותרת', title), field(`${k}-desc`, 'תיאור (אופציונלי)', description),
     field(`${k}-subject`, 'נושא', subject), field(`${k}-unit`, 'יחידה', unit),
-    el('div', { class: 'admin-row' }, flow.reviewBtn), flow.out);
+    el('div', { class: 'admin-row' }, flow.reviewBtn), flow.out,
+    kind === 'video' ? captionsEditor(item) : null);
+}
+
+/** Set, replace or remove a video's captions (WebVTT). */
+function captionsEditor(item) {
+  const k = `ve-${item.id}-cap`;
+  let text = null;
+  const input = el('input', { type: 'file', id: `${k}-file`, accept: '.vtt,text/vtt' });
+  const msg = el('div');
+  input.addEventListener('change', () => guarded(async () => {
+    msg.replaceChildren();
+    text = null;
+    const file = input.files[0];
+    if (!file) return;
+    const read = await readFileChecked(file, msg);
+    if (!read) return;
+    if (read.kind !== 'vtt') return msg.replaceChildren(errorsBox(['נדרש קובץ VTT']));
+    text = read.text;
+  }, msg));
+  const state = (st) => ({ id: item.id, catalog: st.catalog, quizzes: st.quizzes, decks: st.decks, videos: st.videos });
+  const setFlow = reviewFlow(
+    (st) => (text === null ? { files: [], errors: ['לא נבחר קובץ כתוביות'] } : planVideoCaptions({ ...state(st), vtt: text })),
+    `ניהול: כתוביות ל‑${item.id}`, { reviewLabel: 'בדיקת כתוביות' },
+  );
+  const removeFlow = item.captions
+    ? reviewFlow((st) => planVideoCaptions({ ...state(st), vtt: null }), `ניהול: הסרת כתוביות מ‑${item.id}`,
+      { needsOwnContentConfirm: false, reviewLabel: 'בדיקת הסרת כתוביות' })
+    : null;
+  return el('div', { class: 'admin-card' },
+    el('h3', { text: 'כתוביות' }),
+    el('p', { class: 'admin-note', text: item.captions ? 'לסרטון יש כתוביות בעברית. אפשר להחליף אותן או להסיר.' : 'אין כתוביות. אפשר להעלות קובץ WebVTT בעברית (.vtt).' }),
+    field(`${k}-file`, 'קובץ כתוביות (VTT)', input), msg,
+    el('div', { class: 'admin-row' }, setFlow.reviewBtn, removeFlow?.reviewBtn), setFlow.out, removeFlow?.out);
+}
+
+/** The existing items of one kind with edit and delete; `out` receives errors from a failed delete. */
+function itemList(kind, state, out) {
+  const u = ITEM_UI[kind];
+  return el('ul', { class: 'admin-list' }, u.items(state).map((x) => {
+    const editHost = el('div', { hidden: true });
+    const editBtn = button('עריכה', () => {
+      if (editHost.hidden && editHost.childElementCount === 0) editHost.append(itemEditForm(kind, x, state));
+      editHost.hidden = !editHost.hidden;
+      editBtn.setAttribute('aria-expanded', String(!editHost.hidden));
+    }, { class: 'secondary', 'aria-expanded': 'false' });
+    return el('li', {},
+      `${x.title} (${x.id}) · ${x.subject}${x.unit ? ` › ${x.unit}` : ''} · ${u.size(x)} `,
+      el('span', { class: 'admin-row' }, editBtn,
+        button('מחיקה', () => confirmedChange({
+          word: x.id,
+          prompt: u.deletePrompt(x),
+          makePlan: (st) => u.remove({ id: x.id, catalog: st.catalog, quizzes: st.quizzes, decks: st.decks, videos: st.videos }),
+          message: `ניהול: מחיקת ${u.noun} ${x.id}`,
+          out,
+        }), { class: 'secondary' })),
+      editHost);
+  }));
 }
 
 /** The tab for one kind of item: upload form, then the existing items with edit and delete. */
@@ -463,31 +530,13 @@ const itemTab = (kind) => async function render(host) {
     return u.add({
       source,
       overrides: { id: f.id.value.trim(), title: f.title.value.trim(), description: f.description.value.trim(), subject: f.subject.value, unit: f.unit.value },
-      catalog: st.catalog, quizzes: st.quizzes, decks: st.decks,
+      catalog: st.catalog, quizzes: st.quizzes, decks: st.decks, videos: st.videos,
       replace: f.replace.checked,
     });
   }, `ניהול: הוספת ${u.noun}`);
 
   const listOut = el('div');
-  const list = el('ul', { class: 'admin-list' }, u.items(state).map((x) => {
-    const editHost = el('div', { hidden: true });
-    const editBtn = button('עריכה', () => {
-      if (editHost.hidden && editHost.childElementCount === 0) editHost.append(itemEditForm(kind, x, state));
-      editHost.hidden = !editHost.hidden;
-      editBtn.setAttribute('aria-expanded', String(!editHost.hidden));
-    }, { class: 'secondary', 'aria-expanded': 'false' });
-    return el('li', {},
-      `${x.title} (${x.id}) · ${x.subject}${x.unit ? ` › ${x.unit}` : ''} · ${u.size(x)} `,
-      el('span', { class: 'admin-row' }, editBtn,
-        button('מחיקה', () => confirmedChange({
-          word: x.id,
-          prompt: u.deletePrompt(x),
-          makePlan: (st) => u.remove({ id: x.id, catalog: st.catalog, quizzes: st.quizzes, decks: st.decks }),
-          message: `ניהול: מחיקת ${u.noun} ${x.id}`,
-          out: listOut,
-        }), { class: 'secondary' })),
-      editHost);
-  }));
+  const list = itemList(kind, state, listOut);
 
   host.replaceChildren(
     el('section', { class: 'admin-card' },
@@ -607,10 +656,91 @@ function summaryEditForm(sm, state) {
     el('div', { class: 'admin-row' }, flow.reviewBtn), flow.out);
 }
 
+/** The tab for videos: upload an mp4 (+ optional captions), then the existing videos. */
+async function tabVideos(host) {
+  const u = ITEM_UI.video;
+  say('טוען…');
+  const state = await loadState(await session.gh.snapshot());
+  say('');
+  let mp4 = null;
+  let vtt = null;
+  const inputOut = el('div');
+  const f = {
+    id: el('input', { type: 'text', id: 'v-id', autocomplete: 'off', dir: 'ltr' }),
+    title: el('input', { type: 'text', id: 'v-title', autocomplete: 'off' }),
+    description: el('input', { type: 'text', id: 'v-description', autocomplete: 'off' }),
+    subject: el('select', { id: 'v-subject' }, state.catalog.subjects.map((s) => el('option', { value: s.name, text: s.name }))),
+    unit: el('select', { id: 'v-unit' }),
+    replace: el('input', { type: 'checkbox', id: 'v-replace' }),
+  };
+  const fillUnits = () => {
+    const units = state.catalog.subjects.find((s) => s.name === f.subject.value)?.units ?? [];
+    f.unit.replaceChildren(...(units.length ? units : ['']).map((x) => el('option', { value: x, text: x || '— אין יחידות —' })));
+    f.unit.disabled = units.length === 0;
+  };
+  f.subject.addEventListener('change', fillUnits);
+  fillUnits();
+
+  const videoInput = el('input', { type: 'file', id: 'v-file', accept: 'video/mp4,.mp4' });
+  videoInput.addEventListener('change', () => guarded(async () => {
+    inputOut.replaceChildren();
+    mp4 = null;
+    const file = videoInput.files[0];
+    if (!file) return;
+    // Check the name, size and signature from the first bytes before reading a possibly large file.
+    const head = new Uint8Array(await file.slice(0, 64).arrayBuffer());
+    const errors = checkVideo({ name: file.name, size: file.size, bytes: head });
+    if (errors.length > 0) return inputOut.replaceChildren(errorsBox(errors));
+    say('קורא את הסרטון…');
+    mp4 = new Uint8Array(await file.arrayBuffer());
+    say('');
+    const seconds = readMp4Duration(mp4);
+    f.id.value ||= file.name.replace(/\.mp4$/i, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    f.title.value ||= file.name.replace(/\.mp4$/i, '').replace(/[_]+/g, ' ');
+    inputOut.replaceChildren(el('p', { class: 'admin-ok', text: `נטען: ${(file.size / 1024 / 1024).toFixed(1)}MB${seconds ? `, ${formatDuration(seconds)}` : ''}. השלימו מזהה, כותרת ומיקום.` }));
+  }, inputOut));
+
+  const vttOut = el('div');
+  const vttInput = el('input', { type: 'file', id: 'v-captions', accept: '.vtt,text/vtt' });
+  vttInput.addEventListener('change', () => guarded(async () => {
+    vttOut.replaceChildren();
+    vtt = null;
+    const file = vttInput.files[0];
+    if (!file) return;
+    const read = await readFileChecked(file, vttOut);
+    if (!read) return;
+    if (read.kind !== 'vtt') return vttOut.replaceChildren(errorsBox(['נדרש קובץ VTT']));
+    vtt = read.text;
+    vttOut.replaceChildren(el('p', { class: 'admin-ok', text: 'כתוביות נטענו.' }));
+  }, vttOut));
+
+  const flow = reviewFlow((st) => planVideo({
+    meta: { id: f.id.value.trim(), title: f.title.value, description: f.description.value, subject: f.subject.value, unit: f.unit.value },
+    mp4, vtt, replace: f.replace.checked,
+    catalog: st.catalog, quizzes: st.quizzes, decks: st.decks, videos: st.videos,
+  }), 'ניהול: הוספת סרטון');
+
+  const listOut = el('div');
+  host.replaceChildren(
+    el('section', { class: 'admin-card' },
+      el('h2', { text: 'הוספת סרטון' }),
+      el('p', { class: 'admin-note', text: `קובץ mp4 (H.264/AAC מומלץ) עד ${PANEL_VIDEO_BYTES / 1024 / 1024}MB, ואופציונלית כתוביות WebVTT. כל סרטון נשאר בהיסטוריית git גם אחרי מחיקה, ולכן שווה לדחוס לפני ההעלאה. לקובץ גדול יותר: הוסיפו אותו ישירות דרך git.` }),
+      field('v-file', 'קובץ סרטון (mp4)', videoInput), inputOut,
+      field('v-captions', 'כתוביות בעברית (VTT, אופציונלי)', vttInput), vttOut,
+      field('v-id', 'מזהה (אנגלית קטנה, ספרות ומקפים)', f.id, 'למשל opioids-intro. זה גם שם הקבצים.'),
+      field('v-title', 'כותרת', f.title), field('v-description', 'תיאור (אופציונלי)', f.description),
+      field('v-subject', 'נושא', f.subject), field('v-unit', 'יחידה', f.unit),
+      el('div', { class: 'admin-check' }, f.replace, el('label', { for: 'v-replace', text: 'החלפה של סרטון קיים עם אותו מזהה (כתוביות קיימות נשמרות אם לא מעלים חדשות)' })),
+      el('div', { class: 'admin-row' }, flow.reviewBtn), flow.out),
+    el('section', { class: 'admin-card' }, el('h2', { text: u.listTitle }), itemList('video', state, listOut), listOut));
+}
+
 const TEMPLATES = [
   { file: 'quiz-authoring.json', title: 'מבחן — פורמט כתיבה', note: 'אפשרויות כמחרוזות + correctIndex + wrongExplanations. הכי נוח לכתיבה/יצירה חיצונית.' },
   { file: 'quiz-site.json', title: 'מבחן — פורמט האתר', note: 'אפשרויות כאובייקטים {text, note} ו‑correct (0–3).' },
   { file: 'flashcards.json', title: 'חפיסת כרטיסיות — JSON', note: 'id, subject, unit, title ו‑cards: לכל כרטיס front, back ואופציונלית topic. טקסט בלבד.' },
+  { file: 'video.json', title: 'סרטון — קובץ פרטים (להוספה ידנית)', note: 'בפאנל ממלאים את הפרטים בטופס. הקובץ הזה מראה את המבנה של videos/<id>.json למי שמוסיף סרטון ישירות דרך git, לצד <id>.mp4.' },
+  { file: 'captions.vtt', title: 'כתוביות — קובץ WebVTT', note: 'התחילו ב‑WEBVTT, ואז זמן התחלה --> זמן סיום ושורת הטקסט. מעלים אותו בלשונית "סרטונים".' },
   { file: 'summary.html', title: 'סיכום — דף HTML', note: 'מבנה הסיכומים הקיימים (rel, def, exam…). data-system מותאם אוטומטית.' },
   { file: 'subjects.json', title: 'נושאים ויחידות — דוגמה', note: 'המבנה של קטלוג הנושאים. לעריכה יש להשתמש בלשונית "מבנה".' },
 ];
@@ -643,6 +773,7 @@ const TABS = [
   { id: 'structure', label: 'מבנה', render: tabStructure },
   { id: 'quizzes', label: 'מבחנים', render: itemTab('quiz') },
   { id: 'decks', label: 'כרטיסיות', render: itemTab('deck') },
+  { id: 'videos', label: 'סרטונים', render: tabVideos },
   { id: 'summaries', label: 'סיכומים', render: tabSummaries },
   { id: 'templates', label: 'תבניות', render: tabTemplates },
 ];

@@ -8,6 +8,7 @@ export const keys = {
   results: (quizId) => `results:${quizId}`,
   cardSession: (deckId) => `cards-session:${deckId}`,
   cardResults: (deckId) => `cards-results:${deckId}`,
+  videoPosition: (videoId) => `video-pos:${videoId}`,
 };
 
 export function load(key, fallback = null) {

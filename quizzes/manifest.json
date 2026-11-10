@@ -21,26 +21,110 @@
               "topicCount": 14
             }
           ],
-          "flashcards": []
+          "flashcards": [],
+          "videos": []
         },
         {
           "name": "מערכת הנשימה",
           "quizzes": [],
-          "flashcards": []
+          "flashcards": [],
+          "videos": []
         },
         {
           "name": "מערכת ההפרשה",
           "quizzes": [],
-          "flashcards": []
+          "flashcards": [],
+          "videos": []
         },
         {
           "name": "מערכת האנדוקרינולוגיה",
           "quizzes": [],
-          "flashcards": []
+          "flashcards": [],
+          "videos": []
         }
       ],
       "quizzes": [],
-      "flashcards": []
+      "flashcards": [],
+      "videos": []
+    },
+    {
+      "name": "פרמקולוגיה",
+      "units": [
+        {
+          "name": "אופיואידים",
+          "quizzes": [],
+          "flashcards": [],
+          "videos": [
+            {
+              "id": "opioids-masterclass",
+              "title": "אופיואידים: מאסטר־קלאס",
+              "description": "",
+              "durationSec": 587,
+              "hasCaptions": false
+            }
+          ]
+        },
+        {
+          "name": "NSAID",
+          "quizzes": [],
+          "flashcards": [],
+          "videos": [
+            {
+              "id": "nsaids-inflammation-pain",
+              "title": "שליטה ב‑NSAIDs, דלקת וכאב",
+              "description": "",
+              "durationSec": 715,
+              "hasCaptions": false
+            }
+          ]
+        },
+        {
+          "name": "מערכת העיכול",
+          "quizzes": [],
+          "flashcards": [],
+          "videos": [
+            {
+              "id": "digestive-pharmacology",
+              "title": "פרמקולוגיה של מערכת העיכול",
+              "description": "",
+              "durationSec": 453,
+              "hasCaptions": false
+            }
+          ]
+        },
+        {
+          "name": "מערכת הנשימה",
+          "quizzes": [],
+          "flashcards": [],
+          "videos": [
+            {
+              "id": "lungs-asthma-copd",
+              "title": "היגיון הריאות: אסתמה ו‑COPD",
+              "description": "",
+              "durationSec": 531,
+              "hasCaptions": false
+            }
+          ]
+        }
+      ],
+      "quizzes": [],
+      "flashcards": [],
+      "videos": []
+    },
+    {
+      "name": "התערבויות סיעודיות",
+      "units": [],
+      "quizzes": [],
+      "flashcards": [],
+      "videos": [
+        {
+          "id": "nursing-general",
+          "title": "סרטון כללי: סיעוד",
+          "description": "",
+          "durationSec": 717,
+          "hasCaptions": false
+        }
+      ]
     }
   ]
 }

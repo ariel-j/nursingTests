@@ -20,6 +20,14 @@ const utf8ToB64 = (text) => {
   for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
   return btoa(bin);
 };
+// Base64 of raw bytes, built in chunks of a multiple of 3 so no giant intermediate string is created.
+const bytesToB64 = (bytes) => {
+  const parts = [];
+  for (let i = 0; i < bytes.length; i += 30000) {
+    parts.push(btoa(String.fromCharCode(...bytes.subarray(i, i + 30000))));
+  }
+  return parts.join('');
+};
 const b64ToUtf8 = (b64) => new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\s/g, '')), (c) => c.charCodeAt(0)));
 
 const explain = (status) =>
@@ -73,7 +81,7 @@ export function createGithub({ token, owner, repo, branch = 'main', fetchImpl = 
   }
 
   /**
-   * One atomic commit. `files` = [{ path, text }] to write, `deletes` = [path]. Every path must be on the
+   * One atomic commit. `files` = [{ path, text } or { path, bytes }] to write, `deletes` = [path]. Every path must be on the
    * panel's allowlist. Non-forced ref update: if main moved, throws ConflictError (caller rebuilds).
    */
   async function commit({ files = [], deletes = [], message, parent }) {
@@ -82,7 +90,9 @@ export function createGithub({ token, owner, repo, branch = 'main', fetchImpl = 
     }
     const entries = [];
     for (const f of files) {
-      const blob = await call('POST', '/git/blobs', { content: utf8ToB64(f.text), encoding: 'base64' });
+      // A file is either text (committed as UTF-8) or raw bytes (a video).
+      const content = f.bytes ? bytesToB64(f.bytes) : utf8ToB64(f.text);
+      const blob = await call('POST', '/git/blobs', { content, encoding: 'base64' });
       entries.push({ path: f.path, mode: '100644', type: 'blob', sha: blob.sha });
     }
     for (const path of deletes) entries.push({ path, mode: '100644', type: 'blob', sha: null });

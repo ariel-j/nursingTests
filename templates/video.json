@@ -1,0 +1,10 @@
+{
+  "id": "example-video-1",
+  "subject": "שם המקצוע",
+  "unit": "יחידה א",
+  "title": "סרטון לדוגמה",
+  "description": "תיאור קצר של הסרטון (אופציונלי).",
+  "file": "example-video-1.mp4",
+  "captions": "example-video-1.vtt",
+  "durationSec": 120
+}

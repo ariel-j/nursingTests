@@ -3,11 +3,12 @@
 // empty, nothing may be committed. Uses the same validators as `npm run validate`.
 import { validateQuiz } from '../core.js';
 import { validateDeck } from '../cards-core.js';
+import { captionsFile, formatDuration, readMp4Duration, validateVideo, videoFile, vttErrors } from '../video-core.js';
 import { buildManifest, placementErrors, serializeManifest, validateCatalog } from '../catalog.js';
 import { fromAuthoringFormat } from '../import-format.js';
 import { listErrors } from '../summary-list.js';
 import { pageErrors } from '../summary-check.js';
-import { deckPath, isValidId, quizPath, setSummaryAccent, summaryPath, withSummaryAccent, withoutSummaryAccent } from './uploads.js';
+import { captionsPath, checkVideo, deckPath, isValidId, quizPath, setSummaryAccent, videoMediaPath, videoMetaPath, summaryPath, withSummaryAccent, withoutSummaryAccent } from './uploads.js';
 
 const json = (value) => `${JSON.stringify(value, null, 2)}\n`;
 
@@ -15,9 +16,9 @@ const json = (value) => `${JSON.stringify(value, null, 2)}\n`;
  * The manifest file for the whole site. EVERY plan that changes quizzes, decks or the catalog builds its
  * manifest through this one helper, so no action can regenerate a manifest that forgets the decks.
  */
-export const manifestFile = (quizzes, decks, catalog) => ({
+export const manifestFile = ({ quizzes = [], decks = [], videos = [] }, catalog) => ({
   path: 'quizzes/manifest.json',
-  text: serializeManifest(buildManifest(quizzes, catalog, decks)),
+  text: serializeManifest(buildManifest(quizzes, catalog, decks, videos)),
 });
 
 /** Tells a site-format quiz from an authoring-format one (options as strings + correctIndex). */
@@ -39,16 +40,22 @@ export const readQuizzes = (api) => readFolder(api, 'quizzes', (p) => /^quizzes\
 /** Reads every flashcard deck at the current head (none when the folder does not exist yet). */
 export const readDecks = (api) => readFolder(api, 'flashcards');
 
+/** Reads every video's metadata at the current head (the media files themselves are never downloaded). */
+export const readVideos = (api) => readFolder(api, 'videos');
+
 // What differs between the two kinds of item that live in a subject/unit.
 const KINDS = {
   quiz: { noun: 'מבחן', validate: validateQuiz, pathOf: quizPath, size: (x) => `${x.questions.length} שאלות` },
   deck: { noun: 'חפיסה', validate: validateDeck, pathOf: deckPath, size: (x) => `${x.cards.length} כרטיסיות` },
+  video: { noun: 'סרטון', validate: validateVideo, pathOf: videoMetaPath, size: (x) => formatDuration(x.durationSec) || 'סרטון' },
 };
 
-// The manifest for `items` of `kind` with the other kind left as it is.
-const manifestFor = (kind, items, { quizzes, decks, catalog }) =>
-  kind === 'quiz' ? manifestFile(items, decks, catalog) : manifestFile(quizzes, items, catalog);
-const itemsOf = (kind, { quizzes, decks }) => (kind === 'quiz' ? quizzes : decks);
+const STATE_KEY = { quiz: 'quizzes', deck: 'decks', video: 'videos' };
+// The manifest for `items` of `kind`, with the other kinds left as they are.
+const manifestFor = (kind, items, state) => manifestFile({ ...state, [STATE_KEY[kind]]: items }, state.catalog);
+const itemsOf = (kind, state) => state[STATE_KEY[kind]];
+// Every plan works on the whole site: callers that have no decks or videos simply pass none.
+const withState = (args) => ({ quizzes: [], decks: [], videos: [], ...args });
 
 function addItem(kind, { source, overrides = {}, replace = false, ...state }) {
   const k = KINDS[kind];
@@ -124,22 +131,25 @@ function editItem(kind, { id, patch, ...state }) {
  * Add or replace a quiz. `source` is the parsed upload; `overrides` are fields chosen in the form
  * (id, subject, unit, title, description). Replacing an existing id requires `replace: true`.
  */
-export const planQuiz = ({ decks = [], ...args }) => addItem('quiz', { decks, ...args });
-export const planQuizDelete = ({ decks = [], ...args }) => deleteItem('quiz', { decks, ...args });
+export const planQuiz = (args) => addItem('quiz', withState(args));
+export const planQuizDelete = (args) => deleteItem('quiz', withState(args));
 /** Edit a quiz's details or move it. The id is immutable: saved progress in browsers is keyed by it. */
-export const planQuizEdit = ({ decks = [], ...args }) => editItem('quiz', { decks, ...args });
+export const planQuizEdit = (args) => editItem('quiz', withState(args));
 
 /** Flashcard decks: same flow as quizzes, JSON in the site format only. */
-export const planDeck = ({ quizzes = [], ...args }) => addItem('deck', { quizzes, ...args });
-export const planDeckDelete = ({ quizzes = [], ...args }) => deleteItem('deck', { quizzes, ...args });
-export const planDeckEdit = ({ quizzes = [], ...args }) => editItem('deck', { quizzes, ...args });
+export const planDeck = (args) => addItem('deck', withState(args));
+export const planDeckDelete = (args) => deleteItem('deck', withState(args));
+export const planDeckEdit = (args) => editItem('deck', withState(args));
+
+/** Edit a video's details or move it (its files are untouched; use planVideo with replace to change the media). */
+export const planVideoEdit = (args) => editItem('video', withState(args));
 
 /**
  * Replace the catalog. `renames` = { subjects: { old: new }, units: { [oldSubjectName]: { old: new } } }
  * makes a rename cascade into every affected quiz and deck (and the manifest) in the same commit. A
  * subject or unit that is removed while it still holds quizzes or decks is refused, and they are listed.
  */
-export function planStructure({ catalog, renames = {}, quizzes, decks = [] }) {
+export function planStructure({ catalog, renames = {}, quizzes = [], decks = [], videos = [] }) {
   const errors = validateCatalog(catalog);
   if (errors.length > 0) return { files: [], errors };
 
@@ -158,7 +168,8 @@ export function planStructure({ catalog, renames = {}, quizzes, decks = [] }) {
   };
   const q = move(quizzes);
   const d = move(decks);
-  for (const x of [...q.updated, ...d.updated]) {
+  const v = move(videos);
+  for (const x of [...q.updated, ...d.updated, ...v.updated]) {
     for (const e of placementErrors(x, catalog)) errors.push(`"${x.title}" (${x.id}): ${e}`);
   }
   if (errors.length > 0) return { files: [], errors };
@@ -166,13 +177,15 @@ export function planStructure({ catalog, renames = {}, quizzes, decks = [] }) {
   const parts = [];
   if (q.changed.length > 0) parts.push(`${q.changed.length} מבחנים`);
   if (d.changed.length > 0) parts.push(`${d.changed.length} חפיסות`);
+  if (v.changed.length > 0) parts.push(`${v.changed.length} סרטונים`);
   return {
     errors: [],
     files: [
       { path: 'quizzes/subjects.json', text: json(catalog) },
       ...q.changed.map((x) => ({ path: quizPath(x.id), text: json(x) })),
       ...d.changed.map((x) => ({ path: deckPath(x.id), text: json(x) })),
-      manifestFile(q.updated, d.updated, catalog),
+      ...v.changed.map((x) => ({ path: videoMetaPath(x.id), text: json(x) })),
+      manifestFile({ quizzes: q.updated, decks: d.updated, videos: v.updated }, catalog),
     ],
     summary: parts.length > 0 ? `עדכון נושאים (שינוי שם משפיע על ${parts.join(' ו')})` : 'עדכון נושאים ותתי־נושאים',
   };
@@ -249,4 +262,92 @@ export function planSummaryOrder({ order, list }) {
   if (order.every((id, i) => id === ids[i])) return { files: [], errors: ['לא בוצע שינוי'] };
   const next = { summaries: order.map((id) => list.summaries.find((s) => s.id === id)) };
   return { errors: [], files: [{ path: 'summaries/list.json', text: json(next) }], summary: 'שינוי סדר הסיכומים' };
+}
+
+const MB = (bytes) => `${(bytes / 1024 / 1024).toFixed(1)}MB`;
+
+/**
+ * Add or replace a video: its metadata, the mp4 (raw bytes) and optional captions (WebVTT text), plus the
+ * manifest, in one plan. The duration is read from the mp4 header. Replacing keeps existing captions unless
+ * new ones are given. `meta` = { id, subject, unit?, title, description? }.
+ */
+export function planVideo({ meta, mp4, vtt = null, replace = false, catalog, ...rest }) {
+  const state = withState({ catalog, ...rest });
+  const errors = [];
+  const id = meta?.id;
+  if (!isValidId(id)) errors.push('מזהה לא תקין (אותיות קטנות באנגלית, ספרות ומקפים)');
+  if (!(mp4 instanceof Uint8Array)) errors.push('לא נבחר קובץ סרטון');
+  else if (isValidId(id)) errors.push(...checkVideo({ name: videoFile(id), size: mp4.length, bytes: mp4 }));
+  if (vtt !== null) errors.push(...vttErrors(vtt).map((e) => `כתוביות: ${e}`));
+  if (errors.length > 0) return { files: [], errors };
+
+  const existing = state.videos.find((x) => x.id === id);
+  const duration = readMp4Duration(mp4);
+  const video = {
+    id,
+    subject: meta.subject,
+    ...(meta.unit ? { unit: meta.unit } : {}),
+    title: (meta.title ?? '').trim(),
+    ...(meta.description?.trim() ? { description: meta.description.trim() } : {}),
+    file: videoFile(id),
+    ...(vtt !== null || (replace && existing?.captions) ? { captions: captionsFile(id) } : {}),
+    ...(duration === null ? {} : { durationSec: duration }),
+  };
+  errors.push(...validateVideo(video));
+  if (errors.length === 0) errors.push(...placementErrors(video, catalog));
+  if (errors.length === 0 && existing && !replace) errors.push(`סרטון עם המזהה "${id}" כבר קיים (סמנו "החלפה" כדי לדרוס)`);
+  if (errors.length > 0) return { files: [], errors };
+
+  const files = [{ path: videoMediaPath(id), bytes: mp4 }, { path: videoMetaPath(id), text: json(video) }];
+  if (vtt !== null) files.push({ path: captionsPath(id), text: vtt });
+  files.push(manifestFor('video', [...state.videos.filter((x) => x.id !== id), video], state));
+  return {
+    errors: [],
+    files,
+    summary: `סרטון "${video.title}" (${[formatDuration(duration), MB(mp4.length), vtt !== null ? 'עם כתוביות' : null].filter(Boolean).join(', ')})`,
+  };
+}
+
+/** Delete a video: the metadata, the mp4 and its captions, together (git history keeps the old bytes). */
+export function planVideoDelete({ id, catalog, ...rest }) {
+  const state = withState({ catalog, ...rest });
+  const existing = state.videos.find((x) => x.id === id);
+  if (!isValidId(id) || !existing) return { files: [], errors: ['הסרטון לא נמצא'] };
+  return {
+    errors: [],
+    deletes: [videoMetaPath(id), videoMediaPath(id), ...(existing.captions ? [captionsPath(id)] : [])],
+    files: [manifestFor('video', state.videos.filter((x) => x.id !== id), state)],
+    summary: `מחיקת סרטון "${id}"`,
+  };
+}
+
+/** Set, replace (`vtt` = text) or remove (`vtt` = null) a video's captions. */
+export function planVideoCaptions({ id, vtt, catalog, ...rest }) {
+  const state = withState({ catalog, ...rest });
+  const existing = state.videos.find((x) => x.id === id);
+  if (!isValidId(id) || !existing) return { files: [], errors: ['הסרטון לא נמצא'] };
+
+  let next;
+  const files = [];
+  const deletes = [];
+  if (vtt === null) {
+    if (!existing.captions) return { files: [], errors: ['לסרטון הזה אין כתוביות'] };
+    const { captions, ...without } = existing;
+    void captions;
+    next = without;
+    deletes.push(captionsPath(id));
+  } else {
+    const errors = vttErrors(vtt).map((e) => `כתוביות: ${e}`);
+    if (errors.length > 0) return { files: [], errors };
+    next = { ...existing, captions: captionsFile(id) };
+    files.push({ path: captionsPath(id), text: vtt });
+  }
+  files.push({ path: videoMetaPath(id), text: json(next) });
+  files.push(manifestFor('video', state.videos.map((x) => (x.id === id ? next : x)), state));
+  return {
+    errors: [],
+    files,
+    ...(deletes.length > 0 ? { deletes } : {}),
+    summary: vtt === null ? `הסרת כתוביות מ"${existing.title}"` : `כתוביות ל"${existing.title}"`,
+  };
 }

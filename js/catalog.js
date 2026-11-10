@@ -66,13 +66,23 @@ function deckEntry(d) {
   };
 }
 
+function videoEntry(v) {
+  return {
+    id: v.id,
+    title: v.title,
+    description: v.description ?? '',
+    ...(v.durationSec === undefined ? {} : { durationSec: v.durationSec }),
+    hasCaptions: v.captions !== undefined,
+  };
+}
+
 const byTitle = (a, b) => collator.compare(a.title, b.title) || a.id.localeCompare(b.id);
 
 /**
- * The home page tree, in catalog order: subjects → units → quizzes and flashcard decks (each by title).
- * Units without either are kept so the page can show them as coming soon.
+ * The home page tree, in catalog order: subjects → units → quizzes, flashcard decks and videos (each by title).
+ * Units without any are kept so the page can show them as coming soon.
  */
-export function buildManifest(quizzes, catalog, decks = []) {
+export function buildManifest(quizzes, catalog, decks = [], videos = []) {
   const pick = (items, subject, unit, make) =>
     items.filter((x) => x.subject === subject && x.unit === unit).map(make).sort(byTitle);
   return {
@@ -82,9 +92,11 @@ export function buildManifest(quizzes, catalog, decks = []) {
         name: unit,
         quizzes: pick(quizzes, s.name, unit, entry),
         flashcards: pick(decks, s.name, unit, deckEntry),
+        videos: pick(videos, s.name, unit, videoEntry),
       })),
       quizzes: pick(quizzes, s.name, undefined, entry),
       flashcards: pick(decks, s.name, undefined, deckEntry),
+      videos: pick(videos, s.name, undefined, videoEntry),
     })),
   };
 }
@@ -99,6 +111,13 @@ export function countQuizzes(manifest) {
 export function countDecks(manifest) {
   return manifest.subjects.reduce(
     (n, s) => n + (s.flashcards?.length ?? 0) + s.units.reduce((m, u) => m + (u.flashcards?.length ?? 0), 0),
+    0,
+  );
+}
+
+export function countVideos(manifest) {
+  return manifest.subjects.reduce(
+    (n, s) => n + (s.videos?.length ?? 0) + s.units.reduce((m, u) => m + (u.videos?.length ?? 0), 0),
     0,
   );
 }

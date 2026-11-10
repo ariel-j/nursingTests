@@ -137,6 +137,33 @@ A deck is one JSON file, `flashcards/<id>.json`, shown on the home page next to 
 
 Studying follows the quiz rules: flip the card, then "ידעתי" or "לא ידעתי". Known on the first try = mastered; after a miss the card returns 2-5 cards later and needs two "ידעתי" in a row. Modes: whole deck, chosen topics, only the cards that came back. Only whole-deck runs update the best score. Keyboard: Space reveals, `1` = ידעתי, `2` = לא ידעתי. A ready-made example is `templates/flashcards.json`; see also [docs/flashcards-authoring.md](docs/flashcards-authoring.md).
 
+## Videos (סרטונים)
+
+A video is three files that share one id, in `videos/`: `<id>.mp4` (the video), `<id>.json` (details) and an optional `<id>.vtt` (Hebrew captions). It appears on the home page next to the quizzes of its subject/unit (labelled "סרטון", with its length and whether it has captions) and plays at `video.html?id=<id>` with the browser's own controls (keyboard accessible, no autoplay). The player remembers where you stopped and offers to continue. Upload from the admin panel (tab "סרטונים"), or add the files and run `npm run manifest` and `npm run validate`.
+
+```json
+{
+  "id": "opioids-intro",
+  "subject": "פרמקולוגיה",
+  "unit": "אופיואידים",
+  "title": "אופיואידים: מבוא",
+  "description": "אופציונלי",
+  "file": "opioids-intro.mp4",
+  "captions": "opioids-intro.vtt",
+  "durationSec": 587
+}
+```
+
+| Field | Rule |
+|---|---|
+| `id` | lowercase letters, digits, single hyphens; equals the file name |
+| `subject`, `unit` | placed like a quiz (see Flashcards) |
+| `file` | must be exactly `<id>.mp4`: a path can never come from the data |
+| `captions` | optional, exactly `<id>.vtt` (WebVTT, starts with `WEBVTT`, at most 1 MB) |
+| `durationSec` | optional whole seconds; the panel reads it from the mp4 header |
+
+`npm run validate` also checks the media: the mp4 must start with the mp4 signature and be at most 100 MB, declared captions must exist and be valid, and any `.mp4`/`.vtt` without a matching `.json` (or any other file type in `videos/`) is an error. The panel accepts mp4 files up to 50 MB (it uploads from the browser); for larger files add them with git. H.264 video with AAC audio plays in every browser. Every video stays in git history even after it is deleted, so compress before uploading (see [docs/videos-authoring.md](docs/videos-authoring.md)). Examples: `templates/video.json`, `templates/captions.vtt`.
+
 ## Development
 
 ```sh
@@ -154,6 +181,8 @@ npm run serve     # http://localhost:8000 (fetch() does not work over file://)
 | `js/index.js`, `js/quiz.js`, `js/cards.js` | page UI (home, quiz, flashcards) |
 | `js/cards-core.js` | pure flashcard logic (validation, session, summary); reuses the quiz engine in `js/core.js` |
 | `flashcards/` | one JSON file per deck |
+| `js/video-core.js`, `js/video.js`, `video.html` | videos: pure validation, mp4 duration and WebVTT checks; the player page |
+| `videos/` | `<id>.mp4`, `<id>.json`, optional `<id>.vtt` per video |
 | `summaries/`, `css/summary.css` | short summaries, the hub and the combined print page |
 | `summaries/list.json` | the list of summaries; `js/summary-list.js` validates/loads it, `js/summaries.js`, `js/summary.js`, `js/summaries-all.js` drive the pages |
 | `admin/`, `js/admin/` | the admin panel (see below) |
@@ -174,11 +203,12 @@ What you can manage (every action previews the exact files first and publishes a
 
 | | Add | Edit | Delete |
 |---|---|---|---|
-| Subjects / units | yes | rename (cascades into their quizzes and decks), reorder | only when they hold no quizzes or decks |
+| Subjects / units | yes | rename (cascades into their quizzes, decks and videos), reorder | only when they hold no quizzes, decks or videos |
 | Quizzes | upload (site or authoring format) | title, description, move to another subject/unit; to fix questions re-upload with "החלפה" | yes (type the id to confirm) |
 | Flashcard decks | upload JSON | title, description, move to another subject/unit; to fix cards re-upload with "החלפה" | yes (type the id to confirm) |
+| Videos | upload mp4 (up to 50 MB) + optional captions | title, description, move; set, replace or remove captions; to change the video re-upload with "החלפה" | yes (mp4, details and captions; type the id to confirm) |
 | Summaries | upload HTML | title, blurb, accent hue, order; to change the page re-upload with "החלפה" | yes (page, list entry and accent together; type the id to confirm) |
 
-A quiz's or deck's id is fixed: learners' saved progress in their browsers is keyed by it.
+A quiz's, deck's or video's id is fixed: learners' saved progress in their browsers is keyed by it.
 
-The password protects a lost or shared device, not a compromised one; the real gate is the token (revoke it at GitHub if it leaks). Every upload is checked with the same validators as `npm run validate`, summary HTML is held to a strict allowlist, and `.github/workflows/check.yml` re-checks each push. Planned next: videos.
+The password protects a lost or shared device, not a compromised one; the real gate is the token (revoke it at GitHub if it leaks). Every upload is checked with the same validators as `npm run validate`, summary HTML is held to a strict allowlist, and `.github/workflows/check.yml` re-checks each push. 
