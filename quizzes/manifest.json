@@ -679,28 +679,28 @@
               "id": "laws-circulars-1",
               "title": "מבחן 1",
               "description": "חוקים, חוזרי מנהל הסיעוד והרפואה, וההבחנה בין פעולת סיעוד, פעולה חריגה ופעולה רפואית, לפי הסילבוס וחוזר 234/2025.",
-              "questionCount": 100,
-              "topicCount": 11
+              "questionCount": 68,
+              "topicCount": 10
             },
             {
               "id": "laws-exam-1",
               "title": "מבחן חוזרים 1",
               "description": "150 שאלות מחוזרי מנהל האחיות, בהתמקדות בנושאים שהופיעו בעבר במבחנים.",
-              "questionCount": 150,
+              "questionCount": 144,
               "topicCount": 15
             },
             {
               "id": "laws-exam-2",
               "title": "מבחן חוזרים 2",
               "description": "150 שאלות מחוזרי מנהל האחיות, בהתמקדות בנושאים שהופיעו בעבר במבחנים.",
-              "questionCount": 150,
+              "questionCount": 147,
               "topicCount": 15
             },
             {
               "id": "laws-exam-3",
               "title": "מבחן חוזרים 3",
               "description": "150 שאלות מחוזרי מנהל האחיות, בהתמקדות בנושאים שהופיעו בעבר במבחנים.",
-              "questionCount": 150,
+              "questionCount": 144,
               "topicCount": 15
             }
           ]
@@ -712,7 +712,7 @@
               "id": "safety-1",
               "title": "מבחן 1",
               "description": "בטיחות ובטחון: גורמים, נפילות וחוזר 145/2019, אבחנות, הגבלה פיזית (חוזר רפואה 15/2009) ויעדי בטיחות, עם חזרה מצטברת.",
-              "questionCount": 93,
+              "questionCount": 91,
               "topicCount": 13
             }
           ]
@@ -848,7 +848,7 @@
               "id": "general-exam-1",
               "title": "מבחן כללי 1",
               "description": "מבחן מסכם של 200 שאלות על כל נושאי יחידה 1: היגיינה, פצעים, ניעות, שינה, שתן, עיכול, הפרשות, גירוי סנסורי, בטיחות וחוזרים.",
-              "questionCount": 200,
+              "questionCount": 198,
               "topicCount": 13
             },
             {
@@ -862,7 +862,7 @@
               "id": "general-exam-3",
               "title": "מבחן כללי 3",
               "description": "מבחן מסכם של 200 שאלות על כל נושאי יחידה 1: היגיינה, פצעים, ניעות, שינה, שתן, עיכול, הפרשות, גירוי סנסורי, בטיחות וחוזרים.",
-              "questionCount": 200,
+              "questionCount": 197,
               "topicCount": 13
             }
           ]
