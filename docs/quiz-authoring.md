@@ -153,6 +153,10 @@ SUBJECT NOTES
 2. `npm run manifest && npm run validate`. Validation errors name the file, question id and field.
    Validate also prints `warning:` lines when a quiz is easy to guess (the correct option is the longest
    in over half the questions, is much longer on average, or is the only one with parentheses, Latin
-   letters or digits; absolute words only in wrong options). Warnings do not fail the build, but fix them:
-   lengthen the distractors or shorten the answer (`scripts/quiz-lint.mjs`, tested in `test/quiz-lint.test.mjs`).
+   letters or digits; absolute words only in wrong options), and per question when a single question gives
+   its answer away (the correct option is much the longest, or the only one with parentheses, Latin letters,
+   digits or a list / clause (`, : ; —`), or a wrong option has בלבד / תמיד... and the correct one has none).
+   `npm run lint-quiz -- quizzes/<id>.json` lists those questions with their options and lengths.
+   Warnings do not fail the build, but fix them: lengthen the distractors or shorten the answer
+   (`scripts/quiz-lint.mjs`, tested in `test/quiz-lint.test.mjs`).
 3. Play it locally with `npm run serve` before committing.
