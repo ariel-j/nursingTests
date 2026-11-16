@@ -1,27 +1,41 @@
 // All summaries on one page (summaries/all.html), for printing them as a single PDF.
 // Each summary page stays the only copy of its content: this fetches the pages and moves their
 // <article> in with the DOM APIs (DOMParser does not run their scripts). Opened with #print, it
-// opens the print dialog once everything, fonts included, has loaded.
-import { SUMMARIES, summaryFile } from './summary-list.js';
+// opens the print dialog once everything, fonts included, has loaded. ?subject=<id> keeps only
+// that subject's summaries.
+import { SUMMARIES, summariesFor, summaryFile } from './summary-list.js';
+import { toolArticle } from './tool-print.js';
 
 const statusEl = document.getElementById('status');
 const listEl = document.getElementById('all-summaries');
 const printBtn = document.getElementById('print-all');
 
-async function loadArticle(id) {
+async function loadArticle(entry) {
+  const id = entry.id;
   const res = await fetch(summaryFile(id), { cache: 'no-cache' });
   if (!res.ok) throw new Error(`${id}: HTTP ${res.status}`);
   const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+  // An interactive summary (tools/) is rebuilt as a plain article with everything opened.
+  if (entry.tool) return toolArticle(doc, entry);
   const article = doc.querySelector('article.summary');
   if (!article) throw new Error(`${id}: no article.summary`);
+  // Interactive widgets (search, simulators, flashcards) need their page's script; print only the text.
+  for (const widget of article.querySelectorAll('[data-interactive]')) widget.remove();
   return document.adoptNode(article);
 }
 
 async function main() {
   printBtn.disabled = true;
+  const subjectId = new URLSearchParams(location.search).get('subject');
+  const chosen = subjectId === null ? SUMMARIES : summariesFor(subjectId);
+  if (subjectId !== null) document.getElementById('back-link').href = `./?subject=${encodeURIComponent(subjectId)}`;
+  if (chosen.length === 0) {
+    statusEl.textContent = 'אין סיכומים להדפסה.';
+    return;
+  }
   let articles;
   try {
-    articles = await Promise.all(SUMMARIES.map((s) => loadArticle(s.id)));
+    articles = await Promise.all(chosen.map(loadArticle));
   } catch (err) {
     console.error(err);
     statusEl.textContent = location.protocol === 'file:'

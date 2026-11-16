@@ -3,6 +3,7 @@ import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateQuiz } from '../js/core.js';
+import { isValidSubjectId } from '../js/catalog.js';
 
 export const QUIZ_DIR = fileURLToPath(new URL('../quizzes/', import.meta.url));
 export const MANIFEST_FILE = 'manifest.json';
@@ -10,14 +11,17 @@ export const MANIFEST_FILE = 'manifest.json';
 export const CATALOG_FILE = 'subjects.json';
 
 const isText = (v) => typeof v === 'string' && v.trim() !== '';
+/** A relative link to a page of this site ("drugs.html?subject=x"): no scheme, host or leading slash. */
+export const isSitePath = (v) => isText(v) && /^[a-z0-9][a-z0-9./_-]*\.html(?:\?[^\s#]*)?$/.test(v) && !v.includes('..');
 
-/** Problems with the catalog: [{ name, units?: [unit names] }] under "subjects". */
+/** Problems with the catalog: [{ id, name, units?: [unit names] }] under "subjects". */
 export function validateCatalog(catalog) {
   const errors = [];
   if (!catalog || !Array.isArray(catalog.subjects) || catalog.subjects.length === 0) {
     return ['"subjects" must be a non-empty array'];
   }
   const names = new Set();
+  const ids = new Set();
   catalog.subjects.forEach((s, i) => {
     const where = `subjects[${i}]`;
     if (!s || !isText(s.name)) {
@@ -26,11 +30,29 @@ export function validateCatalog(catalog) {
     }
     if (names.has(s.name)) errors.push(`${where}: duplicate subject "${s.name}"`);
     names.add(s.name);
-    if (s.units === undefined) return;
-    if (!Array.isArray(s.units) || !s.units.every(isText)) {
-      errors.push(`${where}: units must be an array of non-empty strings`);
-    } else if (new Set(s.units).size !== s.units.length) {
-      errors.push(`${where}: duplicate unit name`);
+    // The id goes in URLs (?subject=<id>) and ties summaries to their subject.
+    if (!isValidSubjectId(s.id)) {
+      errors.push(`${where}: id must be lowercase letters, digits and single hyphens`);
+    } else if (ids.has(s.id)) {
+      errors.push(`${where}: duplicate id "${s.id}"`);
+    }
+    ids.add(s.id);
+    if (s.units !== undefined) {
+      if (!Array.isArray(s.units) || !s.units.every(isText)) {
+        errors.push(`${where}: units must be an array of non-empty strings`);
+      } else if (new Set(s.units).size !== s.units.length) {
+        errors.push(`${where}: duplicate unit name`);
+      }
+    }
+    if (s.upcoming !== undefined) {
+      const ok = Array.isArray(s.upcoming) && s.upcoming.every((t) => t && isText(t.title)
+        && (t.status === undefined || isText(t.status)));
+      if (!ok) errors.push(`${where}: upcoming must be an array of { title, status? } with non-empty text`);
+    }
+    if (s.tools !== undefined) {
+      const ok = Array.isArray(s.tools) && s.tools.every((t) => t && isText(t.title) && isSitePath(t.href)
+        && (t.description === undefined || isText(t.description)));
+      if (!ok) errors.push(`${where}: tools must be an array of { title, href, description? }, href a relative site path`);
     }
   });
   return errors;
@@ -106,12 +128,15 @@ export function buildManifest(quizzes, catalog) {
     subjects: catalog.subjects.map((s) => {
       const own = quizzes.filter((q) => q.subject === s.name);
       return {
+        id: s.id,
         name: s.name,
         units: (s.units ?? []).map((unit) => ({
           name: unit,
           quizzes: own.filter((q) => q.unit === unit).map(entry).sort(byTitle),
         })),
         quizzes: own.filter((q) => q.unit === undefined).map(entry).sort(byTitle),
+        upcoming: (s.upcoming ?? []).map((t) => ({ title: t.title, status: t.status ?? 'בקרוב' })),
+        tools: (s.tools ?? []).map((t) => ({ title: t.title, href: t.href, description: t.description ?? '' })),
       };
     }),
   };
