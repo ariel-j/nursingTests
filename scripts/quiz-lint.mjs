@@ -11,6 +11,14 @@ const FEATURES = {
   'digits': /\d/,
 };
 
+// Per question: the correct option is this much longer than the average wrong one, and longer than
+// every wrong one by at least LONG_MIN_CHARS (so two short drug names never count).
+const LONG_RATIO = 1.3;
+const LONG_MIN_CHARS = 6;
+// Explanatory punctuation: a list or a clause that only the correct option spells out.
+const EXPLAINS = /[,:;—]/;
+const QUESTION_FEATURES = { ...FEATURES, 'a list or clause (, : ; —)': EXPLAINS };
+
 const len = (o) => o.text.length;
 const median = (xs) => {
   const s = [...xs].sort((a, b) => a - b);
@@ -19,10 +27,43 @@ const median = (xs) => {
 };
 const pct = (x) => `${Math.round(x * 100)}%`;
 
+/**
+ * The tells one question has, i.e. ways to spot its correct option without knowing the material:
+ * much the longest; the only option with parentheses, Latin letters, digits or explanatory
+ * punctuation; or an absolute word (בלבד, תמיד...) on a wrong option while the correct one has none.
+ * [] when the options look alike.
+ */
+export function questionTells(q) {
+  const opts = q.options ?? [];
+  if (opts.length < 2 || !opts[q.correct]) return [];
+  const tells = [];
+  const right = opts[q.correct];
+  const wrong = opts.filter((_, i) => i !== q.correct);
+  const mean = wrong.reduce((n, o) => n + len(o), 0) / wrong.length;
+  if (len(right) >= mean * LONG_RATIO && len(right) - Math.max(...wrong.map(len)) >= LONG_MIN_CHARS) {
+    tells.push(`longest (${(len(right) / mean).toFixed(1)}×)`);
+  }
+  for (const [name, rx] of Object.entries(QUESTION_FEATURES)) {
+    if (rx.test(right.text) && !wrong.some((o) => rx.test(o.text))) tells.push(`only one with ${name}`);
+  }
+  if (!ABSOLUTES.test(right.text) && wrong.some((o) => ABSOLUTES.test(o.text))) {
+    tells.push('absolute word on a wrong option');
+  }
+  return tells;
+}
+
+// Per-question tells are judged at any quiz size.
+function toldWarning(quiz) {
+  const told = (quiz.questions ?? []).filter((q) => questionTells(q).length > 0).map((q) => q.id);
+  if (told.length === 0) return [];
+  const more = told.length > 8 ? '…' : '';
+  return [`${told.length} questions give the answer away (${told.slice(0, 8).join(', ')}${more}); see npm run lint-quiz -- quizzes/${quiz.id ?? '<id>'}.json`];
+}
+
 /** Warnings (strings) for one quiz; [] when it looks balanced or is too small to judge. */
 export function lintQuiz(quiz) {
   const qs = quiz.questions ?? [];
-  if (qs.length < MIN_QUESTIONS) return [];
+  if (qs.length < MIN_QUESTIONS) return toldWarning(quiz);
   const warnings = [];
 
   let longest = 0;
@@ -71,5 +112,6 @@ export function lintQuiz(quiz) {
   if (absWrong >= 10 && absWrong >= 5 * Math.max(absRight, 1)) {
     warnings.push(`absolute words (בלבד, תמיד, לעולם...) appear in ${absWrong} wrong options but ${absRight} correct ones; they give the wrong answers away`);
   }
-  return warnings;
+
+  return [...warnings, ...toldWarning(quiz)];
 }

@@ -11,6 +11,7 @@
     "import-drugs": "node scripts/import-drugs.mjs",
     "import-cards": "node scripts/import-cards.mjs",
     "import-concepts": "node scripts/import-concepts.mjs",
+    "lint-quiz": "node scripts/lint-quiz.mjs",
     "serve": "node scripts/serve.mjs"
   },
   "engines": {
