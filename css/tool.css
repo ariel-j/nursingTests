@@ -1,0 +1,188 @@
+/* Interactive tools (tools/*.html). Loaded after style.css and reuses its tokens and .option /
+   .card / .primary styles (design/STYLE.md). Logical properties only. */
+
+:root {
+  --warn: #8a5200;
+  --warn-bg: #fdf0d8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --warn: #f0b04a;
+    --warn-bg: #3a2b0e;
+  }
+}
+:root[data-theme="dark"] {
+  --warn: #f0b04a;
+  --warn-bg: #3a2b0e;
+}
+:root[data-contrast="high"] {
+  --warn: #000000;
+  --warn-bg: #ffffff;
+}
+
+/* style.css lays .quiz-header out as a row (quiz title next to its stats); on a tool page the header
+   is a stack: kicker, title, intro, then the step ladder. */
+.quiz-header { display: block; }
+
+.sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- in-page navigation ---------- */
+
+.tool-nav {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 5;
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-block: 0.6rem;
+  margin-block-end: 0.5rem;
+  background: var(--bg);
+  border-block-end: 1px solid var(--line);
+}
+.tool-nav a {
+  flex: none;
+  padding: 0.2rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.tool-nav a:hover { border-color: var(--ink); }
+
+.tool-section { padding-block-start: 1.75rem; scroll-margin-block-start: 4rem; }
+.tool-section > h2 { margin-block-end: 0.4rem; }
+.tool-section h3 { margin-block-start: 1.25rem; }
+
+/* ---------- tables ---------- */
+
+.scroll { overflow-x: auto; }
+.tool-table { inline-size: 100%; border-collapse: collapse; font-size: 1rem; background: var(--surface); }
+.tool-table caption { text-align: start; padding-block-end: 0.4rem; font-weight: 600; }
+.tool-table th, .tool-table td { border: 1px solid var(--line); padding: 0.4rem 0.7rem; text-align: start; vertical-align: top; }
+.tool-table th { background: var(--bg); }
+.nowrap { white-space: nowrap; }
+
+.callout {
+  border-inline-start: 4px solid var(--warn);
+  background: var(--warn-bg);
+  color: var(--ink);
+  padding: 0.6rem 0.9rem;
+  border-radius: 4px;
+  margin-block: 0.75rem 0;
+}
+.callout.bad { border-inline-start-color: var(--bad); background: var(--bad-soft); }
+.callout p { margin: 0; }
+:root[data-contrast="high"] .callout { border: 2px solid #000; }
+
+/* ---------- stats ---------- */
+
+.fact-stats { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-block: 0.75rem 0; padding: 0; list-style: none; }
+.fact-stats > * {
+  flex: 1 1 10rem;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.fact-stats strong { display: block; font-family: var(--serif); font-weight: 700; font-size: 1.8rem; font-variant-numeric: tabular-nums; line-height: 1.2; }
+.fact-stats small { color: var(--muted); font-size: 0.95rem; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 0.75rem; margin-block-start: 0.75rem; }
+.grid .card { margin: 0; }
+.grid ul, .card ul { margin: 0.4rem 0 0; padding-inline-start: 1.3rem; }
+
+/* ---------- drills ---------- */
+
+.drill-meta { margin: 0 0 0.4rem; color: var(--muted); font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+.drill-prompt { margin: 0 0 0.9rem; font-family: var(--serif); font-weight: 500; font-size: 1.375rem; line-height: 1.45; }
+.drill-prompt:focus { outline: none; }
+.drill-feedback { margin: 0.9rem 0 0; min-block-size: 1.6em; font-weight: 600; }
+.drill-feedback.ok { color: var(--ok); }
+.drill-feedback.no { color: var(--bad); }
+.drill .primary { margin-block-start: 0.6rem; }
+.drill .options { grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); }
+
+/* ---------- chips, radios, checkboxes ---------- */
+
+.chips { border: none; padding: 0; margin: 0.5rem 0 0; min-inline-size: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.chip-label, .opts label, .checks label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 0.97rem;
+}
+.opts label, .checks label { border-radius: 8px; padding-block: 0.3rem; }
+.chip-label input, .opts input, .checks input { position: absolute; opacity: 0; inline-size: 100%; block-size: 100%; inset: 0; margin: 0; cursor: pointer; }
+.chip-label:has(input:checked), .opts label:has(input:checked), .checks label:has(input:checked) {
+  background: var(--accent);
+  color: var(--surface);
+  border-color: var(--accent);
+}
+.chip-label:has(input:focus-visible), .opts label:has(input:focus-visible), .checks label:has(input:focus-visible) {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+.checks label:has(input:checked)::before, .chip-label:has(input:checked)::before { content: "✓"; margin-inline-end: 0.4rem; }
+
+#calc-form fieldset { border: none; padding: 0; margin: 0 0 0.8rem; min-inline-size: 0; }
+#calc-form legend { font-weight: 700; padding: 0; margin-block-end: 0.3rem; }
+.opts, .checks { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+/* ---------- factor cards ---------- */
+
+.flips { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.6rem; margin-block-start: 0.75rem; }
+.flip {
+  display: block;
+  text-align: start;
+  min-block-size: 5.5rem;
+  padding: 0.7rem 0.9rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.flip:hover { border-color: var(--ink); }
+.flip b { display: block; }
+.flip-detail { display: block; margin-block-start: 0.3rem; color: var(--muted); }
+.flip[aria-expanded="false"]::after { content: "הצגת דוגמה"; color: var(--accent); font-size: 0.9rem; }
+
+/* ---------- risk score and bar ---------- */
+
+.risk-score { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem; margin-block-start: 0.5rem; }
+.risk-score strong { font-family: var(--serif); font-size: 2.6rem; font-variant-numeric: tabular-nums; line-height: 1; }
+.pill { display: inline-block; padding: 0.15rem 0.8rem; border-radius: 999px; font-weight: 700; border: 1px solid currentColor; }
+.pill.low { background: var(--ok-soft); color: var(--ok); }
+.pill.high { background: var(--warn-bg); color: var(--warn); }
+.pill.vhigh { background: var(--bad-soft); color: var(--bad); }
+
+.risk-bar { display: flex; block-size: 0.7rem; margin-block-start: 0.5rem; border-radius: 6px; background: var(--line); overflow: hidden; }
+.risk-bar i { display: block; inline-size: var(--w, 0%); block-size: 100%; transition: inline-size 0.25s; }
+.risk-bar i:nth-child(1) { background: var(--ok); }
+.risk-bar i:nth-child(2) { background: #c98a1b; }
+.risk-bar i:nth-child(3) { background: var(--bad); }
+:root[data-contrast="high"] .risk-bar { outline: 2px solid #000; }
+
+/* ---------- restraint clock ---------- */
+
+.hours-scale { display: flex; justify-content: space-between; color: var(--muted); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+#hours { inline-size: 100%; accent-color: var(--accent); }
+.hours-label { font-weight: 700; }
+.actions-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-block-start: 0.6rem; }
+
+@media (max-width: 520px) {
+  .tool-table { font-size: 0.95rem; }
+}

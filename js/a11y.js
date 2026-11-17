@@ -3,6 +3,8 @@
 // stopped motion. Choices persist per browser. The underlying site is already keyboard- and
 // screen-reader-friendly; this is an extra convenience, not a replacement for that.
 import { load, save } from './storage.js';
+import { onTheme, setTheme } from './theme.js';
+import { THEME_LABELS, THEME_MODES } from './theme-core.js';
 
 const KEY = 'a11y';
 const TEXT_STEPS = ['normal', 'large', 'xlarge'];
@@ -86,6 +88,17 @@ function build() {
     el('span', { class: 'a11y-label', text: 'גודל טקסט' }),
     el('span', { class: 'a11y-stepper' }, dec, textValue, inc));
 
+  // Appearance: auto (device) / light / dark. Kept out of "reset", it is a taste, not an accessibility need.
+  const themeBtns = THEME_MODES.map((m) => {
+    const b = el('button', { type: 'button', class: 'a11y-btn a11y-theme', 'aria-pressed': 'false', text: THEME_LABELS[m] });
+    b.addEventListener('click', () => setTheme(m));
+    return { mode: m, el: b };
+  });
+  const themeRow = el('div', { class: 'a11y-row a11y-theme-row', role: 'group', 'aria-label': 'מראה האתר' },
+    el('span', { class: 'a11y-label', text: 'מראה' }),
+    el('span', { class: 'a11y-stepper' }, ...themeBtns.map((b) => b.el)));
+  onTheme((mode) => { for (const b of themeBtns) b.el.setAttribute('aria-pressed', String(b.mode === mode)); });
+
   function refresh() {
     textValue.textContent = ['רגיל', 'גדול', 'גדול מאוד'][state.text];
     dec.disabled = state.text === 0;
@@ -122,7 +135,7 @@ function build() {
   const statementHref = new URL('../accessibility.html', import.meta.url).href;
   const statement = el('a', { class: 'a11y-statement', href: statementHref, text: 'הצהרת נגישות' });
 
-  container.append(heading, textRow, ...toggleRows, reset, statement);
+  container.append(heading, themeRow, textRow, ...toggleRows, reset, statement);
 
   // Open/close behavior
   function setOpen(open) {
