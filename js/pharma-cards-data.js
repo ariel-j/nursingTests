@@ -1,7 +1,7 @@
 // Flashcards for the GI, respiratory and immunosuppression summaries (js/pharma-cards.js shows them). Every
 // answer restates a fact that is already on its page; repeats is set only where the page tags it as asked in
 // past exams. No DOM, no storage; checked by the Node tests.
-const EXAM = 'נשאל בשחזורים';
+const EXAM = 'הופיע בעבר';
 
 export const DECKS = {
   'pharma-git': [
