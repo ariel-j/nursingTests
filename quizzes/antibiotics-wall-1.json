@@ -1134,30 +1134,6 @@
       "explanation": "סינרגיזם הוא 1 ועוד 1 שווה 3."
     },
     {
-      "id": "q048",
-      "topic": "אתר הזיהום ושילוב תרופות",
-      "question": "איזה שילוב מוצג כדוגמה לסינרגיזם באנדוקרדיטיס אנטרוקוקלית?",
-      "options": [
-        {
-          "text": "ampicillin ו-gentamicin"
-        },
-        {
-          "text": "vancomycin ו-aztreonam",
-          "note": "הטעות: אלה אינם הצמד שהוצג בשקף."
-        },
-        {
-          "text": "ceftriaxone ו-erythromycin",
-          "note": "הטעות: אלה אינם הצמד שהוצג בשקף."
-        },
-        {
-          "text": "penicillin ו-tetracycline",
-          "note": "הטעות: טטרציקלין בקטריוסטטית ואינה הצמד שבשקף."
-        }
-      ],
-      "correct": 0,
-      "explanation": "ampicillin פוגע בדופן ו-gentamicin מעכב ריבוזום."
-    },
-    {
       "id": "q049",
       "topic": "אתר הזיהום ושילוב תרופות",
       "question": "מדוע ampicillin מסייע לפעילות gentamicin?",
@@ -1758,30 +1734,6 @@
       "explanation": "שינוי ב-PBP (חלבון קושר פניצילין) מונע קישור וגורם ל-MRSA."
     },
     {
-      "id": "q074",
-      "topic": "משפחת הפניצילינים",
-      "question": "מהו MRSA?",
-      "options": [
-        {
-          "text": "Staph aureus עמיד למתיצילין"
-        },
-        {
-          "text": "Streptococcus רגיש לפניצילין",
-          "note": "הטעות: זו אינה ההגדרה."
-        },
-        {
-          "text": "Listeria עמידה לאמפיצילין",
-          "note": "הטעות: זו אינה ההגדרה."
-        },
-        {
-          "text": "Pseudomonas עמיד לצפטזידים",
-          "note": "הטעות: זו אינה ההגדרה."
-        }
-      ],
-      "correct": 0,
-      "explanation": "MRSA הוא Methicillin Resistant Staph aureus."
-    },
-    {
       "id": "q075",
       "topic": "משפחת הפניצילינים",
       "question": "איזו תרופה ניתנת IV ואיזו פומית בקבוצת האמינופניצילינים?",
@@ -1804,78 +1756,6 @@
       ],
       "correct": 0,
       "explanation": "Amoxicillin נספג טוב פומית ו-Ampicillin ניתן IV."
-    },
-    {
-      "id": "q076",
-      "topic": "משפחת הפניצילינים",
-      "question": "איזה חיידק גרם חיובי מכוסה היטב על ידי אמינופניצילינים?",
-      "options": [
-        {
-          "text": "Listeria"
-        },
-        {
-          "text": "MRSA",
-          "note": "הטעות: MRSA עמיד לפניצילינים."
-        },
-        {
-          "text": "Pseudomonas",
-          "note": "הטעות: פסאודומונס אינו גרם חיובי ואינו מכוסה."
-        },
-        {
-          "text": "Staphylococcus epidermidis",
-          "note": "הטעות: סטפילוקוקים מכוסים בצורה גרועה."
-        }
-      ],
-      "correct": 0,
-      "explanation": "אמינופניצילינים יעילים נגד ליסטריה."
-    },
-    {
-      "id": "q077",
-      "topic": "משפחת הפניצילינים",
-      "question": "איזה חיידק גרם שלילי מהקהילה מכוסה על ידי אמינופניצילינים?",
-      "options": [
-        {
-          "text": "E. coli"
-        },
-        {
-          "text": "Pseudomonas",
-          "note": "הטעות: זה דורש פניצילין אנטי פסאודומונס."
-        },
-        {
-          "text": "Acinetobacter",
-          "note": "הטעות: אינו מכוסה בשקף."
-        },
-        {
-          "text": "Enterobacter עמיד",
-          "note": "הטעות: אינו מכוסה בשקף."
-        }
-      ],
-      "correct": 0,
-      "explanation": "אמינופניצילינים מכסים E. coli מהקהילה."
-    },
-    {
-      "id": "q078",
-      "topic": "משפחת הפניצילינים",
-      "question": "איזו קבוצה של פניצילינים יעילה נגד Pseudomonas?",
-      "options": [
-        {
-          "text": "Piperacillin ו-Ticarcillin"
-        },
-        {
-          "text": "Penicillin V ו-Penicillin G",
-          "note": "הטעות: אלה טבעיים."
-        },
-        {
-          "text": "Oxacillin ו-Cloxacillin",
-          "note": "הטעות: אלה אנטי סטפילוקוקליים."
-        },
-        {
-          "text": "Amoxicillin ו-Ampicillin",
-          "note": "הטעות: אלה אמינופניצילינים."
-        }
-      ],
-      "correct": 0,
-      "explanation": "Carbenicillin ו-Ticarcillin ו-Mezlocillin ו-Piperacillin פועלים נגד Pseudomonas."
     },
     {
       "id": "q079",
@@ -1948,30 +1828,6 @@
       ],
       "correct": 0,
       "explanation": "בגרם שליליים הבטא לקטם אינו חודר היטב דרך הממברנה החיצונית."
-    },
-    {
-      "id": "q082",
-      "topic": "עמידות ומעכבי בטא לקטמאז",
-      "question": "איזה מנגנון עמידות מאפיין MRSA?",
-      "options": [
-        {
-          "text": "PBP עם אפיניות נמוכה"
-        },
-        {
-          "text": "ייצור מוגבר של בטא לקטמאז",
-          "note": "הטעות: ב-MRSA המנגנון הוא שינוי PBP."
-        },
-        {
-          "text": "משאבות efflux פעילות",
-          "note": "הטעות: זה אינו המנגנון העיקרי."
-        },
-        {
-          "text": "ממברנה חיצונית אטומה",
-          "note": "הטעות: זה מאפיין של גרם שליליים."
-        }
-      ],
-      "correct": 0,
-      "explanation": "ב-MRSA ה-PBP לא נקשר באופן הדוק לבטא לקטם."
     },
     {
       "id": "q083",
@@ -2478,30 +2334,6 @@
       "explanation": "Ceftriaxone חודר היטב ל-CSF."
     },
     {
-      "id": "q104",
-      "topic": "משפחת הצפלוספורינים",
-      "question": "איזה צפלוספורין מכסה גם Pseudomonas בדור השלישי?",
-      "options": [
-        {
-          "text": "Ceftazidime"
-        },
-        {
-          "text": "Ceftriaxone",
-          "note": "הטעות: זה אינו מכסה Pseudomonas."
-        },
-        {
-          "text": "Cefotaxime",
-          "note": "הטעות: זה אינו מכסה Pseudomonas."
-        },
-        {
-          "text": "Cefazolin",
-          "note": "הטעות: זה דור ראשון."
-        }
-      ],
-      "correct": 0,
-      "explanation": "Ceftazidime מכסה גם Pseudomonas אך חלש בגרם חיוביים."
-    },
-    {
       "id": "q105",
       "topic": "משפחת הצפלוספורינים",
       "question": "מהי תרופת הבחירה נגד זיבה לפי השקף?",
@@ -2548,30 +2380,6 @@
       ],
       "correct": 0,
       "explanation": "Ceftobiprole מדור חמישי מכסה MRSA ואנטרוקוקים."
-    },
-    {
-      "id": "q107",
-      "topic": "משפחת הצפלוספורינים",
-      "question": "איזה חיידקים אינם מכוסים כלל על ידי צפלוספורינים בשקף?",
-      "options": [
-        {
-          "text": "Listeria ואטיפיים"
-        },
-        {
-          "text": "E. coli ו-Klebsiella",
-          "note": "הטעות: זה מכוסה."
-        },
-        {
-          "text": "Streptococcus ו-Staphylococcus",
-          "note": "הטעות: אלה מכוסים."
-        },
-        {
-          "text": "Haemophilus ו-Moraxella",
-          "note": "הטעות: אלה מכוסים."
-        }
-      ],
-      "correct": 0,
-      "explanation": "Listeria monocytogenes ו-Chlamydia ו-Mycoplasma ו-Legionella אינם מכוסים."
     },
     {
       "id": "q108",
@@ -2836,30 +2644,6 @@
       ],
       "correct": 0,
       "explanation": "Vancomycin פעיל נגד גרם חיוביים בלבד."
-    },
-    {
-      "id": "q119",
-      "topic": "תרופת ונקומיצין",
-      "question": "מהו אחד מהשימושים העיקריים של vancomycin?",
-      "options": [
-        {
-          "text": "MRSA"
-        },
-        {
-          "text": "פסאודומונס",
-          "note": "הטעות: אין כיסוי."
-        },
-        {
-          "text": "E. coli",
-          "note": "הטעות: גרם שלילי ולא מכוסה."
-        },
-        {
-          "text": "מיקופלזמה",
-          "note": "הטעות: אין דופן."
-        }
-      ],
-      "correct": 0,
-      "explanation": "Vancomycin הוא טיפול בחירה נגד MRSA ו-S. epidermidis."
     },
     {
       "id": "q120",
