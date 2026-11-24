@@ -87,6 +87,7 @@
 [data-subject="pharmacology"]         { --s: #4338CA; --s-soft: #E8E7FB; --s-ink: #2E2690; --d: #A5A3FF; --d-soft: #23224A; --d-ink: #D0CFFF; }
 [data-subject="pharmacology-b"]       { --s: #0E7490; --s-soft: #DFF3F8; --s-ink: #0A5266; --d: #5CD0EA; --d-soft: #10323B; --d-ink: #A6E6F5; }
 [data-subject="nursing-fundamentals"] { --s: #A84B07; --s-soft: #FCEBD3; --s-ink: #7C3A06; --d: #F5B04A; --d-soft: #3A2A10; --d-ink: #FADDA6; }
+[data-subject="nursing-fundamentals-b"]     { --s: #2A6F2D; --s-soft: #E3F4E4; --s-ink: #1B5E20; --d: #7FD686; --d-soft: #16301A; --d-ink: #BDEFC1; }
 
 [data-subject] { --accent: var(--s); --accent-soft: var(--s-soft); --accent-ink: var(--s-ink); --loop: var(--s); --loop-track: color-mix(in srgb, var(--s) 20%, transparent); }
 @media (prefers-color-scheme: dark) {
