@@ -5,6 +5,8 @@
 // URL, so pages in subfolders (summaries/) get the same menu.
 import { findSubject, loadManifest, loadMedia, mediaCount, subjectOfQuiz, subjectPaths, subjectStats, unitAnchor } from './catalog.js';
 import { SUMMARIES, summariesFor } from './summary-list.js';
+import { getTheme, onTheme, setTheme } from './theme.js';
+import { THEME_LABELS, nextTheme } from './theme-core.js';
 
 const ROOT = new URL('../', import.meta.url);
 const SITE_TITLE = 'תרגול למבחנים בסיעוד';
@@ -22,6 +24,13 @@ function el(tag, props = {}, ...children) {
   node.append(...children);
   return node;
 }
+
+/** Icon paths for the theme button: half disc = auto, sun = light, moon = dark. */
+const THEME_ICONS = {
+  auto: 'M12 3a9 9 0 1 0 0 18V3z M12 3a9 9 0 0 1 0 18',
+  light: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z M12 2v2 M12 20v2 M4.9 4.9l1.4 1.4 M17.7 17.7l1.4 1.4 M2 12h2 M20 12h2 M4.9 19.1l1.4-1.4 M17.7 6.3l1.4-1.4',
+  dark: 'M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z',
+};
 
 function icon(d) {
   const svg = document.createElementNS(SVG_NS, 'svg');
@@ -51,7 +60,7 @@ function link(path, text, className) {
 /** The subject the current page is about: ?subject=, the quiz in ?id=, or a summary page's article. */
 function currentSubjectId(manifest) {
   const params = new URLSearchParams(location.search);
-  const bySubject = findSubject(manifest, params.get('subject'));
+  const bySubject = findSubject(manifest, params.get('subject') ?? params.get('drugs') ?? params.get('concepts'));
   if (bySubject) return bySubject.id;
   const id = params.get('id');
   if (id) return subjectOfQuiz(manifest, id)?.id ?? null;
@@ -68,9 +77,11 @@ function subjectItem(subject, open, media) {
     items.push(el('li', { class: 'drawer-unit' }, link(`${paths.home}#${unitAnchor(i)}`, unit.name)));
   });
   if (canMix) items.push(el('li', {}, link(paths.practice, 'תרגול לפי נושאים')));
+  if (quizCount > 0) items.push(el('li', {}, link(paths.starred, '★ שאלות מסומנות')));
   if (quizCount > 0) items.push(el('li', {}, link(paths.print, 'מבחן להדפסה')));
   if (summariesFor(subject.id).length > 0) items.push(el('li', {}, link(paths.summaries, 'סיכומים קצרים')));
   if (mediaCount(media, subject.id) > 0) items.push(el('li', {}, link(paths.media, 'סרטוני הסבר קצרים')));
+  for (const tool of subject.tools ?? []) items.push(el('li', {}, link(tool.href, tool.title)));
   if (quizCount === 0) items.push(el('li', { class: 'drawer-soon', text: 'בחנים בקרוב' }));
 
   const details = el('details', { class: 'drawer-subject' },
@@ -84,6 +95,8 @@ function subjectsSection(manifest, media) {
   const subjects = manifest?.subjects ?? [];
   if (subjects.length === 0) return [];
   const current = currentSubjectId(manifest);
+  // Color theme of the page (css/style.css, [data-subject]); theme-init.js already did ?subject=.
+  if (current) document.documentElement.setAttribute('data-subject', current);
   return [
     el('h3', { class: 'drawer-heading', text: 'מקצועות' }),
     // The current subject starts open; with none (home, statement pages) every subject does.
@@ -100,7 +113,8 @@ function build() {
   const fill = (manifest, media) => nav.replaceChildren(
     el('ul', { class: 'drawer-list' },
       el('li', {}, link('./', 'דף הבית · כל המקצועות')),
-      el('li', {}, link('summaries/', 'כל הסיכומים'))),
+      el('li', {}, link('summaries/', 'כל הסיכומים')),
+      el('li', {}, link('quiz.html?starred', '★ שאלות מסומנות מכל המקצועות'))),
     ...subjectsSection(manifest, media),
     el('ul', { class: 'drawer-list drawer-foot' },
       el('li', {}, link('accessibility.html', 'הצהרת נגישות')),
@@ -130,8 +144,20 @@ function build() {
   });
   dialog.addEventListener('close', () => toggle.setAttribute('aria-expanded', 'false'));
 
+  // One button that cycles auto → light → dark. The label says the current mode, so it is
+  // understood without the icon (screen readers, and not relying on the icon alone).
+  const themeBtn = el('button', { type: 'button', class: 'theme-toggle' });
+  const themeText = el('span', { class: 'theme-toggle-text' });
+  themeBtn.addEventListener('click', () => setTheme(nextTheme(getTheme())));
+  onTheme((mode) => {
+    themeBtn.replaceChildren(icon(THEME_ICONS[mode]), themeText);
+    themeText.textContent = THEME_LABELS[mode];
+    themeBtn.setAttribute('aria-label', `מראה האתר: ${THEME_LABELS[mode]}. לחצו להחלפה`);
+    themeBtn.title = 'מראה האתר';
+  });
+
   const bar = el('header', { class: 'site-bar' },
-    el('div', { class: 'site-bar-inner' }, toggle, el('a', { class: 'site-name', href: href('./'), text: SITE_TITLE })));
+    el('div', { class: 'site-bar-inner' }, toggle, el('a', { class: 'site-name', href: href('./'), text: SITE_TITLE }), themeBtn));
   document.body.prepend(bar);
   document.body.append(dialog);
 }

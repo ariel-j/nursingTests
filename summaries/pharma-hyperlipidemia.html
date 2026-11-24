@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
+  <script src="../js/theme-init.js"></script>
   <title>היפרליפידמיה ושומנים בדם — סיכום</title>
   <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/style.css">
@@ -13,6 +14,7 @@
   <script type="module" src="../js/summary-study.js"></script>
   <script type="module" src="../js/nav.js"></script>
   <script type="module" src="../js/a11y.js"></script>
+  <script type="module" src="../js/analytics.js"></script>
 </head>
 <body class="summary-page">
   <main class="page wide">
@@ -23,7 +25,7 @@
 
 <article class="summary" data-system="pharma-hyperlipidemia">
   <header>
-    <p class="kicker">פרמקולוגיה · סיכום נושא</p>
+    <p class="kicker">פרמקולוגיה א' · סיכום נושא</p>
     <h1>היפרליפידמיה — תרופות להורדת שומנים בדם</h1>
     <p class="lede">היפרליפידמיה היא רמות שומנים גבוהות בדם (כולסטרול ו/או טריגליצרידים), והיא גורם סיכון מרכזי לטרשת עורקים (<span class="en">atherosclerosis</span>) ולמחלת לב כלילית. מטרת הטיפול היא הורדת ה-<span class="en">LDL</span> ומניעת אירועים קרדיווסקולריים — לא "ריפוי" מספר בבדיקה. הרעיון המאחד את כל הנושא: <b>כל משפחת תרופות נכנסת בנקודה אחרת במטבוליזם הכולסטרול</b> — ייצור בכבד, ספיגה במעי, או פינוי מהדם.</p>
     <svg class="motif" viewBox="0 0 480 64" preserveAspectRatio="none" aria-hidden="true">
@@ -31,7 +33,7 @@
     </svg>
     <div class="legend">
       <span><span class="arrowmark">←</span> <b>גורם ← תוצאה</b> (קוראים מימין לשמאל)</span>
-      <span><span class="exam exam-legend">נשאל בשחזורים</span> נקודה שחזרה במבחנים</span>
+      <span><span class="exam exam-legend">הופיע בעבר</span> נקודה שחזרה במבחנים</span>
     </div>
   </header>
 
@@ -39,7 +41,7 @@
     <h2>מבוא: על מה כל זה?</h2>
     <p>כולסטרול וטריגליצרידים הם שומנים שהגוף צריך: לקרום התא, להורמונים ולוויטמין <span class="en">D</span>. אבל כשיש מהם <b>יותר מדי בדם</b> (היפרליפידמיה), הם מצטברים בדופן העורקים ויוצרים פלאק (טרשת עורקים) שמצר את העורק ועלול לגרום להתקף לב או שבץ. לכן מטרת הטיפול היא <b>למנוע אירועים קרדיווסקולריים</b>, לא "לתקן מספר בבדיקה".</p>
     <p>שומן לא מתמוסס בדם, ולכן הוא נע בחלקיקי הובלה שנקראים ליפופרוטאינים. <span class="en">LDL</span> מוביל כולסטרול אל הרקמות (ועודף שלו שוקע בעורקים — "הרע"), <span class="en">HDL</span> אוסף כולסטרול מהרקמות ומחזיר לכבד ("הטוב"). הרעיון המרכזי: לכל משפחת תרופות יש "תחנה" אחרת במסלול הכולסטרול — ייצור בכבד (סטטינים), ספיגה במעי (<span class="en">Ezetimibe</span>), מיחזור מרה (רזינים), פירוק טריגליצרידים (פיברטים) — וזה מסביר את המנגנון ואת תופעות הלוואי של כל אחת.</p>
-    <p>התרופה החשובה ביותר היא הסטטינים: קו ראשון, הכי יעילים בהורדת <span class="en">LDL</span>, והכי נשאלים בשחזורים — בעיקר הניטור שלהם (כבד ושרירים).</p>
+    <p>התרופה החשובה ביותר היא הסטטינים: קו ראשון, הכי יעילים בהורדת <span class="en">LDL</span>, והכי נשאלים במבחנים — בעיקר הניטור שלהם (כבד ושרירים).</p>
   </section>
 
   <section class="glossary" id="pharma-hyperlipidemia-glossary">
@@ -69,10 +71,10 @@
     <dl class="def"><dt><span class="en">Niacin</span></dt><dd>ויטמין <span class="en">B3</span> במינון גבוה, התרופה היעילה ביותר להעלאת <span class="en">HDL</span>, אך פוטנטיות (עוצמה) נמוכה. ת"ל אופיינית: הסמקה.</dd></dl>
     <dl class="def"><dt>הסמקה ופרוסטגלנדינים</dt><dd>הסמקה = אדמומיות וחום בעור, מהרחבת כלי דם הנגרמת מפרוסטגלנדינים (חומרים דלקתיים שמשפיעים על כלי דם). אספירין ואיבופרופן, שחוסמים את יצירתם, מפחיתים אותה.</dd></dl>
     <dl class="def"><dt>פוטנטיות</dt><dd>עוצמה של תרופה: כמה ממנה צריך כדי להשיג אפקט נתון. פוטנטיות נמוכה (כמו ב‑<span class="en">Niacin</span>) = נדרש מינון גבוה יחסית.</dd></dl>
-    <dl class="def"><dt>חומצה אורית וגאוט</dt><dd>חומצה אורית = פסולת שהגוף מפרק, שבריכוז גבוה נשקעת במפרקים וגורמת לדלקת כואבת (גאוט). <span class="en">Niacin</span> ו‑<span class="en">Bempedoic acid</span> מעלים אותה.</dd></dl>
+    <dl class="def"><dt>חומצה אורית וגאוט</dt><dd>חומצה אורית = פסולת שהגוף מפרק, שבריכוז גבוה נשקעת במפרקים וגורמת לדלקת כואבת (גאוט). גאוט מופיע כתופעת לוואי של <span class="en">Niacin</span> ושל <span class="en">Bempedoic acid</span>.</dd></dl>
     <dl class="def"><dt>אומגה 3</dt><dd>שומנים בריאים מדגים. <span class="en">Icosapent ethyl</span> מפחית טריגליצרידים, ומגביר סיכון לדימום כשנוטלים אותו עם נוגדי קרישה.</dd></dl>
-    <dl class="def"><dt><span class="en">PCSK9</span></dt><dd>אנזים שנקשר לקולטני <span class="en">LDL</span> ומוביל לפירוקם. מעכבים שלו (<span class="en">Alirocumab, Evolocumab</span>) משאירים יותר קולטנים ומורידים <span class="en">LDL</span> במידה רבה.</dd></dl>
-    <dl class="def"><dt><span class="en">MTP</span></dt><dd>חלבון בכבד שדרוש לאריזת <span class="en">VLDL</span>. <span class="en">Lomitapide</span> מעכב אותו ולכן מוריד <span class="en">LDL</span> ו‑<span class="en">TG</span>, עם סיכון לכבד שומני.</dd></dl>
+    <dl class="def"><dt><span class="en">PCSK9</span></dt><dd>אנזים שנקשר לקולטני <span class="en">LDL</span> ומוביל לפירוקם. מעכבים שלו משאירים יותר קולטנים ומורידים <span class="en">LDL</span> במידה רבה.</dd></dl>
+    <dl class="def"><dt><span class="en">MTP</span></dt><dd>חלבון בכבד שדרוש לאריזת <span class="en">VLDL</span>. <span class="en">Lomitapide</span> מעכב אותו ולכן מוריד <span class="en">LDL</span> ו‑<span class="en">TG</span>; הוא פוגע בכבד, ולכן חובה לנטר אותו.</dd></dl>
     <dl class="def"><dt><span class="en">Bisacodyl</span></dt><dd>תרופה משלשלת, אינה קשורה להורדת שומנים. מופיעה בשאלות כ"מסיח" (תשובה שגויה).</dd></dl>
   </section>
 
@@ -87,7 +89,7 @@
     <dl class="def"><dt>ליפופרוטאין (<span class="en">lipoprotein</span>)</dt><dd>חלקיק נשא שמוביל שומנים בדם (כי שומן לא מתמוסס בדם). שמו נקבע לפי הצפיפות שלו.</dd></dl>
     <dl class="def"><dt>טרשת עורקים (<span class="en">atherosclerosis</span>)</dt><dd>הצטברות פלאק שומני בדופן העורק, שמצר אותו ומוביל להתקף לב ושבץ.</dd></dl>
     <dl class="def"><dt><span class="en">ASCVD</span></dt><dd>מחלה קרדיווסקולרית על רקע טרשתי — היעד שאותו הטיפול מנסה למנוע.</dd></dl>
-    <p>המטרה הקלינית אושרה גם בשחזורים: <b>מניעת מחלות קרדיווסקולריות כמו טרשת עורקים</b>, ולא "הורדת <span class="en">HDL</span>" או ירידה במשקל. <span class="exam">נשאל</span></p>
+    <p>המטרה הקלינית חוזרת גם במבחנים: <b>מניעת מחלות קרדיווסקולריות כמו טרשת עורקים</b>, ולא "הורדת <span class="en">HDL</span>" או ירידה במשקל. <span class="exam">נשאל</span></p>
   </section>
 
   <section>
@@ -103,7 +105,7 @@
 
   <section>
     <h2>3 · סטטינים — תרופת הקו הראשון</h2>
-    <p class="sec-note">הכי חשובה בנושא: הכי יעילה להורדת <span class="en">LDL</span>, והכי נשאלת בשחזורים.</p>
+    <p class="sec-note">הכי חשובה בנושא: הכי יעילה להורדת <span class="en">LDL</span>, והכי נשאלת במבחנים.</p>
     <p>סטטינים (<span class="en">Atorvastatin</span>, <span class="en">Simvastatin</span>, <span class="en">Rosuvastatin</span> ועוד) הם <b>מעכבים תחרותיים של האנזים <span class="en">HMG-CoA reductase</span></b> — האנזים המרכזי בייצור הכולסטרול בכבד. התוצאה: פחות ייצור כולסטרול בכבד, ובתגובה הכבד מגדיל את מספר קולטני ה-<span class="en">LDL</span> (<span class="en">LDL-R</span>) על פניו ושואב <span class="en">LDL</span> מהדם.</p>
     <div class="rel">
       <div class="rel-cause">עיכוב <span class="en">HMG-CoA reductase</span></div>
@@ -194,7 +196,7 @@
   </section>
 
   <section>
-    <h2>8 · נקודות שחזרו בשחזורים — לא לפספס</h2>
+    <h2>8 · נקודות שהופיעו בעבר — לא לפספס</h2>
     <div class="flags"><ul>
       <li>ניטור בטיפול בסטטינים = <b>תפקודי כבד</b>. <span class="exam">נשאל ×3</span></li>
       <li>מנגנון <span class="en">Simvastatin</span> = עיכוב ייצור כולסטרול בכבד (מסלול אנדוגני). <span class="exam">נשאל ×3</span></li>
@@ -221,6 +223,7 @@
       <a href="../privacy.html">מדיניות פרטיות</a>
     </nav>
     <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+    <p>תוכן לימודי לתרגול בלבד. אינו מהווה ייעוץ רפואי ואינו תחליף לחומרי הקורס.</p>
   </footer>
 </body>
 </html>

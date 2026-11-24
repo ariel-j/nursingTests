@@ -12,7 +12,7 @@ The exact JSON format and field rules are in [README.md](../README.md#quiz-forma
 
 ```text
 You are writing multiple-choice quiz files for a Hebrew nursing exam-prep site.
-SUBJECT: <subject name exactly as in the catalog, e.g. פרמקולוגיה>
+SUBJECT: <subject name exactly as in the catalog, e.g. פרמקולוגיה א'>
 UNIT:    <unit name exactly as in the catalog, e.g. תרופות לב וכלי דם; or "none" if the subject has no units>
 QUIZ:    <title, e.g. מבחן 1; and the quiz id, e.g. pharma-cardio-1>
 
@@ -77,6 +77,19 @@ WRITING QUESTIONS
 - Write original questions based on the material. Do not reproduce past exam questions
   or copy long passages. The repository is public.
 
+DISTRACTORS (the correct answer must not be recognisable without knowing the material)
+- All four options have similar length, structure and level of detail. If the correct answer needs
+  a qualifier or a number, give every distractor one too, or move the detail to the explanation.
+  Across a quiz the correct option should be the longest in roughly a quarter of the questions.
+- Each distractor is a plausible near-miss: a sibling concept, the same system, a neighbouring value.
+  Never an absurd option, an organ of another system, or an extreme number (10 vs 2000).
+- Numeric options use nearby values, in the same unit and format.
+- Parentheses, Latin terms, digits and words like "בלבד", "תמיד", "לעולם" appear in the distractors
+  as often as in the correct option, or in none of them.
+- No two options say the same thing in different words, and no distractor is also arguably correct.
+- Do not make three options mirror each other so that the correct one is the odd one out (or the
+  one that overlaps most with the others).
+
 NOTES AND EXPLANATIONS
 - "explanation" (required): why the correct answer is right. It is shown after every answer and
   in the printable answer key, so it must make sense without seeing the options' order.
@@ -94,6 +107,7 @@ STYLE OF THE TEXT
 
 BEFORE HANDING OVER, CHECK
 - Valid JSON; every question has 4 options with distinct texts; "correct" is 0–3.
+- The distractor rules above hold: similar lengths, no tells in parentheses or absolute words.
 - "subject" and "unit" are exactly the strings given above.
 - Every topic string comes from the agreed list.
 - No positional options; no fields other than the documented ones.
@@ -113,7 +127,7 @@ SUBJECT NOTES
 - Clinical links are welcome when the material makes them (e.g. what happens in heart failure).
 ```
 
-### פרמקולוגיה
+### פרמקולוגיה א'
 
 ```text
 SUBJECT NOTES
@@ -137,4 +151,12 @@ SUBJECT NOTES
 
 1. Save it as `quizzes/<id>.json` (or convert it with `npm run import`, see README).
 2. `npm run manifest && npm run validate`. Validation errors name the file, question id and field.
+   Validate also prints `warning:` lines when a quiz is easy to guess (the correct option is the longest
+   in over half the questions, is much longer on average, or is the only one with parentheses, Latin
+   letters or digits; absolute words only in wrong options), and per question when a single question gives
+   its answer away (the correct option is much the longest, or the only one with parentheses, Latin letters,
+   digits or a list / clause (`, : ; —`), or a wrong option has בלבד / תמיד... and the correct one has none).
+   `npm run lint-quiz -- quizzes/<id>.json` lists those questions with their options and lengths.
+   Warnings do not fail the build, but fix them: lengthen the distractors or shorten the answer
+   (`scripts/quiz-lint.mjs`, tested in `test/quiz-lint.test.mjs`).
 3. Play it locally with `npm run serve` before committing.

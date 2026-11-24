@@ -3,7 +3,7 @@
 
 .summary [hidden], .study [hidden] { display: none !important; }
 
-.study { margin-block: 0.75rem 1.25rem; padding: 0.8rem 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; display: grid; gap: 0.7rem; }
+.study { margin-block: 0.75rem 1.25rem; padding: 0.8rem 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.7rem; }
 .study-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .study-nav a { display: inline-block; padding: 0.2rem 0.7rem; border: 1px solid var(--line); border-radius: 999px; font-size: 0.875rem; text-decoration: none; color: var(--ink); }
 .study-nav a[aria-current="page"] { background: var(--ink); color: var(--bg); border-color: var(--ink); font-weight: 700; }
@@ -33,6 +33,7 @@
 .summary .flags li.has-check::before { display: none; }
 .summary .flag-item { display: flex; align-items: flex-start; gap: 0.6rem; cursor: pointer; }
 .summary .flag-item input { flex: none; inline-size: 1.15rem; block-size: 1.15rem; margin-block-start: 0.35rem; accent-color: var(--accent); }
+.summary .flag-text { min-inline-size: 0; overflow-wrap: anywhere; }
 .summary .flags li.is-done .flag-text { opacity: 0.55; }
 
 :root[data-contrast="high"] .study,

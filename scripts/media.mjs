@@ -1,4 +1,4 @@
-// Videos and the owner's own artifacts (images, PDFs, HTML pages) under media/<subject-id>/,
+// Videos, podcasts (m4a/mp3, no captions needed) and the owner's own artifacts (images, PDFs, HTML pages) under media/<subject-id>/,
 // optionally one folder deeper per sub-subject. GitHub Pages can't list a folder, so this scans
 // media/ into media/manifest.json, which the media page reads. The file is not committed: the Pages
 // deploy workflow builds it on every deploy, and `npm run manifest` builds it for local use.
@@ -15,6 +15,7 @@ export const MAX_BYTES = 50 * 1024 * 1024;
 
 const KINDS = {
   mp4: 'video', webm: 'video',
+  m4a: 'audio', mp3: 'audio',
   png: 'image', jpg: 'image', jpeg: 'image', webp: 'image', gif: 'image', svg: 'image',
   pdf: 'pdf',
   html: 'html', htm: 'html',
@@ -26,11 +27,21 @@ const collator = new Intl.Collator('he', { numeric: true });
 const extOf = (name) => (name.includes('.') ? name.slice(name.lastIndexOf('.') + 1).toLowerCase() : '');
 const stem = (name) => (name.includes('.') ? name.slice(0, name.lastIndexOf('.')) : name);
 
-/** Display name of a file (no extension) or folder: no ordering prefix ("01 - ", "2_", "3.", "4)"). */
+/**
+ * Display name of a file (no extension) or folder: no ordering prefix ("01 - ", "2_", "3.", "4)"),
+ * and underscores read as spaces (downloaded files often come named "שם_הסרטון").
+ */
 export function displayName(name, { isFile = true } = {}) {
   const base = isFile ? stem(name) : name;
-  return base.replace(/^\d+\s*[-_.)]?\s*/, '').trim() || base.trim();
+  const words = (s) => s.replace(/_/g, ' ').replace(/\s+/g, ' ').trim();
+  return words(base.replace(/^\d+\s*[-_.)]?\s*/, '')) || words(base) || base.trim();
 }
+
+/**
+ * Drafts: a file or folder whose name starts with "_" stays in the repo but is not listed or
+ * deployed (e.g. a video waiting for its captions). Rename it without the "_" to publish it.
+ */
+export const isDraft = (rel) => rel.split('/').some((part) => part.startsWith('_'));
 
 /** Files that are not media: notes, the manifest itself, dotfiles (.gitkeep, .DS_Store). */
 function ignored(rel) {
@@ -41,7 +52,7 @@ function ignored(rel) {
 /**
  * The manifest from a file list. `files` are { path, size } with paths relative to media/ and '/'
  * separators; `subjectIds` are the catalog's ids. Returns { manifest, errors, warnings }: files with
- * errors are left out of the manifest, warnings (a video with no captions) are not.
+ * errors (a video with no captions among them) are left out of the manifest, warnings are not.
  */
 export function buildMedia(files, subjectIds) {
   const errors = [];
@@ -69,13 +80,15 @@ export function buildMedia(files, subjectIds) {
       errors.push(`${where}: course files (.${ext}) are not published, the repo is public`);
       continue;
     }
+    // Checked after course files: a draft is still in the public repo.
+    if (isDraft(rel)) continue;
     if (CONVERT_VIDEO.has(ext)) {
       errors.push(`${where}: browsers can't all play .${ext}, convert it to .mp4 (H.264)`);
       continue;
     }
     const kind = KINDS[ext];
     if (!kind) {
-      errors.push(`${where}: unsupported file type (use mp4/webm, png/jpg/webp/gif/svg, pdf or html)`);
+      errors.push(`${where}: unsupported file type (use mp4/webm, m4a/mp3, png/jpg/webp/gif/svg, pdf or html)`);
       continue;
     }
     if (size > MAX_BYTES) {
@@ -90,7 +103,10 @@ export function buildMedia(files, subjectIds) {
         item.captions = `media/${vtt}`;
         usedCaptions.add(vtt);
       } else {
-        warnings.push(`${where}: no captions (add ${parts.at(-1).replace(/\.[^.]+$/, '')}.vtt next to it)`);
+        // The deploy workflow captions new videos first (scripts/captions.mjs), so this is a video
+        // whose transcription failed, or one added locally without running it.
+        errors.push(`${where}: no captions (add ${parts.at(-1).replace(/\.[^.]+$/, '')}.vtt next to it, or let the deploy workflow make it)`);
+        continue;
       }
     }
     const group = parts.length === 3 ? parts[1] : '';
@@ -101,7 +117,7 @@ export function buildMedia(files, subjectIds) {
   }
 
   for (const vtt of captions) {
-    if (!usedCaptions.has(vtt) && !ignored(vtt)) {
+    if (!usedCaptions.has(vtt) && !ignored(vtt) && !isDraft(vtt)) {
       errors.push(`media/${vtt}: captions without a video of the same name (.mp4 or .webm)`);
     }
   }
@@ -111,6 +127,18 @@ export function buildMedia(files, subjectIds) {
   for (const id of subjectIds) {
     const groups = bySubject.get(id);
     if (!groups) continue;
+    // A sub-subject's name is its address on the media page (?topic=<name>), so it must be unique.
+    const seen = new Map();
+    for (const folder of groups.keys()) {
+      if (folder === '') continue;
+      const name = displayName(folder, { isFile: false });
+      if (seen.has(name)) {
+        errors.push(`media/${id}/${folder}: same topic name as "${seen.get(name)}" ("${name}"), rename one of them`);
+        groups.delete(folder);
+      } else {
+        seen.set(name, folder);
+      }
+    }
     subjects[id] = {
       groups: [...groups.entries()]
         .sort(([a], [b]) => (a === '' ? -1 : b === '' ? 1 : collator.compare(a, b)))

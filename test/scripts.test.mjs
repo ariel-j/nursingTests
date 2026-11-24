@@ -41,6 +41,16 @@ test('validateCatalog requires a unique URL-safe id per subject', () => {
   assert.ok(validateCatalog({ subjects: [{ id: 'a', name: 'א' }, { id: 'a', name: 'ב' }] }).some((e) => /duplicate id/.test(e)));
 });
 
+test('catalog subjects may list upcoming tools, passed to the manifest', () => {
+  const cat = { subjects: [{ id: 'a', name: 'א', upcoming: [{ title: 'כרטיסיות', status: 'בתהליך' }, { title: 'ב' }] }] };
+  assert.deepEqual(validateCatalog(cat), []);
+  assert.ok(validateCatalog({ subjects: [{ id: 'a', name: 'א', upcoming: [{ status: 'x' }] }] })[0].includes('upcoming'));
+  assert.deepEqual(buildManifest([], cat).subjects[0].upcoming, [
+    { title: 'כרטיסיות', status: 'בתהליך' },
+    { title: 'ב', status: 'בקרוב' },
+  ]);
+});
+
 test('placementErrors checks a quiz against the catalog', () => {
   assert.deepEqual(placementErrors(q('a', 'אנטומיה', 'מבחן 1', ['t'], 'הלב'), catalog), []);
   assert.deepEqual(placementErrors(q('a', 'פרמקולוגיה', 'מבחן 1', ['t']), catalog), []);

@@ -1,7 +1,7 @@
 // Summaries hub (summaries/index.html). ?subject=<id> shows that subject's summaries; without it,
 // every subject that has summaries gets its own heading and list.
 import { findSubject, loadManifest } from './catalog.js';
-import { SUMMARIES, summariesFor, summaryFile } from './summary-list.js';
+import { SUMMARIES, studyFile, summariesFor, summaryFile } from './summary-list.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -19,8 +19,15 @@ function renderList(summaries, headingTag) {
     const link = el('a', 'quiz-card summary-card');
     link.href = summaryFile(summary.id);
     link.dataset.system = summary.id;
+    if (summary.unit) link.append(el('p', 'summary-unit', summary.unit));
     link.append(el(headingTag, 'card-title', summary.title), el('p', 'muted', summary.blurb));
     item.append(link);
+    if (summary.study) {
+      const practice = el('a', 'study-link', 'תרגול אינטראקטיבי ←');
+      practice.href = studyFile(summary.id);
+      practice.dataset.system = summary.id;
+      item.append(practice);
+    }
     return item;
   }));
   return list;

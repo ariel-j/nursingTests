@@ -1,8 +1,8 @@
 // Home page. Without ?subject= it lists the subjects to choose from; with ?subject=<id> it shows
 // that subject: mixed practice, the printable exam, its summaries and videos, then its quizzes by unit.
-import { isValidQuizId, mixedQuizId, progressInfo } from './core.js';
+import { isValidQuizId, mixedQuizId, progressInfo, sessionStyle, starredQuizId } from './core.js';
 import { findSubject, loadManifest, loadMedia, mediaCount, subjectPaths, subjectQuizzes, subjectStats, unitAnchor } from './catalog.js';
-import { keys, load } from './storage.js';
+import { keys, load, loadStars } from './storage.js';
 import { summariesFor } from './summary-list.js';
 
 const SITE_TITLE = 'תרגול למבחנים בסיעוד';
@@ -13,6 +13,9 @@ const ui = {
   lede: $('lede'),
   status: $('status'),
   content: $('content'),
+  starredWrap: $('starred-wrap'),
+  starredLink: $('starred-link'),
+  selfStudyWrap: $('self-study-wrap'),
 };
 
 const num = (n) => n.toLocaleString('he-IL');
@@ -34,12 +37,15 @@ function savedSession(id) {
 function sessionProgress(id) {
   const session = savedSession(id);
   if (!session) return null;
-  const { mastered, total } = progressInfo(session);
-  const progress = el('div', 'card-progress', `בתהליך: נשלטו ${mastered} מתוך ${total}`);
+  const { mastered, answered, total } = progressInfo(session);
+  // An exam counts answered questions; practice counts mastered ones.
+  const exam = sessionStyle(session) === 'exam';
+  const done = exam ? answered : mastered;
+  const progress = el('div', 'card-progress', `בתהליך: ${exam ? 'נענו' : 'נשלטו'} ${done} מתוך ${total}`);
   const bar = el('span', 'bar is-progress');
   bar.setAttribute('aria-hidden', 'true');
   const fill = el('i');
-  fill.style.inlineSize = `${total === 0 ? 0 : Math.round((100 * mastered) / total)}%`;
+  fill.style.inlineSize = `${total === 0 ? 0 : Math.round((100 * done) / total)}%`;
   bar.append(fill);
   progress.append(bar);
   return progress;
@@ -72,7 +78,9 @@ function renderSubjectCard(subject, media) {
     .filter((id) => savedSession(id)).length;
   const progress = inProgress > 0 ? el('p', 'card-progress', `${inProgress} בתהליך`) : null;
 
-  return card(subjectPaths(subject.id).home, 'subject-card', subject.name, meta, progress);
+  const item = card(subjectPaths(subject.id).home, 'subject-card', subject.name, meta, progress);
+  item.firstElementChild.dataset.subject = subject.id; // its own color (css/style.css)
+  return item;
 }
 
 function renderSubjectList(subjects, media) {
@@ -91,6 +99,8 @@ function renderQuiz(entry) {
   if (results && Number.isFinite(results.bestPercent)) {
     meta.append(el('span', null, `שיא: ${results.bestPercent}%`));
   }
+  const stars = loadStars(entry.id).length;
+  if (stars > 0) meta.append(el('span', null, `★ ${stars} מסומנות`));
   return card(
     `quiz.html?id=${encodeURIComponent(entry.id)}`,
     '',
@@ -126,6 +136,16 @@ function renderTools(subject, media) {
     items.push(card(paths.media, 'tool-card', 'סרטוני הסבר קצרים',
       el('p', 'muted', `סרטון וחומרי עזר לכל תת‑נושא · ${videoCount} פריטים.`)));
   }
+  // The subject's own tools from the catalog, e.g. the drug cards.
+  for (const tool of subject.tools ?? []) {
+    items.push(card(tool.href, 'tool-card', tool.title, tool.description ? el('p', 'muted', tool.description) : null));
+  }
+  // Tools the subject plans but has not built yet: shown with their status, not as links.
+  for (const tool of subject.upcoming ?? []) {
+    const box = el('div', 'quiz-card tool-card is-soon');
+    box.append(el('h3', 'card-title', tool.title), el('p', 'meta', tool.status));
+    items.push(box);
+  }
   if (items.length === 0) return null;
   const list = el('ul', 'quiz-list tool-list');
   list.setAttribute('aria-label', 'כלים');
@@ -133,24 +153,69 @@ function renderTools(subject, media) {
   return list;
 }
 
+/**
+ * "מבחן סיכום אישי" for a unit with two or more quizzes: the subject's mixed practice opened with
+ * only this unit chosen, so its quizzes are pooled and sampled per topic.
+ */
+function renderUnitMix(subject, unit, quizzes) {
+  const href = `${subjectPaths(subject.id).practice}&group=${encodeURIComponent(unit.name)}`;
+  const total = quizzes.reduce((n, q) => n + q.questionCount, 0);
+  return card(href, 'mix-card', 'מבחן סיכום אישי',
+    el('p', 'muted', 'שאלות מכל הבחנים ביחידה, בחלוקה לפי גודל הנושא. בוחרים מספר שאלות, תרגול או מבחן.'),
+    el('p', 'meta', `${quizzes.length} בחנים · ${num(total)} שאלות`));
+}
+
 /** A unit's quizzes under a heading, or a "coming soon" note when it has none. */
-function renderUnit(unit, index) {
+function renderUnit(subject, unit, index) {
   const group = el('section', 'group');
   group.id = unitAnchor(index);
   group.append(el('h2', 'group-title', unit.name));
-  if (unit.quizzes.length === 0) {
+  const quizzes = unit.quizzes.filter((q) => isValidQuizId(q.id));
+  if (quizzes.length === 0) {
     group.append(el('p', 'muted soon', 'בקרוב'));
   } else {
     const list = el('ul', 'quiz-list');
-    list.append(...unit.quizzes.filter((q) => isValidQuizId(q.id)).map(renderQuiz));
+    list.append(...quizzes.map(renderQuiz));
+    if (quizzes.length > 1) list.append(renderUnitMix(subject, unit, quizzes));
     group.append(list);
   }
   return group;
 }
 
+/**
+ * The subject's quizzes in one tab, "מבחנים לפי נושאים": quizzes placed directly on the subject
+ * first, then each unit as a section. Returns the tab list and its panel.
+ */
+function renderQuizTabs(subject) {
+  const tab = el('button', 'tab', 'מבחנים לפי נושאים');
+  tab.type = 'button';
+  tab.id = 'quizzes-tab';
+  tab.setAttribute('role', 'tab');
+  tab.setAttribute('aria-selected', 'true');
+  tab.setAttribute('aria-controls', 'quizzes-panel');
+  const tabList = el('div', 'tab-list');
+  tabList.setAttribute('role', 'tablist');
+  tabList.setAttribute('aria-label', 'תצוגות המקצוע');
+  tabList.append(tab);
+
+  const panel = el('div', 'tab-panel');
+  panel.id = 'quizzes-panel';
+  panel.setAttribute('role', 'tabpanel');
+  panel.setAttribute('aria-labelledby', tab.id);
+  const own = subject.quizzes.filter((q) => isValidQuizId(q.id));
+  if (own.length > 0) {
+    const list = el('ul', 'quiz-list');
+    list.append(...own.map(renderQuiz));
+    panel.append(list);
+  }
+  panel.append(...subject.units.map((unit, i) => renderUnit(subject, unit, i)));
+  return [tabList, panel];
+}
+
 function renderSubject(subject, media) {
   document.title = `${subject.name} · ${SITE_TITLE}`;
   ui.subjectNav.hidden = false;
+  ui.selfStudyWrap.hidden = true;
   ui.title.textContent = subject.name;
   const nodes = [];
   if (subjectStats(subject).quizCount === 0) {
@@ -160,14 +225,7 @@ function renderSubject(subject, media) {
   }
   const tools = renderTools(subject, media);
   if (tools) nodes.push(tools);
-  // Quizzes placed directly on the subject (no unit), then each unit as a section.
-  const own = subject.quizzes.filter((q) => isValidQuizId(q.id));
-  if (own.length > 0) {
-    const list = el('ul', 'quiz-list');
-    list.append(...own.map(renderQuiz));
-    nodes.push(list);
-  }
-  nodes.push(...subject.units.map(renderUnit));
+  nodes.push(...renderQuizTabs(subject));
   ui.content.replaceChildren(...nodes);
 
   // The page is built after load, so jump to a unit (#unit-2, from the side menu) once it exists.
@@ -194,6 +252,16 @@ async function main() {
   }
   const key = new URLSearchParams(location.search).get('subject');
   const subject = findSubject(manifest, key);
+  // A subject's page links only its own starred questions; the subject list links all of them.
+  // Stored counts, so an id dropped from its quiz still counts until that quiz is opened.
+  const scope = subject ? [subject] : subjects;
+  const stars = scope.flatMap(subjectQuizzes).reduce((n, q) => n + loadStars(q.id).length, 0);
+  if (stars > 0 || savedSession(starredQuizId(subject?.name ?? null))) {
+    ui.starredLink.textContent = stars > 0 ? `★ שאלות מסומנות (${stars})` : '★ שאלות מסומנות';
+    ui.starredLink.href = subject ? subjectPaths(subject.id).starred : 'quiz.html?starred';
+    ui.starredWrap.hidden = false;
+  }
+
   if (key !== null && !subject) {
     ui.status.textContent = 'המקצוע לא נמצא. אפשר לבחור מהרשימה:';
   } else {

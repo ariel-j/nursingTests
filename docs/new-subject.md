@@ -24,6 +24,32 @@ Add the subject to `quizzes/subjects.json`, in the order it should appear (the u
   don't change it later.
 - `name`: the Hebrew name. Every quiz's `subject` must match it exactly. Mixed-practice progress is
   saved under it, so renaming it later restarts that progress.
+- `upcoming`: optional tools the subject plans but has not built yet, e.g.
+  `[{ "title": "כרטיסיות תרופות", "status": "בתהליך" }]`. They show as cards in the tools list
+  with the status (default "בקרוב") and are not links until the tool exists.
+- `tools`: optional tools the subject has, e.g.
+  `[{ "title": "כרטיסיות תרופות", "href": "drugs.html?subject=pharmacology", "description": "…" }]`.
+  Each is a link card in the tools list and an entry in the side menu; `href` is a relative page of
+  this site and `npm run validate` checks the page exists.
+- Drug cards: a subject may have `data/<id>/drugs.json` (`{ families, drugs: [{ name, family, receptor,
+  mechanism, indications, sideEffects, alsoIn, exam }] }`; unknown fields are `""`, `exam` marks drugs that
+  appeared in past exams). `drugs.html?subject=<id>` shows them (browse, matching game) and
+  `quiz.html?drugs=<id>` (`&exam=1`) / `print.html?drugs=<id>` quiz on them. Link the page with a `tools`
+  entry. No source names or lecturers in the file; `npm run validate` checks it and the generated quiz.
+  An optional `data/<id>/stems.json` adds the suffix game: `{ "stems": [{ "stem": "-olol", "pattern": "olol$",
+  "class": "חוסם β", "except": ["word"] }] }`, the pattern tested on each Latin word of a drug name; every
+  suffix must match at least one name.
+- Concept cards: a subject may have `data/<id>/concepts.json`: `{ topics: [{ id, title, unit?, concepts: [{ id, term,
+  en?, def }], numbers: [{ id, q, a }], tests: [{ id, name, en?, purpose, normal?, nursing? }], medications: [{ id,
+  name, en?, group, action, nursing? }], cards: [{ id, q, a }], sequences: [{ id, title, steps }], matches: [{ id, title, pairs: [{ a, b }] }] }] }`
+  (every list optional; ids are unique across the deck and never change, new items go at the end; `unit` must
+  be one of the subject's `units`). `concepts.html?subject=<id>` shows them (browse, daily review, games) and
+  `quiz.html?concepts=<id>` / `print.html?concepts=<id>` quiz on them. Link the page with a `tools` entry. Convert an
+  authoring file with `npm run import-concepts -- <source.json> [--subject <id>]`: it publishes the learning
+  content only and drops every `source` (never publish where the material came from). `npm run validate`
+  checks the deck and the generated quiz. Flashcard files (`{ id, unit, cards: [{ id, topic, front, back }] }`) go in as
+  question/answer cards with `npm run import-cards -- <file.json>... --subject <id> [--unit "<unit>"]`; re-importing a file
+  replaces its cards. Card text must state the fact, not point at the course ("השקופית קובעת…").
 - `units`: optional, in display order. Once a subject has units, every quiz needs one of them as `unit`.
   A subject without units lists its quizzes directly. Choose before the first quiz arrives.
   Prefer a few broad units with topics inside them over many tiny units: in pharmacology a unit is a
@@ -56,3 +82,8 @@ or topic. It defines the page's visual style: cause → effect rows, definitions
 3. `npm run manifest && npm test && npm run validate`, then check it with `npm run serve`:
    the home card, the subject page, the menu, one quiz, mixed practice, the print preview, and a summary.
 4. Commit the catalog, quizzes, manifest and summaries together.
+
+
+## Color theme
+
+Add a `[data-subject="<id>"]` palette to `css/style.css` (light `--s`, `--s-soft`, `--s-ink`; dark `--d`, `--d-soft`, `--d-ink`). `npm test` fails until every subject in `quizzes/subjects.json` has one and each passes AA contrast.

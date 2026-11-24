@@ -4,12 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
+  <script src="js/theme-init.js"></script>
   <title>בוחן</title>
   <link rel="preload" href="fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/style.css">
   <script type="module" src="js/quiz.js"></script>
   <script type="module" src="js/nav.js"></script>
   <script type="module" src="js/a11y.js"></script>
+  <script type="module" src="js/analytics.js"></script>
 </head>
 <body>
   <main class="page">
@@ -43,17 +45,50 @@
         <button id="resume" class="primary" type="button">המשך מאיפה שעצרת</button>
       </div>
 
+      <section id="starred-box" class="card" aria-labelledby="starred-title" hidden>
+        <h2 id="starred-title">שאלות מסומנות</h2>
+        <button id="practice-starred" class="primary" type="button"></button>
+        <details class="starred-browse">
+          <summary>הצג את השאלות המסומנות</summary>
+          <ul id="starred-list" class="starred-list"></ul>
+        </details>
+        <p class="muted star-note">הסימונים נשמרים בדפדפן. כדי להעביר אותם למכשיר אחר, משתמשים בייצוא ובייבוא שבדף הבית.</p>
+      </section>
+
+      <section id="stats" class="card" aria-labelledby="stats-title" hidden>
+        <h2 id="stats-title">מצב הנושאים שלך</h2>
+        <p id="stats-summary" class="muted"></p>
+        <ul id="stats-list" class="stats-list"></ul>
+        <div class="actions">
+          <button id="practice-weak" class="primary" type="button" hidden></button>
+          <button id="practice-questions" class="secondary" type="button" hidden></button>
+          <button id="clear-stats" class="link-button" type="button">נקה סטטיסטיקה לבוחן זה</button>
+        </div>
+      </section>
+
       <form id="new-session" class="card">
         <h2>תרגול חדש</h2>
+        <fieldset id="style-setting" class="setting styles">
+          <legend class="setting-label">אופן</legend>
+          <label class="radio">
+            <input type="radio" name="style" value="practice" checked>
+            <span><b>תרגול</b> · משוב אחרי כל שאלה, וטעויות חוזרות עד שליטה</span>
+          </label>
+          <label class="radio">
+            <input type="radio" name="style" value="exam">
+            <span><b>מבחן</b> · כל שאלה פעם אחת בלי משוב, ציון וסקירת טעויות בסוף</span>
+          </label>
+        </fieldset>
         <fieldset class="topics">
-          <legend>נושאים</legend>
+          <legend id="topics-legend">נושאים</legend>
           <div class="topic-actions">
             <button id="all-topics" class="chip" type="button">בחר הכל</button>
             <button id="no-topics" class="chip" type="button">נקה</button>
           </div>
           <ul id="topic-list" class="topic-list"></ul>
         </fieldset>
-        <div class="setting count-setting">
+        <p id="starred-note" class="muted star-note" hidden>הסימונים נשמרים בדפדפן. כדי להעביר אותם למכשיר אחר, משתמשים בייצוא ובייבוא שבדף הבית.</p>
+        <div id="count-setting" class="setting count-setting">
           <label for="count" class="setting-label">מספר שאלות</label>
           <div class="count-row">
             <input id="count" type="number" inputmode="numeric" min="1" step="1" aria-describedby="count-hint">
@@ -74,9 +109,10 @@
       </a>
 
       <div class="card rules">
-        <p>שאלה אחת בכל פעם, והתשובות מתערבבות בכל הצגה. תשובה שגויה או דילוג מחזירים את השאלה לתור, והיא נחשבת נשלטת רק אחרי שתי תשובות נכונות ברצף.</p>
+        <p>שאלה אחת בכל פעם, והתשובות מתערבבות בכל הצגה. בתרגול, תשובה שגויה או דילוג מחזירים את השאלה לתור, והיא נחשבת נשלטת רק אחרי שתי תשובות נכונות ברצף. במבחן כל שאלה מוצגת פעם אחת, ודילוג נחשב כטעות.</p>
+        <p>כשבוחרים פחות שאלות מהקיים, כל נושא מקבל חלק לפי גודלו, ומגיעות קודם שאלות שעוד לא הוצגו בסבבים קודמים.</p>
         <p>ההתקדמות נשמרת בדפדפן, אפשר לסגור ולחזור.</p>
-        <p class="keys-hint">מקלדת: <kbd>1</kbd>–<kbd>4</kbd> לבחירת א–ד, <kbd>S</kbd> לדילוג, <kbd>A</kbd> למעבר אוטומטי, <kbd>Enter</kbd> להמשך.</p>
+        <p class="keys-hint">מקלדת: <kbd>1</kbd>–<kbd>4</kbd> לבחירת א–ד, <kbd>S</kbd> לדילוג, <kbd>F</kbd> לסימון בכוכב, <kbd>A</kbd> למעבר אוטומטי, <kbd>T</kbd> להצגת הנושא, <kbd>Enter</kbd> להמשך (במבחן: לאישור התשובה).</p>
       </div>
       <p id="best" class="muted" hidden></p>
     </section>
@@ -86,7 +122,10 @@
       <article class="card">
         <div class="question-meta">
           <span id="topic" class="topic-chip"></span>
-          <span id="retry-label" class="retry" hidden></span>
+          <span class="meta-end">
+            <span id="retry-label" class="retry" hidden></span>
+            <button id="star" class="star-toggle" type="button" aria-label="סימון בכוכב" aria-pressed="false" aria-keyshortcuts="F">☆</button>
+          </span>
         </div>
         <h2 id="question" class="question" tabindex="-1"></h2>
         <ol id="options" class="options"></ol>
@@ -99,8 +138,12 @@
         </div>
         <div class="actions play-actions">
           <button id="skip" class="secondary" type="button">דילוג <kbd>S</kbd></button>
+          <button id="confirm" class="primary" type="button" hidden disabled>אישור והמשך <kbd>Enter</kbd></button>
+          <span class="toggles">
+          <label class="auto-toggle"><input id="show-topic" type="checkbox" aria-keyshortcuts="T"> הצג נושא <kbd>T</kbd></label>
           <label class="auto-toggle"><input id="auto-advance" type="checkbox" aria-keyshortcuts="A"> מעבר אוטומטי <kbd>A</kbd></label>
-          <button id="next" class="primary" type="button" disabled>הבאה <kbd>Enter</kbd></button>
+          </span>
+          <button id="next" class="primary" type="button" aria-describedby="verdict" disabled>הבאה <kbd>Enter</kbd></button>
         </div>
       </article>
     </section>
@@ -109,6 +152,7 @@
     <section id="done" hidden>
       <div class="card">
         <h2>סיימת!</h2>
+        <p id="score-label" class="muted">ציון בניסיון ראשון</p>
         <p id="score-percent" class="score"></p>
         <p id="score" class="muted"></p>
 
@@ -120,7 +164,7 @@
 
         <div class="section">
           <h2 id="retried-title">שאלות שחזרו</h2>
-          <p id="no-retried" class="muted" hidden>כל השאלות נענו נכון בפעם הראשונה.</p>
+          <p id="no-retried" class="muted" hidden></p>
           <div id="retried"></div>
         </div>
 
@@ -139,6 +183,7 @@
       <a href="privacy.html">מדיניות פרטיות</a>
     </nav>
     <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+    <p>תוכן לימודי לתרגול בלבד. אינו מהווה ייעוץ רפואי ואינו תחליף לחומרי הקורס.</p>
   </footer>
 </body>
 </html>

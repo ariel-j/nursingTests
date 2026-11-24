@@ -43,6 +43,7 @@ export function subjectPaths(id) {
   return {
     home: `./${q}`,
     practice: `quiz.html${q}`,
+    starred: `quiz.html?starred&subject=${encodeURIComponent(id)}`,
     print: `print.html${q}`,
     summaries: `summaries/${q}`,
     media: `media.html${q}`,
@@ -68,6 +69,15 @@ export function loadManifest() {
 export function mediaCount(media, subjectId) {
   return (media?.subjects?.[subjectId]?.groups ?? []).reduce((n, g) => n + g.items.length, 0);
 }
+
+/** A sub-subject (topic) of a subject's media by its name, or null. The loose files have no name. */
+export function findMediaTopic(media, subjectId, name) {
+  if (typeof name !== 'string' || name === '') return null;
+  return (media?.subjects?.[subjectId]?.groups ?? []).find((g) => g.name === name) ?? null;
+}
+
+/** The media page of one topic. */
+export const mediaTopicPath = (subjectId, name) => `${subjectPaths(subjectId).media}&topic=${encodeURIComponent(name)}`;
 
 const MEDIA_URL = new URL('../media/manifest.json', import.meta.url);
 let pendingMedia = null;

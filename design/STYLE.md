@@ -1,5 +1,7 @@
 # Site style: "feedback loop"
 
+> **Updated:** the current skin (warm neutrals, 18px radii, soft shadows, per-subject accent via `[data-subject]`, motion layer, light/dark/auto toggle) lives in `css/style.css`. The tokens and component notes below are the original spec; where they differ, the stylesheet wins.
+
 `reference.html` is the working endocrine quiz whose look the whole site should adopt.
 Open it in a browser to see the target. Keep the site's engine (`js/core.js`) and data
 format as they are: this is a visual change only.

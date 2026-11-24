@@ -1,8 +1,14 @@
 // Loads the quiz a page was opened for: ?id=<quiz> is one quiz; ?subject=<id> (or the subject's
-// name, from older links) merges all of that subject's quizzes for mixed practice.
+// name, from older links) merges all of that subject's quizzes for mixed practice; ?drugs=<id>
+// builds a quiz from the subject's drug cards (data/<id>/drugs.json), &exam=1 from exam drugs only;
+// ?concepts=<id>[&deck=<deck>] builds one from the subject's concept cards (data/<id>/concepts.json, or concepts-<deck>.json);
+// ?starred merges every quiz that has starred questions; with &subject=<id>, only that subject's.
 // Shared by quiz.js and print.js.
-import { buildMixedQuiz, isValidQuizId, validateQuiz } from './core.js';
+import { buildMixedQuiz, buildStarredQuiz, isValidQuizId, sessionQuizIds, starredQuizId, validateQuiz } from './core.js';
 import { findSubject, loadManifest, subjectPaths, subjectQuizzes } from './catalog.js';
+import { buildConceptQuiz, conceptsUrl, isValidDeckId, validateConceptDeck } from './concepts-core.js';
+import { buildDrugQuiz, drugDeckUrl, validateDrugDeck } from './drugs-core.js';
+import { keys, load, loadStars } from './storage.js';
 
 /** An error whose message is ready to show the user. */
 export class LoadError extends Error {}
@@ -23,7 +29,71 @@ async function fetchQuiz(id) {
   return data;
 }
 
+async function loadDrugQuiz(subjectId, examOnly) {
+  const entry = findSubject(await loadManifest(), subjectId);
+  if (!entry) throw new LoadError('המקצוע לא נמצא.');
+  const deck = await fetchJson(drugDeckUrl(entry.id));
+  const errors = validateDrugDeck(deck);
+  if (errors.length > 0) {
+    console.error('Invalid drug cards:', errors);
+    throw new LoadError('קובץ כרטיסיות התרופות פגום. פרטים בקונסול.');
+  }
+  const quiz = buildDrugQuiz(deck, {
+    id: `drugs-${entry.id}${examOnly ? '-exam' : ''}`,
+    subject: entry.name,
+    unit: 'כרטיסיות תרופות',
+    examOnly,
+  });
+  // Generated from the deck, not a quiz file, so its questions cannot be starred.
+  return { ...quiz, generated: true };
+}
+
+async function loadConceptQuiz(subjectId, deckName) {
+  const entry = findSubject(await loadManifest(), subjectId);
+  if (!entry) throw new LoadError('המקצוע לא נמצא.');
+  if (deckName !== null && !isValidDeckId(deckName)) throw new LoadError('חבילת הכרטיסיות לא נמצאה.');
+  const deck = await fetchJson(conceptsUrl(entry.id, deckName));
+  const errors = validateConceptDeck(deck);
+  if (errors.length > 0) {
+    console.error('Invalid concept cards:', errors);
+    throw new LoadError('קובץ כרטיסיות המושגים פגום. פרטים בקונסול.');
+  }
+  // Generated from the deck, not a quiz file, so its questions cannot be starred.
+  return { ...buildConceptQuiz(deck, { id: `concepts-${entry.id}${deckName ? `-${deckName}` : ''}`, subject: entry.name, unit: deck.title ?? 'כרטיסיות מושגים' }), generated: true };
+}
+
+/**
+ * Every quiz with starred questions, plus any a saved starred session still needs, merged in
+ * home-page order. A quiz that fails to load is left out rather than failing the page.
+ */
+async function loadStarredQuiz(subjectKey) {
+  const manifest = await loadManifest();
+  const entry = subjectKey === null ? null : findSubject(manifest, subjectKey);
+  if (subjectKey !== null && !entry) throw new LoadError('המקצוע לא נמצא.');
+  const needed = new Set(sessionQuizIds(load(keys.session(starredQuizId(entry?.name ?? null)))));
+  const ids = (entry ? [entry] : manifest.subjects)
+    .flatMap(subjectQuizzes)
+    .map((q) => q.id)
+    .filter((id) => needed.has(id) || loadStars(id).length > 0);
+  const loaded = await Promise.allSettled(ids.map(fetchQuiz));
+  loaded.forEach((r, i) => {
+    if (r.status === 'rejected') console.error(`Could not load ${ids[i]}:`, r.reason);
+  });
+  return {
+    ...buildStarredQuiz(loaded.filter((r) => r.status === 'fulfilled').map((r) => r.value), entry?.name ?? null),
+    title: 'שאלות מסומנות',
+    description: entry
+      ? `השאלות שסימנתם בכוכב ב${entry.name}. בחרו מאילו בחנים ואילו שאלות לתרגל.`
+      : 'השאלות שסימנתם בכוכב. בחרו מאילו בחנים ואילו שאלות לתרגל.',
+  };
+}
+
 async function loadQuiz(params) {
+  if (params.has('starred')) return loadStarredQuiz(params.get('subject'));
+  const concepts = params.get('concepts');
+  if (concepts !== null) return loadConceptQuiz(concepts, params.get('deck'));
+  const drugs = params.get('drugs');
+  if (drugs !== null) return loadDrugQuiz(drugs, params.get('exam') === '1');
   const subject = params.get('subject');
   if (subject === null) {
     const id = params.get('id');

@@ -1,3 +1,4 @@
 node_modules/
 .DS_Store
 media/manifest.json
+__pycache__/

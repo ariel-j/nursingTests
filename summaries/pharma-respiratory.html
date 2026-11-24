@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
+  <script src="../js/theme-init.js"></script>
   <title>תרופות למערכת הנשימה — סיכום</title>
   <link rel="preload" href="../fonts/rubik-hebrew-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/style.css">
@@ -15,6 +16,7 @@
   <script type="module" src="../js/pharma-cards.js"></script>
   <script type="module" src="../js/nav.js"></script>
   <script type="module" src="../js/a11y.js"></script>
+  <script type="module" src="../js/analytics.js"></script>
 </head>
 <body class="summary-page">
   <main class="page wide">
@@ -25,7 +27,7 @@
 
 <article class="summary" data-system="pharma-respiratory">
   <header>
-    <p class="kicker">פרמקולוגיה · מערכת הנשימה · סיכום נושא</p>
+    <p class="kicker">פרמקולוגיה א' · מערכת הנשימה · סיכום נושא</p>
     <h1>תרופות למערכת הנשימה</h1>
     <p class="lede">כל הטיפול באסטמה וב-<span class="en">COPD</span> נבנה סביב שני צירים: <b>הרחבת הסמפונות (ברונכודילטציה) מול הפחתת הדלקת</b>. מרחיבי הסמפונות (בטא-אגוניסטים, אנטגוניסטים מוסקריניים) פותרים התקף מיידי; נוגדי הדלקת (סטרואידים בשאיפה, אנטגוניסטים ללויקוטריאנים, ביולוגיים) מטפלים בשורש ומונעים התקפים.</p>
     <svg class="motif" viewBox="0 0 480 64" preserveAspectRatio="none" aria-hidden="true">
@@ -33,7 +35,7 @@
     </svg>
     <div class="legend">
       <span><span class="arrowmark">←</span> <b>גורם ← תוצאה</b> (קוראים מימין לשמאל)</span>
-      <span><span class="exam exam-legend">נשאל בשחזורים</span> נקודה שחזרה במבחנים</span>
+      <span><span class="exam exam-legend">הופיע בעבר</span> נקודה שחזרה במבחנים</span>
     </div>
   </header>
 
@@ -41,7 +43,7 @@
     <h2>מבוא: על מה כל זה?</h2>
     <p>האוויר עובר בריאות דרך צינורות שמתפצלים ומצטמצמים, והקטנים שבהם נקראים סמפונות. באסטמה ובמחלת <span class="en">COPD</span> הסמפונות מצטמצמות, ולכן קשה לנשום. באסטמה זה קורה בהתקפים: השריר שמסביב לסמפון מתכווץ, הרירית דלקתית ונפוחה, ומופרש ריר רב. ב-<span class="en">COPD</span> החסימה קבועה יותר, לרוב בעקבות עישון.</p>
     <p>לכן יש שני סוגי תרופות, וההבדל ביניהם הוא העיקר בנושא. <b>מרחיבי סמפונות</b> מרפים את השריר ופותחים את הדרך מיד, ולכן הם תרופות ההצלה בהתקף. <b>נוגדי דלקת</b> מטפלים בדלקת עצמה ומונעים התקפים בעתיד, אבל פועלים לאט ונלקחים כל יום. טעות נפוצה היא להסתמך על מרחיב לבד ולא לטפל בדלקת, וכך הסיכון להחמרות עולה.</p>
-    <p>הסיכום עובר על מרחיבי הסמפונות (בטא-אגוניסטים ואנטגוניסטים מוסקריניים), על נוגדי הדלקת (סטרואידים בשאיפה, אנטגוניסטים ללויקוטריאנים וטיפול ביולוגי), על ניהול הטיפול לפי ההנחיות ועל תופעות הלוואי של סטרואידים, ועל <span class="en">COPD</span>. בסוף יש טבלת סיבה ← תוצאה ונקודות ששבו ועלו בשחזורים. המילון שמתחת מסביר כל מונח.</p>
+    <p>הסיכום עובר על מרחיבי הסמפונות (בטא-אגוניסטים ואנטגוניסטים מוסקריניים), על נוגדי הדלקת (סטרואידים בשאיפה, אנטגוניסטים ללויקוטריאנים וטיפול ביולוגי), על ניהול הטיפול לפי ההנחיות ועל תופעות הלוואי של סטרואידים, ועל <span class="en">COPD</span>. בסוף יש טבלת סיבה ← תוצאה ונקודות ששבו ועלו בעבר. המילון שמתחת מסביר כל מונח.</p>
   </section>
 
   <section class="glossary" id="pharma-respiratory-glossary">
@@ -132,9 +134,9 @@
         <div class="call">
           <h4><span aria-hidden="true">⚠️</span> מלכודות שכיחות</h4>
           <ul class="flush">
-            <li><span class="en">Ipratropium</span> עוזר באסטמה כי הוא <b>אנטגוניסט</b> מוסקריני (חוסם כיווץ), לא אגוניסט. <span class="exam">נשאל בשחזורים</span></li>
-            <li>אגוניסט מוסקריני דווקא יכווץ סמפונות — לכן אינו מתאים לאסטמה. <span class="exam">נשאל בשחזורים</span></li>
-            <li>המנגנון המועדף להתקף אסטמה הוא אגוניסט לבטא-2 — לא אלפא ולא בטא לא-ספציפי. <span class="exam">נשאל בשחזורים</span></li>
+            <li><span class="en">Ipratropium</span> עוזר באסטמה כי הוא <b>אנטגוניסט</b> מוסקריני (חוסם כיווץ), לא אגוניסט. <span class="exam">הופיע בעבר</span></li>
+            <li>אגוניסט מוסקריני דווקא יכווץ סמפונות — לכן אינו מתאים לאסטמה. <span class="exam">הופיע בעבר</span></li>
+            <li>המנגנון המועדף להתקף אסטמה הוא אגוניסט לבטא-2 — לא אלפא ולא בטא לא-ספציפי. <span class="exam">הופיע בעבר</span></li>
           </ul>
         </div>
   </section>
@@ -179,17 +181,17 @@
   </section>
 
   <section>
-    <h2>7 · נקודות שחזרו בשחזורים — לא לפספס</h2>
+    <h2>7 · נקודות שהופיעו בעבר — לא לפספס</h2>
         <div class="flags">
           <ul>
-            <li><span class="en">Ipratropium</span> ניתן באסטמה כי הוא אנטגוניסט מוסקריני הגורם לברונכודילטציה. <span class="exam">נשאל בשחזורים</span></li>
-            <li>המנגנון המועדף לטיפול באסטמה: אגוניסט לבטא-2. <span class="exam">נשאל בשחזורים</span></li>
-            <li>להתקף אסטמה אקוטי משתמשים ב-<span class="en">Salbutamol/Albuterol</span>. <span class="exam">נשאל בשחזורים</span></li>
-            <li>מנגנון <span class="en">Montelukast</span>: חוסם רצפטורים ללויקוטריאנים. <span class="exam">נשאל בשחזורים</span></li>
-            <li>ההתוויה לאנטגוניסטים ללויקוטריאנים: אסטמה (קשה). <span class="exam">נשאל בשחזורים</span></li>
-            <li>מנגנון שאינו מתאים לאסטמה: הרחבת עורקים קורונריים. <span class="exam">נשאל בשחזורים</span></li>
-            <li>תרופה שאינה יעילה באסטמה: <span class="en">Ranitidine</span> (חוסם <span class="en">H2</span> לחומצה, לא לנשימה). <span class="exam">נשאל בשחזורים</span></li>
-            <li>אגוניסט מוסקריני אינו יכול לשמש לטיפול באסטמה. <span class="exam">נשאל בשחזורים</span></li>
+            <li><span class="en">Ipratropium</span> ניתן באסטמה כי הוא אנטגוניסט מוסקריני הגורם לברונכודילטציה. <span class="exam">הופיע בעבר</span></li>
+            <li>המנגנון המועדף לטיפול באסטמה: אגוניסט לבטא-2. <span class="exam">הופיע בעבר</span></li>
+            <li>להתקף אסטמה אקוטי משתמשים ב-<span class="en">Salbutamol/Albuterol</span>. <span class="exam">הופיע בעבר</span></li>
+            <li>מנגנון <span class="en">Montelukast</span>: חוסם רצפטורים ללויקוטריאנים. <span class="exam">הופיע בעבר</span></li>
+            <li>ההתוויה לאנטגוניסטים ללויקוטריאנים: אסטמה (קשה). <span class="exam">הופיע בעבר</span></li>
+            <li>מנגנון שאינו מתאים לאסטמה: הרחבת עורקים קורונריים. <span class="exam">הופיע בעבר</span></li>
+            <li>תרופה שאינה יעילה באסטמה: <span class="en">Ranitidine</span> (חוסם <span class="en">H2</span> לחומצה, לא לנשימה). <span class="exam">הופיע בעבר</span></li>
+            <li>אגוניסט מוסקריני אינו יכול לשמש לטיפול באסטמה. <span class="exam">הופיע בעבר</span></li>
             <li><span class="en">ICS</span> הוא קו ראשון נוגד דלקת; חובה הדרכה לשטיפת פה (קנדידיאזיס).</li>
             <li><span class="en">LABA</span> אף פעם אינו ניתן לבד — תמיד עם <span class="en">ICS</span>.</li>
             <li><span class="en">Cromolyn</span> מונע שחרור היסטמין אך אינו מרחיב סמפונות.</li>
@@ -240,6 +242,7 @@
       <a href="../privacy.html">מדיניות פרטיות</a>
     </nav>
     <p>אתר תרגול עצמאי · ההתקדמות נשמרת בדפדפן שלכם בלבד</p>
+    <p>תוכן לימודי לתרגול בלבד. אינו מהווה ייעוץ רפואי ואינו תחליף לחומרי הקורס.</p>
   </footer>
 </body>
 </html>

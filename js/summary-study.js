@@ -39,7 +39,7 @@ function init(article) {
   status.setAttribute('role', 'status');
 
   tools.append(buildSearch(article, status), buildToggle('בחן את עצמך', (on) => setRecall(article, on)),
-    buildToggle('מיקוד שחזורים', (on) => setFocus(article, on)));
+    buildToggle('מיקוד במה שהופיע בעבר', (on) => setFocus(article, on)));
   bar.append(tools, status);
 
   const progress = buildChecklist(article, id);

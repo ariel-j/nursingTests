@@ -1,23 +1,34 @@
 import {
   MASTERY_STREAK,
+  addAttempt,
+  analyzeHistory,
   answer,
+  buildAttempt,
   createSession,
   currentQuestion,
   isComplete,
   isSessionCompatible,
   isolateNumberRanges as fmt,
   listTopics,
+  newAttemptId,
   presentOptions,
   progressInfo,
   questionById,
   questionIdsForTopics,
   recordResult,
+  recordServed,
+  sanitizeHistory,
   sampleQuestionIds,
+  sessionStyle,
   skip,
+  starTarget,
+  starredIds,
   summarize,
+  toggleStar,
 } from './core.js';
+import { trackEvent } from './analytics.js';
 import { loadQuizFromUrl, quizPlace, subjectHomeHref } from './load-quiz.js';
-import { keys, load, prefs, remove, save } from './storage.js';
+import { keys, load, loadStars, prefs, remove, save } from './storage.js';
 
 const $ = (id) => document.getElementById(id);
 const ui = {
@@ -31,7 +42,13 @@ const ui = {
   resumeBox: $('resume-box'),
   resumeText: $('resume-text'),
   resume: $('resume'),
+  starredBox: $('starred-box'),
+  practiceStarred: $('practice-starred'),
+  starredList: $('starred-list'),
   newSession: $('new-session'),
+  topicsLegend: $('topics-legend'),
+  starredNote: $('starred-note'),
+  countSetting: $('count-setting'),
   allTopics: $('all-topics'),
   noTopics: $('no-topics'),
   count: $('count'),
@@ -39,6 +56,12 @@ const ui = {
   topicList: $('topic-list'),
   startButton: $('start-button'),
   best: $('best'),
+  stats: $('stats'),
+  statsSummary: $('stats-summary'),
+  statsList: $('stats-list'),
+  practiceWeak: $('practice-weak'),
+  practiceQuestions: $('practice-questions'),
+  clearStats: $('clear-stats'),
   printLink: $('print-link'),
   homeLinks: [$('home-link'), $('done-home-link')],
   // play
@@ -50,12 +73,15 @@ const ui = {
   progressText: $('progress-text'),
   topic: $('topic'),
   retryLabel: $('retry-label'),
+  star: $('star'),
   question: $('question'),
   options: $('options'),
   skip: $('skip'),
+  confirm: $('confirm'),
   feedback: $('feedback'),
   countdown: $('countdown'),
   autoToggle: $('auto-advance'),
+  topicToggle: $('show-topic'),
   verdict: $('verdict'),
   explanation: $('explanation'),
   note: $('note'),
@@ -63,6 +89,7 @@ const ui = {
   next: $('next'),
   // done
   done: $('done'),
+  scoreLabel: $('score-label'),
   scorePercent: $('score-percent'),
   score: $('score'),
   retryMissed: $('retry-missed'),
@@ -74,7 +101,11 @@ const ui = {
   noRetried: $('no-retried'),
 };
 
-const MODE_LABELS = { full: 'כל הבוחן', topics: 'נושאים נבחרים', retry: 'שאלות שחזרו' };
+const LEVEL_LABELS = { unknown: 'אין עדיין מספיק נתונים', weak: 'דורש חיזוק', fair: 'בינוני', solid: 'שולט' };
+const TREND_LABELS = { up: '↑ משתפר', down: '↓ יורד', flat: '→ יציב' };
+
+const MODE_LABELS = { full: 'כל הבוחן', topics: 'נושאים נבחרים', retry: 'שאלות שחזרו', starred: 'שאלות מסומנות' };
+const STYLE_LABELS = { practice: 'תרגול', exam: 'מבחן' };
 const LETTERS = ['א', 'ב', 'ג', 'ד'];
 // After a correct answer, move on by itself unless the user asked for less motion.
 // The pause scales with the text the learner has to read (explanation plus note).
@@ -85,10 +116,15 @@ const AUTO_ADVANCE_PER_CHAR_MS = 45;
 
 let quiz = null;
 let state = null;
+// The question on screen; after answering, `state` already points at the next one.
+let shownQuestion = null;
 // 'start' → choosing; 'question' → waiting for an answer; 'feedback' → showing the result; 'done' → end screen.
 let phase = 'start';
 let optionButtons = [];
+// Exam style: the option picked but not yet confirmed (authored index), or null.
+let selected = null;
 let lastSummary = null;
+let analysis = null;
 let autoAdvance = null;
 
 function el(tag, className, text) {
@@ -122,6 +158,8 @@ function showStatus(text) {
   ui.progressText.hidden = true;
 }
 
+const isExam = () => sessionStyle(state) === 'exam';
+
 function persist() {
   if (isComplete(state)) remove(keys.session(quiz.id));
   else save(keys.session(quiz.id), state);
@@ -130,6 +168,203 @@ function persist() {
 function loadSavedSession() {
   const saved = load(keys.session(quiz.id));
   return saved && isSessionCompatible(saved, quiz) && !isComplete(saved) ? saved : null;
+}
+
+
+// ---------- statistics ----------
+
+function loadHistory() {
+  return sanitizeHistory(load(keys.history(quiz.id)));
+}
+
+function recordAttempt() {
+  // The starred page's questions change with every star, so topic statistics would mislead there.
+  if (quiz.starred) return;
+  const now = new Date();
+  const attempt = buildAttempt(state, quiz, { id: newAttemptId(now), date: now.toISOString() });
+  // Statistics are best effort: if storage is full or blocked the quiz itself still works.
+  save(keys.history(quiz.id), addAttempt(loadHistory(), attempt));
+}
+
+function renderStatRow(t) {
+  const li = el('li', `stat-row level-${t.level}`);
+  const bar = el('span', 'bar');
+  bar.setAttribute('aria-hidden', 'true');
+  const fill = el('i');
+  fill.style.inlineSize = `${t.score === null ? 0 : Math.round(t.score * 100)}%`;
+  bar.append(fill);
+
+  const parts = [LEVEL_LABELS[t.level]];
+  if (t.level !== 'unknown') parts.push(`${Math.round(t.score * 100)}%`);
+  if (t.trend) parts.push(TREND_LABELS[t.trend]);
+  const text = el('span', 'stat-text', parts.join(' · '));
+  if (t.recovered) text.append(el('span', 'recovered', '✓ הייתה חלשה והתחזקה'));
+  li.append(el('span', null, t.topic), bar, text);
+  return li;
+}
+
+function renderStats() {
+  if (quiz.starred) {
+    ui.stats.hidden = true;
+    return;
+  }
+  analysis = analyzeHistory(loadHistory(), quiz);
+  ui.stats.hidden = analysis.attempts === 0;
+  if (analysis.attempts === 0) return;
+
+  const weak = analysis.topics.filter((t) => t.level === 'weak');
+  ui.statsSummary.textContent = `${analysis.attempts} סבבים נשמרו · `
+    + (weak.length === 0 ? 'אין כרגע נושאים שדורשים חיזוק.' : `${weak.length} נושאים דורשים חיזוק.`);
+  // Weak topics first (stable sort keeps the quiz order within each group).
+  const ordered = [...analysis.topics].sort((a, b) => (b.level === 'weak') - (a.level === 'weak'));
+  ui.statsList.replaceChildren(...ordered.map(renderStatRow));
+
+  const weakIds = questionIdsForTopics(quiz, weak.map((t) => t.topic));
+  ui.practiceWeak.hidden = weakIds.length === 0;
+  ui.practiceWeak.textContent = `תרגל את הנושאים החלשים · ${weakIds.length} שאלות`;
+  ui.practiceQuestions.hidden = analysis.weakQuestions.length === 0;
+  ui.practiceQuestions.textContent = `תרגל ${analysis.weakQuestions.length} שאלות שחוזרות לטעות`;
+}
+
+function practiceWeakTopics() {
+  const weak = analysis.topics.filter((t) => t.level === 'weak').map((t) => t.topic);
+  const ids = questionIdsForTopics(quiz, weak);
+  if (ids.length > 0) begin(ids, 'topics');
+}
+
+function practiceWeakQuestions() {
+  if (analysis.weakQuestions.length > 0) begin(analysis.weakQuestions.map((q) => q.id), 'retry');
+}
+
+function clearStats() {
+  if (!window.confirm('הסטטיסטיקה של הבוחן הזה תימחק. להמשיך?')) return;
+  remove(keys.history(quiz.id));
+  renderStart();
+  ui.startButton.focus({ preventScroll: true });
+}
+
+// ---------- rotation ----------
+
+// Kept per quiz file with its own question ids (starTarget maps a mixed id back), so a quiz and the
+// mixed practice that includes it rotate through the same questions.
+
+function loadServed() {
+  const files = new Map();
+  const seen = {};
+  for (const q of quiz.questions) {
+    const { quizId, questionId } = starTarget(quiz, q.id);
+    if (!files.has(quizId)) files.set(quizId, load(keys.served(quizId))?.seen ?? {});
+    const entry = files.get(quizId)[questionId];
+    if (entry) seen[q.id] = entry;
+  }
+  return { seen };
+}
+
+function saveServed(ids) {
+  const now = Date.now();
+  const byFile = new Map();
+  for (const id of ids) {
+    const { quizId, questionId } = starTarget(quiz, id);
+    byFile.set(quizId, [...(byFile.get(quizId) ?? []), questionId]);
+  }
+  for (const [quizId, own] of byFile) save(keys.served(quizId), recordServed(load(keys.served(quizId)), own, now));
+}
+
+// ---------- stars ----------
+
+// Generated quizzes (drug cards) are not quiz files, so there is nothing to keep a star on.
+const canStar = () => !quiz.generated;
+
+/** "Is this question starred?" over the stars as stored now, reading each quiz's list once. */
+function starredNow() {
+  const stars = new Map();
+  return (question) => {
+    const { quizId, questionId } = starTarget(quiz, question.id);
+    if (!stars.has(quizId)) stars.set(quizId, new Set(loadStars(quizId)));
+    return stars.get(quizId).has(questionId);
+  };
+}
+
+const isStarred = (question) => starredNow()(question);
+
+/** Flips the question's star in storage and returns whether it is now starred. */
+function flipStar(question) {
+  const { quizId, questionId } = starTarget(quiz, question.id);
+  const next = toggleStar(loadStars(quizId), questionId);
+  if (next.length === 0) remove(keys.starred(quizId));
+  else save(keys.starred(quizId), next);
+  return next.includes(questionId);
+}
+
+// The accessible name stays fixed; aria-pressed carries the state.
+function paintStar(button, on) {
+  button.setAttribute('aria-pressed', String(on));
+  button.textContent = on ? '★' : '☆';
+  button.title = on ? 'הסר כוכב' : 'סמן בכוכב';
+}
+
+function starButton(question, onChange) {
+  const button = el('button', 'star-toggle');
+  button.type = 'button';
+  button.setAttribute('aria-label', 'סימון בכוכב');
+  paintStar(button, isStarred(question));
+  button.addEventListener('click', () => {
+    paintStar(button, flipStar(question));
+    onChange?.();
+  });
+  return button;
+}
+
+/**
+ * A starred question to browse: its text (with a checkbox when picking), its star, and the answer
+ * on demand. Unstarring keeps the row, with an empty star, so a slip is one click to undo.
+ */
+function starredItem(question, checkbox = null) {
+  const li = el('li', 'starred-item');
+  const head = el('div', 'starred-head');
+  const text = el('span', null, fmt(question.question));
+  if (checkbox) {
+    const label = el('label', 'topic-option');
+    label.append(checkbox, text);
+    head.append(label);
+  } else {
+    head.append(text);
+  }
+  head.append(starButton(question, quiz.starred ? null : updateStarredButton));
+
+  const details = el('details');
+  details.append(
+    el('summary', null, 'תשובה והסבר'),
+    el('p', 'answer', `תשובה נכונה: ${fmt(question.options[question.correct].text)}`),
+    el('p', 'muted', fmt(question.explanation)),
+  );
+  li.append(head, details);
+  return li;
+}
+
+/** This quiz's starred questions (a mixed practice reads each quiz's own stars). */
+function currentStarredIds() {
+  if (!quiz.mixed) return starredIds(loadStars(quiz.id), quiz);
+  return quiz.questions.filter(starredNow()).map((q) => q.id);
+}
+
+function updateStarredButton() {
+  const count = currentStarredIds().length;
+  ui.practiceStarred.disabled = count === 0;
+  ui.practiceStarred.textContent = count === 0 ? 'אין שאלות מסומנות' : `תרגל ${count} שאלות מסומנות`;
+}
+
+function renderStarredBox() {
+  const ids = quiz.starred || !canStar() ? [] : currentStarredIds();
+  ui.starredBox.hidden = ids.length === 0;
+  if (ids.length === 0) return;
+  ui.starredList.replaceChildren(...ids.map((id) => starredItem(questionById(quiz, id))));
+  updateStarredButton();
+}
+
+function practiceStarred() {
+  const ids = currentStarredIds();
+  if (ids.length > 0) begin(ids, 'starred');
 }
 
 // ---------- start screen ----------
@@ -149,6 +384,7 @@ function selectedTopics() {
 let wantedCount = null;
 
 function availableCount() {
+  if (quiz.starred) return ui.topicList.querySelectorAll('.q-check:checked').length;
   return questionIdsForTopics(quiz, selectedTopics(), selectionField()).length;
 }
 
@@ -157,12 +393,23 @@ function chosenCount() {
   return wantedCount === null ? max : Math.min(wantedCount, max);
 }
 
-/** A fresh sample of the chosen size: proportional per topic, so every chosen unit is covered. */
+/**
+ * A fresh sample of the chosen size: proportional per topic, so every chosen unit is covered, and
+ * least-served first, so consecutive samples differ. `sampled` says whether it is a sample.
+ */
 function selectedQuestionIds() {
+  if (quiz.starred) return { ids: [...ui.topicList.querySelectorAll('.q-check:checked')].map((c) => c.value), sampled: false };
   const topics = selectedTopics();
   const max = availableCount();
-  if (wantedCount === null || wantedCount >= max) return questionIdsForTopics(quiz, topics, selectionField());
-  return sampleQuestionIds(quiz, { topics, field: selectionField(), count: wantedCount });
+  if (wantedCount === null || wantedCount >= max) {
+    return { ids: questionIdsForTopics(quiz, topics, selectionField()), sampled: false };
+  }
+  const ids = sampleQuestionIds(quiz, { topics, field: selectionField(), count: wantedCount, served: loadServed() });
+  return { ids, sampled: true };
+}
+
+function chosenStyle() {
+  return ui.newSession.querySelector('input[name="style"]:checked')?.value ?? 'practice';
 }
 
 function updateStartButton() {
@@ -173,7 +420,9 @@ function updateStartButton() {
   if (document.activeElement !== ui.count) ui.count.value = max === 0 ? '' : String(count);
   ui.countHint.textContent = max === 0 ? '' : `מתוך ${max} זמינות`;
   ui.startButton.disabled = count === 0;
-  ui.startButton.textContent = count === 0 ? 'בחרו לפחות נושא אחד' : `התחל · ${count} שאלות`;
+  ui.startButton.textContent = count === 0
+    ? `בחרו לפחות ${quiz.starred ? 'שאלה אחת' : 'נושא אחד'}`
+    : `התחל ${STYLE_LABELS[chosenStyle()]} · ${count} שאלות`;
 }
 
 /** Takes the typed number; an empty or invalid field means "all chosen questions". */
@@ -189,14 +438,23 @@ function settleCount() {
   if (availableCount() > 0) ui.count.value = String(chosenCount());
 }
 
+/** The unit a link asked a mixed practice to start with (&group=<unit>), if it has one. */
+function preselectedGroup() {
+  const wanted = new URLSearchParams(location.search).get('group');
+  if (!quiz.mixed || quiz.starred || wanted === null) return null;
+  return quiz.questions.some((q) => q.group === wanted) ? wanted : null;
+}
+
 function renderTopics() {
-  ui.topicList.replaceChildren(...listTopics(quiz, selectionField()).map(({ topic, count }) => {
+  const groups = listTopics(quiz, selectionField());
+  const only = preselectedGroup();
+  ui.topicList.replaceChildren(...groups.map(({ topic, count }) => {
     const li = el('li');
     const label = el('label', 'topic-option');
     const box = el('input');
     box.type = 'checkbox';
     box.value = topic;
-    box.checked = true;
+    box.checked = only === null || topic === only;
     box.addEventListener('change', updateStartButton);
     label.append(box, el('span', null, topic), el('span', 'count', String(count)));
     li.append(label);
@@ -205,15 +463,76 @@ function renderTopics() {
   updateStartButton();
 }
 
+/**
+ * The starred page's picker: a group per quiz with a checkbox for all of it, and a checkbox per
+ * starred question. Rebuilt on every visit to the start screen, since stars change while playing.
+ */
+function renderStarPicker() {
+  const groups = new Map();
+  const starred = starredNow();
+  for (const q of quiz.questions) {
+    if (!starred(q)) continue;
+    if (!groups.has(q.group)) groups.set(q.group, []);
+    groups.get(q.group).push(q);
+  }
+  ui.topicList.replaceChildren(...[...groups].map(([label, questions]) => {
+    const li = el('li', 'star-group');
+    const all = el('input');
+    all.type = 'checkbox';
+    all.checked = true;
+    const head = el('label', 'topic-option group-head');
+    head.append(all, el('b', null, label), el('span', 'count', String(questions.length)));
+
+    const boxes = questions.map((q) => {
+      const box = el('input', 'q-check');
+      box.type = 'checkbox';
+      box.value = q.id;
+      box.checked = true;
+      return box;
+    });
+    const sync = () => {
+      const n = boxes.filter((b) => b.checked).length;
+      all.checked = n === boxes.length;
+      all.indeterminate = n > 0 && n < boxes.length;
+      updateStartButton();
+    };
+    all.addEventListener('change', () => {
+      for (const b of boxes) b.checked = all.checked;
+      sync();
+    });
+    for (const b of boxes) b.addEventListener('change', sync);
+
+    const list = el('ul', 'starred-list');
+    list.append(...questions.map((q, i) => starredItem(q, boxes[i])));
+    li.append(head, list);
+    return li;
+  }));
+  updateStartButton();
+}
+
+function setAllCheckboxes(checked) {
+  for (const c of topicCheckboxes()) {
+    c.checked = checked;
+    c.indeterminate = false;
+  }
+  updateStartButton();
+}
+
 function renderStart() {
   phase = 'start';
   show(ui.start);
+  renderStats();
+  if (quiz.starred) renderStarPicker();
+  renderStarredBox();
 
   const saved = loadSavedSession();
   ui.resumeBox.hidden = !saved;
   if (saved) {
-    const { mastered, total } = progressInfo(saved);
-    ui.resumeText.textContent = `יש תרגול פתוח (${MODE_LABELS[saved.mode]}): נשלטו ${mastered} מתוך ${total}.`;
+    const { mastered, answered, total } = progressInfo(saved);
+    const label = `${STYLE_LABELS[sessionStyle(saved)]} · ${MODE_LABELS[saved.mode]}`;
+    ui.resumeText.textContent = sessionStyle(saved) === 'exam'
+      ? `יש סבב פתוח (${label}): נענו ${answered} מתוך ${total}.`
+      : `יש סבב פתוח (${label}): נשלטו ${mastered} מתוך ${total}.`;
   }
 
   const results = load(keys.results(quiz.id));
@@ -224,18 +543,23 @@ function renderStart() {
   (saved ? ui.resume : ui.startButton).focus({ preventScroll: true });
 }
 
-function begin(questionIds, mode) {
-  if (loadSavedSession() && !window.confirm('התרגול הפתוח יימחק. להתחיל תרגול חדש?')) return;
-  state = createSession(quiz, Math.random, { questionIds, mode });
+/** Starts a new session; `sampled` records its questions for the rotation. */
+function begin(questionIds, mode, style = 'practice', sampled = false) {
+  if (loadSavedSession() && !window.confirm('הסבב הפתוח יימחק. להתחיל סבב חדש?')) return;
+  state = createSession(quiz, Math.random, { questionIds, mode, style });
+  if (sampled) saveServed(questionIds);
   persist();
+  trackEvent(`quiz-start/${quiz.id}/${mode}`, document.title);
   renderQuestion();
 }
 
 function onStartSubmit(event) {
   event.preventDefault();
-  const ids = selectedQuestionIds();
+  const { ids, sampled } = selectedQuestionIds();
   if (ids.length === 0) return;
-  begin(ids, ids.length === quiz.questions.length ? 'full' : 'topics');
+  const style = chosenStyle();
+  if (quiz.starred) begin(ids, 'starred', style);
+  else begin(ids, ids.length === quiz.questions.length ? 'full' : 'topics', style, sampled);
 }
 
 // ---------- play ----------
@@ -247,7 +571,18 @@ function stat(label, value) {
 }
 
 function renderProgress() {
-  const { mastered, total, queueSize } = progressInfo(state);
+  const { mastered, answered, total, queueSize } = progressInfo(state);
+  if (isExam()) {
+    // No first-try count here: it would give the answers away before the end.
+    const fraction = total === 0 ? 0 : answered / total;
+    ui.ringFill.setAttribute('stroke-dashoffset', String(100 * (1 - fraction)));
+    ui.ringFill.classList.toggle('is-empty', answered === 0);
+    ui.ringMastered.textContent = String(answered);
+    ui.ringTotal.textContent = `מתוך ${total}`;
+    ui.ring.setAttribute('aria-label', `נענו ${answered} מתוך ${total}`);
+    ui.progressText.replaceChildren(stat('שאלה', `${Math.min(answered + 1, total)} מתוך ${total}`));
+    return;
+  }
   const firstTries = Object.values(state.progress).map((p) => p.firstTry).filter((t) => t !== null);
   const firstOk = firstTries.filter((t) => t === 'correct').length;
 
@@ -280,14 +615,25 @@ function renderQuestion() {
   phase = 'question';
   show(ui.play);
   const question = currentQuestion(state, quiz);
+  shownQuestion = question;
+  const exam = isExam();
   ui.feedback.hidden = true;
   ui.skip.disabled = false;
   ui.next.disabled = true;
+  // An exam has no feedback to move on from: confirm the pick instead.
+  ui.next.hidden = exam;
+  ui.autoToggle.closest('label').hidden = exam;
+  ui.confirm.hidden = !exam;
+  ui.confirm.disabled = true;
+  selected = null;
   renderProgress();
 
   ui.topic.textContent = question.topic;
+  ui.topic.hidden = !ui.topicToggle.checked;
+  ui.star.hidden = !canStar();
+  if (canStar()) paintStar(ui.star, isStarred(question));
   const { attempts } = state.progress[question.id];
-  ui.retryLabel.hidden = attempts === 0;
+  ui.retryLabel.hidden = exam || attempts === 0;
   ui.retryLabel.textContent = `שאלה חוזרת · ניסיון ${attempts + 1}`;
   ui.question.textContent = fmt(question.question);
 
@@ -295,6 +641,7 @@ function renderQuestion() {
     const button = el('button', 'option');
     button.type = 'button';
     button.dataset.index = String(opt.index);
+    if (exam) button.setAttribute('aria-pressed', 'false');
     button.append(el('span', 'letter', LETTERS[i]), el('span', 'option-text', fmt(opt.text)));
     button.addEventListener('click', () => choose(opt.index));
     return button;
@@ -364,22 +711,54 @@ function startAutoAdvance() {
 function apply(result, chosenIndex) {
   state = result.state;
   persist();
-  // Best score only means something for a run over the whole of one quiz.
-  if (isComplete(state) && state.mode === 'full' && !quiz.mixed) {
-    const summary = summarize(state, quiz);
-    save(keys.results(quiz.id), recordResult(load(keys.results(quiz.id)), summary, new Date().toISOString()));
+  if (isComplete(state)) {
+    trackEvent(`quiz-done/${quiz.id}/${state.mode}`, document.title);
+    // Best score only means something for a run over the whole of one quiz.
+    if (state.mode === 'full' && !quiz.mixed) {
+      const summary = summarize(state, quiz);
+      save(keys.results(quiz.id), recordResult(load(keys.results(quiz.id)), summary, new Date().toISOString()));
+    }
+    // Every finished run feeds the weak-area statistics, whatever its mode.
+    recordAttempt();
   }
-  showFeedback(result, chosenIndex);
+  if (!isExam()) {
+    showFeedback(result, chosenIndex);
+  } else if (isComplete(state)) {
+    renderDone();
+  } else {
+    // An exam shows nothing until the end: straight on to the next question.
+    renderQuestion();
+  }
 }
 
 function choose(optionIndex) {
   if (phase !== 'question') return;
-  apply(answer(state, quiz, optionIndex), optionIndex);
+  if (!isExam()) {
+    apply(answer(state, quiz, optionIndex), optionIndex);
+    return;
+  }
+  selected = optionIndex;
+  for (const button of optionButtons) {
+    const on = Number(button.dataset.index) === optionIndex;
+    button.classList.toggle('is-selected', on);
+    button.setAttribute('aria-pressed', String(on));
+  }
+  ui.confirm.disabled = false;
+}
+
+function confirmChoice() {
+  if (phase !== 'question' || !isExam() || selected === null) return;
+  apply(answer(state, quiz, selected), selected);
 }
 
 function skipQuestion() {
   if (phase !== 'question') return;
   apply(skip(state, quiz), null);
+}
+
+function toggleShownStar() {
+  if ((phase !== 'question' && phase !== 'feedback') || !shownQuestion || !canStar()) return;
+  paintStar(ui.star, flipStar(shownQuestion));
 }
 
 function next() {
@@ -391,32 +770,43 @@ function next() {
 
 // ---------- end screen ----------
 
-function renderRetried(summary) {
+function renderRetried(summary, exam) {
   return summary.retried.map((r) => {
     const q = questionById(quiz, r.id);
     const details = el('details', 'retried-item');
     const head = el('summary');
-    head.append(
-      el('b', null, r.misses === 1 ? 'טעות אחת' : `${r.misses} טעויות`),
-      document.createTextNode(` · ${fmt(q.question)}`),
-    );
+    let label = r.misses === 1 ? 'טעות אחת' : `${r.misses} טעויות`;
+    if (exam) label = r.choice === null ? 'דילוג' : 'טעות';
+    head.append(el('b', null, label), document.createTextNode(` · ${fmt(q.question)}`));
+    details.append(head);
+    if (exam && r.choice !== null) {
+      details.append(el('p', 'your-answer', `התשובה שלך: ${fmt(q.options[r.choice].text)}`));
+      const note = q.options[r.choice].note ?? '';
+      if (note.trim() !== '') details.append(el('p', 'note', fmt(note)));
+    }
     details.append(
-      head,
       el('p', 'answer', `תשובה נכונה: ${fmt(q.options[q.correct].text)}`),
       el('p', 'muted', fmt(q.explanation)),
     );
-    return details;
+    if (!canStar()) return details;
+    const row = el('div', 'retried-row');
+    row.append(details, starButton(q));
+    return row;
   });
 }
 
 function renderDone() {
   phase = 'done';
   show(ui.done);
+  const exam = isExam();
   const summary = summarize(state, quiz);
   lastSummary = summary;
 
+  ui.scoreLabel.textContent = exam ? 'ציון במבחן' : 'ציון בניסיון ראשון';
   ui.scorePercent.textContent = `${summary.firstTryPercent}%`;
-  ui.score.textContent = `${summary.firstTryCorrect} מתוך ${summary.total} שאלות נענו נכון בפעם הראשונה.`;
+  ui.score.textContent = exam
+    ? `${summary.firstTryCorrect} מתוך ${summary.total} תשובות נכונות.`
+    : `${summary.firstTryCorrect} מתוך ${summary.total} שאלות נענו נכון בפעם הראשונה.`;
 
   ui.weakTopics.replaceChildren(...summary.weakTopics.map((t) => {
     const li = el('li');
@@ -430,10 +820,10 @@ function renderDone() {
   }));
   ui.noWeak.hidden = summary.weakTopics.length > 0;
 
-  ui.retriedTitle.textContent = summary.retried.length > 0
-    ? `שאלות שחזרו (${summary.retried.length})`
-    : 'שאלות שחזרו';
-  ui.retried.replaceChildren(...renderRetried(summary));
+  const heading = exam ? 'שאלות שטעית בהן' : 'שאלות שחזרו';
+  ui.retriedTitle.textContent = summary.retried.length > 0 ? `${heading} (${summary.retried.length})` : heading;
+  ui.retried.replaceChildren(...renderRetried(summary, exam));
+  ui.noRetried.textContent = exam ? 'כל התשובות נכונות!' : 'כל השאלות נענו נכון בפעם הראשונה.';
   ui.noRetried.hidden = summary.retried.length > 0;
 
   ui.retryMissed.hidden = summary.retried.length === 0;
@@ -442,6 +832,7 @@ function renderDone() {
 
 function retryMissed() {
   if (!lastSummary || lastSummary.retried.length === 0) return;
+  // Going over mistakes is practice, whatever the style of the run that produced them.
   begin(lastSummary.retried.map((r) => r.id), 'retry');
 }
 
@@ -457,12 +848,26 @@ function onKeyDown(event) {
       event.preventDefault();
       button.click();
     }
-  } else if ((phase === 'question' || phase === 'feedback') && event.code === 'KeyA') {
+  } else if (phase === 'question' && event.key === 'Enter' && isExam()) {
+    // A focused button handles Enter itself (an option picks, confirm confirms); confirm from
+    // anywhere else, or from the option that is already picked.
+    const target = event.target;
+    if (target instanceof HTMLButtonElement && !target.classList.contains('is-selected')) return;
+    if (target instanceof HTMLInputElement || target instanceof HTMLAnchorElement) return;
+    event.preventDefault();
+    confirmChoice();
+  } else if ((phase === 'question' || phase === 'feedback') && event.code === 'KeyA' && !isExam()) {
     event.preventDefault();
     ui.autoToggle.click();
+  } else if ((phase === 'question' || phase === 'feedback') && event.code === 'KeyT') {
+    event.preventDefault();
+    ui.topicToggle.click();
   } else if (phase === 'question' && event.code === 'KeyS') {
     event.preventDefault();
     skipQuestion();
+  } else if ((phase === 'question' || phase === 'feedback') && event.code === 'KeyF' && canStar()) {
+    event.preventDefault();
+    toggleShownStar();
   } else if (phase === 'feedback' && (event.key === 'Enter' || event.key === ' ')) {
     // A focused button already handles Enter/Space natively; avoid a double advance.
     if (event.target instanceof HTMLButtonElement || event.target instanceof HTMLAnchorElement || event.target instanceof HTMLInputElement) return;
@@ -479,11 +884,19 @@ async function main() {
     return;
   }
 
+  if (quiz.starred && !quiz.questions.some(starredNow()) && !loadSavedSession()) {
+    showStatus('עוד לא סימנתם שאלות. אפשר לסמן שאלה בכוכב ☆ בזמן התרגול, ולחזור לכאן כדי לתרגל רק אותן.');
+    return;
+  }
+
   // Kicker shows the subject and, when present, the unit: "אנטומיה ופיזיולוגיה · הלב".
-  const place = quizPlace(quiz);
-  document.title = `${quiz.title} · ${place}`;
+  // Opened from a unit's "מבחן סיכום אישי" card (&group=<unit>): name it after that unit.
+  const group = preselectedGroup();
+  const place = quiz.starred ? (quiz.subject ?? 'מכל הבחנים') : `${quizPlace(quiz)}${group ? ` · ${group}` : ''}`;
+  const title = group ? 'מבחן סיכום אישי' : quiz.title;
+  document.title = `${title} · ${place}`;
   ui.subject.textContent = place;
-  ui.title.textContent = quiz.title;
+  ui.title.textContent = title;
   // Same ?id= or ?subject= as this page, so mixed practice prints mixed too.
   ui.printLink.href = `print.html${location.search}`;
   subjectHomeHref(quiz).then((href) => {
@@ -491,6 +904,14 @@ async function main() {
   });
   ui.description.textContent = quiz.description ?? '';
   ui.description.hidden = !quiz.description;
+  if (quiz.starred) {
+    // Questions are picked one by one here, so no topic count field and no printable exam.
+    ui.topicsLegend.textContent = 'שאלות לפי בוחן';
+    ui.topicList.classList.add('star-picker');
+    ui.countSetting.hidden = true;
+    ui.printLink.hidden = true;
+    ui.starredNote.hidden = false;
+  }
 
   ui.toStart.addEventListener('click', renderStart);
   ui.resume.addEventListener('click', () => {
@@ -499,15 +920,19 @@ async function main() {
     else renderStart();
   });
   ui.newSession.addEventListener('submit', onStartSubmit);
-  ui.allTopics.addEventListener('click', () => {
-    for (const c of topicCheckboxes()) c.checked = true;
-    updateStartButton();
-  });
+  ui.allTopics.addEventListener('click', () => setAllCheckboxes(true));
   ui.count.addEventListener('input', readCount);
   ui.count.addEventListener('change', settleCount);
-  ui.noTopics.addEventListener('click', () => {
-    for (const c of topicCheckboxes()) c.checked = false;
-    updateStartButton();
+  ui.noTopics.addEventListener('click', () => setAllCheckboxes(false));
+  ui.practiceStarred.addEventListener('click', practiceStarred);
+  ui.star.addEventListener('click', toggleShownStar);
+  ui.practiceWeak.addEventListener('click', practiceWeakTopics);
+  ui.practiceQuestions.addEventListener('click', practiceWeakQuestions);
+  ui.clearStats.addEventListener('click', clearStats);
+  ui.topicToggle.checked = load(prefs.showTopic) === true;
+  ui.topicToggle.addEventListener('change', () => {
+    save(prefs.showTopic, ui.topicToggle.checked);
+    ui.topic.hidden = !ui.topicToggle.checked;
   });
   ui.autoToggle.checked = autoAdvanceOn();
   ui.autoToggle.addEventListener('change', () => {
@@ -516,6 +941,10 @@ async function main() {
     else cancelAutoAdvance();
   });
   ui.skip.addEventListener('click', skipQuestion);
+  ui.confirm.addEventListener('click', confirmChoice);
+  ui.newSession.addEventListener('change', (event) => {
+    if (event.target.name === 'style') updateStartButton();
+  });
   ui.next.addEventListener('click', next);
   // Touching the explanation means the learner is still reading: stop the automatic advance.
   ui.feedback.addEventListener('pointerdown', cancelAutoAdvance);
@@ -523,7 +952,7 @@ async function main() {
   ui.newPractice.addEventListener('click', renderStart);
   document.addEventListener('keydown', onKeyDown);
 
-  renderTopics();
+  if (!quiz.starred) renderTopics();
   renderStart();
 }
 

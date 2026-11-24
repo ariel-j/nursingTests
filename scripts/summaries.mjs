@@ -6,13 +6,17 @@ import { fileURLToPath } from 'node:url';
 import { SUMMARIES, summaryFile } from '../js/summary-list.js';
 
 export const SUMMARY_DIR = fileURLToPath(new URL('../summaries/', import.meta.url));
+export const TOOLS_DIR = fileURLToPath(new URL('../tools/', import.meta.url));
+export const STUDY_DIR = fileURLToPath(new URL('../study/', import.meta.url));
 export const SUMMARY_CSS = fileURLToPath(new URL('../css/summary.css', import.meta.url));
 // Pages in summaries/ that are not summaries themselves.
 const SUPPORT_PAGES = new Set(['index.html', 'all.html']);
+// Every page's footer carries this line (the summaries and quizzes are study aids only).
+export const MEDICAL_DISCLAIMER = 'אינו מהווה ייעוץ רפואי';
 
 // Site pages outside summaries/, checked with the same rules (paths relative to the root).
 export const ROOT_DIR = fileURLToPath(new URL('../', import.meta.url));
-export const ROOT_PAGES = ['index.html', 'quiz.html', 'print.html', 'media.html', 'accessibility.html', 'privacy.html'];
+export const ROOT_PAGES = ['index.html', 'quiz.html', 'print.html', 'media.html', 'drugs.html', 'concepts.html', 'memory.html', 'accessibility.html', 'privacy.html'];
 
 /**
  * Problems with one page's HTML. `root` is the path from the page to the site root ('../' for
@@ -20,21 +24,34 @@ export const ROOT_PAGES = ['index.html', 'quiz.html', 'print.html', 'media.html'
  */
 export function pageErrors(html, { id, isSummary, root = '../' }) {
   const errors = [];
-  if (/\b(?:src|href)\s*=\s*["']?(?:https?:)?\/\//i.test(html) || /url\(\s*["']?(?:https?:)?\/\//i.test(html)) {
+  // A plain <a href> to another site is a link, not a load; <link href>, src and url() are loads.
+  const external = /\bsrc\s*=\s*["']?(?:https?:)?\/\//i.test(html)
+    || /<link\b[^>]*\bhref\s*=\s*["']?(?:https?:)?\/\//i.test(html)
+    || /url\(\s*["']?(?:https?:)?\/\//i.test(html);
+  if (external) {
     errors.push('loads an external resource (fonts and assets must be self-hosted)');
   }
   if (/<[^>]+\s(?:on[a-z]+|style)\s*=/i.test(html)) errors.push('inline style or event handler attribute');
   if (!html.includes(`src="${root}js/a11y.js"`)) errors.push(`missing the accessibility toolbar (${root}js/a11y.js)`);
   if (!html.includes(`src="${root}js/nav.js"`)) errors.push(`missing the side menu (${root}js/nav.js)`);
   for (const page of [`${root}accessibility.html`, `${root}privacy.html`]) {
+  if (!html.includes(`src="${root}js/analytics.js"`)) errors.push(`missing the visit counter (${root}js/analytics.js)`);
     if (!html.includes(`href="${page}"`)) errors.push(`footer is missing the link to ${page}`);
   }
+  if (!html.includes(MEDICAL_DISCLAIMER)) errors.push('footer is missing the "not medical advice" line');
   if (isSummary) {
     const articles = html.match(/<article class="summary" data-system="[^"]*">/g) ?? [];
     if (articles.length !== 1 || articles[0] !== `<article class="summary" data-system="${id}">`) {
       errors.push(`needs exactly one <article class="summary" data-system="${id}">`);
     }
     if (!html.includes('data-print')) errors.push('missing the print / PDF button');
+    // Study-hub quizzes (summary-interactive.js): every question has exactly one right option.
+    for (const q of html.split('<div class="mq">').slice(1)) {
+      const block = q.split('</ul>')[0];
+      if ((block.match(/<li class="ok">/g) ?? []).length !== 1) {
+        errors.push('a mini-quiz question (.mq) must have exactly one <li class="ok"> option');
+      }
+    }
     // The explanation and the glossary open every summary, before the first chapter.
     const intro = html.search(/<section class="intro"/);
     const glossary = html.search(/<section[^>]*class="glossary"/);
@@ -49,6 +66,14 @@ export function pageErrors(html, { id, isSummary, root = '../' }) {
     }
   }
   return errors;
+}
+
+/**
+ * How many times a text mentions exam recollections (שחזור, שחזורים...). Published content
+ * says "הופיע בעבר" instead; validate lists the remaining mentions as warnings.
+ */
+export function recollectionMentions(text) {
+  return (text.match(/שחזור/g) ?? []).length;
 }
 
 /** Problems with the root pages (home, quiz, print, statement pages). */
@@ -71,8 +96,9 @@ export async function checkRootPages(dir = ROOT_DIR) {
  * Every problem across the summaries: the list, the pages and the stylesheet's accents.
  * `subjectIds` are the catalog's subject ids; each summary's `subject` must be one of them.
  */
-export async function checkSummaries(subjectIds, dir = SUMMARY_DIR, cssFile = SUMMARY_CSS) {
+export async function checkSummaries(subjectIds, dir = SUMMARY_DIR, cssFile = SUMMARY_CSS, studyDir = STUDY_DIR, toolDir = TOOLS_DIR) {
   const errors = [];
+  const toolFiles = await readdir(toolDir);
   const ids = SUMMARIES.map((s) => s.id);
   if (new Set(ids).size !== ids.length) errors.push('js/summary-list.js: duplicate id');
   for (const s of SUMMARIES) {
@@ -84,7 +110,8 @@ export async function checkSummaries(subjectIds, dir = SUMMARY_DIR, cssFile = SU
   }
 
   const files = (await readdir(dir)).filter((f) => f.endsWith('.html'));
-  const listed = new Set(ids.map(summaryFile));
+  const toolEntries = SUMMARIES.filter((s) => s.tool);
+  const listed = new Set(SUMMARIES.filter((s) => !s.tool).map((s) => summaryFile(s.id)));
   for (const file of files) {
     if (!SUPPORT_PAGES.has(file) && !listed.has(file)) {
       errors.push(`summaries/${file}: not listed in js/summary-list.js`);
@@ -100,8 +127,30 @@ export async function checkSummaries(subjectIds, dir = SUMMARY_DIR, cssFile = SU
     for (const e of pageErrors(html, { id, isSummary: listed.has(file) })) errors.push(`summaries/${file}: ${e}`);
   }
 
+  // Interactive summaries live in tools/<name>.html (page rules are checked by checkTools).
+  for (const s of toolEntries) {
+    if (!/^[a-z0-9-]+$/.test(s.tool)) errors.push(`js/summary-list.js: ${s.id} has a bad tool name "${s.tool}"`);
+    else if (!toolFiles.includes(`${s.tool}.html`)) errors.push(`js/summary-list.js: ${s.id} points to tools/${s.tool}.html, which is missing`);
+  }
+
+  // Interactive study pages: one per summary that declares `study`, and no strays.
+  const studyIds = SUMMARIES.filter((s) => s.study).map((s) => s.id);
+  const studyFiles = (await readdir(studyDir)).filter((f) => f.endsWith('.html'));
+  for (const file of studyFiles) {
+    if (!studyIds.includes(file.replace(/\.html$/, ''))) errors.push(`study/${file}: no summary with study: true`);
+  }
+  for (const id of studyIds) {
+    if (!studyFiles.includes(`${id}.html`)) {
+      errors.push(`study/${id}.html: missing`);
+      continue;
+    }
+    const html = await readFile(path.join(studyDir, `${id}.html`), 'utf8');
+    if (!html.includes(`data-study="${id}"`)) errors.push(`study/${id}.html: needs data-study="${id}"`);
+    for (const e of pageErrors(html, { id, isSummary: false })) errors.push(`study/${id}.html: ${e}`);
+  }
+
   const css = await readFile(cssFile, 'utf8');
-  for (const id of ids) {
+  for (const id of SUMMARIES.filter((s) => !s.tool).map((s) => s.id)) {
     if (!css.includes(`[data-system="${id}"]`)) errors.push(`css/summary.css: no accent colors for "${id}"`);
   }
   return errors;
