@@ -15,7 +15,7 @@ test('each summary has a full deck of unique, plain-text flashcards', () => {
     for (const c of cards) {
       assert.ok(c.q.trim() && c.a.trim(), `${id}: empty card`);
       assert.ok(!/[<>*`]/.test(c.q + c.a), `${id}: flashcards are plain text (no markup) in "${c.q}"`);
-      if (c.repeats !== undefined) assert.match(c.repeats, /^נשאל בשחזורים( ×\d)?$/);
+      if (c.repeats !== undefined) assert.match(c.repeats, /^הופיע בעבר( ×\d)?$/);
     }
   }
 });
