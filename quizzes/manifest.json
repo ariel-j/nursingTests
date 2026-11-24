@@ -9,14 +9,14 @@
           "quizzes": [
             {
               "id": "heart-1",
-              "title": "מבחן 1",
+              "title": "הלב 1",
               "description": "המערכת הקרדיווסקולרית: מבנה הלב, הולכה, א.ק.ג, מחזור הלב ובקרה.",
               "questionCount": 200,
               "topicCount": 14
             },
             {
               "id": "heart-2",
-              "title": "מבחן 2",
+              "title": "הלב 2",
               "description": "מצבים, מנגנונים והבנה, ומספרים רק כשהם חשובים באמת.",
               "questionCount": 200,
               "topicCount": 14
@@ -28,14 +28,14 @@
           "quizzes": [
             {
               "id": "excretory-1",
-              "title": "מבחן 1",
+              "title": "מערכת ההפרשה 1",
               "description": "200 שאלות על מערכת ההפרשה (כליות ודרכי השתן) ומאזן חומצה-בסיס, בסגנון שאלות המבחן.",
               "questionCount": 200,
               "topicCount": 16
             },
             {
               "id": "excretory-2",
-              "title": "מבחן 2",
+              "title": "מערכת ההפרשה 2",
               "description": "200 שאלות על מערכת ההפרשה: כליות, נפרון, סינון, ריכוז שתן, הורמונים ומאזן חומצה-בסיס.",
               "questionCount": 200,
               "topicCount": 16
@@ -46,16 +46,16 @@
           "name": "מערכת האנדוקרינולוגיה",
           "quizzes": [
             {
-              "id": "endocrine-1",
-              "title": "מבחן 1",
-              "description": "200 שאלות ברמת המבחן, כולל הורמוני מערכת העיכול",
+              "id": "endocrine",
+              "title": "מבחן קשה מאוד",
+              "description": "200 שאלות ברמה גבוהה, לפי ההרצאה, כולל הורמוני מערכת העיכול",
               "questionCount": 200,
               "topicCount": 13
             },
             {
-              "id": "endocrine",
-              "title": "מבחן קשה מאוד",
-              "description": "200 שאלות ברמה גבוהה, לפי ההרצאה, כולל הורמוני מערכת העיכול",
+              "id": "endocrine-1",
+              "title": "מערכת האנדוקרינולוגיה",
+              "description": "200 שאלות ברמת המבחן, כולל הורמוני מערכת העיכול",
               "questionCount": 200,
               "topicCount": 13
             }
@@ -66,14 +66,14 @@
           "quizzes": [
             {
               "id": "digestive-1",
-              "title": "מבחן 1",
+              "title": "מערכת העיכול 1",
               "description": "מערכת העיכול: מבנה הצינור ובקרה עצבית, הפה והבליעה, הקיבה, המעי הדק, הלבלב, הכבד והמרה, עיכול וספיגה, המעי הגס.",
               "questionCount": 200,
               "topicCount": 14
             },
             {
               "id": "digestive-2",
-              "title": "מבחן 2",
+              "title": "מערכת העיכול 2",
               "description": "200 שאלות קצרות וישירות ברמת המבחן, מהפה ועד פי הטבעת.",
               "questionCount": 200,
               "topicCount": 14
@@ -125,7 +125,7 @@
           "quizzes": [
             {
               "id": "pharma-parasympathetic-1",
-              "title": "מבחן 1",
+              "title": "מערכת פאראסימפתטית",
               "description": "מבחן מקיף על המערכת הפאראסימפתטית: סינפסה כולינרגית, רצפטורים, אגוניסטים ואנטגוניסטים (מוסקריניים וניקוטיניים), שימושים, תופעות לוואי וחוסמי עצב-שריר.",
               "questionCount": 130,
               "topicCount": 13
@@ -137,7 +137,7 @@
           "quizzes": [
             {
               "id": "pharma-sympathetic-1",
-              "title": "מבחן 1",
+              "title": "מערכת סימפתטית",
               "description": "מבחן מקיף על תרופות במערכת העצבים הסימפתטית: רצפטורים אדרנרגיים, אגוניסטים ישירים ועקיפים, קטכולאמינים, חוסמי אלפא ובטא, תרופות ADHD ושיקולי סיעוד.",
               "questionCount": 130,
               "topicCount": 13
@@ -149,7 +149,7 @@
           "quizzes": [
             {
               "id": "pharma-opioids-1",
-              "title": "מבחן 1",
+              "title": "אופיואידים",
               "description": "מבחן מקיף על אופיואידים: מנגנון, השפעות ותופעות לוואי, סבילות וגמילה, שימושים, התוויות נגד, דרכי מתן וסיעוד, והתרופות לפי משפחות.",
               "questionCount": 130,
               "topicCount": 15
@@ -161,7 +161,7 @@
           "quizzes": [
             {
               "id": "pharma-nsaids-1",
-              "title": "מבחן 1",
+              "title": "NSAIDs",
               "description": "מבחן מקיף על NSAIDs: מסלול חומצה ארכידונית, מנגנון וסלקטיביות COX, Aspirin ו-Paracetamol, לויקוטריאנים, שיגדון, RA ומיגרנה.",
               "questionCount": 130,
               "topicCount": 14
@@ -173,7 +173,7 @@
           "quizzes": [
             {
               "id": "pharma-coagulation-1",
-              "title": "מבחן 1",
+              "title": "קרישה",
               "description": "תרופות בהפרעות קרישה: נוגדי טסיות, נוגדי קרישה, טרומבוליטים, מעודדי קרישה, בדיקות מעבדה וסיעוד.",
               "questionCount": 130,
               "topicCount": 15
@@ -185,7 +185,7 @@
           "quizzes": [
             {
               "id": "pharma-hyperlipidemia-1",
-              "title": "מבחן 1",
+              "title": "היפרליפידמיה (תרופות להורדת שומנים בדם)",
               "description": "מבחן מקיף על תרופות להורדת שומנים בדם: סטטינים, רזינים, Ezetimibe, פיברטים, Niacin, אומגה 3, מעכבי PCSK9 ותרופות נוספות — מנגנון, תופעות לוואי, השוואת יעילות וסיעוד.",
               "questionCount": 130,
               "topicCount": 13
@@ -197,7 +197,7 @@
           "quizzes": [
             {
               "id": "pharma-parkinson-1",
-              "title": "מבחן 1",
+              "title": "פרקינסון",
               "description": "מבחן מקיף על תרופות לפרקינסון ולמחלות ניווניות: L-Dopa ותוספי עזר, מעכבי MAO-B, אגוניסטים דופמינרגיים, Amantadine, אנטי-מוסקריניים, וכן אלצהיימר ו-ALS — מנגנון, תופעות לוואי, השוואה וסיעוד.",
               "questionCount": 130,
               "topicCount": 13
@@ -209,7 +209,7 @@
           "quizzes": [
             {
               "id": "pharma-anxiety-1",
-              "title": "מבחן 1",
+              "title": "חרדה",
               "description": "נוגדי חרדה ומשרי שינה: GABA, בנזודיאזפינים, ברביטורטים, Buspirone, תרופות Z, אגוניסטים למלטונין ואנטגוניסטים לאורקסין.",
               "questionCount": 51,
               "topicCount": 13
@@ -221,7 +221,7 @@
           "quizzes": [
             {
               "id": "pharma-depression-1",
-              "title": "מבחן 1",
+              "title": "דיכאון",
               "description": "נוגדי דיכאון ומייצבי מצב רוח: SSRI, SNRI, NRI, TCA, MAOI וטיראמין, סינדרום סרוטונין, נוגדי דיכאון לא טיפוסיים וחדשים, ו-Lithium.",
               "questionCount": 56,
               "topicCount": 14
@@ -233,7 +233,7 @@
           "quizzes": [
             {
               "id": "pharma-psychosis-1",
-              "title": "מבחן 1",
+              "title": "פסיכוזה",
               "description": "מבחן על תרופות אנטי-פסיכוטיות: פסיכוזה וסכיזופרניה, מסלולי דופמין, דור ראשון מול שני, Clozapine, תופעות לוואי (EPS, מטבוליות, אוטונומיות, NMS), שימושים קליניים וסיעוד.",
               "questionCount": 56,
               "topicCount": 11
@@ -245,7 +245,7 @@
           "quizzes": [
             {
               "id": "pharma-epilepsy-1",
-              "title": "מבחן 1",
+              "title": "אפילפסיה",
               "description": "מבחן על תרופות נוגדות פרכוסים: עקרונות וסיווג התקפים, מנגנוני הפעולה, התרופות המרכזיות (Valproic acid, Phenytoin, Carbamazepine, Lamotrigine, Topiramate, Levetiracetam, Ethosuximide), ברביטורטים ובנזודיאזפינים, status epilepticus, הריון, בחירת תרופה וסיעוד.",
               "questionCount": 64,
               "topicCount": 15
@@ -257,7 +257,7 @@
           "quizzes": [
             {
               "id": "pharma-anesthesia-1",
-              "title": "מבחן 1",
+              "title": "הרדמה",
               "description": "שאלות על הרדמה כללית ומקומית: שלבי ההרדמה, MAC, גזים נדיפים, חומרי הרדמה IV, תרופות עזר, חוסמים נוירומוסקולריים, היפרתרמיה ממאירה וסיעוד.",
               "questionCount": 66,
               "topicCount": 13
@@ -269,7 +269,7 @@
           "quizzes": [
             {
               "id": "pharma-antihistamines-1",
-              "title": "מבחן 1",
+              "title": "אנטיהיסטמינים",
               "description": "שאלות על היסטמין, רצפטורים H1-H4, אנטיהיסטמינים דור ראשון ושני, שימושים קליניים, תופעות לוואי, תגובות בין-תרופתיות וסיעוד.",
               "questionCount": 42,
               "topicCount": 11
@@ -281,7 +281,7 @@
           "quizzes": [
             {
               "id": "pharma-git-1",
-              "title": "מבחן 1",
+              "title": "מערכת העיכול",
               "description": "מבחן מקיף על תרופות במערכת העיכול: כיב וצרבת, בקרת חומצה, שלשול ועצירות, בחילות והקאות, ומעי רגיז.",
               "questionCount": 52,
               "topicCount": 12
@@ -293,7 +293,7 @@
           "quizzes": [
             {
               "id": "pharma-respiratory-1",
-              "title": "מבחן 1",
+              "title": "מערכת הנשימה",
               "description": "מבחן מקיף על תרופות למערכת הנשימה: אסטמה ו-COPD, מרחיבי סמפונות, נוגדי דלקת, ביולוגיים וניהול הטיפול.",
               "questionCount": 52,
               "topicCount": 11
@@ -305,7 +305,7 @@
           "quizzes": [
             {
               "id": "pharma-immunosuppression-1",
-              "title": "מבחן 1",
+              "title": "דיכוי חיסוני",
               "description": "מבחן מקיף על תרופות לדיכוי חיסוני ומניעת דחיית שתל: עקרונות הטיפול, נוגדנים, מעכבי קלצינאורין, mTOR, אנטי-פרוליפרטיביים וסיעוד.",
               "questionCount": 39,
               "topicCount": 9
@@ -382,7 +382,7 @@
           "quizzes": [
             {
               "id": "endocrine-pituitary-1",
-              "title": "מבחן 1",
+              "title": "מבוא אנדוקרינולוגיה ויותרת המוח",
               "description": "שאלות על מבוא למערכת האנדוקרינית ועל הורמוני ההיפותלמוס וההיפופיזה.",
               "questionCount": 109,
               "topicCount": 9
@@ -394,7 +394,7 @@
           "quizzes": [
             {
               "id": "endocrine-thyroid-1",
-              "title": "מבחן 1",
+              "title": "בלוטת התריס",
               "description": "שאלות על סינתזה, בקרה וטיפול תרופתי בהפרעות של בלוטת התריס.",
               "questionCount": 54,
               "topicCount": 6
@@ -406,7 +406,7 @@
           "quizzes": [
             {
               "id": "endocrine-sex-hormones-1",
-              "title": "מבחן 1",
+              "title": "הורמוני מין ואמצעי מניעה",
               "description": "שאלות על אסטרוגנים, פרוגסטרון, SERMs, אמצעי מניעה ואנדרוגנים.",
               "questionCount": 84,
               "topicCount": 7
@@ -418,7 +418,7 @@
           "quizzes": [
             {
               "id": "endocrine-adrenal-1",
-              "title": "מבחן 1",
+              "title": "אדרנל וסטרואידים",
               "description": "שאלות על הורמוני האדרנל וקורטיקוסטרואידים.",
               "questionCount": 58,
               "topicCount": 5
@@ -430,7 +430,7 @@
           "quizzes": [
             {
               "id": "endocrine-diabetes-1",
-              "title": "מבחן 1",
+              "title": "סוכרת א׳: פיזיולוגיה ואינסולין",
               "description": "שאלות על ויסות גלוקוז, סוכרת ואינסולין",
               "questionCount": 47,
               "topicCount": 5
@@ -442,7 +442,7 @@
           "quizzes": [
             {
               "id": "endocrine-diabetes-2",
-              "title": "מבחן 1",
+              "title": "סוכרת ב׳: תרופות לא-אינסוליניות",
               "description": "שאלות על התרופות הפומיות לסוכרת",
               "questionCount": 43,
               "topicCount": 6
@@ -454,7 +454,7 @@
           "quizzes": [
             {
               "id": "hypertension-1",
-              "title": "מבחן 1",
+              "title": "יתר לחץ דם: ACE, ARB, אלפא, בטא, CCB",
               "description": "שאלות על תרופות ליתר לחץ דם: מנגנונים, תופעות לוואי והתוויות נגד.",
               "questionCount": 105,
               "topicCount": 10
@@ -466,7 +466,7 @@
           "quizzes": [
             {
               "id": "diuretics-1",
-              "title": "מבחן 1",
+              "title": "משתנים",
               "description": "שאלות על משתני תיאזיד, לולאה, חוסכי אשלגן, קרבוניק אנהידרז ואוסמוטיים.",
               "questionCount": 65,
               "topicCount": 7
@@ -478,7 +478,7 @@
           "quizzes": [
             {
               "id": "ischemia-hf-arrhythmia-1",
-              "title": "מבחן 1",
+              "title": "איסכמיה, אי-ספיקת לב והפרעות קצב",
               "description": "שאלות על תעוקת חזה, ACS, אי ספיקת לב, תרופות יונוטרופיות ותרופות נגד הפרעות קצב.",
               "questionCount": 126,
               "topicCount": 12
@@ -490,7 +490,7 @@
           "quizzes": [
             {
               "id": "oncology-principles-1",
-              "title": "מבחן 1",
+              "title": "אונקולוגיה: עקרונות ועמידות",
               "description": "שאלות על עקרונות הטיפול הכימותרפי, עמידות ורעילות",
               "questionCount": 66,
               "topicCount": 9
@@ -502,7 +502,7 @@
           "quizzes": [
             {
               "id": "oncology-drug-families-1",
-              "title": "מבחן 1",
+              "title": "אונקולוגיה: משפחות התרופות",
               "description": "שאלות על משפחות התרופות הכימותרפיות, מנגנונים ותופעות לוואי",
               "questionCount": 78,
               "topicCount": 11
@@ -514,7 +514,7 @@
           "quizzes": [
             {
               "id": "antibiotics-wall-1",
-              "title": "מבחן 1",
+              "title": "אנטיביוטיקה א׳: עקרונות ודופן התא",
               "description": "שאלות על עקרונות הטיפול האנטיביוטי ותרופות הפוגעות בדופן התא החיידקית",
               "questionCount": 113,
               "topicCount": 14
@@ -526,7 +526,7 @@
           "quizzes": [
             {
               "id": "antibiotics-protein-dna-1",
-              "title": "מבחן 1",
+              "title": "אנטיביוטיקה ב׳: סינתזת חלבון וחומצות גרעין",
               "description": "שאלות על אמינוגליקוזידים, טטרציקלינים, מקרולידים, קלינדמיצין, קווינולונים, ריפמיצינים, סולפה, מטרונידזול ותרופות לזיהומים עמידים",
               "questionCount": 89,
               "topicCount": 11
@@ -538,7 +538,7 @@
           "quizzes": [
             {
               "id": "antivirals-tb-1",
-              "title": "מבחן 1",
+              "title": "שחפת ותרופות נגד וירוסים",
               "description": "שאלות על תרופות לשחפת, שפעת, RSV, הרפס ו-HIV",
               "questionCount": 71,
               "topicCount": 12
@@ -550,7 +550,7 @@
           "quizzes": [
             {
               "id": "fungi-1",
-              "title": "מבחן 1",
+              "title": "פטריות, טפילים ותולעים",
               "description": "תרופות נגד פטריות",
               "questionCount": 64,
               "topicCount": 7
@@ -562,7 +562,7 @@
           "quizzes": [
             {
               "id": "routes-1",
-              "title": "מבחן 1",
+              "title": "סיעוד: דרכי מתן לא-פרנטרליות",
               "description": "דרכי מתן",
               "questionCount": 55,
               "topicCount": 9
@@ -574,7 +574,7 @@
           "quizzes": [
             {
               "id": "injections-1",
-              "title": "מבחן 1",
+              "title": "סיעוד: הזרקות ומתן דרך הווריד",
               "description": "הזרקות ועירוי",
               "questionCount": 57,
               "topicCount": 9
@@ -586,7 +586,7 @@
           "quizzes": [
             {
               "id": "circulars-1",
-              "title": "מבחן 1",
+              "title": "סיעוד: חוזרים והיבטים חוקיים",
               "description": "חוזרים, בטיחות תרופתית וניהול טיפול תרופתי בסיעוד",
               "questionCount": 87,
               "topicCount": 8
@@ -677,7 +677,7 @@
           "quizzes": [
             {
               "id": "laws-circulars-1",
-              "title": "מבחן 1",
+              "title": "חוקים וחוזרים",
               "description": "חוקים, חוזרי מנהל הסיעוד והרפואה, וההבחנה בין פעולת סיעוד, פעולה חריגה ופעולה רפואית, לפי הסילבוס וחוזר 234/2025.",
               "questionCount": 68,
               "topicCount": 10
@@ -710,7 +710,7 @@
           "quizzes": [
             {
               "id": "safety-1",
-              "title": "מבחן 1",
+              "title": "בטיחות ובטחון",
               "description": "בטיחות ובטחון: גורמים, נפילות וחוזר 145/2019, אבחנות, הגבלה פיזית (חוזר רפואה 15/2009) ויעדי בטיחות, עם חזרה מצטברת.",
               "questionCount": 91,
               "topicCount": 13
@@ -722,7 +722,7 @@
           "quizzes": [
             {
               "id": "hygiene-1",
-              "title": "מבחן 1",
+              "title": "היגיינה ואומדן העור",
               "description": "מבחן מקיף על היגיינה אישית ואומדן העור: מבנה ותפקידי העור, ממצאי עור, אומדן היגיינה, טיפול בפה/חושים/שיער/ציפורניים, רחצה ועקרונות-על בטיפול הסיעודי.",
               "questionCount": 85,
               "topicCount": 8
@@ -734,7 +734,7 @@
           "quizzes": [
             {
               "id": "tissue-integrity-1",
-              "title": "מבחן 1",
+              "title": "שלמות הרקמה",
               "description": "מבחן מקיף על שלמות הרקמה: פצעים אקוטיים וכרוניים, דרגות סגירה ושלבי ריפוי, גורמים מעכבי ריפוי, פצעי לחץ, סולמות נורטון וברדן, דרגות פצע לחץ, מניעה וטיפול וחוזר 153.",
               "questionCount": 85,
               "topicCount": 8
@@ -746,7 +746,7 @@
           "quizzes": [
             {
               "id": "mobility-1",
-              "title": "מבחן 1",
+              "title": "ניעות",
               "description": "מבחן מקיף על ניעות: הגדרות וגורמים, חוזר 249/2025, השפעת חוסר ניעות לפי מערכות, סיבוכי שכיבה, אומדן, תנוחות מטופל, Deconditioning, ארגונומיה והרמות, עם חזרה מצטברת מנושאים קודמים.",
               "questionCount": 110,
               "topicCount": 9
@@ -758,7 +758,7 @@
           "quizzes": [
             {
               "id": "sleep-1",
-              "title": "מבחן 1",
+              "title": "מנוחה ושינה",
               "description": "מבחן מקיף על מנוחה ושינה: פיזיולוגיה (RAS/BSR, מלטונין, מקצב צירקדי), שלבי NREM ו-REM, מחזוריות השינה, תפקידי השינה וחסך, הפרעות שינה, דום נשימה בשינה, תהליך סיעודי, עם חזרה מצטברת מנושאים קודמים.",
               "questionCount": 100,
               "topicCount": 8
@@ -770,7 +770,7 @@
           "quizzes": [
             {
               "id": "urinary-1",
-              "title": "מבחן 1",
+              "title": "מערכת השתן",
               "description": "מבחן מקיף על מערכת השתן: אנטומיה ותפקידי הכליה, פיזיולוגיה של השתנה, ערכי שתן תקינים, הפרעות במתן שתן, אי-שליטה ואצירה, בדיקות ואיסוף, צנתור וקטטר ואמצעי הטיית שתן, עם חזרה מצטברת.",
               "questionCount": 85,
               "topicCount": 9
@@ -782,14 +782,14 @@
           "quizzes": [
             {
               "id": "excretion-1",
-              "title": "מבחן 1",
+              "title": "מערכת העיכול 1",
               "description": "הפרשת צואה תקינה, עצירות ושלשול, אי שליטה (חוזר 248/2025), משלשלים, חוקן, אבני צואה, הפרעות רקטום ואנוס, בדיקות וסטומה.",
               "questionCount": 105,
               "topicCount": 10
             },
             {
               "id": "gi-1",
-              "title": "מבחן 1",
+              "title": "מערכת העיכול 2",
               "description": "מבחן מקיף על מערכת העיכול, ההזנה וההפרשות: אנטומיה ופיזיולוגיה, צואה תקינה וסולם בריסטול, עצירות ושלשול, תכשירים משלשלים וחוקן, אבני צואה וסיבוכים, סטומה וקולונוסקופיה, עם חזרה מצטברת.",
               "questionCount": 85,
               "topicCount": 9
@@ -801,7 +801,7 @@
           "quizzes": [
             {
               "id": "sensory-1",
-              "title": "מבחן 1",
+              "title": "גירוי סנסורי",
               "description": "החוויה הסנסורית: קליטה ותפיסה, RAS ומצבי מודעות, חסך והצפה, גורמים משפיעים, אבחנות NANDA, אומדן והתערבויות.",
               "questionCount": 84,
               "topicCount": 10
@@ -894,6 +894,14 @@
           "description": "פעולת סיעוד מול פעולה חריגה, מיון פעולות, איזה חוזר שייך לאיזה נושא, וכוח עזר מיומן."
         }
       ]
+    },
+    {
+      "id": "nursing-fundamentals-b",
+      "name": "יסודות להתערבות סיעודית 2",
+      "units": [],
+      "quizzes": [],
+      "upcoming": [],
+      "tools": []
     }
   ]
 }
