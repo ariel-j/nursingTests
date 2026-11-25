@@ -898,7 +898,137 @@
     {
       "id": "nursing-fundamentals-b",
       "name": "יסודות להתערבות סיעודית 2",
-      "units": [],
+      "units": [
+        {
+          "name": "סימנים חיוניים",
+          "quizzes": [
+            {
+              "id": "vital-signs-1",
+              "title": "מבחן 1 - סימנים חיוניים",
+              "description": "מבחן מסכם של כ-100 שאלות על חום, דופק, נשימה, לחץ דם וסטורציה",
+              "questionCount": 102,
+              "topicCount": 12
+            }
+          ]
+        },
+        {
+          "name": "עירוי פריפרי",
+          "quizzes": [
+            {
+              "id": "peripheral-iv-1",
+              "title": "מבחן 1 - עירוי פריפרי",
+              "description": "מבחן מסכם של כ-100 שאלות על החדרת עירוי פריפרי, סיבוכים ומתן נוזלים",
+              "questionCount": 103,
+              "topicCount": 10
+            }
+          ]
+        },
+        {
+          "name": "בטיחות בקטריאלית",
+          "quizzes": [
+            {
+              "id": "infection-control-1",
+              "title": "מבחן 1 - בטיחות בקטריאלית",
+              "description": "מבחן מסכם של כ-100 שאלות על שליטה בזיהומים, היגיינת ידיים, אמצעי זהירות ובידודים",
+              "questionCount": 101,
+              "topicCount": 11
+            }
+          ]
+        },
+        {
+          "name": "התהליך הסיעודי",
+          "quizzes": [
+            {
+              "id": "nursing-process-1",
+              "title": "מבחן 1 - התהליך הסיעודי",
+              "description": "אומדן, אבחנה, תכנון, יישום והערכה",
+              "questionCount": 108,
+              "topicCount": 12
+            }
+          ]
+        },
+        {
+          "name": "כאב",
+          "quizzes": [
+            {
+              "id": "pain-1",
+              "title": "מבחן 1 - כאב",
+              "description": "מבחן מסכם של כ-100 שאלות על פיזיולוגיה, סיווג, אומדן וטיפול תרופתי ולא תרופתי בכאב",
+              "questionCount": 102,
+              "topicCount": 12
+            }
+          ]
+        },
+        {
+          "name": "בדיקות עזר והדמיה",
+          "quizzes": [
+            {
+              "id": "imaging-1",
+              "title": "מבחן 1 - הדמיה ובדיקות עזר",
+              "description": "מבחן מסכם של כ-100 שאלות על קרינה, בדיקות הדמיה, הכנת מטופל ובחירת בדיקה",
+              "questionCount": 96,
+              "topicCount": 10
+            }
+          ]
+        },
+        {
+          "name": "חוקים, חוזרים ואתיקה",
+          "quizzes": [
+            {
+              "id": "laws-circulars-b-1",
+              "title": "מבחן 1 - חוקים, חוזרים ואתיקה",
+              "description": "מבחן על חקיקה, חוזרי משרד הבריאות, פעולות סיעוד ופעולות חריגות, סודיות ואתיקה",
+              "questionCount": 91,
+              "topicCount": 9
+            }
+          ]
+        },
+        {
+          "name": "שאלות שהופיעו בעבר",
+          "quizzes": [
+            {
+              "id": "recall-exam-1",
+              "title": "שאלות שהופיעו בעבר 1",
+              "description": "שאלות בנוסח מבחנים קודמים",
+              "questionCount": 60,
+              "topicCount": 7
+            },
+            {
+              "id": "recall-exam-2",
+              "title": "שאלות שהופיעו בעבר 2",
+              "description": "שאלות בנוסח מבחנים קודמים: סימנים חיוניים, עירוי, בידוד, תהליך סיעודי, כאב והדמיה",
+              "questionCount": 83,
+              "topicCount": 8
+            }
+          ]
+        },
+        {
+          "name": "מבחן מסכם",
+          "quizzes": [
+            {
+              "id": "summary-exam-1",
+              "title": "מבחן מסכם 1",
+              "description": "מבחן מסכם רב-יחידתי: סימנים חיוניים, עירוי פריפרי, בקרת זיהומים, תהליך סיעודי, כאב, הדמיה וחוקים",
+              "questionCount": 58,
+              "topicCount": 7
+            },
+            {
+              "id": "summary-exam-2",
+              "title": "מבחן מסכם 2",
+              "description": "שאלות משולבות מכל היחידות",
+              "questionCount": 61,
+              "topicCount": 7
+            },
+            {
+              "id": "summary-exam-3",
+              "title": "מבחן מסכם 3",
+              "description": "מבחן מסכם רב-יחידתי של כ-60 שאלות על סימנים חיוניים, עירוי פריפרי, בטיחות בקטריאלית, תהליך סיעודי, כאב, הדמיה וחוקים",
+              "questionCount": 62,
+              "topicCount": 7
+            }
+          ]
+        }
+      ],
       "quizzes": [],
       "upcoming": [],
       "tools": []
