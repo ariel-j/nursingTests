@@ -142,6 +142,32 @@
               "topicCount": 8
             }
           ]
+        },
+        {
+          "name": "מבחן מסכם",
+          "quizzes": [
+            {
+              "id": "summary-exam-1",
+              "title": "מבחן מסכם 1",
+              "description": "מבחן מסכם רב-יחידתי: סימנים חיוניים, עירוי פריפרי, בקרת זיהומים, תהליך סיעודי, כאב, הדמיה וחוקים",
+              "questionCount": 58,
+              "topicCount": 7
+            },
+            {
+              "id": "summary-exam-2",
+              "title": "מבחן מסכם 2",
+              "description": "שאלות משולבות מכל היחידות",
+              "questionCount": 61,
+              "topicCount": 7
+            },
+            {
+              "id": "summary-exam-3",
+              "title": "מבחן מסכם 3",
+              "description": "מבחן מסכם רב-יחידתי של כ-60 שאלות על סימנים חיוניים, עירוי פריפרי, בטיחות בקטריאלית, תהליך סיעודי, כאב, הדמיה וחוקים",
+              "questionCount": 62,
+              "topicCount": 7
+            }
+          ]
         }
       ],
       "quizzes": []
