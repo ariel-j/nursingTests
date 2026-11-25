@@ -1,0 +1,15 @@
+/* כרטיסיות מושגים (concepts.html): on top of drugs.css (tabs, cards, games, matching board). */
+
+.concept-en { font-size: 0.8125rem; font-weight: 400; color: var(--muted); }
+.seq-steps { margin: 0.6rem 0 0; padding-inline-start: 1.4rem; font-size: 0.9rem; }
+.seq-steps[hidden] { display: none; }
+.seq-steps li { margin-block: 0.2rem; overflow-wrap: anywhere; }
+.match-title { margin-block: 0.5rem 0; font-weight: 600; }
+.match-title:empty { display: none; }
+.concepts-page .group-title { margin-block: 1.2rem 0.5rem; font-size: 1.125rem; }
+
+@media print {
+  .seq-steps[hidden] { display: block !important; }
+  .seq-steps { margin-block-start: 1mm; font-size: inherit; }
+  .concepts-page .group-title { margin-block: 3mm 1.5mm; font-size: 11pt; break-after: avoid; }
+}
